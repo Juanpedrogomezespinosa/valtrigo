@@ -29,6 +29,17 @@ export function hasSavedGame(): boolean {
   return readSaveData() !== null;
 }
 
+// Devuelve la partida guardada, o null si no hay ninguna válida.
+export function readSave(): GameState | null {
+  return readSaveData()?.state ?? null;
+}
+
+// Indica si la partida guardada coincide con el estado indicado, es decir, si no hay cambios sin guardar.
+export function isSaved(state: GameState): boolean {
+  const saved = readSave();
+  return saved !== null && JSON.stringify(saved) === JSON.stringify(state);
+}
+
 // Guarda la partida y sobrescribe la anterior, si la había.
 // Devuelve false si el navegador no permite guardar.
 export function writeSave(state: GameState): boolean {

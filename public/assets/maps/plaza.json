@@ -2476,6 +2476,19 @@
    "columns": 12,
    "margin": 0,
    "spacing": 0
+  },
+  {
+   "firstgid": 133,
+   "name": "kenney-tiny-dungeon",
+   "image": "../sprites/kenney-tiny-dungeon.png",
+   "imagewidth": 192,
+   "imageheight": 176,
+   "tilewidth": 16,
+   "tileheight": 16,
+   "tilecount": 132,
+   "columns": 12,
+   "margin": 0,
+   "spacing": 0
   }
  ]
 }

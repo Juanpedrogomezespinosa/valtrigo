@@ -8,6 +8,11 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 const OUTPUT_DIR = 'public/assets/maps';
 const TILE_SIZE = 16;
 
+// Los mapas usan dos hojas: Tiny Town (exteriores) y Tiny Dungeon (interiores).
+// En los mapas, las casillas de Tiny Dungeon van después de las 132 de Tiny Town.
+const TOWN_TILE_COUNT = 132;
+const dungeon = (index) => TOWN_TILE_COUNT + index;
+
 // Casillas de Tiny Town (índice en la hoja, empezando en 0).
 const TILE = {
   grass: 0,
@@ -30,6 +35,19 @@ const TILE = {
   bush: 5,
   well: 104,
   sign: 83,
+};
+
+// Casillas de Tiny Dungeon para interiores.
+const INTERIOR = {
+  floor: dungeon(48),
+  floorDetail: dungeon(49),
+  wall: dungeon(40),
+  wallTop: dungeon(37),
+  door: dungeon(45),
+  shelf: dungeon(63),
+  table: dungeon(72),
+  chair: dungeon(73),
+  barrel: dungeon(82),
 };
 
 // Edificios: filas de casillas, de arriba abajo. La puerta forma parte de la fila inferior.
@@ -188,6 +206,19 @@ function toTiled(map) {
         imageheight: 176,
         tilewidth: TILE_SIZE,
         tileheight: TILE_SIZE,
+        tilecount: TOWN_TILE_COUNT,
+        columns: 12,
+        margin: 0,
+        spacing: 0,
+      },
+      {
+        firstgid: TOWN_TILE_COUNT + 1,
+        name: 'kenney-tiny-dungeon',
+        image: '../sprites/kenney-tiny-dungeon.png',
+        imagewidth: 192,
+        imageheight: 176,
+        tilewidth: TILE_SIZE,
+        tileheight: TILE_SIZE,
         tilecount: 132,
         columns: 12,
         margin: 0,
@@ -242,8 +273,32 @@ function plaza() {
   return map;
 }
 
+// Casa del jugador: interior más pequeño que la pantalla (HU-09).
+// Muros alrededor y la puerta de salida en el muro inferior.
+function casa() {
+  const map = createMap(12, 9);
+
+  for (let y = 0; y < map.height; y++) {
+    for (let x = 0; x < map.width; x++) {
+      const isWall = x === 0 || y === 0 || x === map.width - 1 || y === map.height - 1;
+      if (y === 0) setTile(map.obstacles, map, x, y, INTERIOR.wallTop);
+      else if (isWall || y === 1) setTile(map.obstacles, map, x, y, INTERIOR.wall);
+      setTile(map.ground, map, x, y, hash(x, y) % 5 === 0 ? INTERIOR.floorDetail : INTERIOR.floor);
+    }
+  }
+
+  setTile(map.obstacles, map, 6, 8, INTERIOR.door);
+  setTile(map.obstacles, map, 2, 1, INTERIOR.shelf);
+  setTile(map.obstacles, map, 3, 1, INTERIOR.shelf);
+  setTile(map.obstacles, map, 8, 4, INTERIOR.table);
+  setTile(map.obstacles, map, 8, 5, INTERIOR.chair);
+  setTile(map.obstacles, map, 10, 2, INTERIOR.barrel);
+
+  return map;
+}
+
 mkdirSync(OUTPUT_DIR, { recursive: true });
-for (const [name, build] of Object.entries({ plaza })) {
+for (const [name, build] of Object.entries({ plaza, casa })) {
   writeFileSync(`${OUTPUT_DIR}/${name}.json`, JSON.stringify(toTiled(build()), null, 1) + '\n');
   console.log(`${OUTPUT_DIR}/${name}.json`);
 }

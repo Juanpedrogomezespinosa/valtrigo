@@ -142,3 +142,39 @@ export async function sceneTexts(page: Page, sceneKey: string): Promise<string[]
       .map((child) => (child as import('phaser').GameObjects.Text).text);
   }, sceneKey);
 }
+
+// --- Partida en curso y menú de pausa ---
+
+// Abre el juego y empieza una partida nueva (sin partida guardada previa).
+export async function startNewGame(page: Page): Promise<void> {
+  await openGame(page);
+  await press(page, 'Enter'); // "Nueva partida"
+  await waitForScene(page, 'GameScene');
+}
+
+export async function openPause(page: Page): Promise<void> {
+  await press(page, 'Escape');
+  await waitForScene(page, 'PauseScene');
+}
+
+export async function isScenePaused(page: Page, sceneKey: string): Promise<boolean> {
+  return page.evaluate((key) => (window as unknown as GameWindow).game.scene.isPaused(key), sceneKey);
+}
+
+export async function pauseSelectedOption(page: Page): Promise<string> {
+  return page.evaluate(() => {
+    const game = (window as unknown as GameWindow).game;
+    return (game.scene.getScene('PauseScene') as unknown as { getSelectedOption(): string }).getSelectedOption();
+  });
+}
+
+// Selecciona una opción del menú de pausa con las flechas y la activa con Enter.
+export async function choosePauseOption(page: Page, label: string): Promise<void> {
+  const options = ['Continuar', 'Opciones', 'Guardar partida', 'Salir al menú principal'];
+  const target = options.indexOf(label);
+  const current = options.indexOf(await pauseSelectedOption(page));
+  for (let i = 0; i < Math.abs(target - current); i++) {
+    await press(page, target > current ? 'ArrowDown' : 'ArrowUp');
+  }
+  await press(page, 'Enter');
+}

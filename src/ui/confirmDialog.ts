@@ -2,8 +2,11 @@ import Phaser from 'phaser';
 import { COLORS, FONT_FAMILY } from '../config';
 import { playEffect } from '../systems/audio';
 
-const WIDTH = 520;
-const HEIGHT = 180;
+const WIDTH = 560;
+const PADDING = 40;
+// Espacio entre el mensaje y el centro de los botones, y entre los botones y el borde inferior.
+const BUTTONS_GAP = 55;
+const BOTTOM_GAP = 30;
 const DEPTH = 100;
 
 // Cuadro de confirmación con "Sí" y "No", centrado sobre la escena.
@@ -19,24 +22,34 @@ export function showConfirmDialog(scene: Phaser.Scene, message: string, onAnswer
     .setOrigin(0)
     .setDepth(DEPTH)
     .setInteractive();
-  const box = scene.add
-    .rectangle(width / 2, height / 2, WIDTH, HEIGHT, Phaser.Display.Color.HexStringToColor(COLORS.background).color)
-    .setStrokeStyle(2, Phaser.Display.Color.HexStringToColor(COLORS.text).color)
-    .setDepth(DEPTH);
+  // El mensaje se parte en varias líneas si no cabe, y el cuadro crece en altura.
   const text = scene.add
-    .text(width / 2, height / 2 - 35, message, { fontFamily: FONT_FAMILY, fontSize: '26px', color: COLORS.text })
-    .setOrigin(0.5)
+    .text(width / 2, 0, message, {
+      fontFamily: FONT_FAMILY,
+      fontSize: '26px',
+      color: COLORS.text,
+      align: 'center',
+      wordWrap: { width: WIDTH - PADDING * 2 },
+    })
+    .setOrigin(0.5, 0)
+    .setDepth(DEPTH + 1);
+  const boxHeight = PADDING + text.height + BUTTONS_GAP + BOTTOM_GAP + PADDING / 2;
+  const boxTop = height / 2 - boxHeight / 2;
+  text.setY(boxTop + PADDING);
+  const box = scene.add
+    .rectangle(width / 2, height / 2, WIDTH, boxHeight, Phaser.Display.Color.HexStringToColor(COLORS.background).color)
+    .setStrokeStyle(2, Phaser.Display.Color.HexStringToColor(COLORS.text).color)
     .setDepth(DEPTH);
   objects.push(shade, box, text);
 
   const buttons = (['Sí', 'No'] as const).map((label, index) => {
     const button = scene.add
-      .text(width / 2 + (index === 0 ? -80 : 80), height / 2 + 40, label, {
+      .text(width / 2 + (index === 0 ? -80 : 80), boxTop + PADDING + text.height + BUTTONS_GAP, label, {
         fontFamily: FONT_FAMILY,
         fontSize: '28px',
       })
       .setOrigin(0.5)
-      .setDepth(DEPTH)
+      .setDepth(DEPTH + 1)
       .setInteractive({ useHandCursor: true });
     button.on('pointerdown', () => answer(index === 0));
     objects.push(button);

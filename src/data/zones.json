@@ -2,5 +2,9 @@
   "plaza": {
     "name": "Exterior del pueblo",
     "map": "assets/maps/plaza.json"
+  },
+  "casa": {
+    "name": "Casa del jugador",
+    "map": "assets/maps/casa.json"
   }
 }

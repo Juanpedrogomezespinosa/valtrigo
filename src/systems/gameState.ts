@@ -41,6 +41,11 @@ export function startGame(state: GameState): void {
   current = state;
 }
 
+// Termina la partida en curso sin guardarla (al salir al menú principal).
+export function endGame(): void {
+  current = null;
+}
+
 export function isGameInProgress(): boolean {
   return current !== null;
 }

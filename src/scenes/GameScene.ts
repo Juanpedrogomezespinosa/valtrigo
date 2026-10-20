@@ -16,7 +16,10 @@ export class GameScene extends Phaser.Scene {
     const state = getGameState();
 
     const map = this.make.tilemap({ key: mapKey(state.zone) });
-    const tiles = map.addTilesetImage('kenney-tiny-town', 'tiles-town')!;
+    const tiles = [
+      map.addTilesetImage('kenney-tiny-town', 'tiles-town')!,
+      map.addTilesetImage('kenney-tiny-dungeon', 'characters')!,
+    ];
     map.createLayer('suelo', tiles);
     map.createLayer('obstaculos', tiles);
 
@@ -28,5 +31,11 @@ export class GameScene extends Phaser.Scene {
     camera.setZoom(WORLD_ZOOM);
     camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
     camera.centerOn(this.player.x, this.player.y);
+
+    // Escape abre el menú de pausa y detiene la partida (HU-26).
+    this.input.keyboard!.on('keydown-ESC', () => {
+      this.scene.pause();
+      this.scene.launch('PauseScene');
+    });
   }
 }

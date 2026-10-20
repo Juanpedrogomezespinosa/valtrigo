@@ -87,3 +87,25 @@ Es un proyecto público con un fin doble: servir de base para un curso de testin
 - En desarrollo, main.ts expone también `window.gameState()` para que los tests consulten la partida en curso.
 - El escenario 2 de HU-01 ya está activo: una partida guardada válida activa "Continuar" (que aún no hace nada hasta HU-03).
 - Hasta HU-31, en la plaza sigue sonando la música del menú. Hasta HU-22 no se muestra el reloj en pantalla, y hasta HU-06 el personaje no se mueve.
+
+### Continuar partida (HU-03)
+
+- "Continuar" lee la partida guardada (`readSave()` en save.ts) y abre GameScene con ese estado, sin selector.
+- Se restaura todo `GameState`: zona, posición, día, hora, dinero, energía, inventario, encargos activos y cofres abiertos (`openedChests`, con identificadores como `cofre-1`).
+- El escenario 2 de HU-03 (cofre 1 vacío y que no se reabre) está como `test.fixme` hasta HU-12, que crea los cofres y la interacción con E.
+- Casa del jugador: mapa de 12×9 casillas con las casillas de interior de Tiny Dungeon. Los mapas incluyen las dos hojas (Tiny Town y Tiny Dungeon) y GameScene usa la de Tiny Dungeon también como hoja de casillas.
+- **Falta una cama**: ninguno de los dos paquetes de Kenney tiene una. HU-24 la necesita, así que hará falta un gráfico antes de esa historia.
+- Hasta HU-09, las zonas más pequeñas que la pantalla (como la casa) se dibujan en la esquina superior izquierda en lugar de centradas.
+
+### Pausa, reanudar y guardar (HU-26, HU-27, HU-04)
+
+- **"Guardar partida" del menú principal siempre aparece desactivada.** Requisito literal (HU-01 y HU-04: desactivada sin partida en curso) más HU-26 (al salir al menú principal se pierde la partida): nunca se llega al menú principal con una partida en curso. Decisión del autor: se deja así a propósito.
+- PauseScene se abre encima de GameScene, que queda en pausa (`scene.pause`). El orden de las escenas en main.ts marca qué se dibuja encima: partida, pausa y, sobre ellas, opciones.
+- Menú de pausa: "Continuar", "Opciones", "Guardar partida" y "Salir al menú principal", con la misma navegación, colores y sonidos que el menú principal (src/ui/menuList.ts, compartido por los dos).
+- Al abrir la pausa aparece seleccionada "Continuar".
+- "Opciones" desde la pausa abre OptionsScene, y "Volver" o Escape regresan a la pausa con "Opciones" seleccionada. La partida sigue detenida.
+- Escape: en la partida abre la pausa; en la pausa la reanuda; con un cuadro de confirmación abierto equivale a "No".
+- "Guardar partida" en la pausa guarda (sobrescribe la única partida guardada) y muestra "Partida guardada" durante 2 segundos en la parte inferior (src/ui/message.ts). Si el navegador no permite guardar, no se muestra el mensaje.
+- "Salir al menú principal": hay "cambios sin guardar" si la partida en curso no coincide exactamente con la guardada (o no hay partida guardada). Con cambios, pide confirmación; sin cambios, sale directamente. "No" deja la pausa abierta. Al salir, la partida en curso termina (`endGame()`) y el menú principal se abre con "Nueva partida" seleccionada.
+- El cuadro de confirmación parte el mensaje en varias líneas si no cabe.
+- El escenario 3 de HU-27 está como `test.fixme` hasta que existan los NPC (HU-10) y el avance del reloj (HU-22).

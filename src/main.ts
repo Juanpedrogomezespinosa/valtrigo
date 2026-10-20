@@ -5,6 +5,7 @@ import { CreditsScene } from './scenes/CreditsScene';
 import { GameScene } from './scenes/GameScene';
 import { MenuScene } from './scenes/MenuScene';
 import { OptionsScene } from './scenes/OptionsScene';
+import { PauseScene } from './scenes/PauseScene';
 import { getGameState, isGameInProgress } from './systems/gameState';
 
 const game = new Phaser.Game({
@@ -18,7 +19,8 @@ const game = new Phaser.Game({
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
-  scene: [BootScene, MenuScene, OptionsScene, CreditsScene, GameScene],
+  // El orden marca qué escena se dibuja encima: la pausa sobre la partida y las opciones sobre la pausa.
+  scene: [BootScene, MenuScene, GameScene, PauseScene, OptionsScene, CreditsScene],
 });
 
 // Expone el juego y el estado de la partida en desarrollo para que los tests de Playwright
