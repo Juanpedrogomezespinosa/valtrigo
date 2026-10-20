@@ -51,8 +51,8 @@ test('Escenario 1: Continuar una partida guardada', async ({ page }) => {
 });
 
 test('Escenario 2: Los cofres abiertos se mantienen', async ({ page }) => {
-  // El cofre 1 está en el cercado del granero (granja, casilla 5, 7).
-  await setSavedGame(page, savedGame({ zone: 'granja', position: { x: 6, y: 7 }, inventory: [], openedChests: ['cofre-1'] }));
+  // El cofre 1 está detrás del granero (granja, casilla 7, 2).
+  await setSavedGame(page, savedGame({ zone: 'granja', position: { x: 8, y: 2 }, inventory: [], openedChests: ['cofre-1'] }));
   await openGame(page);
   await press(page, 'ArrowDown'); // "Continuar"
   await press(page, 'Enter');

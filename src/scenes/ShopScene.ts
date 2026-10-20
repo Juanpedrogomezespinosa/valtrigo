@@ -142,7 +142,8 @@ export class ShopScene extends Phaser.Scene {
     if (message) {
       showMessage(this, message, MESSAGE_MS);
     } else {
-      playEffect(this, 'menuConfirm');
+      // HU-32: efecto de compra o de venta.
+      playEffect(this, this.tab === 'Comprar' ? 'buy' : 'sell');
     }
     // Si se vendió la última unidad de la última casilla, la selección sube.
     this.selected = Math.min(this.selected, Math.max(0, this.rows().length - 1));

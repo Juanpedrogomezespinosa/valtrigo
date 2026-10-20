@@ -1,5 +1,15 @@
 import Phaser from 'phaser';
-import { COLORS, FONT_FAMILY, MESSAGE_MS, SLEEP_FADE_MS, TALK_DISTANCE, TILE_SIZE, WORLD_ZOOM, ZONE_FADE_MS } from '../config';
+import {
+  COLORS,
+  FONT_FAMILY,
+  MESSAGE_MS,
+  SLEEP_FADE_MS,
+  STEP_SOUND_MS,
+  TALK_DISTANCE,
+  TILE_SIZE,
+  WORLD_ZOOM,
+  ZONE_FADE_MS,
+} from '../config';
 import chests from '../data/chests.json';
 import dialogues from '../data/dialogues.json';
 import signs from '../data/signs.json';
@@ -11,10 +21,10 @@ import { getGameState, startGame } from '../systems/gameState';
 import { addItem, type ItemId } from '../systems/inventory';
 import { isShopOpen } from '../systems/economy';
 import { writeSave } from '../systems/save';
-import { playZoneMusic } from '../systems/audio';
+import { playEffect, playZoneMusic } from '../systems/audio';
 import { stateAfterMidnight, stateAfterSleeping } from '../systems/sleep';
 import { advanceTime } from '../systems/time';
-import { acceptQuest, canReceiveReward, completeQuest, conversationWith, type NpcId } from '../systems/quests';
+import { acceptQuest, canReceiveReward, completeQuest, conversationWith, LAST_QUEST, type NpcId } from '../systems/quests';
 import { findMapPoint, getProperty, mapKey, mapObjects, pointTile, ZONES, type MapObject, type ZoneId } from '../systems/zones';
 import { showConfirmDialog } from '../ui/confirmDialog';
 import { showMessage } from '../ui/message';
@@ -57,6 +67,8 @@ export class GameScene extends Phaser.Scene {
   private sleeping = false;
   private sleepPromptOpen = false;
   private dialogOpen = false;
+  // Tiempo andando desde el último paso que sonó (HU-32).
+  private stepMs = 0;
   // Inventario (HU-13) o lista de objetivos (HU-21) abiertos: el tiempo sigue, pero el personaje no se mueve.
   private overlayOpen = false;
 
@@ -145,6 +157,7 @@ export class GameScene extends Phaser.Scene {
     }
 
     this.player.update();
+    this.playSteps(delta);
     this.updateIndicator();
     getGameState().position = this.player.getTilePosition();
 
@@ -161,6 +174,21 @@ export class GameScene extends Phaser.Scene {
     }
     showMessage(this.scene.get('HudScene'), 'Inventario lleno', MESSAGE_MS, 'top');
     return false;
+  }
+
+  // HU-32: mientras el personaje anda (se desplaza de verdad, no contra un obstáculo), suenan sus pasos.
+  private playSteps(delta: number): void {
+    const body = this.player.body;
+    const walking = body.velocity.lengthSq() > 0 && (body.deltaAbsX() > 0 || body.deltaAbsY() > 0);
+    if (!walking) {
+      this.stepMs = STEP_SOUND_MS; // al empezar a andar, el primer paso suena enseguida
+      return;
+    }
+    this.stepMs += delta;
+    if (this.stepMs >= STEP_SOUND_MS) {
+      this.stepMs = 0;
+      playEffect(this, 'steps');
+    }
   }
 
   // --- Consultas para los tests ---
@@ -210,6 +238,7 @@ export class GameScene extends Phaser.Scene {
         return;
       }
       this.player.stand();
+      playEffect(this, 'openMenu');
       this.scene.pause();
       // Con la pausa abierta, un diálogo abierto también se detiene (HU-26).
       if (this.scene.isActive('DialogScene')) {
@@ -294,6 +323,7 @@ export class GameScene extends Phaser.Scene {
     this.overlayOpen = true;
     this.player.stand();
     this.indicator.setVisible(false);
+    playEffect(this, 'openMenu');
     const data: OverlaySceneData = {
       onClose: () => {
         this.overlayOpen = false;
@@ -367,6 +397,11 @@ export class GameScene extends Phaser.Scene {
     });
   }
 
+  // HU-37: mensaje de final. Se cierra con E y se sigue jugando.
+  private showEnding(): void {
+    this.openDialog({ speaker: 'fin', title: dialogues.ending.title, lines: dialogues.ending.lines, typewriter: false });
+  }
+
   // HU-11, HU-19 y HU-20: lo que dice el NPC depende del estado de los encargos (src/systems/quests.ts).
   // La vendedora atiende la tienda (HU-17 y HU-18). Decisión del autor: con la tienda cerrada solo
   // dice "La tienda está cerrada"; con la tienda abierta, si tiene algo del encargo que decir (dar la
@@ -420,7 +455,10 @@ export class GameScene extends Phaser.Scene {
         }
         completeQuest(conversation.quest);
         showMessage(this.scene.get('HudScene'), 'Encargo completado', MESSAGE_MS, 'top');
-        this.openDialog({ ...npcDialog, lines: conversation.lines }, afterClose);
+        playEffect(this, 'questComplete');
+        // HU-37: al completar el último encargo, cuando se cierra el diálogo aparece el mensaje de final.
+        const afterThanks = conversation.quest.id === LAST_QUEST ? () => this.showEnding() : afterClose;
+        this.openDialog({ ...npcDialog, lines: conversation.lines }, afterThanks);
         return;
       }
 
@@ -455,6 +493,7 @@ export class GameScene extends Phaser.Scene {
         if (this.pickUp(item as ItemId, quantity)) {
           state.openedChests.push(id);
           chest.setOpen(true);
+          playEffect(this, 'chest');
         }
       },
     });

@@ -1,0 +1,10 @@
+{
+  "author": "Juanpe Gómez",
+  "engine": { "name": "Phaser 3", "by": "Phaser Studio", "license": "Licencia MIT" },
+  "resources": [
+    { "name": "Tiny Town y Tiny Dungeon (gráficos)", "by": "Kenney (kenney.nl)", "license": "CC0 1.0" },
+    { "name": "Ninja Adventure (personajes, retratos, objetos, cama y efectos)", "by": "Pixel-boy y AAA", "license": "CC0 1.0" },
+    { "name": "Música", "by": "Juanpe Gómez, generada con IA (Flow, de Google)", "license": "Propia" },
+    { "name": "Agua y efectos de los menús", "by": "Generados por código para Valtrigo", "license": "Propia" }
+  ]
+}

@@ -515,12 +515,14 @@ export async function startNextTo(page: Page, npc: string, overrides: Partial<Te
 }
 
 // Habla con el NPC (si no hay un diálogo abierto) y avanza el diálogo línea a línea, esperando a que
-// cada una se escriba entera, hasta que aparecen opciones o se cierra. Devuelve las líneas mostradas.
+// cada una se escriba entera, hasta que aparecen opciones, se cierra o pasa a hablar otro (por ejemplo,
+// el mensaje de final). Devuelve las líneas mostradas.
 export async function talkUntilChoiceOrEnd(page: Page): Promise<string[]> {
   if (!(await dialogState(page))) {
     await press(page, 'e');
   }
   const lines: string[] = [];
+  let speaker: string | null = null;
   for (;;) {
     await expect
       .poll(async () => {
@@ -530,6 +532,8 @@ export async function talkUntilChoiceOrEnd(page: Page): Promise<string[]> {
       .toBe(true);
     const state = await dialogState(page);
     if (!state) return lines;
+    speaker ??= state.speaker;
+    if (state.speaker !== speaker) return lines;
     lines.push(state.fullText);
     if (state.choice) return lines;
     await press(page, 'e');
@@ -715,4 +719,67 @@ export async function openOptionsAt(page: Page, row: 'Música' | 'Efectos' | 'Si
   const rows = ['Música', 'Efectos', 'Silenciar', 'Volver'];
   for (let i = 0; i < rows.indexOf(row); i++) await press(page, 'ArrowDown');
   expect((await optionsView(page))?.selected).toBe(row);
+}
+
+// --- Legibilidad (HU-36) ---
+
+export interface TextContrast {
+  text: string;
+  ratio: number;
+}
+
+// Contraste real en pantalla de cada texto visible de una escena: se captura la zona del texto, se toma
+// como fondo el color más frecuente que no es el del texto y se calcula el contraste según WCAG.
+export async function textContrasts(page: Page, sceneKey: string): Promise<TextContrast[]> {
+  return page.evaluate(async (sceneKey) => {
+    const game = (window as unknown as GameWindow).game;
+    type Text = import('phaser').GameObjects.Text;
+    const texts = game.scene
+      .getScene(sceneKey)
+      .children.list.filter((child) => child.type === 'Text' && (child as Text).visible && (child as Text).text.trim() !== '') as Text[];
+
+    const luminance = ([r, g, b]: number[]) => {
+      const [R, G, B] = [r, g, b].map((v) => {
+        const c = v / 255;
+        return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+      });
+      return 0.2126 * R + 0.7152 * G + 0.0722 * B;
+    };
+    const hexToRgb = (hex: string) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
+
+    const results: { text: string; ratio: number }[] = [];
+    for (const text of texts) {
+      const bounds = text.getBounds();
+      const image = await new Promise<HTMLImageElement>((resolve) =>
+        game.renderer.snapshotArea(
+          Math.max(0, Math.floor(bounds.x)),
+          Math.max(0, Math.floor(bounds.y)),
+          Math.max(1, Math.ceil(bounds.width)),
+          Math.max(1, Math.ceil(bounds.height)),
+          (snapshot) => resolve(snapshot as HTMLImageElement),
+        ),
+      );
+      const canvas = document.createElement('canvas');
+      canvas.width = image.width;
+      canvas.height = image.height;
+      const context = canvas.getContext('2d')!;
+      context.drawImage(image, 0, 0);
+      const data = context.getImageData(0, 0, canvas.width, canvas.height).data;
+
+      const textColor = hexToRgb(text.style.color as string);
+      const counts = new Map<string, number>();
+      for (let i = 0; i < data.length; i += 4) {
+        const pixel = [data[i], data[i + 1], data[i + 2]];
+        const distance = Math.hypot(pixel[0] - textColor[0], pixel[1] - textColor[1], pixel[2] - textColor[2]);
+        if (distance < 60) continue; // píxeles del propio texto o de su borde suavizado
+        const key = pixel.join(',');
+        counts.set(key, (counts.get(key) ?? 0) + 1);
+      }
+      const background = [...counts.entries()].sort((a, b) => b[1] - a[1])[0]?.[0].split(',').map(Number);
+      if (!background) continue;
+      const [light, dark] = [luminance(textColor), luminance(background)].sort((a, b) => b - a);
+      results.push({ text: text.text, ratio: (light + 0.05) / (dark + 0.05) });
+    }
+    return results;
+  }, sceneKey);
 }

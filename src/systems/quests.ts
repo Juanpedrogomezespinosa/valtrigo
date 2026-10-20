@@ -23,7 +23,12 @@ export type Conversation =
   | { kind: 'complete'; quest: Quest; lines: string[] }
   | { kind: 'thanks'; quest: Quest; lines: string[] }
   | { kind: 'busy'; lines: string[] }
-  | { kind: 'give-letter'; lines: string[] };
+  | { kind: 'give-letter'; lines: string[] }
+  | { kind: 'clock-repaired'; lines: string[] };
+
+// El encargo cuyo final repara el reloj de la torre, y el último de la historia.
+const CLOCK_QUEST = 'encargo-4';
+export const LAST_QUEST = 'encargo-6';
 
 export function getActiveQuest(): Quest | null {
   const id = getGameState().activeQuests[0];
@@ -84,6 +89,11 @@ export function conversationWith(npc: NpcId): Conversation {
   const next = nextQuest();
   if (!active && next?.npc === npc) {
     return { kind: 'offer', quest: next, lines: questDialogue(npc, next).offer };
+  }
+
+  // HU-11 (escenario 5): con el reloj reparado, el NPC que no tiene nada de encargos que decir lo comenta.
+  if (state.completedQuests.includes(CLOCK_QUEST)) {
+    return { kind: 'clock-repaired', lines: npcData.clockRepaired };
   }
 
   // HU-11: después de completar un encargo, el NPC da las gracias (por el último que completó).

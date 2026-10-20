@@ -1,26 +1,63 @@
 import { expect, test } from './fixtures';
-import { openGame, playedEffects, press, recordEffects } from './helpers';
+import {
+  at,
+  openGame,
+  playedEffects,
+  press,
+  recordEffects,
+  sceneTexts,
+  selectShopRow,
+  startAtWith,
+  startNewGame,
+  startNextTo,
+} from './helpers';
 
 // HU-32. Efectos de sonido en las acciones
 
 const NAVIGATE = 'sfx-menu-navegar';
 const CONFIRM = 'sfx-menu-confirmar';
 
-// Pendientes: dependen de historias aún no implementadas.
-test.fixme('Escenario 1: Andar', async () => {
-  // HU-06: movimiento del personaje.
+test('Escenario 1: Andar', async ({ page }) => {
+  await startNewGame(page); // centro de la plaza, sin obstáculos cerca
+  await recordEffects(page);
+
+  await page.keyboard.down('ArrowRight');
+  await page.waitForTimeout(700);
+  await page.keyboard.up('ArrowRight');
+
+  const steps = (await playedEffects(page)).filter((key) => key === 'sfx-pasos');
+  expect(steps.length).toBeGreaterThanOrEqual(2);
 });
 
-test.fixme('Escenario 2: Comprar', async () => {
-  // HU-17: tienda.
+test('Escenario 2: Comprar', async ({ page }) => {
+  await startNextTo(page, 'vendedora', { minutes: at(10), money: 100, inventory: [] });
+  await press(page, 'e'); // abre la tienda
+  await selectShopRow(page, 'semilla');
+  await recordEffects(page);
+
+  await press(page, 'Enter');
+
+  expect(await playedEffects(page)).toEqual(['sfx-compra']);
 });
 
-test.fixme('Escenario 3: Abrir un cofre', async () => {
-  // HU-12: cofres.
+test('Escenario 3: Abrir un cofre', async ({ page }) => {
+  // Junto al cofre 1, detrás del granero.
+  await startAtWith(page, 'granja', { x: 8, y: 2 }, { inventory: [] });
+  await recordEffects(page);
+
+  await press(page, 'e');
+
+  expect(await playedEffects(page)).toContain('sfx-cofre');
 });
 
-test.fixme('Escenario 4: Completar un encargo', async () => {
-  // HU-20: encargos.
+test('Escenario 4: Completar un encargo', async ({ page }) => {
+  await startNextTo(page, 'alcalde', { activeQuests: ['encargo-1'], inventory: [{ item: 'carta-del-alcalde', quantity: 1 }] });
+  await recordEffects(page);
+
+  await press(page, 'e');
+
+  expect(await sceneTexts(page, 'HudScene')).toContain('Encargo completado');
+  expect(await playedEffects(page)).toContain('sfx-encargo-completado');
 });
 
 test('Escenario 5: Navegar por un menú', async ({ page }) => {

@@ -1,5 +1,7 @@
 {
-  "busy": ["Termina tu encargo actual primero"],
+  "busy": [
+    "Termina tu encargo actual primero"
+  ],
   "npcs": {
     "alcalde": {
       "name": "Alcalde",
@@ -8,21 +10,42 @@
         "Desde que el reloj de la torre se paró, nadie sabe a qué hora hacer nada.",
         "Y la feria anual está a la vuelta de la esquina... ¡Qué desastre!"
       ],
+      "clockRepaired": [
+        "¿Has oído las campanas? El reloj de la torre vuelve a dar la hora.",
+        "Ahora sí podemos preparar la feria como es debido."
+      ],
       "quests": {
         "encargo-1": {
           "offer": [
             "¡Ah, una cara nueva! Soy el alcalde de Valtrigo.",
             "Me han dicho que la vendedora de la tienda tiene una carta para mí. ¿Podrías traérmela?"
           ],
-          "active": ["¿Ya has pasado por la tienda? La vendedora tiene mi carta."],
-          "complete": ["¡Mi carta! Muchas gracias.", "Toma estas monedas, y una manzana de mi huerto."],
-          "thanks": ["Gracias otra vez por la carta. Ahora, si alguien arreglara ese reloj..."]
+          "active": [
+            "¿Ya has pasado por la tienda? La vendedora tiene mi carta."
+          ],
+          "complete": [
+            "¡Mi carta! Muchas gracias.",
+            "Toma estas monedas, y una manzana de mi huerto."
+          ],
+          "thanks": [
+            "Gracias otra vez por la carta. Ahora, si alguien arreglara ese reloj..."
+          ]
         },
         "encargo-6": {
-          "offer": ["¡El reloj vuelve a dar la hora y la feria ya ha empezado!", "¿Me acompañas un momento? Hay algo que quiero decirte."],
-          "active": ["Cuando estés listo, vuelve a hablar conmigo."],
-          "complete": ["Valtrigo vuelve a tener hora gracias a ti.", "En nombre de todo el pueblo: ¡gracias! Esto es para ti."],
-          "thanks": ["¡Disfruta de la feria! Valtrigo ya es tu casa."]
+          "offer": [
+            "¡El reloj vuelve a dar la hora y la feria ya ha empezado!",
+            "¿Me acompañas un momento? Hay algo que quiero decirte."
+          ],
+          "active": [
+            "Cuando estés listo, vuelve a hablar conmigo."
+          ],
+          "complete": [
+            "Valtrigo vuelve a tener hora gracias a ti.",
+            "En nombre de todo el pueblo: ¡gracias! Esto es para ti."
+          ],
+          "thanks": [
+            "¡Disfruta de la feria! Valtrigo ya es tu casa."
+          ]
         }
       }
     },
@@ -32,51 +55,109 @@
         "¡Bienvenido a la tienda! Si no lo tengo, es que no lo necesitas.",
         "Sin reloj, abro cuando me despierto. Hoy he madrugado: ¡qué suerte la tuya!"
       ],
+      "clockRepaired": [
+        "Con el reloj en marcha ya sé a qué hora abrir. ¡Se acabó madrugar por si acaso!"
+      ],
       "giveLetter": [
         "¡Vienes por la carta del alcalde! Aquí la tienes.",
         "No la abras, que el alcalde es muy suyo con su correo."
       ],
       "quests": {
         "encargo-3": {
-          "offer": ["Hoy es día de mercado y me he quedado sin semillas que vender.", "Si me vendes 5 Semillas, te doy algo a cambio. ¿Trato hecho?"],
-          "active": ["¿Cuántas semillas me has vendido ya? Necesito 5."],
-          "complete": ["¡Perfecto, ya tengo semillas para todo el día!", "Aquí tienes tu parte, y una manzana de regalo."],
-          "thanks": ["Gracias a ti, el mercado ha ido de maravilla."]
+          "offer": [
+            "Hoy es día de mercado y me he quedado sin semillas que vender.",
+            "Si me vendes 5 Semillas, te doy algo a cambio. ¿Trato hecho?"
+          ],
+          "active": [
+            "¿Cuántas semillas me has vendido ya? Necesito 5."
+          ],
+          "complete": [
+            "¡Perfecto, ya tengo semillas para todo el día!",
+            "Aquí tienes tu parte, y una manzana de regalo."
+          ],
+          "thanks": [
+            "Gracias a ti, el mercado ha ido de maravilla."
+          ]
         }
       }
     },
     "relojera": {
       "name": "Relojera",
-      "greeting": ["Hola. Soy la relojera de Valtrigo.", "El reloj de la torre... es más complicado de lo que parece."],
+      "greeting": [
+        "Hola. Soy la relojera de Valtrigo.",
+        "El reloj de la torre... es más complicado de lo que parece."
+      ],
+      "clockRepaired": [
+        "El reloj vuelve a funcionar. Valtrigo ya sabe qué hora es."
+      ],
       "quests": {
         "encargo-4": {
           "offer": [
             "Así que quieres saber qué le pasó al reloj...",
             "Le faltan tres piezas: un engranaje, un muelle y un péndulo. Si me las traes, lo reparo."
           ],
-          "active": ["Necesito el Engranaje de cobre, el Muelle de plata y el Péndulo de oro."],
-          "complete": ["¡Las tres piezas! Con esto el reloj volverá a dar la hora.", "Toma, has hecho un gran trabajo."],
-          "thanks": ["El reloj vuelve a funcionar. Valtrigo ya sabe qué hora es."]
+          "active": [
+            "Necesito el Engranaje de cobre, el Muelle de plata y el Péndulo de oro."
+          ],
+          "complete": [
+            "¡Las tres piezas! Con esto el reloj volverá a dar la hora.",
+            "Toma, has hecho un gran trabajo."
+          ],
+          "thanks": [
+            "El reloj vuelve a funcionar. Valtrigo ya sabe qué hora es."
+          ]
         }
       }
     },
     "granjero": {
       "name": "Granjero",
-      "greeting": ["Buenas. Aquí en la granja las cosas van despacio.", "Sin reloj no sé cuándo sembrar, pero la tierra sabe esperar."],
+      "greeting": [
+        "Buenas. Aquí en la granja las cosas van despacio.",
+        "Sin reloj no sé cuándo sembrar, pero la tierra sabe esperar."
+      ],
+      "clockRepaired": [
+        "Con el reloj otra vez en marcha, por fin sé cuándo sembrar."
+      ],
       "quests": {
         "encargo-2": {
-          "offer": ["La cosecha no espera, y me he quedado sin semillas.", "¿Podrías traerme 3 Semillas de la tienda?"],
-          "active": ["Necesito 3 Semillas para sembrar. Las venden en la tienda del pueblo."],
-          "complete": ["¡Justo lo que necesitaba! Gracias.", "Toma, por las molestias."],
-          "thanks": ["Las semillas ya están en la tierra. Ahora, a esperar."]
+          "offer": [
+            "La cosecha no espera, y me he quedado sin semillas.",
+            "¿Podrías traerme 3 Semillas de la tienda?"
+          ],
+          "active": [
+            "Necesito 3 Semillas para sembrar. Las venden en la tienda del pueblo."
+          ],
+          "complete": [
+            "¡Justo lo que necesitaba! Gracias.",
+            "Toma, por las molestias."
+          ],
+          "thanks": [
+            "Las semillas ya están en la tierra. Ahora, a esperar."
+          ]
         },
         "encargo-5": {
-          "offer": ["Para la feria quiero preparar una tarta de manzana.", "¿Me traerías 2 Manzanas?"],
-          "active": ["Con 2 Manzanas tengo suficiente para la tarta."],
-          "complete": ["¡Qué manzanas tan rojas! La tarta será la mejor de la feria.", "Toma, te lo has ganado."],
-          "thanks": ["Pásate por mi puesto en la feria: te guardo un trozo de tarta."]
+          "offer": [
+            "Para la feria quiero preparar una tarta de manzana.",
+            "¿Me traerías 2 Manzanas?"
+          ],
+          "active": [
+            "Con 2 Manzanas tengo suficiente para la tarta."
+          ],
+          "complete": [
+            "¡Qué manzanas tan rojas! La tarta será la mejor de la feria.",
+            "Toma, te lo has ganado."
+          ],
+          "thanks": [
+            "Pásate por mi puesto en la feria: te guardo un trozo de tarta."
+          ]
         }
       }
     }
+  },
+  "ending": {
+    "title": "Fin",
+    "lines": [
+      "¡El reloj de Valtrigo vuelve a dar la hora y la feria es todo un éxito! Gracias por jugar. Puedes seguir paseando por el pueblo o ver los créditos desde el menú principal."
+    ]
   }
 }

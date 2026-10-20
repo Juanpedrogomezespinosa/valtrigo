@@ -470,7 +470,8 @@ function tienda() {
   return map;
 }
 
-// Torre del reloj: taller de la relojera.
+// Torre del reloj: taller de la relojera. En la esquina de abajo a la izquierda hay un pequeño almacén
+// tabicado, con la entrada por la derecha, donde está escondido el cofre 2.
 function torre() {
   const map = interior(10, 12, INTERIOR.towerFloor, INTERIOR.floor);
   setTile(map.obstacles, map, 2, 1, INTERIOR.shelf);
@@ -478,7 +479,12 @@ function torre() {
   setTile(map.obstacles, map, 3, 4, INTERIOR.workbench);
   setTile(map.obstacles, map, 8, 2, INTERIOR.barrel);
   addNpc(map, { character: 'relojera', x: 5, y: 5 });
-  addChest(map, { id: 'cofre-3', x: 8, y: 8 });
+
+  // Almacén: tabique en la fila 7 (casillas 1 a 3) y en la columna 3 (fila 10), con la entrada en (3, 8-9).
+  for (let x = 1; x <= 3; x++) setTile(map.obstacles, map, x, 7, INTERIOR.wall);
+  setTile(map.obstacles, map, 3, 10, INTERIOR.wall);
+  setTile(map.obstacles, map, 1, 8, INTERIOR.barrel);
+  addChest(map, { id: 'cofre-2', x: 1, y: 10 });
   return map;
 }
 
@@ -506,7 +512,7 @@ function granja() {
   addDoor(map, { x: 0, y: 10, height: 3, zone: 'plaza', direction: 'left' });
   addArrival(map, { from: 'plaza', x: 1, y: 11, facing: 'right' });
   addNpc(map, { character: 'granjero', x: 16, y: 9 });
-  addChest(map, { id: 'cofre-1', x: 5, y: 7 }); // dentro del cercado del granero
+  addChest(map, { id: 'cofre-1', x: 7, y: 2 }); // detrás del granero, fuera del camino
   addWorldItem(map, { id: 'pala-de-la-granja', x: 10, y: 7 });
   addSign(map, { id: 'granja', x: 3, y: 9 });
 
@@ -524,7 +530,8 @@ function granja() {
   return map;
 }
 
-// Lago: se llega por el camino del norte desde la plaza. Bosque alrededor y un claro al este.
+// Lago: se llega por el camino del norte desde la plaza. Bosque alrededor, un claro vacío al este
+// y, al suroeste, un sendero estrecho entre los árboles que lleva al cofre 3.
 function lago() {
   const map = createMap(30, 22);
 
@@ -536,14 +543,22 @@ function lago() {
 
   addDoor(map, { x: 14, y: 0, width: 3, zone: 'plaza', direction: 'up' });
   addArrival(map, { from: 'plaza', x: 15, y: 1, facing: 'down' });
-  addChest(map, { id: 'cofre-2', x: 26, y: 11 }); // en el claro del este
   addSign(map, { id: 'lago', x: 13, y: 3 });
+
+  // Sendero escondido: sale de la orilla en (5, 17) hacia el suroeste y acaba en el cofre (2, 18).
+  const hiddenPath = [[4, 17], [3, 17], [3, 18]];
+  addChest(map, { id: 'cofre-3', x: 2, y: 18 });
 
   // Sin árboles: el camino, una franja de una casilla alrededor del lago y el claro del este.
   const reserved = new Set();
   for (let y = 7; y <= 17; y++) for (let x = 5; x <= 24; x++) reserved.add(key(x, y));
   for (let y = 9; y <= 14; y++) for (let x = 25; x <= 27; x++) reserved.add(key(x, y));
   for (let x = 14; x <= 16; x++) for (let y = 0; y < 2; y++) reserved.add(key(x, y));
+  for (const [x, y] of [...hiddenPath, [2, 18]]) reserved.add(key(x, y));
+  // Alrededor del sendero, bosque cerrado para que no se vea a simple vista. Los árboles bajo la entrada
+  // (fila 18) hacen que, al bajar por la orilla, el personaje se pare alineado con el sendero.
+  addTrees(map, 2, 15, 4, 19, 100, reserved);
+  addTrees(map, 5, 18, 7, 18, 100, reserved);
   addTrees(map, 0, 0, 29, 1, 100, reserved);
   addTrees(map, 0, 20, 29, 21, 100, reserved);
   addTrees(map, 0, 0, 1, 21, 100, reserved);

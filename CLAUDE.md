@@ -65,7 +65,7 @@ Es un proyecto público con un fin doble: servir de base para un curso de testin
 - Si la flecha no cambia la selección (por ejemplo, arriba en la primera opción), no suena nada.
 - Con el ratón, un clic en una opción solo reproduce el efecto de confirmación, no el de navegación.
 - "Volver" (con clic, Enter o Escape) reproduce el efecto de confirmación.
-- Los escenarios 1 a 4 de HU-32 están como `test.fixme` hasta que existan sus historias (HU-06, HU-17, HU-12 y HU-20).
+- Efectos de las acciones (Ninja Adventure): pasos al andar (cada 250 ms mientras el personaje se desplaza de verdad; contra un obstáculo no suena), abrir menús (inventario, objetivos, pausa y tienda), comprar, vender, abrir un cofre y completar un encargo. En la tienda, una compra o venta correcta suena con su efecto en lugar del de confirmación.
 
 ### Mundo y gráficos
 
@@ -182,9 +182,14 @@ Es un proyecto público con un fin doble: servir de base para un curso de testin
 ### Cofres, carteles y la Pala (HU-12)
 
 - Contenido en src/data/: chests.json (objeto de cada cofre), signs.json (texto de cada cartel) y worldItems.json (objetos sueltos). En los mapas son puntos llamados `cofre`, `cartel` y `objeto` con la propiedad `id`.
-- Cofres: cofre-1 en el cercado del granero (granja), cofre-2 en el claro del este del lago y cofre-3 en la torre, con las tres piezas del reloj en ese orden. Son obstáculos. Se ven abiertos cuando su `id` está en `openedChests`.
+- Cofres, algo escondidos (decisión del autor) y numerados como en el catálogo de bugs (docs/bugs.md):
+  - cofre-1: detrás del granero (granja, casilla 7, 2), con el Engranaje de cobre.
+  - cofre-2: en un almacén tabicado de la torre (1, 10), con el Péndulo de oro.
+  - cofre-3: al final de un sendero entre los árboles, al suroeste del lago (2, 18), con el Muelle de plata.
+  Cada pieza sigue en el sitio que dice la historia del juego (Engranaje en el granero, Muelle en el lago, Péndulo en la torre). El claro del este del lago queda vacío, como pista falsa. Son obstáculos y se ven abiertos cuando su `id` está en `openedChests`.
+- Los pasillos de los escondites están pensados para que el personaje quede alineado al llegar (al subir hasta los árboles del borde en la granja, al bajar hasta los árboles de la fila 18 en el lago) y la entrada del almacén de la torre mide dos casillas.
 - **La Pala** (decisión del autor: se encuentra en la granja) está en el suelo junto al granero. Se recoge con E y desaparece del mapa. Queda anotada en `pickedUpItems`, un campo nuevo de `GameState`; las partidas guardadas que no lo tengan se cargan con la lista vacía. Criterio y escenario 5 añadidos a HU-12.
-- Carteles con pistas (decisión del autor): dos en la plaza (centro y camino del lago), uno a la entrada de la granja y otro a la entrada del lago. Son casillas sólidas. Su texto aparece completo, sin escribirse letra a letra, porque HU-12 dice que la segunda E lo cierra.
+- Carteles con pistas (decisión del autor): dos en la plaza (centro y camino del lago), uno a la entrada de la granja y otro a la entrada del lago. Dan pistas de los escondites de los cofres. Son casillas sólidas. Su texto aparece completo, sin escribirse letra a letra, porque HU-12 dice que la segunda E lo cierra.
 - Todo lo que se activa con E (NPC, cofres cerrados, carteles y objetos) usa el mismo alcance (menos de una casilla) y el mismo indicador "E". Un cofre ya abierto no muestra el indicador.
 - El cuadro de diálogo (DialogScene) sirve para NPC y carteles: título, retrato opcional y texto letra a letra o completo.
 
@@ -227,7 +232,7 @@ Es un proyecto público con un fin doble: servir de base para un curso de testin
 ### Día y noche (HU-23)
 
 - NightScene: capa de color azul noche (`NIGHT_COLOR`) sobre la partida, por debajo de diálogos, menús e interfaz. Su opacidad sale de `darkness()` (src/systems/time.ts): sube de 0 a 1 entre las 20:00 y las 21:00, vale 1 hasta las 06:00 y baja de 1 a 0 entre las 06:00 y las 07:00.
-- **"Completamente oscura" es una opacidad del 65 %** (`NIGHT_MAX_ALPHA`), no negro total, para que de noche se pueda seguir jugando. Pendiente de confirmar por el autor.
+- **"Completamente oscura" es una opacidad del 65 %** (`NIGHT_MAX_ALPHA`), no negro total, para que de noche se pueda seguir jugando (confirmado por el autor).
 - Afecta a todas las zonas, también a los interiores. Una partida nueva empieza a las 06:00, así que empieza a oscuras y se va aclarando durante la primera hora, como dice la historia.
 
 ### Dormir y guardado automático (HU-24 y HU-25)
@@ -250,3 +255,15 @@ Es un proyecto público con un fin doble: servir de base para un curso de testin
 - Cada zona tiene su pista en src/data/zones.json (`music`), con la clave `music-<zona>`. GameScene la pone al crear la zona (`playZoneMusic`). Si es la que ya suena, no se reinicia; si es otra, entra con crossfade.
 - La primera vez que se entra en una zona su pista se descarga; mientras tanto sigue sonando la anterior.
 - Al volver al menú principal suena la música del menú. En desarrollo, `window.audioState()` dice qué pista suena y cuántas veces ha empezado una (`musicStarts`), para comprobar que no se reinicia.
+
+### Créditos y legibilidad (HU-35 y HU-36)
+
+- Créditos en src/data/credits.json: autor (Juanpe Gómez), motor (Phaser 3, licencia MIT) y recursos con su autor y licencia: Kenney (CC0), Ninja Adventure (CC0), la música (propia, generada con IA con Flow, de Google) y lo generado por código (propio). Si se añade un recurso, hay que añadirlo aquí y en public/assets/CREDITOS.md.
+- Contraste (HU-36): todos los textos usan `COLORS` sobre fondos opacos o sobre capas oscuras semitransparentes. El test mide el contraste real en pantalla: captura la zona de cada texto, toma el color de fondo más frecuente y aplica la fórmula de WCAG. Valores medidos: unos 13:1 el texto blanco y unos 10:1 el amarillo.
+- El tamaño del texto es fijo: las opciones no tienen ningún ajuste de tamaño.
+- El test de idioma revisa los textos de las pantallas y de src/data/ en busca de palabras en inglés habituales en interfaces.
+
+### Reloj reparado y final (HU-11 escenario 5 y HU-37)
+
+- Detectado al jugar: tras reparar el reloj, el alcalde seguía diciendo "si alguien arreglara ese reloj". Decisión del autor: nuevo criterio y escenario 5 en HU-11. Con el encargo 4 completado, un NPC que no tiene nada de encargos que decir (ni ofrecer, ni seguimiento, ni completar, ni la carta, ni "Termina tu encargo actual primero") dice sus líneas `clockRepaired`. Tienen prioridad sobre el agradecimiento y el saludo.
+- **HU-37 (historia nueva, decisión del autor):** al completar el último encargo ("La feria de Valtrigo"), cuando se cierra el diálogo del alcalde aparece el mensaje de final (`ending` en dialogues.json, título "Fin", texto completo sin escritura letra a letra). Se cierra con E y se sigue jugando. Solo aparece una vez, porque el encargo solo se completa una vez.

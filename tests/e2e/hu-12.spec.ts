@@ -10,13 +10,13 @@ import {
 } from './helpers';
 
 // HU-12. Interactuar con objetos del mundo
-// Cofre 1: en el cercado del granero (granja, casilla 5, 7), con el Engranaje de cobre.
-// Cofre 2: en el claro del lago (26, 11). Cartel de la plaza: (23, 11). Pala: granja (10, 7).
+// Cofre 1: detrás del granero (granja, casilla 7, 2), con el Engranaje de cobre.
+// Cofre 2: en el almacén de la torre (1, 10). Cartel de la plaza: (23, 11). Pala: granja (10, 7).
 
 const FULL_INVENTORY = Array.from({ length: 20 }, () => ({ item: 'manzana', quantity: 99 }));
 
 test('Escenario 1: Abrir un cofre', async ({ page }) => {
-  await startAtWith(page, 'granja', { x: 6, y: 7 }, { inventory: [] });
+  await startAtWith(page, 'granja', { x: 8, y: 2 }, { inventory: [] });
   expect(await isChestOpen(page, 'cofre-1')).toBe(false);
 
   await press(page, 'e');
@@ -26,7 +26,7 @@ test('Escenario 1: Abrir un cofre', async ({ page }) => {
 });
 
 test('Escenario 2: Cofre ya abierto', async ({ page }) => {
-  await startAtWith(page, 'granja', { x: 6, y: 7 }, { inventory: [], openedChests: ['cofre-1'] });
+  await startAtWith(page, 'granja', { x: 8, y: 2 }, { inventory: [], openedChests: ['cofre-1'] });
   expect(await isChestOpen(page, 'cofre-1')).toBe(true);
 
   await press(page, 'e');
@@ -40,7 +40,7 @@ test('Escenario 2: Cofre ya abierto', async ({ page }) => {
 });
 
 test('Escenario 3: Inventario lleno', async ({ page }) => {
-  await startAtWith(page, 'lago', { x: 25, y: 11 }, { inventory: FULL_INVENTORY });
+  await startAtWith(page, 'torre', { x: 2, y: 10 }, { inventory: FULL_INVENTORY });
 
   await press(page, 'e');
 

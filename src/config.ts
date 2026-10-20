@@ -64,3 +64,6 @@ export const SLEEP_FADE_MS = 500;
 // para que de noche se pueda seguir jugando.
 export const NIGHT_COLOR = 0x0a1030;
 export const NIGHT_MAX_ALPHA = 0.65;
+
+// Cada cuánto suena un paso mientras el personaje anda (HU-32): dos pasos por ciclo de la animación.
+export const STEP_SOUND_MS = 250;

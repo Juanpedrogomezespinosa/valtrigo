@@ -44,3 +44,14 @@ test('Escenario 4: Siguiente encargo del mismo NPC', async ({ page }) => {
   expect(lines).toEqual(dialogues.npcs.granjero.quests['encargo-5'].offer);
   expect((await dialogState(page))?.choice?.options).toEqual(['Aceptar', 'Rechazar']);
 });
+
+test('Escenario 5: Reloj reparado', async ({ page }) => {
+  // Encargos 1 a 4 completados: el reloj está reparado y el siguiente encargo (5) es del granjero.
+  await startNextTo(page, 'alcalde', { completedQuests: ['encargo-1', 'encargo-2', 'encargo-3', 'encargo-4'] });
+
+  const lines = await talkUntilChoiceOrEnd(page);
+
+  expect(lines).toEqual(dialogues.npcs.alcalde.clockRepaired);
+  expect(lines.join(' ')).toContain('reloj');
+  expect(lines).not.toEqual(mayor.thanks);
+});

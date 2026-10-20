@@ -7,6 +7,13 @@ import { getSettings, updateSettings, type Settings } from './settings';
 export const SFX = {
   menuNavigate: { key: 'sfx-menu-navegar', path: 'assets/audio/sfx/menu-navegar.wav' },
   menuConfirm: { key: 'sfx-menu-confirmar', path: 'assets/audio/sfx/menu-confirmar.wav' },
+  // HU-32: efectos de las acciones principales (Ninja Adventure, ver CREDITOS.md).
+  steps: { key: 'sfx-pasos', path: 'assets/audio/sfx/pasos.wav' },
+  openMenu: { key: 'sfx-abrir-menu', path: 'assets/audio/sfx/abrir-menu.wav' },
+  buy: { key: 'sfx-compra', path: 'assets/audio/sfx/compra.wav' },
+  sell: { key: 'sfx-venta', path: 'assets/audio/sfx/venta.wav' },
+  chest: { key: 'sfx-cofre', path: 'assets/audio/sfx/cofre.wav' },
+  questComplete: { key: 'sfx-encargo-completado', path: 'assets/audio/sfx/encargo-completado.wav' },
 } as const;
 
 export type SfxName = keyof typeof SFX;
