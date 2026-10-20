@@ -3,7 +3,7 @@
   "semilla": { "name": "Semilla", "consumable": false },
   "pala": { "name": "Pala", "consumable": false },
   "carta-del-alcalde": { "name": "Carta del alcalde", "consumable": false },
-  "pieza-del-reloj-1": { "name": "Pieza del reloj (cobre)", "consumable": false },
-  "pieza-del-reloj-2": { "name": "Pieza del reloj (plata)", "consumable": false },
-  "pieza-del-reloj-3": { "name": "Pieza del reloj (oro)", "consumable": false }
+  "pieza-del-reloj-1": { "name": "Engranaje de cobre", "consumable": false },
+  "pieza-del-reloj-2": { "name": "Muelle de plata", "consumable": false },
+  "pieza-del-reloj-3": { "name": "Péndulo de oro", "consumable": false }
 }

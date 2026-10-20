@@ -9,6 +9,7 @@ Criterios de aceptación:
 - Hay 3 cofres en el pueblo. Al abrir un cofre, su objeto se añade al inventario y el cofre no puede volver a abrirse.
 - Si el inventario está lleno, el cofre no se abre.
 - Los carteles muestran su texto al interactuar con ellos con la tecla E.
+- En la granja hay una Pala en el suelo. Al pulsar E junto a ella, se añade al inventario y desaparece del mapa. Si el inventario está lleno, no se recoge.
 Escenario 1: Abrir un cofre
 
 - Dado que el jugador está junto al cofre 1 y tiene espacio en el inventario
@@ -32,4 +33,10 @@ Escenario 4: Leer un cartel
 - Cuando pulsa E
 - Entonces aparece el texto del cartel
 - Y se cierra al pulsar E de nuevo
+Escenario 5: Recoger la Pala
+
+- Dado que el jugador está junto a la Pala de la granja y tiene espacio en el inventario
+- Cuando pulsa E
+- Entonces la Pala se añade al inventario
+- Y desaparece del mapa
 

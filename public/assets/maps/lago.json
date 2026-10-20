@@ -10,7 +10,7 @@
  "tilewidth": 16,
  "tileheight": 16,
  "nextlayerid": 4,
- "nextobjectid": 3,
+ "nextobjectid": 5,
  "layers": [
   {
    "id": 1,
@@ -799,7 +799,7 @@
     0,
     28,
     17,
-    0,
+    84,
     0,
     0,
     0,
@@ -1389,6 +1389,44 @@
     },
     {
      "id": 2,
+     "name": "cofre",
+     "type": "",
+     "point": true,
+     "x": 424,
+     "y": 184,
+     "width": 0,
+     "height": 0,
+     "rotation": 0,
+     "visible": true,
+     "properties": [
+      {
+       "name": "id",
+       "type": "string",
+       "value": "cofre-2"
+      }
+     ]
+    },
+    {
+     "id": 3,
+     "name": "cartel",
+     "type": "",
+     "point": true,
+     "x": 216,
+     "y": 56,
+     "width": 0,
+     "height": 0,
+     "rotation": 0,
+     "visible": true,
+     "properties": [
+      {
+       "name": "id",
+       "type": "string",
+       "value": "lago"
+      }
+     ]
+    },
+    {
+     "id": 4,
      "name": "puerta",
      "type": "",
      "x": 224,

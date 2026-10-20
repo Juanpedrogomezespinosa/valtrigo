@@ -5,8 +5,15 @@ import { COLORS, DIALOG_MS_PER_LETTER, FONT_FAMILY } from '../config';
 export type NpcId = keyof typeof dialogues;
 
 export interface DialogSceneData {
-  npc: NpcId;
+  // Quién habla: el identificador del NPC o "cartel".
+  speaker: string;
+  // Título del cuadro: el nombre del NPC o "Cartel".
+  title: string;
+  // Clave de la imagen del retrato. Los carteles no tienen.
+  portrait?: string;
   lines: string[];
+  // Si el texto se escribe letra a letra (NPC, HU-10) o aparece completo (carteles, HU-12).
+  typewriter: boolean;
   // Se llama al cerrar el diálogo, después de la última línea.
   onClose: () => void;
 }
@@ -16,14 +23,13 @@ const MARGIN = 20;
 // Los retratos miden 38×38: se amplían ×3 sin suavizar.
 const PORTRAIT_SIZE = 114;
 
-// Cuadro de diálogo de un NPC (HU-10), en la parte inferior de la pantalla, sobre la partida.
-// - Muestra el retrato y el nombre del NPC, y escribe cada línea letra a letra.
-// - E durante la escritura muestra la línea completa; E con la línea completa pasa a la siguiente.
-// - E en la última línea completa cierra el diálogo.
+// Cuadro de diálogo en la parte inferior de la pantalla, sobre la partida.
+// - NPC (HU-10): retrato y nombre, y cada línea se escribe letra a letra. E durante la escritura muestra
+//   la línea completa; E con la línea completa pasa a la siguiente; E en la última línea cierra el diálogo.
+// - Carteles (HU-12): el texto aparece completo y E lo cierra.
 export class DialogScene extends Phaser.Scene {
-  private npc!: NpcId;
+  private dialog!: DialogSceneData;
   private lines: string[] = [];
-  private onClose!: () => void;
   private lineIndex = 0;
   private shownLetters = 0;
   private text!: Phaser.GameObjects.Text;
@@ -34,9 +40,8 @@ export class DialogScene extends Phaser.Scene {
   }
 
   init(data: DialogSceneData): void {
-    this.npc = data.npc;
+    this.dialog = data;
     this.lines = data.lines;
-    this.onClose = data.onClose;
     this.lineIndex = 0;
   }
 
@@ -49,14 +54,16 @@ export class DialogScene extends Phaser.Scene {
       .setOrigin(0)
       .setStrokeStyle(2, Phaser.Display.Color.HexStringToColor(COLORS.text).color);
 
-    this.add
-      .image(MARGIN * 2, top + (BOX_HEIGHT - PORTRAIT_SIZE) / 2, `retrato-${this.npc}`)
-      .setOrigin(0)
-      .setDisplaySize(PORTRAIT_SIZE, PORTRAIT_SIZE)
-      .setName('retrato');
+    if (this.dialog.portrait) {
+      this.add
+        .image(MARGIN * 2, top + (BOX_HEIGHT - PORTRAIT_SIZE) / 2, this.dialog.portrait)
+        .setOrigin(0)
+        .setDisplaySize(PORTRAIT_SIZE, PORTRAIT_SIZE)
+        .setName('retrato');
+    }
 
-    const textLeft = MARGIN * 3 + PORTRAIT_SIZE;
-    this.add.text(textLeft, top + 16, dialogues[this.npc].name, {
+    const textLeft = this.dialog.portrait ? MARGIN * 3 + PORTRAIT_SIZE : MARGIN * 2;
+    this.add.text(textLeft, top + 16, this.dialog.title, {
       fontFamily: FONT_FAMILY,
       fontSize: '22px',
       color: COLORS.selected,
@@ -75,9 +82,9 @@ export class DialogScene extends Phaser.Scene {
   }
 
   // Estado del diálogo, para los tests.
-  getState(): { npc: NpcId; lineIndex: number; shownText: string; fullText: string; typing: boolean } {
+  getState(): { speaker: string; lineIndex: number; shownText: string; fullText: string; typing: boolean } {
     return {
-      npc: this.npc,
+      speaker: this.dialog.speaker,
       lineIndex: this.lineIndex,
       shownText: this.text.text,
       fullText: this.lines[this.lineIndex],
@@ -91,9 +98,14 @@ export class DialogScene extends Phaser.Scene {
 
   private showLine(index: number): void {
     this.lineIndex = index;
+    this.typing?.remove();
+    if (!this.dialog.typewriter) {
+      this.shownLetters = this.lines[index].length;
+      this.text.setText(this.lines[index]);
+      return;
+    }
     this.shownLetters = 0;
     this.text.setText('');
-    this.typing?.remove();
     this.typing = this.time.addEvent({
       delay: DIALOG_MS_PER_LETTER,
       repeat: this.lines[index].length - 1,
@@ -118,6 +130,6 @@ export class DialogScene extends Phaser.Scene {
     }
 
     this.scene.stop();
-    this.onClose();
+    this.dialog.onClose();
   }
 }

@@ -169,12 +169,22 @@ Es un proyecto público con un fin doble: servir de base para un curso de testin
 ### Inventario y dinero (HU-13 a HU-16)
 
 - Objetos en src/data/items.json (nombre, si es consumible y la energía que da). Iconos de Ninja Adventure en public/assets/sprites/objetos/<id>.png: Manzana (SeedBig3, una fruta roja), Semilla, Pala, Carta del alcalde y tres piezas del reloj (barras de cobre, plata y oro). Ver CREDITOS.md.
-- **Nombres provisionales de las piezas del reloj** (la historia no los da): "Pieza del reloj (cobre)", "(plata)" y "(oro)". Pendiente de confirmar por el autor.
+- Piezas del reloj (decisión del autor: nombres de piezas reales): "Engranaje de cobre" (cofre 1), "Muelle de plata" (cofre 2) y "Péndulo de oro" (cofre 3). Sus identificadores son pieza-del-reloj-1, -2 y -3.
 - El inventario de `GameState` es la lista de casillas ocupadas, en orden. Al vaciarse una casilla, las siguientes se desplazan.
 - Recoger objetos (src/systems/inventory.ts): primero se completan las casillas del mismo objeto (hasta 99) y después se usan casillas libres. Si no caben todas las unidades, no se recoge ninguna y aparece "Inventario lleno".
-- El inventario (InventoryScene) detiene la partida mientras está abierto, igual que la pausa. Cuadrícula de 5×4; al abrirlo está seleccionada la primera casilla; las flechas mueven la selección (sin dar la vuelta) y Enter usa el objeto. I o Escape lo cierran (Escape no abre la pausa).
+- El inventario (InventoryScene) **no detiene el tiempo** (decisión del autor): solo impide moverse, interactuar y abrir la pausa mientras está abierto. Cuadrícula de 5×4; al abrirlo está seleccionada la primera casilla; las flechas mueven la selección (sin dar la vuelta) y Enter usa el objeto. I o Escape lo cierran (Escape no abre la pausa).
 - Usar un objeto no consumible muestra "No se puede usar". La Manzana con la energía al máximo no se consume y no muestra mensaje (la historia no indica ninguno).
 - Los mensajes breves sin duración indicada ("Inventario lleno", "No se puede usar") duran 2 segundos (`MESSAGE_MS`).
-- HudScene: interfaz fija durante la partida, por encima de la partida, el inventario y la pausa, y por debajo de las opciones. Muestra el dinero arriba a la derecha ("[cantidad] monedas") y se actualiza en cada fotograma. "Inventario lleno" se muestra en esta capa.
+- HudScene: interfaz fija durante la partida, por encima de la partida, el inventario y la pausa, y por debajo de las opciones. Muestra el dinero arriba a la derecha ("[cantidad] monedas") y, debajo, la energía ("Energía: [actual]/100"). Se actualiza en cada fotograma.
+- **Energía en pantalla:** criterio y escenario 5 añadidos a HU-14 (decisión del autor), porque ninguna historia la mostraba. "Inventario lleno" se muestra en esta capa.
 - En desarrollo, main.ts expone `window.pickUp(objeto, cantidad)`, la misma función que usarán cofres y tienda, para probar HU-15 sin depender de esas historias.
 - Retratos y objetos se copiaron de ~/Downloads/Ninja Adventure - Asset Pack (la carpeta descomprimida se borró; el zip se conserva).
+
+### Cofres, carteles y la Pala (HU-12)
+
+- Contenido en src/data/: chests.json (objeto de cada cofre), signs.json (texto de cada cartel) y worldItems.json (objetos sueltos). En los mapas son puntos llamados `cofre`, `cartel` y `objeto` con la propiedad `id`.
+- Cofres: cofre-1 en el cercado del granero (granja), cofre-2 en el claro del este del lago y cofre-3 en la torre, con las tres piezas del reloj en ese orden. Son obstáculos. Se ven abiertos cuando su `id` está en `openedChests`.
+- **La Pala** (decisión del autor: se encuentra en la granja) está en el suelo junto al granero. Se recoge con E y desaparece del mapa. Queda anotada en `pickedUpItems`, un campo nuevo de `GameState`; las partidas guardadas que no lo tengan se cargan con la lista vacía. Criterio y escenario 5 añadidos a HU-12.
+- Carteles con pistas (decisión del autor): dos en la plaza (centro y camino del lago), uno a la entrada de la granja y otro a la entrada del lago. Son casillas sólidas. Su texto aparece completo, sin escribirse letra a letra, porque HU-12 dice que la segunda E lo cierra.
+- Todo lo que se activa con E (NPC, cofres cerrados, carteles y objetos) usa el mismo alcance (menos de una casilla) y el mismo indicador "E". Un cofre ya abierto no muestra el indicador.
+- El cuadro de diálogo (DialogScene) sirve para NPC y carteles: título, retrato opcional y texto letra a letra o completo.

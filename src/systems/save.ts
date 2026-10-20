@@ -30,8 +30,10 @@ export function hasSavedGame(): boolean {
 }
 
 // Devuelve la partida guardada, o null si no hay ninguna válida.
+// Las listas que no existían en partidas guardadas más antiguas se rellenan vacías.
 export function readSave(): GameState | null {
-  return readSaveData()?.state ?? null;
+  const state = readSaveData()?.state;
+  return state ? { ...state, pickedUpItems: state.pickedUpItems ?? [] } : null;
 }
 
 // Indica si la partida guardada coincide con el estado indicado, es decir, si no hay cambios sin guardar.

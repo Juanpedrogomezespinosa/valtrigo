@@ -91,6 +91,7 @@ export interface TestGameState {
   inventory: { item: string; quantity: number }[];
   activeQuests: string[];
   openedChests: string[];
+  pickedUpItems: string[];
 }
 
 // Partida guardada de ejemplo, con el formato de src/systems/save.ts.
@@ -105,6 +106,7 @@ export function savedGame(overrides: Partial<TestGameState> = {}): TestGameState
     inventory: [{ item: 'semilla', quantity: 3 }],
     activeQuests: [],
     openedChests: [],
+    pickedUpItems: [],
     ...overrides,
   };
 }
@@ -381,7 +383,7 @@ export async function measureZoneChange(page: Page, trigger: () => Promise<void>
 // --- NPC y diálogos ---
 
 export interface DialogState {
-  npc: string;
+  speaker: string;
   lineIndex: number;
   shownText: string;
   fullText: string;
@@ -451,4 +453,38 @@ export async function hudMoney(page: Page): Promise<{ text: string; x: number; y
     const bounds = text.getBounds();
     return { text: text.text, x: bounds.centerX, y: bounds.centerY, visible: text.visible };
   });
+}
+
+export async function hudEnergy(page: Page): Promise<string | null> {
+  return page.evaluate(() => {
+    const game = (window as unknown as GameWindow).game;
+    if (!game.scene.isActive('HudScene')) return null;
+    return (game.scene.getScene('HudScene').children.getByName('energia') as import('phaser').GameObjects.Text).text;
+  });
+}
+
+// --- Objetos del mundo (HU-12) ---
+
+export async function isChestOpen(page: Page, id: string): Promise<boolean> {
+  return page.evaluate((id) => {
+    const game = (window as unknown as GameWindow).game;
+    return (game.scene.getScene('GameScene') as unknown as { isChestOpen(id: string): boolean }).isChestOpen(id);
+  }, id);
+}
+
+export async function isWorldItemOnMap(page: Page, id: string): Promise<boolean> {
+  return page.evaluate((id) => {
+    const game = (window as unknown as GameWindow).game;
+    return (game.scene.getScene('GameScene') as unknown as { isWorldItemOnMap(id: string): boolean }).isWorldItemOnMap(id);
+  }, id);
+}
+
+// Abre el juego y continúa una partida guardada en una zona y casilla concretas, con otros datos.
+export async function startAtWith(
+  page: Page,
+  zone: string,
+  position: { x: number; y: number },
+  overrides: Partial<TestGameState>,
+): Promise<void> {
+  await startWith(page, { zone, position, ...overrides });
 }

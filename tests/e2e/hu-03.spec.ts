@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
-import { currentGameState, openGame, press, savedGame, setSavedGame, waitForScene } from './helpers';
+import { currentGameState, isChestOpen, openGame, press, savedGame, setSavedGame, waitForScene } from './helpers';
 
 // HU-03. Continuar una partida guardada
 
@@ -49,10 +49,20 @@ test('Escenario 1: Continuar una partida guardada', async ({ page }) => {
   expect(state).toEqual(saved);
 });
 
-// Pendiente: los cofres y la tecla E se implementan en HU-12.
-test.fixme('Escenario 2: Los cofres abiertos se mantienen', async () => {
-  // Guardar una partida con 'cofre-1' en openedChests, pulsar "Continuar",
-  // comprobar que el cofre 1 aparece vacío y que E junto a él no hace nada.
+test('Escenario 2: Los cofres abiertos se mantienen', async ({ page }) => {
+  // El cofre 1 está en el cercado del granero (granja, casilla 5, 7).
+  await setSavedGame(page, savedGame({ zone: 'granja', position: { x: 6, y: 7 }, inventory: [], openedChests: ['cofre-1'] }));
+  await openGame(page);
+  await press(page, 'ArrowDown'); // "Continuar"
+  await press(page, 'Enter');
+  await waitForScene(page, 'GameScene');
+
+  // Aparece vacío (abierto)...
+  expect(await isChestOpen(page, 'cofre-1')).toBe(true);
+  // ...y no se puede volver a abrir.
+  await press(page, 'e');
+  await page.waitForTimeout(100);
+  expect((await currentGameState(page))?.inventory).toEqual([]);
 });
 
 test('Escenario 3: Sin partida guardada', async ({ page }) => {

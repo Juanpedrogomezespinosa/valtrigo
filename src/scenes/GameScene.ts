@@ -1,13 +1,18 @@
 import Phaser from 'phaser';
-import { COLORS, FONT_FAMILY, MESSAGE_MS, TALK_DISTANCE, WORLD_ZOOM, ZONE_FADE_MS } from '../config';
+import { COLORS, FONT_FAMILY, MESSAGE_MS, TALK_DISTANCE, TILE_SIZE, WORLD_ZOOM, ZONE_FADE_MS } from '../config';
+import chests from '../data/chests.json';
 import dialogues from '../data/dialogues.json';
+import signs from '../data/signs.json';
+import worldItems from '../data/worldItems.json';
+import { Chest } from '../entities/Chest';
 import { Npc } from '../entities/Npc';
 import { Player, type Direction } from '../entities/Player';
-import type { DialogSceneData, NpcId } from './DialogScene';
 import { getGameState } from '../systems/gameState';
 import { addItem, type ItemId } from '../systems/inventory';
+import { findMapPoint, getProperty, mapKey, mapObjects, pointTile, type MapObject, type ZoneId } from '../systems/zones';
 import { showMessage } from '../ui/message';
-import { findMapPoint, getProperty, mapKey, mapObjects, pointTile, type ZoneId } from '../systems/zones';
+import type { DialogSceneData, NpcId } from './DialogScene';
+import type { InventorySceneData } from './InventoryScene';
 
 export interface GameSceneData {
   // Hacia dónde mira el personaje al aparecer (al llegar por una puerta).
@@ -21,16 +26,29 @@ interface Door {
   direction: Direction;
 }
 
+// Algo con lo que se interactúa pulsando E a menos de una casilla: NPC, cofres, carteles y objetos sueltos.
+interface Interactable {
+  kind: 'npc' | 'cofre' | 'cartel' | 'objeto';
+  id: string;
+  // Lo que ocupa en el mundo.
+  area: Phaser.Geom.Rectangle;
+  // Si pulsar E hace algo ahora mismo (un cofre abierto o un objeto ya recogido, no).
+  isAvailable(): boolean;
+  interact(): void;
+}
+
 // Escena de juego: dibuja la zona actual y al personaje.
 export class GameScene extends Phaser.Scene {
   player!: Player;
 
   private facing?: Direction;
   private doors: Door[] = [];
+  private interactables: Interactable[] = [];
+  private chests: Chest[] = [];
+  private indicator!: Phaser.GameObjects.Text;
   private changingZone = false;
-  private npcs: Npc[] = [];
-  private talkIndicator!: Phaser.GameObjects.Text;
   private dialogOpen = false;
+  private inventoryOpen = false;
 
   constructor() {
     super('GameScene');
@@ -44,6 +62,7 @@ export class GameScene extends Phaser.Scene {
     const state = getGameState();
     this.changingZone = false;
     this.dialogOpen = false;
+    this.inventoryOpen = false;
 
     const map = this.make.tilemap({ key: mapKey(state.zone) });
     const tiles = [
@@ -61,14 +80,19 @@ export class GameScene extends Phaser.Scene {
     this.player.setObstacles(obstacles);
     this.physics.add.collider(this.player, obstacles);
 
-    // NPC de la zona (HU-10): son obstáculos para el personaje (HU-07).
-    this.npcs = mapObjects(this, state.zone)
-      .filter((object) => object.name === 'npc')
-      .map((object) => new Npc(this, getProperty(object, 'personaje')!, pointTile(object)));
-    this.physics.add.collider(this.player, this.npcs);
+    const objects = mapObjects(this, state.zone);
+    this.doors = objects.filter((object) => object.name === 'puerta').map((object) => this.createDoor(object));
+    this.interactables = [];
+    this.chests = [];
+    for (const object of objects) {
+      if (object.name === 'npc') this.addNpc(object);
+      if (object.name === 'cofre') this.addChest(object);
+      if (object.name === 'cartel') this.addSign(object);
+      if (object.name === 'objeto') this.addWorldItem(object);
+    }
 
-    // Indicador "E" sobre el NPC con el que se puede hablar.
-    this.talkIndicator = this.add
+    // Indicador "E" sobre aquello con lo que se puede interactuar (HU-10).
+    this.indicator = this.add
       .text(0, 0, 'E', {
         fontFamily: FONT_FAMILY,
         fontSize: '8px',
@@ -81,28 +105,82 @@ export class GameScene extends Phaser.Scene {
       .setDepth(10)
       .setVisible(false);
 
-    this.input.keyboard!.on('keydown-E', () => this.talk());
-    this.input.keyboard!.on('keydown-I', () => this.openInventory());
+    this.setUpCamera(map.widthInPixels, map.heightInPixels);
+    this.setUpKeys();
 
-    // Interfaz fija (dinero), por encima de la partida.
+    // Interfaz fija (dinero y energía), por encima de la partida.
     if (!this.scene.isActive('HudScene')) {
       this.scene.launch('HudScene');
     }
+  }
 
-    this.doors = mapObjects(this, state.zone)
-      .filter((object) => object.name === 'puerta')
-      .map((object) => ({
-        area: new Phaser.Geom.Rectangle(object.x, object.y, object.width, object.height),
-        zone: getProperty(object, 'zona') as ZoneId,
-        direction: getProperty(object, 'direccion') as Direction,
-      }));
+  update(): void {
+    // Durante un cambio de zona, un diálogo o con el inventario abierto, el personaje no se mueve.
+    if (this.isBusy()) {
+      return;
+    }
 
-    this.setUpCamera(map.widthInPixels, map.heightInPixels);
+    this.player.update();
+    this.updateIndicator();
+    getGameState().position = this.player.getTilePosition();
+
+    const door = this.doors.find((candidate) => this.isCrossing(candidate));
+    if (door) {
+      this.changeZone(door);
+    }
+  }
+
+  // HU-15: recoge objetos. Si no caben, no se recoge ninguno y aparece "Inventario lleno".
+  pickUp(item: ItemId, quantity: number): boolean {
+    if (addItem(item, quantity)) {
+      return true;
+    }
+    showMessage(this.scene.get('HudScene'), 'Inventario lleno', MESSAGE_MS);
+    return false;
+  }
+
+  // --- Consultas para los tests ---
+
+  isChangingZone(): boolean {
+    return this.changingZone;
+  }
+
+  isDialogOpen(): boolean {
+    return this.dialogOpen;
+  }
+
+  isInventoryOpen(): boolean {
+    return this.inventoryOpen;
+  }
+
+  // Identificador de aquello con lo que se puede interactuar ahora mismo, si hay algo.
+  getTalkTarget(): string | null {
+    return this.interactTarget()?.id ?? null;
+  }
+
+  isTalkIndicatorVisible(): boolean {
+    return this.indicator.visible;
+  }
+
+  isChestOpen(id: string): boolean {
+    return this.chests.find((chest) => chest.id === id)?.isOpen() ?? false;
+  }
+
+  isWorldItemOnMap(id: string): boolean {
+    return this.interactables.some((interactable) => interactable.kind === 'objeto' && interactable.id === id);
+  }
+
+  // --- Teclas ---
+
+  private setUpKeys(): void {
+    const keyboard = this.input.keyboard!;
+    keyboard.on('keydown-E', () => this.interact());
+    keyboard.on('keydown-I', () => this.openInventory());
 
     // Escape abre el menú de pausa y detiene la partida (HU-26), salvo durante un cambio de zona.
-    // Con la pausa abierta el personaje no se mueve (HU-06).
-    this.input.keyboard!.on('keydown-ESC', () => {
-      if (this.changingZone) {
+    // Con el inventario abierto, Escape lo cierra (InventoryScene) y no abre la pausa.
+    keyboard.on('keydown-ESC', () => {
+      if (this.changingZone || this.inventoryOpen) {
         return;
       }
       this.player.stand();
@@ -116,92 +194,163 @@ export class GameScene extends Phaser.Scene {
 
     // Las teclas que se soltaron durante la pausa no llegan a esta escena:
     // al reanudar se dan todas por sueltas para que el personaje no siga andando solo.
-    const onResume = () => this.input.keyboard!.resetKeys();
+    const onResume = () => keyboard.resetKeys();
     this.events.on(Phaser.Scenes.Events.RESUME, onResume);
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.events.off(Phaser.Scenes.Events.RESUME, onResume));
   }
 
-  // HU-15: recoge objetos. Si no caben, no se recoge ninguno y aparece "Inventario lleno".
-  pickUp(item: ItemId, quantity: number): boolean {
-    if (addItem(item, quantity)) {
-      return true;
-    }
-    showMessage(this.scene.get('HudScene'), 'Inventario lleno', MESSAGE_MS);
-    return false;
+  // Hay algo en curso que impide moverse, abrir la pausa o interactuar.
+  private isBusy(): boolean {
+    return this.changingZone || this.dialogOpen || this.inventoryOpen;
   }
 
-  // HU-13: I abre el inventario. La partida se detiene mientras está abierto.
+  // HU-13: I abre el inventario. Mientras está abierto el personaje no se mueve, pero el tiempo sigue.
   private openInventory(): void {
-    if (this.changingZone || this.dialogOpen) {
+    if (this.isBusy()) {
       return;
     }
+    this.inventoryOpen = true;
     this.player.stand();
-    this.scene.pause();
-    this.scene.launch('InventoryScene');
+    this.indicator.setVisible(false);
+    const data: InventorySceneData = {
+      onClose: () => {
+        this.inventoryOpen = false;
+      },
+    };
+    this.scene.launch('InventoryScene', data);
   }
 
-  isChangingZone(): boolean {
-    return this.changingZone;
-  }
+  // --- Interacciones con E (HU-10 y HU-12) ---
 
-  isDialogOpen(): boolean {
-    return this.dialogOpen;
-  }
-
-  // NPC con el que se puede hablar ahora mismo, si hay alguno.
-  getTalkTarget(): string | null {
-    return this.talkTarget()?.character ?? null;
-  }
-
-  isTalkIndicatorVisible(): boolean {
-    return this.talkIndicator.visible;
-  }
-
-  // El NPC más cercano que esté a menos de una casilla del personaje.
-  private talkTarget(): Npc | null {
-    let nearest: Npc | null = null;
+  // Lo más cercano a menos de una casilla del personaje con lo que se puede interactuar.
+  private interactTarget(): Interactable | null {
+    const body = this.player.body;
+    let nearest: Interactable | null = null;
     let nearestGap = Infinity;
-    for (const npc of this.npcs) {
-      const gap = npc.gapTo(this.player.body);
+    for (const interactable of this.interactables) {
+      if (!interactable.isAvailable()) {
+        continue;
+      }
+      const { area } = interactable;
+      const dx = Math.max(area.left - body.right, body.left - area.right, 0);
+      const dy = Math.max(area.top - body.bottom, body.top - area.bottom, 0);
+      const gap = Math.hypot(dx, dy);
       if (gap < TALK_DISTANCE && gap < nearestGap) {
-        nearest = npc;
+        nearest = interactable;
         nearestGap = gap;
       }
     }
     return nearest;
   }
 
-  // HU-10: E junto a un NPC abre su diálogo. Mientras está abierto, el personaje no se mueve.
-  private talk(): void {
-    if (this.changingZone || this.dialogOpen) {
-      return;
+  private interact(): void {
+    if (!this.isBusy()) {
+      this.interactTarget()?.interact();
     }
-    const npc = this.talkTarget();
-    if (!npc) {
-      return;
-    }
+  }
 
-    const id = npc.character as NpcId;
+  private updateIndicator(): void {
+    const target = this.interactTarget();
+    this.indicator.setVisible(target !== null);
+    if (target) {
+      this.indicator.setPosition(target.area.centerX, target.area.top - 1);
+    }
+  }
+
+  private openDialog(data: Omit<DialogSceneData, 'onClose'>): void {
     this.dialogOpen = true;
     this.player.stand();
-    this.talkIndicator.setVisible(false);
-    const data: DialogSceneData = {
-      npc: id,
-      lines: dialogues[id].greeting,
+    this.indicator.setVisible(false);
+    this.scene.launch('DialogScene', {
+      ...data,
       onClose: () => {
         this.dialogOpen = false;
       },
-    };
-    this.scene.launch('DialogScene', data);
+    } satisfies DialogSceneData);
   }
 
-  private updateTalkIndicator(): void {
-    const npc = this.talkTarget();
-    this.talkIndicator.setVisible(npc !== null);
-    if (npc) {
-      this.talkIndicator.setPosition(npc.x, npc.y - npc.height / 2 - 1);
-    }
+  // HU-10: los NPC son obstáculos (HU-07). E junto a uno abre su diálogo.
+  private addNpc(object: MapObject): void {
+    const id = getProperty(object, 'personaje') as NpcId;
+    const npc = new Npc(this, id, pointTile(object));
+    this.physics.add.collider(this.player, npc);
+    this.interactables.push({
+      kind: 'npc',
+      id,
+      area: bodyArea(npc.body),
+      isAvailable: () => true,
+      interact: () =>
+        this.openDialog({
+          speaker: id,
+          title: dialogues[id].name,
+          portrait: `retrato-${id}`,
+          lines: dialogues[id].greeting,
+          typewriter: true,
+        }),
+    });
   }
+
+  // HU-12: un cofre se abre una sola vez y da su objeto. Si el inventario está lleno, sigue cerrado.
+  private addChest(object: MapObject): void {
+    const id = getProperty(object, 'id') as keyof typeof chests;
+    const state = getGameState();
+    const chest = new Chest(this, id, pointTile(object), state.openedChests.includes(id));
+    this.physics.add.collider(this.player, chest);
+    this.chests.push(chest);
+    this.interactables.push({
+      kind: 'cofre',
+      id,
+      area: bodyArea(chest.body),
+      isAvailable: () => !chest.isOpen(),
+      interact: () => {
+        const { item, quantity } = chests[id];
+        if (this.pickUp(item as ItemId, quantity)) {
+          state.openedChests.push(id);
+          chest.setOpen(true);
+        }
+      },
+    });
+  }
+
+  // HU-12: los carteles muestran su texto completo. E lo cierra.
+  private addSign(object: MapObject): void {
+    const id = getProperty(object, 'id') as keyof typeof signs;
+    this.interactables.push({
+      kind: 'cartel',
+      id,
+      area: tileArea(object),
+      isAvailable: () => true,
+      interact: () => this.openDialog({ speaker: 'cartel', title: 'Cartel', lines: [signs[id]], typewriter: false }),
+    });
+  }
+
+  // HU-12: objetos sueltos en el suelo (la Pala de la granja). Al recogerlos desaparecen del mapa.
+  private addWorldItem(object: MapObject): void {
+    const id = getProperty(object, 'id') as keyof typeof worldItems;
+    const state = getGameState();
+    if (state.pickedUpItems.includes(id)) {
+      return;
+    }
+    const area = tileArea(object);
+    const { item, quantity } = worldItems[id];
+    const sprite = this.add.image(area.centerX, area.centerY, `objeto-${item}`);
+    const interactable: Interactable = {
+      kind: 'objeto',
+      id,
+      area,
+      isAvailable: () => true,
+      interact: () => {
+        if (this.pickUp(item as ItemId, quantity)) {
+          state.pickedUpItems.push(id);
+          sprite.destroy();
+          this.interactables = this.interactables.filter((other) => other !== interactable);
+        }
+      },
+    };
+    this.interactables.push(interactable);
+  }
+
+  // --- Cámara ---
 
   // HU-09: la cámara sigue al personaje y lo mantiene centrado, pero se detiene en los bordes del mapa.
   // En un eje en el que el mapa es más pequeño que la vista, los límites se amplían hasta el tamaño
@@ -219,20 +368,14 @@ export class GameScene extends Phaser.Scene {
     camera.startFollow(this.player, true);
   }
 
-  update(): void {
-    // Durante el fundido de un cambio de zona el personaje no se mueve (HU-08).
-    if (this.changingZone || this.dialogOpen) {
-      return;
-    }
+  // --- Puertas (HU-08) ---
 
-    this.player.update();
-    this.updateTalkIndicator();
-    getGameState().position = this.player.getTilePosition();
-
-    const door = this.doors.find((candidate) => this.isCrossing(candidate));
-    if (door) {
-      this.changeZone(door);
-    }
+  private createDoor(object: MapObject): Door {
+    return {
+      area: new Phaser.Geom.Rectangle(object.x, object.y, object.width, object.height),
+      zone: getProperty(object, 'zona') as ZoneId,
+      direction: getProperty(object, 'direccion') as Direction,
+    };
   }
 
   // El personaje cruza una puerta si camina hacia ella y su cuerpo la toca con al menos la mitad de su anchura.
@@ -243,9 +386,8 @@ export class GameScene extends Phaser.Scene {
     }
 
     const body = this.player.body;
-    const bodyArea = new Phaser.Geom.Rectangle(body.x, body.y, body.width, body.height);
     const touchArea = Phaser.Geom.Rectangle.Inflate(Phaser.Geom.Rectangle.Clone(door.area), 1, 1);
-    const overlap = Phaser.Geom.Rectangle.Intersection(bodyArea, touchArea);
+    const overlap = Phaser.Geom.Rectangle.Intersection(bodyArea(body), touchArea);
     if (overlap.isEmpty()) {
       return false;
     }
@@ -259,6 +401,7 @@ export class GameScene extends Phaser.Scene {
   private changeZone(door: Door): void {
     this.changingZone = true;
     this.player.stand();
+    this.indicator.setVisible(false);
 
     const state = getGameState();
     const camera = this.cameras.main;
@@ -271,4 +414,14 @@ export class GameScene extends Phaser.Scene {
       this.scene.restart(data);
     });
   }
+}
+
+function bodyArea(body: Phaser.Physics.Arcade.Body | Phaser.Physics.Arcade.StaticBody): Phaser.Geom.Rectangle {
+  return new Phaser.Geom.Rectangle(body.x, body.y, body.width, body.height);
+}
+
+// Casilla completa en la que está un punto del mapa.
+function tileArea(object: MapObject): Phaser.Geom.Rectangle {
+  const { x, y } = pointTile(object);
+  return new Phaser.Geom.Rectangle(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
 }

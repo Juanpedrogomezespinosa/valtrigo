@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { currentGameState, inventoryView, press, sceneTexts, startWith } from './helpers';
+import { currentGameState, hudEnergy, inventoryView, press, sceneTexts, startWith } from './helpers';
 
 // HU-14. Usar objetos del inventario
 // Al abrir el inventario está seleccionada la primera casilla.
@@ -49,4 +49,24 @@ test('Escenario 4: Objeto no consumible', async ({ page }) => {
 
   expect(await sceneTexts(page, 'InventoryScene')).toContain('No se puede usar');
   expect((await inventoryView(page))?.slots[1]?.quantity).toBe(1);
+});
+
+test('Escenario 5: Ver la energía', async ({ page }) => {
+  await startWith(page, { energy: 60, inventory: [{ item: 'manzana', quantity: 1 }] });
+  await expect.poll(() => hudEnergy(page)).toBe('Energía: 60/100');
+
+  await press(page, 'i');
+  await press(page, 'Enter');
+
+  await expect.poll(() => hudEnergy(page)).toBe('Energía: 75/100');
+  // Debajo del dinero, en la esquina superior derecha.
+  const layout = await page.evaluate(() => {
+    const game = (window as unknown as { game: import('phaser').Game }).game;
+    const hud = game.scene.getScene('HudScene');
+    const money = (hud.children.getByName('dinero') as import('phaser').GameObjects.Text).getBounds();
+    const energy = (hud.children.getByName('energia') as import('phaser').GameObjects.Text).getBounds();
+    return { moneyBottom: money.bottom, energyTop: energy.top, energyRight: energy.right };
+  });
+  expect(layout.energyTop).toBeGreaterThanOrEqual(layout.moneyBottom);
+  expect(layout.energyRight).toBeGreaterThan(960 * 0.9);
 });

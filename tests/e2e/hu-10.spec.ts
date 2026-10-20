@@ -22,7 +22,7 @@ test('Escenario 1: Iniciar un diálogo', async ({ page }) => {
 
   // El texto se escribe letra a letra: primero aparece una parte y luego crece hasta la línea completa.
   const first = await dialogState(page);
-  expect(first?.npc).toBe('alcalde');
+  expect(first?.speaker).toBe('alcalde');
   expect(first?.typing).toBe(true);
   expect(first!.shownText.length).toBeLessThan(first!.fullText.length);
   expect(first!.fullText.startsWith(first!.shownText)).toBe(true);

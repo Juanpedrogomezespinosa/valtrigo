@@ -139,6 +139,22 @@ function addArrival(map, { from, x, y, facing }) {
   map.points.push({ name: `llegada-${from}`, x, y, properties: { mirando: facing } });
 }
 
+// Cofre (HU-12). `id` es su identificador en src/data/chests.json.
+function addChest(map, { id, x, y }) {
+  map.points.push({ name: 'cofre', x, y, properties: { id } });
+}
+
+// Cartel (HU-12): casilla sólida en la capa de obstáculos y punto con su `id` en src/data/signs.json.
+function addSign(map, { id, x, y }) {
+  setTile(map.obstacles, map, x, y, TILE.sign);
+  map.points.push({ name: 'cartel', x, y, properties: { id } });
+}
+
+// Objeto suelto en el suelo (HU-12). `id` es su identificador en src/data/worldItems.json.
+function addWorldItem(map, { id, x, y }) {
+  map.points.push({ name: 'objeto', x, y, properties: { id } });
+}
+
 // Posición de un NPC (HU-10). `character` es su identificador en src/data/dialogues.json.
 function addNpc(map, { character, x, y }) {
   map.points.push({ name: 'npc', x, y, properties: { personaje: character } });
@@ -363,7 +379,8 @@ function plaza() {
   placeBuilding(map, BUILDINGS.torre, 18, 2);
   placeBuilding(map, BUILDINGS.tienda, 29, 8);
   setTile(map.obstacles, map, 17, 16, TILE.well);
-  setTile(map.obstacles, map, 23, 11, TILE.sign);
+  addSign(map, { id: 'plaza', x: 23, y: 11 });
+  addSign(map, { id: 'camino-del-lago', x: 18, y: 22 });
 
   map.points.push({ name: 'inicio', x: 20, y: 17 });
 
@@ -453,6 +470,7 @@ function torre() {
   setTile(map.obstacles, map, 3, 4, INTERIOR.workbench);
   setTile(map.obstacles, map, 8, 2, INTERIOR.barrel);
   addNpc(map, { character: 'relojera', x: 5, y: 5 });
+  addChest(map, { id: 'cofre-3', x: 8, y: 8 });
   return map;
 }
 
@@ -480,6 +498,9 @@ function granja() {
   addDoor(map, { x: 0, y: 10, height: 3, zone: 'plaza', direction: 'left' });
   addArrival(map, { from: 'plaza', x: 1, y: 11, facing: 'right' });
   addNpc(map, { character: 'granjero', x: 16, y: 9 });
+  addChest(map, { id: 'cofre-1', x: 5, y: 7 }); // dentro del cercado del granero
+  addWorldItem(map, { id: 'pala-de-la-granja', x: 10, y: 7 });
+  addSign(map, { id: 'granja', x: 3, y: 9 });
 
   const exits = new Set();
   for (let x = 0; x < 2; x++) for (let y = 10; y <= 12; y++) exits.add(key(x, y));
@@ -507,6 +528,8 @@ function lago() {
 
   addDoor(map, { x: 14, y: 0, width: 3, zone: 'plaza', direction: 'up' });
   addArrival(map, { from: 'plaza', x: 15, y: 1, facing: 'down' });
+  addChest(map, { id: 'cofre-2', x: 26, y: 11 }); // en el claro del este
+  addSign(map, { id: 'lago', x: 13, y: 3 });
 
   // Sin árboles: el camino, una franja de una casilla alrededor del lago y el claro del este.
   const reserved = new Set();

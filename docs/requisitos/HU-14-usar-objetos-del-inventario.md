@@ -10,6 +10,7 @@ Criterios de aceptación:
 - Una Manzana recupera 15 puntos de energía, sin superar el máximo de 100.
 - Al usar un objeto consumible se reduce su cantidad en 1. Si la cantidad llega a 0, el objeto desaparece del inventario.
 - Si la energía está al máximo, la Manzana no se consume.
+- La energía aparece en la esquina superior derecha de la pantalla, debajo del dinero, con el formato “Energía: [actual]/100”.
 Escenario 1: Usar una Manzana
 
 - Dado que el jugador tiene 3 Manzanas y 60 puntos de energía
@@ -32,4 +33,9 @@ Escenario 4: Objeto no consumible
 - Dado que el jugador selecciona la Pala
 - Cuando pulsa Enter
 - Entonces aparece el mensaje “No se puede usar”
+Escenario 5: Ver la energía
+
+- Dado que el jugador tiene 60 puntos de energía
+- Cuando usa una Manzana
+- Entonces la interfaz pasa de “Energía: 60/100” a “Energía: 75/100”
 

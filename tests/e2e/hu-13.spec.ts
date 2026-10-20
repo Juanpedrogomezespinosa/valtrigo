@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { activeScenes, inventoryView, isScenePaused, playerInfo, press, startWith } from './helpers';
+import { activeScenes, inventoryView, playerInfo, press, startWith } from './helpers';
 
 // HU-13. Ver el inventario
 
@@ -34,14 +34,17 @@ test('Escenario 3: Cerrar el inventario', async ({ page }) => {
   for (const key of ['i', 'Escape']) {
     await press(page, 'i');
     expect(await inventoryView(page)).not.toBeNull();
-    expect(await isScenePaused(page, 'GameScene')).toBe(true);
 
     await press(page, key);
 
     expect(await inventoryView(page)).toBeNull();
-    expect(await activeScenes(page)).toContain('GameScene');
-    expect(await isScenePaused(page, 'GameScene')).toBe(false);
     expect(await activeScenes(page)).not.toContain('PauseScene'); // Escape cierra el inventario, no abre la pausa
+    // El juego continúa: el personaje vuelve a moverse.
+    const before = await playerInfo(page);
+    await page.keyboard.down('ArrowDown');
+    await page.waitForTimeout(200);
+    await page.keyboard.up('ArrowDown');
+    expect((await playerInfo(page)).y).toBeGreaterThan(before.y);
   }
 });
 

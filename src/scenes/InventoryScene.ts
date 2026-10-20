@@ -18,16 +18,27 @@ interface SlotView {
   quantity: Phaser.GameObjects.Text;
 }
 
-// Inventario (HU-13 y HU-14). Se abre encima de la partida, que queda detenida.
+export interface InventorySceneData {
+  // Se llama al cerrar el inventario.
+  onClose: () => void;
+}
+
+// Inventario (HU-13 y HU-14). Se abre encima de la partida. El tiempo sigue corriendo,
+// pero el personaje no se mueve mientras está abierto.
 // - 20 casillas en una cuadrícula de 5×4. Cada objeto muestra su icono, su nombre y su cantidad.
 // - Las flechas mueven la selección y Enter usa el objeto seleccionado.
 // - I o Escape lo cierran.
 export class InventoryScene extends Phaser.Scene {
   private views: SlotView[] = [];
   private selected = 0;
+  private onClose!: () => void;
 
   constructor() {
     super('InventoryScene');
+  }
+
+  init(data: InventorySceneData): void {
+    this.onClose = data.onClose;
   }
 
   create(): void {
@@ -101,7 +112,7 @@ export class InventoryScene extends Phaser.Scene {
 
   private close(): void {
     this.scene.stop();
-    this.scene.resume('GameScene');
+    this.onClose();
   }
 
   private refresh(): void {

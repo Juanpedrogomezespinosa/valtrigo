@@ -10,7 +10,7 @@
  "tilewidth": 16,
  "tileheight": 16,
  "nextlayerid": 4,
- "nextobjectid": 4,
+ "nextobjectid": 7,
  "layers": [
   {
    "id": 1,
@@ -969,7 +969,7 @@
     4,
     28,
     0,
-    0,
+    84,
     121,
     122,
     0,
@@ -1408,6 +1408,63 @@
     },
     {
      "id": 3,
+     "name": "cofre",
+     "type": "",
+     "point": true,
+     "x": 88,
+     "y": 120,
+     "width": 0,
+     "height": 0,
+     "rotation": 0,
+     "visible": true,
+     "properties": [
+      {
+       "name": "id",
+       "type": "string",
+       "value": "cofre-1"
+      }
+     ]
+    },
+    {
+     "id": 4,
+     "name": "objeto",
+     "type": "",
+     "point": true,
+     "x": 168,
+     "y": 120,
+     "width": 0,
+     "height": 0,
+     "rotation": 0,
+     "visible": true,
+     "properties": [
+      {
+       "name": "id",
+       "type": "string",
+       "value": "pala-de-la-granja"
+      }
+     ]
+    },
+    {
+     "id": 5,
+     "name": "cartel",
+     "type": "",
+     "point": true,
+     "x": 56,
+     "y": 152,
+     "width": 0,
+     "height": 0,
+     "rotation": 0,
+     "visible": true,
+     "properties": [
+      {
+       "name": "id",
+       "type": "string",
+       "value": "granja"
+      }
+     ]
+    },
+    {
+     "id": 6,
      "name": "puerta",
      "type": "",
      "x": 0,

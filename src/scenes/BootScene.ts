@@ -24,6 +24,7 @@ export class BootScene extends Phaser.Scene {
     for (const character of ['jugador', 'vendedora', 'alcalde', 'relojera', 'granjero']) {
       this.load.spritesheet(character, `assets/sprites/personajes/${character}.png`, { frameWidth: 16, frameHeight: 16 });
     }
+    this.load.spritesheet('cofre', 'assets/sprites/cofre.png', { frameWidth: 16, frameHeight: 16 });
     for (const item of Object.keys(ITEMS)) {
       this.load.image(`objeto-${item}`, `assets/sprites/objetos/${item}.png`);
     }

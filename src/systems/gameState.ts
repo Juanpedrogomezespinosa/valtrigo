@@ -18,6 +18,8 @@ export interface GameState {
   inventory: InventoryItem[];
   activeQuests: string[];
   openedChests: string[];
+  // Objetos sueltos del mundo que ya se han recogido (HU-12), como la Pala de la granja.
+  pickedUpItems: string[];
 }
 
 let current: GameState | null = null;
@@ -34,6 +36,7 @@ export function createNewGameState(scene: Phaser.Scene): GameState {
     inventory: [],
     activeQuests: [],
     openedChests: [],
+    pickedUpItems: [],
   };
 }
 
