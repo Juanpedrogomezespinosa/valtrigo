@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { SFX } from '../systems/audio';
+import { mapKey, ZONES, type ZoneId } from '../systems/zones';
 
 // Escena de arranque: carga los recursos y abre el menú principal.
 export class BootScene extends Phaser.Scene {
@@ -14,6 +15,12 @@ export class BootScene extends Phaser.Scene {
 
     for (const { key, path } of Object.values(SFX)) {
       this.load.audio(key, path);
+    }
+
+    this.load.image('tiles-town', 'assets/tilesets/kenney-tiny-town.png');
+    this.load.spritesheet('characters', 'assets/sprites/kenney-tiny-dungeon.png', { frameWidth: 16, frameHeight: 16 });
+    for (const [zone, { map }] of Object.entries(ZONES)) {
+      this.load.tilemapTiledJSON(mapKey(zone as ZoneId), map);
     }
   }
 

@@ -76,3 +76,69 @@ export async function recordEffects(page: Page): Promise<void> {
 export async function playedEffects(page: Page): Promise<string[]> {
   return page.evaluate(() => (window as unknown as { playedEffects: string[] }).playedEffects);
 }
+
+// --- Partida guardada y estado de la partida ---
+
+const SAVE_KEY = 'valtrigo.partida';
+
+export interface TestGameState {
+  zone: string;
+  position: { x: number; y: number };
+  day: number;
+  minutes: number;
+  money: number;
+  energy: number;
+  inventory: { item: string; quantity: number }[];
+  activeQuests: string[];
+  openedChests: string[];
+}
+
+// Partida guardada de ejemplo, con el formato de src/systems/save.ts.
+export function savedGame(overrides: Partial<TestGameState> = {}): TestGameState {
+  return {
+    zone: 'plaza',
+    position: { x: 10, y: 14 },
+    day: 4,
+    minutes: 14 * 60,
+    money: 250,
+    energy: 80,
+    inventory: [{ item: 'semilla', quantity: 3 }],
+    activeQuests: [],
+    openedChests: [],
+    ...overrides,
+  };
+}
+
+// Deja una partida guardada en el navegador antes de abrir el juego. Llamar antes de openGame().
+export async function setSavedGame(page: Page, state: TestGameState): Promise<void> {
+  await page.addInitScript(
+    ({ key, value }) => {
+      // Solo la primera vez: si el juego guarda después, no se pisa al recargar.
+      if (!sessionStorage.getItem('partida-preparada')) {
+        localStorage.setItem(key, value);
+        sessionStorage.setItem('partida-preparada', '1');
+      }
+    },
+    { key: SAVE_KEY, value: JSON.stringify({ version: 1, state }) },
+  );
+}
+
+export async function readSavedGame(page: Page): Promise<TestGameState | null> {
+  const raw = await page.evaluate((key) => localStorage.getItem(key), SAVE_KEY);
+  return raw ? (JSON.parse(raw) as { state: TestGameState }).state : null;
+}
+
+export async function currentGameState(page: Page): Promise<TestGameState | null> {
+  return page.evaluate(() => (window as unknown as { gameState: () => TestGameState | null }).gameState());
+}
+
+// Textos visibles de una escena, de arriba abajo.
+export async function sceneTexts(page: Page, sceneKey: string): Promise<string[]> {
+  return page.evaluate((sceneKey) => {
+    const game = (window as unknown as GameWindow).game;
+    return game.scene
+      .getScene(sceneKey)
+      .children.list.filter((child) => child.type === 'Text' && (child as import('phaser').GameObjects.Text).visible)
+      .map((child) => (child as import('phaser').GameObjects.Text).text);
+  }, sceneKey);
+}

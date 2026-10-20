@@ -1,0 +1,53 @@
+import Phaser from 'phaser';
+import { NEW_GAME } from '../config';
+import { findMapPoint, type TilePosition, type ZoneId } from './zones';
+
+export interface InventoryItem {
+  item: string;
+  quantity: number;
+}
+
+// Todo lo que forma parte de una partida y se guarda (HU-03).
+export interface GameState {
+  zone: ZoneId;
+  position: TilePosition;
+  day: number;
+  minutes: number; // minutos desde las 00:00
+  money: number;
+  energy: number;
+  inventory: InventoryItem[];
+  activeQuests: string[];
+  openedChests: string[];
+}
+
+let current: GameState | null = null;
+
+// Estado de una partida nueva: zona inicial, posición de inicio del mapa y valores de config.ts.
+export function createNewGameState(scene: Phaser.Scene): GameState {
+  return {
+    zone: NEW_GAME.zone,
+    position: findMapPoint(scene, NEW_GAME.zone, 'inicio'),
+    day: NEW_GAME.day,
+    minutes: NEW_GAME.minutes,
+    money: NEW_GAME.money,
+    energy: NEW_GAME.energy,
+    inventory: [],
+    activeQuests: [],
+    openedChests: [],
+  };
+}
+
+export function startGame(state: GameState): void {
+  current = state;
+}
+
+export function isGameInProgress(): boolean {
+  return current !== null;
+}
+
+export function getGameState(): GameState {
+  if (!current) {
+    throw new Error('No hay ninguna partida en curso.');
+  }
+  return current;
+}

@@ -66,3 +66,24 @@ Es un proyecto público con un fin doble: servir de base para un curso de testin
 - Con el ratón, un clic en una opción solo reproduce el efecto de confirmación, no el de navegación.
 - "Volver" (con clic, Enter o Escape) reproduce el efecto de confirmación.
 - Los escenarios 1 a 4 de HU-32 están como `test.fixme` hasta que existan sus historias (HU-06, HU-17, HU-12 y HU-20).
+
+### Mundo y gráficos
+
+- Gráficos: paquetes Tiny Town y Tiny Dungeon de Kenney (CC0), casillas de 16×16. Están en public/assets/tilesets/ y public/assets/sprites/, sin modificar. public/assets/CREDITOS.md recoge el autor y la licencia de cada recurso (para HU-35).
+- Mapas en formato Tiled (JSON) en public/assets/maps/, con tres capas: `suelo`, `obstaculos` (todo lo que hay en ella será sólido en HU-07) y `puntos` (objetos con nombre, como `inicio`).
+- `node tools/generar-mapas.mjs` genera la versión inicial de los mapas. Después se pueden retocar en Tiled; volver a ejecutar el script sobrescribe esos cambios.
+- Las 6 zonas son: exterior del pueblo (`plaza`, zona inicial), casa del jugador, tienda, granja (con el granero), lago y torre. Cada zona usa la pista de música con su nombre. src/data/zones.json lista las zonas y su mapa.
+- En la plaza: casa del jugador al oeste, torre del reloj al norte, tienda al este, camino al este hacia la granja y camino al sur hacia el lago. Árboles otoñales, por la historia del juego.
+- La cámara de las zonas usa zoom ×3 (`WORLD_ZOOM`): se ven unas 20×11 casillas.
+- Personaje del jugador: fotograma 85 de Tiny Dungeon. **Estos personajes solo tienen una postura**: para "mira hacia arriba/abajo" (HU-06) habrá que buscar otros sprites o añadir un indicador de dirección.
+
+### Nueva partida y guardado (HU-02)
+
+- El estado de la partida (`GameState`, src/systems/gameState.ts) guarda la zona, la posición en casillas, el día, los minutos desde las 00:00, el dinero, la energía, el inventario, los encargos activos y los cofres abiertos. Los valores iniciales están en `NEW_GAME` (src/config.ts) y la posición de inicio sale del punto `inicio` del mapa.
+- La partida guardada está en localStorage con la clave `valtrigo.partida` y el formato `{ version: 1, state }`. Si no se puede leer o es de otra versión, se considera que no hay partida guardada.
+- **Interpretación de HU-02, escenario 3:** al confirmar "Sí", la partida nueva se guarda en ese momento y sustituye a la anterior. Sin partida guardada previa, empezar una partida nueva no guarda nada (el guardado normal es al dormir, HU-25, o desde el menú, HU-04).
+- Cuadro de confirmación reutilizable (src/ui/confirmDialog.ts): empieza con "No" seleccionado, se maneja con ← →, Enter, Escape (equivale a "No") o el ratón, y usa los efectos de navegación y confirmación. Mientras está abierto, el menú de debajo no responde.
+- `hasGameInProgress()` ha pasado de save.ts a gameState.ts (`isGameInProgress()`), porque la partida en curso no es parte del guardado.
+- En desarrollo, main.ts expone también `window.gameState()` para que los tests consulten la partida en curso.
+- El escenario 2 de HU-01 ya está activo: una partida guardada válida activa "Continuar" (que aún no hace nada hasta HU-03).
+- Hasta HU-31, en la plaza sigue sonando la música del menú. Hasta HU-22 no se muestra el reloj en pantalla, y hasta HU-06 el personaje no se mueve.

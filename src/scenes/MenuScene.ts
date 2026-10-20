@@ -1,7 +1,9 @@
 import Phaser from 'phaser';
 import { COLORS, FONT_FAMILY } from '../config';
 import { playEffect, playMusic } from '../systems/audio';
-import { hasGameInProgress, hasSavedGame } from '../systems/save';
+import { createNewGameState, isGameInProgress, startGame } from '../systems/gameState';
+import { hasSavedGame, writeSave } from '../systems/save';
+import { showConfirmDialog } from '../ui/confirmDialog';
 import { addTitle } from '../ui/title';
 
 export const MENU_OPTIONS = ['Nueva partida', 'Continuar', 'Guardar partida', 'Opciones', 'Créditos', 'Salir'] as const;
@@ -26,6 +28,7 @@ const OPTION_SPACING = 50;
 export class MenuScene extends Phaser.Scene {
   private items: MenuItem[] = [];
   private selectedIndex = 0;
+  private dialogOpen = false;
   private cursor!: Phaser.GameObjects.Text;
 
   constructor() {
@@ -44,7 +47,7 @@ export class MenuScene extends Phaser.Scene {
     const enabled: Record<MenuOption, boolean> = {
       'Nueva partida': true,
       Continuar: hasSavedGame(),
-      'Guardar partida': hasGameInProgress(),
+      'Guardar partida': isGameInProgress(),
       Opciones: true,
       Créditos: true,
       Salir: true,
@@ -75,9 +78,10 @@ export class MenuScene extends Phaser.Scene {
       .setOrigin(1, 0.5);
 
     const keyboard = this.input.keyboard!;
-    keyboard.on('keydown-UP', () => this.select(this.selectedIndex - 1));
-    keyboard.on('keydown-DOWN', () => this.select(this.selectedIndex + 1));
-    keyboard.on('keydown-ENTER', () => this.activateSelected());
+    // Mientras hay un cuadro de confirmación abierto, el menú no responde al teclado.
+    keyboard.on('keydown-UP', () => !this.dialogOpen && this.select(this.selectedIndex - 1));
+    keyboard.on('keydown-DOWN', () => !this.dialogOpen && this.select(this.selectedIndex + 1));
+    keyboard.on('keydown-ENTER', () => !this.dialogOpen && this.activateSelected());
 
     this.refresh();
   }
@@ -111,15 +115,43 @@ export class MenuScene extends Phaser.Scene {
     playEffect(this, 'menuConfirm');
 
     switch (item.label) {
+      case 'Nueva partida':
+        this.newGame();
+        break;
       case 'Opciones':
         this.scene.start('OptionsScene');
         break;
       case 'Créditos':
         this.scene.start('CreditsScene');
         break;
-      // "Nueva partida" (HU-02), "Continuar" (HU-03), "Guardar partida" (HU-04)
-      // y "Salir" (HU-05) se implementan en sus historias.
+      // "Continuar" (HU-03), "Guardar partida" (HU-04) y "Salir" (HU-05) se implementan en sus historias.
     }
+  }
+
+  // Si ya hay una partida guardada, se pide confirmación y, al aceptar,
+  // la partida nueva sustituye a la guardada.
+  private newGame(): void {
+    if (!hasSavedGame()) {
+      this.startNewGame();
+      return;
+    }
+
+    this.dialogOpen = true;
+    showConfirmDialog(this, '¿Sobrescribir la partida guardada?', (yes) => {
+      this.dialogOpen = false;
+      if (yes) {
+        this.startNewGame({ overwriteSave: true });
+      }
+    });
+  }
+
+  private startNewGame({ overwriteSave = false } = {}): void {
+    const state = createNewGameState(this);
+    if (overwriteSave) {
+      writeSave(state);
+    }
+    startGame(state);
+    this.scene.start('GameScene');
   }
 
   private refresh(): void {

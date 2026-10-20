@@ -2,8 +2,10 @@ import Phaser from 'phaser';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH } from './config';
 import { BootScene } from './scenes/BootScene';
 import { CreditsScene } from './scenes/CreditsScene';
+import { GameScene } from './scenes/GameScene';
 import { MenuScene } from './scenes/MenuScene';
 import { OptionsScene } from './scenes/OptionsScene';
+import { getGameState, isGameInProgress } from './systems/gameState';
 
 const game = new Phaser.Game({
   type: Phaser.AUTO,
@@ -16,10 +18,14 @@ const game = new Phaser.Game({
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
-  scene: [BootScene, MenuScene, OptionsScene, CreditsScene],
+  scene: [BootScene, MenuScene, OptionsScene, CreditsScene, GameScene],
 });
 
-// Expone el juego en desarrollo para que los tests de Playwright puedan consultar su estado.
+// Expone el juego y el estado de la partida en desarrollo para que los tests de Playwright
+// puedan consultarlos. En la build de producción no se expone nada.
 if (import.meta.env.DEV) {
-  (window as unknown as { game: Phaser.Game }).game = game;
+  Object.assign(window, {
+    game,
+    gameState: () => (isGameInProgress() ? getGameState() : null),
+  });
 }

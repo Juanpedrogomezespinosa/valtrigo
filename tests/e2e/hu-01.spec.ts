@@ -1,5 +1,14 @@
 import { expect, test, type Page } from '@playwright/test';
-import { activeScenes, clickText, expectSceneActive, openGame, press, waitForScene } from './helpers';
+import {
+  activeScenes,
+  clickText,
+  expectSceneActive,
+  openGame,
+  press,
+  savedGame,
+  setSavedGame,
+  waitForScene,
+} from './helpers';
 
 // HU-01. Ver el menú principal al abrir el juego
 
@@ -56,10 +65,8 @@ test('Escenario 1: Primera apertura del juego', async ({ page }) => {
   expect(await isEnabled(page, 'Guardar partida')).toBe(false);
 });
 
-// Pendiente: el estado de partida guardada se implementa en HU-02/HU-03.
-// Hasta entonces hasSavedGame() siempre devuelve false y este escenario no puede cumplirse.
-test.fixme('Escenario 2: Con partida guardada', async ({ page }) => {
-  // TODO HU-03: crear aquí una partida guardada con el formato real de systems/save.ts.
+test('Escenario 2: Con partida guardada', async ({ page }) => {
+  await setSavedGame(page, savedGame());
   await openGame(page);
 
   expect(await isEnabled(page, 'Continuar')).toBe(true);
