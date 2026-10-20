@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.DS_Store
+
+# Documentación privada (catálogo de bugs, soluciones)
+docs-privadas/
+
+# Playwright
+test-results/
+playwright-report/

@@ -1,0 +1,21 @@
+{
+  "name": "valtrigo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Juego de navegador en 2D para practicar testing manual de videojuegos.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test": "playwright test"
+  },
+  "dependencies": {
+    "phaser": "^3.90.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.64.1",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.4"
+  }
+}
