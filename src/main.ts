@@ -15,6 +15,10 @@ const game = new Phaser.Game({
   height: GAME_HEIGHT,
   backgroundColor: COLORS.background,
   pixelArt: true,
+  physics: {
+    default: 'arcade',
+    arcade: { debug: false },
+  },
   scale: {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,

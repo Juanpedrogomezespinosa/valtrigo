@@ -33,3 +33,6 @@ export const NEW_GAME = {
 } as const;
 
 export const MAX_ENERGY = 100;
+
+// Velocidad del personaje en píxeles por segundo: 4 casillas por segundo (HU-06).
+export const PLAYER_SPEED = 64;

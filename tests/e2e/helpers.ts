@@ -178,3 +178,70 @@ export async function choosePauseOption(page: Page, label: string): Promise<void
   }
   await press(page, 'Enter');
 }
+
+// --- Personaje ---
+
+export interface PlayerInfo {
+  x: number;
+  y: number;
+  facing: string;
+  velocity: { x: number; y: number };
+}
+
+export async function playerInfo(page: Page): Promise<PlayerInfo> {
+  return page.evaluate(() => {
+    const game = (window as unknown as GameWindow).game;
+    const player = (game.scene.getScene('GameScene') as unknown as {
+      player: { x: number; y: number; facing: string; body: { velocity: { x: number; y: number } } };
+    }).player;
+    return {
+      x: player.x,
+      y: player.y,
+      facing: player.facing,
+      velocity: { x: player.body.velocity.x, y: player.body.velocity.y },
+    };
+  });
+}
+
+// Abre el juego y continúa una partida guardada con el personaje en una zona y casilla concretas.
+export async function startAt(page: Page, zone: string, position: { x: number; y: number }): Promise<void> {
+  await setSavedGame(page, savedGame({ zone, position }));
+  await openGame(page);
+  await press(page, 'ArrowDown'); // "Continuar"
+  await press(page, 'Enter');
+  await waitForScene(page, 'GameScene');
+}
+
+export async function playerBody(page: Page): Promise<{ left: number; right: number; top: number; bottom: number }> {
+  return page.evaluate(() => {
+    const game = (window as unknown as GameWindow).game;
+    const body = (game.scene.getScene('GameScene') as unknown as { player: { body: import('phaser').Physics.Arcade.Body } })
+      .player.body;
+    return { left: body.left, right: body.right, top: body.top, bottom: body.bottom };
+  });
+}
+
+export interface CameraInfo {
+  // Parte del mundo que se ve, en píxeles del mundo.
+  view: { left: number; top: number; right: number; bottom: number };
+  // Posición del personaje en pantalla, en píxeles de la pantalla del juego (960×540).
+  playerOnScreen: { x: number; y: number };
+  screen: { width: number; height: number };
+}
+
+export async function cameraInfo(page: Page): Promise<CameraInfo> {
+  return page.evaluate(() => {
+    const game = (window as unknown as GameWindow).game;
+    const scene = game.scene.getScene('GameScene') as import('phaser').Scene & { player: { x: number; y: number } };
+    const camera = scene.cameras.main;
+    const view = camera.worldView;
+    return {
+      view: { left: view.left, top: view.top, right: view.right, bottom: view.bottom },
+      playerOnScreen: {
+        x: (scene.player.x - view.left) * camera.zoom,
+        y: (scene.player.y - view.top) * camera.zoom,
+      },
+      screen: { width: camera.width, height: camera.height },
+    };
+  });
+}

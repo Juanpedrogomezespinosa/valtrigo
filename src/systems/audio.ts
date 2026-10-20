@@ -45,6 +45,12 @@ export function playMusic(scene: Phaser.Scene, key: string): void {
   scene.registry.set('music', key);
 }
 
+// Detiene la música al momento (al cerrar el juego).
+export function stopMusic(): void {
+  currentMusic?.track.stop(0);
+  currentMusic = null;
+}
+
 // Reproduce un efecto de sonido con el volumen de efectos.
 export function playEffect(scene: Phaser.Scene, name: SfxName): void {
   scene.sound.play(SFX[name].key, { volume: DEFAULT_SFX_VOLUME });

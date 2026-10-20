@@ -4,7 +4,7 @@ import { COLORS, FONT_FAMILY } from '../config';
 const DEPTH = 200;
 
 // Mensaje breve en la parte inferior de la pantalla, como "Partida guardada".
-// Desaparece solo al cabo de `durationMs`.
+// Desaparece solo al cabo de `durationMs` milisegundos reales.
 export function showMessage(scene: Phaser.Scene, message: string, durationMs: number): void {
   const text = scene.add
     .text(scene.scale.width / 2, scene.scale.height - 60, message, {
@@ -17,5 +17,11 @@ export function showMessage(scene: Phaser.Scene, message: string, durationMs: nu
     .setOrigin(0.5)
     .setDepth(DEPTH);
 
-  scene.time.delayedCall(durationMs, () => text.destroy());
+  // Se usa tiempo real y no el reloj de Phaser, que puede quedarse atrás si el equipo va lento:
+  // el mensaje debe durar los segundos indicados en la historia.
+  window.setTimeout(() => {
+    if (text.active) {
+      text.destroy();
+    }
+  }, durationMs);
 }

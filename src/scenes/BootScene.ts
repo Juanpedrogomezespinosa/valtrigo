@@ -18,7 +18,8 @@ export class BootScene extends Phaser.Scene {
     }
 
     this.load.image('tiles-town', 'assets/tilesets/kenney-tiny-town.png');
-    this.load.spritesheet('characters', 'assets/sprites/kenney-tiny-dungeon.png', { frameWidth: 16, frameHeight: 16 });
+    this.load.image('tiles-dungeon', 'assets/sprites/kenney-tiny-dungeon.png');
+    this.load.spritesheet('jugador', 'assets/sprites/personajes/jugador.png', { frameWidth: 16, frameHeight: 16 });
     for (const [zone, { map }] of Object.entries(ZONES)) {
       this.load.tilemapTiledJSON(mapKey(zone as ZoneId), map);
     }

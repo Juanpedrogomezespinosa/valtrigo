@@ -75,7 +75,7 @@ Es un proyecto público con un fin doble: servir de base para un curso de testin
 - Las 6 zonas son: exterior del pueblo (`plaza`, zona inicial), casa del jugador, tienda, granja (con el granero), lago y torre. Cada zona usa la pista de música con su nombre. src/data/zones.json lista las zonas y su mapa.
 - En la plaza: casa del jugador al oeste, torre del reloj al norte, tienda al este, camino al este hacia la granja y camino al sur hacia el lago. Árboles otoñales, por la historia del juego.
 - La cámara de las zonas usa zoom ×3 (`WORLD_ZOOM`): se ven unas 20×11 casillas.
-- Personaje del jugador: fotograma 85 de Tiny Dungeon. **Estos personajes solo tienen una postura**: para "mira hacia arriba/abajo" (HU-06) habrá que buscar otros sprites o añadir un indicador de dirección.
+- Personajes: hojas de Ninja Adventure (CC0) en public/assets/sprites/personajes/: jugador (Boy), vendedora (Woman), alcalde (Noble), relojera (OldWoman) y granjero (OldMan). Cada hoja tiene 4 columnas (abajo, arriba, izquierda, derecha) y las 4 primeras filas son la animación de andar. Del paquete solo se han copiado los archivos que usa el juego; la lista exacta está en public/assets/CREDITOS.md.
 
 ### Nueva partida y guardado (HU-02)
 
@@ -94,8 +94,7 @@ Es un proyecto público con un fin doble: servir de base para un curso de testin
 - Se restaura todo `GameState`: zona, posición, día, hora, dinero, energía, inventario, encargos activos y cofres abiertos (`openedChests`, con identificadores como `cofre-1`).
 - El escenario 2 de HU-03 (cofre 1 vacío y que no se reabre) está como `test.fixme` hasta HU-12, que crea los cofres y la interacción con E.
 - Casa del jugador: mapa de 12×9 casillas con las casillas de interior de Tiny Dungeon. Los mapas incluyen las dos hojas (Tiny Town y Tiny Dungeon) y GameScene usa la de Tiny Dungeon también como hoja de casillas.
-- **Falta una cama**: ninguno de los dos paquetes de Kenney tiene una. HU-24 la necesita, así que hará falta un gráfico antes de esa historia.
-- Hasta HU-09, las zonas más pequeñas que la pantalla (como la casa) se dibujan en la esquina superior izquierda en lugar de centradas.
+- La cama de HU-24 es public/assets/sprites/cama.png (16×32, recortada de Ninja Adventure).
 
 ### Pausa, reanudar y guardar (HU-26, HU-27, HU-04)
 
@@ -105,7 +104,38 @@ Es un proyecto público con un fin doble: servir de base para un curso de testin
 - Al abrir la pausa aparece seleccionada "Continuar".
 - "Opciones" desde la pausa abre OptionsScene, y "Volver" o Escape regresan a la pausa con "Opciones" seleccionada. La partida sigue detenida.
 - Escape: en la partida abre la pausa; en la pausa la reanuda; con un cuadro de confirmación abierto equivale a "No".
-- "Guardar partida" en la pausa guarda (sobrescribe la única partida guardada) y muestra "Partida guardada" durante 2 segundos en la parte inferior (src/ui/message.ts). Si el navegador no permite guardar, no se muestra el mensaje.
+- "Guardar partida" en la pausa guarda (sobrescribe la única partida guardada) y muestra "Partida guardada" durante 2 segundos en la parte inferior (src/ui/message.ts). Los mensajes temporales cuentan tiempo real (`setTimeout`), no el reloj de Phaser, que se retrasa si el equipo va cargado. Si el navegador no permite guardar, no se muestra el mensaje.
 - "Salir al menú principal": hay "cambios sin guardar" si la partida en curso no coincide exactamente con la guardada (o no hay partida guardada). Con cambios, pide confirmación; sin cambios, sale directamente. "No" deja la pausa abierta. Al salir, la partida en curso termina (`endGame()`) y el menú principal se abre con "Nueva partida" seleccionada.
 - El cuadro de confirmación parte el mensaje en varias líneas si no cabe.
 - El escenario 3 de HU-27 está como `test.fixme` hasta que existan los NPC (HU-10) y el avance del reloj (HU-22).
+
+### Salir del juego (HU-05)
+
+- Una página web no puede cerrar su propia pestaña. Decisión del autor (opción 1): al confirmar "Sí", el juego se apaga. Se para la música, se destruye Phaser (desaparece el lienzo) y queda una pantalla de despedida: "Has salido de Valtrigo. Puedes cerrar esta pestaña." (#farewell en index.html). Para volver a jugar hay que recargar la página.
+- El texto de HU-05 ("el juego se cierra") no se ha modificado.
+- "No" o Escape cierran el cuadro y el menú queda con "Salir" seleccionada.
+- Salir no toca la partida guardada.
+
+### Movimiento (HU-06)
+
+- El personaje se mueve con física Arcade de Phaser a 64 px/s (`PLAYER_SPEED`, 4 casillas por segundo), con movimiento libre, no casilla a casilla.
+- Con varias direcciones pulsadas manda la última pulsada (la tecla con `timeDown` más reciente). Al soltarla, vuelve a mandar la que siga pulsada.
+- Animación de andar a 8 fotogramas por segundo. Al pararse, el personaje mantiene la dirección hacia la que miraba.
+- Al abrir la pausa el personaje se para. Al reanudar, todas las teclas se dan por sueltas, porque las que se soltaron durante la pausa no llegan a la escena de juego.
+- La posición en casillas de `GameState` se actualiza en cada fotograma con la casilla en la que está el centro del personaje.
+- Seis efectos de Ninja Adventure ya están en public/assets/audio/sfx/ (pasos, abrir menú, compra, venta, cofre y encargo completado) para HU-32, pero todavía no se usan.
+
+### Colisiones (HU-07)
+
+- Todas las casillas de la capa `obstaculos` son sólidas: árboles, edificios, muros, muebles, el pozo y el cartel. El agua irá en esa capa cuando exista el lago (HU-08).
+- El cuerpo de colisión del personaje mide 14×14 y está centrado en su casilla de 16×16. Los gráficos tienen bordes transparentes, así que no se ve superposición, y queda algo de margen para pasar por huecos de una casilla.
+- El personaje no puede salir de los límites del mapa. Las salidas de la plaza hacia la granja y el lago se convertirán en cambios de zona en HU-08.
+- Si la dirección que manda (la última pulsada) está bloqueada, se usa la siguiente pulsada que esté libre. Si todas están bloqueadas, el personaje se queda quieto mirando hacia la que manda.
+- Para saber si una dirección está bloqueada se desplaza 1 px el cuerpo y se miran las casillas sólidas que tocaría.
+- Los escenarios 2 (agua) y 4 (NPC) de HU-07 están como `test.fixme` hasta HU-08 (lago) y HU-10 (NPC).
+
+### Cámara (HU-09)
+
+- La cámara sigue al personaje sin retardo (`startFollow`), así que siempre lo mantiene centrado, y redondea a píxeles enteros para que el pixel art no tiemble.
+- Sus límites son los del mapa, ampliados en cada eje en el que el mapa sea más pequeño que la vista (320×180 px de mundo con zoom ×3) y centrados sobre él. En los mapas grandes se detiene en los bordes. En los ejes pequeños no se mueve y la zona queda centrada, con el color de fondo alrededor.
+- El escenario 4 de HU-09 (cámara tras cruzar una puerta) está como `test.fixme` hasta HU-08.

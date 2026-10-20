@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { playMusic } from '../systems/audio';
+import { playMusic, stopMusic } from '../systems/audio';
 import { createNewGameState, isGameInProgress, startGame } from '../systems/gameState';
 import { hasSavedGame, readSave, writeSave } from '../systems/save';
 import { showConfirmDialog } from '../ui/confirmDialog';
@@ -78,7 +78,9 @@ export class MenuScene extends Phaser.Scene {
       case 'Créditos':
         this.scene.start('CreditsScene');
         break;
-      // "Salir" se implementa en HU-05.
+      case 'Salir':
+        this.exit();
+        break;
     }
   }
 
@@ -106,6 +108,27 @@ export class MenuScene extends Phaser.Scene {
     }
     startGame(state);
     this.scene.start('GameScene');
+  }
+
+  // HU-05: pide confirmación y cierra el juego. "No" deja el menú con "Salir" seleccionada.
+  private exit(): void {
+    this.menu.active = false;
+    showConfirmDialog(this, '¿Salir del juego?', (yes) => {
+      this.menu.active = true;
+      if (yes) {
+        this.closeGame();
+      }
+    });
+  }
+
+  // Una página web no puede cerrar su propia pestaña, así que el juego se apaga:
+  // se para la música, se destruye Phaser (con su lienzo) y queda una pantalla de despedida.
+  // La partida guardada no se toca.
+  private closeGame(): void {
+    stopMusic();
+    this.game.destroy(true);
+    document.getElementById('game')?.remove();
+    document.getElementById('farewell')?.classList.add('visible');
   }
 
   // Carga la partida guardada directamente, sin selector (HU-03).
