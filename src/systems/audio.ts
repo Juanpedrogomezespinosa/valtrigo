@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
-import { DEFAULT_MUSIC_VOLUME, DEFAULT_SFX_VOLUME } from '../config';
+import { VOLUME_BARS } from '../config';
 import { LoopingTrack } from './music';
+import { getSettings, updateSettings, type Settings } from './settings';
 
 // Efectos de sonido. La clave es la que se usa al cargarlos y la ruta es relativa a public/.
 export const SFX = {
@@ -11,6 +12,8 @@ export const SFX = {
 export type SfxName = keyof typeof SFX;
 
 let currentMusic: { key: string; track: LoopingTrack } | null = null;
+// Cuántas veces ha empezado a sonar una pista. Sirve para comprobar que la música no se reinicia.
+let musicStarts = 0;
 let musicVolume: GainNode | null = null;
 
 // Reproduce una música en bucle. Si ya está sonando, no la reinicia,
@@ -30,7 +33,7 @@ export function playMusic(scene: Phaser.Scene, key: string): void {
 
   if (!musicVolume) {
     musicVolume = sound.context.createGain();
-    musicVolume.gain.value = DEFAULT_MUSIC_VOLUME;
+    musicVolume.gain.value = getSettings().musicBars / VOLUME_BARS;
     musicVolume.connect(sound.destination);
   }
 
@@ -40,6 +43,7 @@ export function playMusic(scene: Phaser.Scene, key: string): void {
   currentMusic?.track.stop();
   track.play();
   currentMusic = { key, track };
+  musicStarts++;
 
   // Se anota en el registro del juego para que los tests sepan qué música suena.
   scene.registry.set('music', key);
@@ -51,7 +55,51 @@ export function stopMusic(): void {
   currentMusic = null;
 }
 
-// Reproduce un efecto de sonido con el volumen de efectos.
+// Reproduce un efecto de sonido con el volumen de efectos (HU-29).
 export function playEffect(scene: Phaser.Scene, name: SfxName): void {
-  scene.sound.play(SFX[name].key, { volume: DEFAULT_SFX_VOLUME });
+  scene.sound.play(SFX[name].key, { volume: getSettings().effectBars / VOLUME_BARS });
+}
+
+// Aplica las opciones de sonido al instante (HU-28 a HU-30) y las guarda (HU-34).
+// El silencio usa el silencio general de Phaser, por el que pasan la música y los efectos:
+// así los volúmenes conservan sus valores mientras está activo.
+export function changeSoundSettings(game: Phaser.Game, changes: Partial<Settings>): Settings {
+  const settings = updateSettings(changes);
+  applySoundSettings(game);
+  return settings;
+}
+
+export function applySoundSettings(game: Phaser.Game): void {
+  const settings = getSettings();
+  game.sound.mute = settings.muted;
+  if (musicVolume) {
+    musicVolume.gain.value = settings.musicBars / VOLUME_BARS;
+  }
+}
+
+// Estado real del audio, para los tests.
+export function getAudioState(game: Phaser.Game): {
+  musicGain: number | null;
+  muted: boolean;
+  music: string | null;
+  musicStarts: number;
+} {
+  return { musicGain: musicVolume?.gain.value ?? null, muted: game.sound.mute, music: currentMusic?.key ?? null, musicStarts };
+}
+
+// HU-31: reproduce la música de una zona. Las pistas pesan varios MB, así que cada una se descarga
+// la primera vez que se entra en su zona; mientras tanto sigue sonando la anterior.
+export function playZoneMusic(scene: Phaser.Scene, key: string, path: string): void {
+  if (scene.cache.audio.exists(key)) {
+    playMusic(scene, key);
+    return;
+  }
+  scene.load.audio(key, path);
+  scene.load.once(Phaser.Loader.Events.COMPLETE, () => {
+    // Si mientras tanto se ha salido de la partida, no se pone la música.
+    if (scene.sys.isActive()) {
+      playMusic(scene, key);
+    }
+  });
+  scene.load.start();
 }

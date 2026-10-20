@@ -12,11 +12,11 @@ export const COLORS = {
 
 export const FONT_FAMILY = 'sans-serif';
 
-// Volumen de la música mientras no existan las opciones de sonido (HU-28).
-export const DEFAULT_MUSIC_VOLUME = 0.6;
-
-// Volumen de los efectos mientras no existan las opciones de sonido (HU-29).
-export const DEFAULT_SFX_VOLUME = 0.5;
+// Opciones de sonido (HU-28 a HU-30): volúmenes en barras, de 0 a 10. Valores la primera vez que
+// se abre el juego, sin ajustes guardados (decisión del autor).
+export const VOLUME_BARS = 10;
+export const DEFAULT_MUSIC_BARS = 6;
+export const DEFAULT_EFFECT_BARS = 5;
 
 // Mundo
 export const TILE_SIZE = 16;

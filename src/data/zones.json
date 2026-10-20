@@ -1,26 +1,32 @@
 {
   "plaza": {
     "name": "Exterior del pueblo",
-    "map": "assets/maps/plaza.json"
+    "map": "assets/maps/plaza.json",
+    "music": "assets/audio/plaza.mp3"
   },
   "casa": {
     "name": "Casa del jugador",
-    "map": "assets/maps/casa.json"
+    "map": "assets/maps/casa.json",
+    "music": "assets/audio/casa.mp3"
   },
   "tienda": {
     "name": "Tienda",
-    "map": "assets/maps/tienda.json"
+    "map": "assets/maps/tienda.json",
+    "music": "assets/audio/tienda.mp3"
   },
   "torre": {
     "name": "Torre del reloj",
-    "map": "assets/maps/torre.json"
+    "map": "assets/maps/torre.json",
+    "music": "assets/audio/torre.mp3"
   },
   "granja": {
     "name": "Granja",
-    "map": "assets/maps/granja.json"
+    "map": "assets/maps/granja.json",
+    "music": "assets/audio/granja.mp3"
   },
   "lago": {
     "name": "Lago",
-    "map": "assets/maps/lago.json"
+    "map": "assets/maps/lago.json",
+    "music": "assets/audio/lago.mp3"
   }
 }

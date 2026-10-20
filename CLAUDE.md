@@ -54,14 +54,14 @@ Es un proyecto público con un fin doble: servir de base para un curso de testin
 - La música sale por un nodo de volumen propio (systems/audio.ts) conectado a la salida de Phaser, para que el volumen y el silencio de HU-28 a HU-30 se apliquen en un único punto.
 - Al cambiar de música, la anterior se desvanece en 2 segundos mientras entra la nueva (el mismo solapamiento que entre vueltas).
 - Créditos de la música (para HU-35): todas las pistas de public/assets/audio/ son de Juanpe Gómez, generadas con IA (Flow, de Google).
-- BootScene solo carga menu.mp3. Cada pista pesa unos 3-4 MB, así que la música de cada zona se cargará con su zona (HU-31).
+- BootScene solo carga menu.mp3. Cada pista pesa unos 3-4 MB, así que la de cada zona se descarga la primera vez que se entra en ella (HU-31).
 - systems/audio.ts anota la música que suena en `game.registry` ('music') para que los tests puedan comprobarla.
 
 ### Efectos de sonido (HU-32)
 
 - Se han añadido a HU-32 dos criterios y los escenarios 5 y 6: efecto de navegación al cambiar de opción en un menú y efecto de confirmación al activar una opción. Las opciones desactivadas no suenan, para no contradecir el escenario 4 de HU-01 ("no ocurre nada").
 - **Los efectos son provisionales.** Se generan por código con `node tools/generar-efectos.mjs`, que escribe archivos WAV en public/assets/audio/sfx/. Para cambiar uno por un archivo definitivo, basta con sustituir el WAV o la ruta en `SFX` (src/systems/audio.ts).
-- Los efectos se cargan en BootScene a partir de la lista `SFX` de systems/audio.ts y se reproducen con `playEffect()`, con el volumen `DEFAULT_SFX_VOLUME` hasta HU-29.
+- Los efectos se cargan en BootScene a partir de la lista `SFX` de systems/audio.ts y se reproducen con `playEffect()`, con el volumen de efectos de las opciones (HU-29).
 - Si la flecha no cambia la selección (por ejemplo, arriba en la primera opción), no suena nada.
 - Con el ratón, un clic en una opción solo reproduce el efecto de confirmación, no el de navegación.
 - "Volver" (con clic, Enter o Escape) reproduce el efecto de confirmación.
@@ -86,7 +86,6 @@ Es un proyecto público con un fin doble: servir de base para un curso de testin
 - `hasGameInProgress()` ha pasado de save.ts a gameState.ts (`isGameInProgress()`), porque la partida en curso no es parte del guardado.
 - En desarrollo, main.ts expone también `window.gameState()` para que los tests consulten la partida en curso.
 - El escenario 2 de HU-01 ya está activo: una partida guardada válida activa "Continuar" (que aún no hace nada hasta HU-03).
-- Hasta HU-31, en la plaza sigue sonando la música del menú.
 
 ### Continuar partida (HU-03)
 
@@ -236,3 +235,18 @@ Es un proyecto público con un fin doble: servir de base para un curso de testin
 - E junto a la cama abre "¿Dormir?" con "Sí" y "No" (el mismo cuadro de confirmación que el menú, dibujado en la capa de interfaz). Mientras está abierto el personaje no se mueve y Escape equivale a "No".
 - **Qué se guarda al dormir** (decisión del autor, lectura literal de HU-25 escenario 3): la partida tal como está al acostarse (si se duerme el día 4 a las 21:00, se guarda el día 4 a las 21:00, junto a la cama). Después aparece "Partida guardada" (2 s, arriba), la pantalla se funde a negro (0,5 s) y empieza el día siguiente a las 06:00 con la energía a 100, junto a la cama. Ese estado de la mañana no se guarda hasta el próximo guardado.
 - Dormir en la cama y dormirse a medianoche comparten el fundido y el despertar (`sleepUntilMorning` en GameScene, src/systems/sleep.ts). A medianoche no se guarda y se pierde lo no guardado.
+
+### Opciones de sonido y controles (HU-28 a HU-30, HU-33 y HU-34)
+
+- Ajustes en src/systems/settings.ts: música y efectos de 0 a 10 barras y silencio. Primera vez: música 6 y efectos 5 (decisión del autor). Se guardan en localStorage con la clave `valtrigo.opciones` y se cargan en BootScene. Si el navegador no permite guardar, se aplican igual pero no se conservan.
+- Volumen: música = barras / 10 en el nodo de ganancia de la música; efectos = barras / 10 en cada `playEffect()`. "Silenciar" usa el silencio general de Phaser (`game.sound.mute`), por el que pasan música y efectos, así que las barras conservan sus valores.
+- Pantalla de opciones: filas "Música", "Efectos", "Silenciar" y "Volver". ↑ ↓ eligen la fila (efecto de navegación), ← → cambian el volumen al instante, Enter o un clic activan "Silenciar" o "Volver", y Escape vuelve. Las barras también se ajustan con un clic.
+- Efecto de prueba (HU-29): al soltar ← o → (o el clic) en "Efectos", si el valor ha cambiado, suena el efecto de confirmación con el nuevo volumen.
+- Tabla de controles (HU-33) a la derecha, de solo lectura: pulsar sobre una tecla no hace nada.
+- Las opciones se abren desde el menú principal y desde la pausa, y se aplican igual en los dos casos.
+
+### Música por zona (HU-31)
+
+- Cada zona tiene su pista en src/data/zones.json (`music`), con la clave `music-<zona>`. GameScene la pone al crear la zona (`playZoneMusic`). Si es la que ya suena, no se reinicia; si es otra, entra con crossfade.
+- La primera vez que se entra en una zona su pista se descarga; mientras tanto sigue sonando la anterior.
+- Al volver al menú principal suena la música del menú. En desarrollo, `window.audioState()` dice qué pista suena y cuántas veces ha empezado una (`musicStarts`), para comprobar que no se reinicia.

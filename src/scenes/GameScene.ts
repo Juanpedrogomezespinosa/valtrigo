@@ -11,10 +11,11 @@ import { getGameState, startGame } from '../systems/gameState';
 import { addItem, type ItemId } from '../systems/inventory';
 import { isShopOpen } from '../systems/economy';
 import { writeSave } from '../systems/save';
+import { playZoneMusic } from '../systems/audio';
 import { stateAfterMidnight, stateAfterSleeping } from '../systems/sleep';
 import { advanceTime } from '../systems/time';
 import { acceptQuest, canReceiveReward, completeQuest, conversationWith, type NpcId } from '../systems/quests';
-import { findMapPoint, getProperty, mapKey, mapObjects, pointTile, type MapObject, type ZoneId } from '../systems/zones';
+import { findMapPoint, getProperty, mapKey, mapObjects, pointTile, ZONES, type MapObject, type ZoneId } from '../systems/zones';
 import { showConfirmDialog } from '../ui/confirmDialog';
 import { showMessage } from '../ui/message';
 import type { DialogSceneData } from './DialogScene';
@@ -119,6 +120,9 @@ export class GameScene extends Phaser.Scene {
 
     this.setUpCamera(map.widthInPixels, map.heightInPixels);
     this.setUpKeys();
+
+    // HU-31: la música de la zona. Si es la misma que ya suena, no se reinicia.
+    playZoneMusic(this, `music-${state.zone}`, ZONES[state.zone].music);
 
     // Capa de noche (HU-23) e interfaz fija (día, hora, dinero y energía), por encima de la partida.
     for (const key of ['NightScene', 'HudScene']) {

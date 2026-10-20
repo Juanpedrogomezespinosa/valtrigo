@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
-import { SFX } from '../systems/audio';
+import { applySoundSettings, SFX } from '../systems/audio';
+import { loadSettings } from '../systems/settings';
 import { ITEMS } from '../systems/inventory';
 import { mapKey, ZONES, type ZoneId } from '../systems/zones';
 
@@ -38,6 +39,9 @@ export class BootScene extends Phaser.Scene {
   }
 
   create(): void {
+    // HU-34: al abrir el juego se cargan los últimos ajustes de sonido guardados.
+    loadSettings();
+    applySoundSettings(this.game);
     this.scene.start('MenuScene');
   }
 }

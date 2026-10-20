@@ -57,17 +57,23 @@ export async function expectSceneActive(page: Page, sceneKey: string): Promise<v
 // Empieza a anotar los efectos de sonido que reproduce el juego, o vacía la lista si ya se anotaban.
 export async function recordEffects(page: Page): Promise<void> {
   await page.evaluate(() => {
-    const target = window as unknown as GameWindow & { playedEffects?: string[] };
+    const target = window as unknown as GameWindow & {
+      playedEffects?: string[];
+      playedEffectVolumes?: { key: string; volume: number }[];
+    };
     // Si ya se estaban anotando, solo se vacía la lista.
     if (target.playedEffects) {
       target.playedEffects = [];
+      target.playedEffectVolumes = [];
       return;
     }
     target.playedEffects = [];
+    target.playedEffectVolumes = [];
     const sound = target.game.sound;
     const originalPlay = sound.play.bind(sound);
     sound.play = (key: string, extra?: unknown) => {
       target.playedEffects?.push(key);
+      target.playedEffectVolumes?.push({ key, volume: (extra as { volume?: number } | undefined)?.volume ?? 1 });
       return originalPlay(key, extra as never);
     };
   });
@@ -646,4 +652,67 @@ export async function answerSleep(page: Page, answer: 'Sí' | 'No'): Promise<voi
   await press(page, 'e');
   expect(await sceneTexts(page, 'HudScene')).toContain('¿Dormir?');
   await clickText(page, 'HudScene', answer);
+}
+
+// Efectos anotados por recordEffects, con el volumen con el que se reprodujeron (0 a 1).
+export async function playedEffectVolumes(page: Page): Promise<{ key: string; volume: number }[]> {
+  return page.evaluate(() => (window as unknown as { playedEffectVolumes: { key: string; volume: number }[] }).playedEffectVolumes);
+}
+
+// --- Opciones de sonido ---
+
+const SETTINGS_KEY = 'valtrigo.opciones';
+
+// Deja unos ajustes de sonido guardados antes de abrir el juego (solo la primera vez en la página).
+export async function setSoundSettings(
+  page: Page,
+  settings: { musicBars: number; effectBars: number; muted: boolean },
+): Promise<void> {
+  await page.addInitScript(
+    ({ key, value }) => {
+      if (!sessionStorage.getItem('opciones-preparadas')) {
+        localStorage.setItem(key, value);
+        sessionStorage.setItem('opciones-preparadas', '1');
+      }
+    },
+    { key: SETTINGS_KEY, value: JSON.stringify(settings) },
+  );
+}
+
+export interface OptionsView {
+  selected: string;
+  musicBars: number;
+  effectBars: number;
+  muted: boolean;
+  controls: [string, string][];
+}
+
+export async function optionsView(page: Page): Promise<OptionsView | null> {
+  return page.evaluate(() => {
+    const game = (window as unknown as GameWindow).game;
+    if (!game.scene.isActive('OptionsScene')) return null;
+    return (game.scene.getScene('OptionsScene') as unknown as { getState(): OptionsView }).getState();
+  });
+}
+
+export interface AudioState {
+  musicGain: number | null;
+  muted: boolean;
+  music: string | null;
+  musicStarts: number;
+}
+
+export async function audioState(page: Page): Promise<AudioState> {
+  return page.evaluate(() => (window as unknown as { audioState(): AudioState }).audioState());
+}
+
+// Abre Opciones desde el menú principal y selecciona una fila.
+export async function openOptionsAt(page: Page, row: 'Música' | 'Efectos' | 'Silenciar' | 'Volver'): Promise<void> {
+  await openGame(page);
+  for (let i = 0; i < 3; i++) await press(page, 'ArrowDown'); // "Opciones"
+  await press(page, 'Enter');
+  await waitForScene(page, 'OptionsScene');
+  const rows = ['Música', 'Efectos', 'Silenciar', 'Volver'];
+  for (let i = 0; i < rows.indexOf(row); i++) await press(page, 'ArrowDown');
+  expect((await optionsView(page))?.selected).toBe(row);
 }
