@@ -1,10 +1,12 @@
 import Phaser from 'phaser';
-import { COLORS, FONT_FAMILY, TALK_DISTANCE, WORLD_ZOOM, ZONE_FADE_MS } from '../config';
+import { COLORS, FONT_FAMILY, MESSAGE_MS, TALK_DISTANCE, WORLD_ZOOM, ZONE_FADE_MS } from '../config';
 import dialogues from '../data/dialogues.json';
 import { Npc } from '../entities/Npc';
 import { Player, type Direction } from '../entities/Player';
 import type { DialogSceneData, NpcId } from './DialogScene';
 import { getGameState } from '../systems/gameState';
+import { addItem, type ItemId } from '../systems/inventory';
+import { showMessage } from '../ui/message';
 import { findMapPoint, getProperty, mapKey, mapObjects, pointTile, type ZoneId } from '../systems/zones';
 
 export interface GameSceneData {
@@ -80,6 +82,12 @@ export class GameScene extends Phaser.Scene {
       .setVisible(false);
 
     this.input.keyboard!.on('keydown-E', () => this.talk());
+    this.input.keyboard!.on('keydown-I', () => this.openInventory());
+
+    // Interfaz fija (dinero), por encima de la partida.
+    if (!this.scene.isActive('HudScene')) {
+      this.scene.launch('HudScene');
+    }
 
     this.doors = mapObjects(this, state.zone)
       .filter((object) => object.name === 'puerta')
@@ -111,6 +119,25 @@ export class GameScene extends Phaser.Scene {
     const onResume = () => this.input.keyboard!.resetKeys();
     this.events.on(Phaser.Scenes.Events.RESUME, onResume);
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.events.off(Phaser.Scenes.Events.RESUME, onResume));
+  }
+
+  // HU-15: recoge objetos. Si no caben, no se recoge ninguno y aparece "Inventario lleno".
+  pickUp(item: ItemId, quantity: number): boolean {
+    if (addItem(item, quantity)) {
+      return true;
+    }
+    showMessage(this.scene.get('HudScene'), 'Inventario lleno', MESSAGE_MS);
+    return false;
+  }
+
+  // HU-13: I abre el inventario. La partida se detiene mientras está abierto.
+  private openInventory(): void {
+    if (this.changingZone || this.dialogOpen) {
+      return;
+    }
+    this.player.stand();
+    this.scene.pause();
+    this.scene.launch('InventoryScene');
   }
 
   isChangingZone(): boolean {

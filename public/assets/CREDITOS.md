@@ -5,7 +5,21 @@
 | Tiny Town 1.1 | tilesets/kenney-tiny-town.png | Kenney (www.kenney.nl) | CC0 1.0 (dominio público) |
 | Tiny Dungeon 1.0 | sprites/kenney-tiny-dungeon.png | Kenney (www.kenney.nl) | CC0 1.0 (dominio público) |
 | Ninja Adventure (personajes) | sprites/personajes/*.png | Pixel-boy y AAA (pixel-boy.itch.io) | CC0 1.0 (dominio público) |
-| Ninja Adventure (cama) | sprites/cama.png | Pixel-boy y AAA (pixel-boy.itch.io) | CC0 1.0 (dominio público) |
+| Ninja Adventure (retratos) | sprites/retratos/*.png | Pixel-boy y AAA (pixel-boy.itch.io) | CC0 1.0 (dominio público) |
+| Ninja Adventure (objetos y cofre) | sprites/objetos/*.png, sprites/cofre.png | Pixel-boy y AAA (pixel-boy.itch.io) | CC0 1.0 (dominio público) |
+| Ninja Adventure (cama) | sprites/retratos/vendedora.png | Actor/Character/Woman/Faceset.png |
+| sprites/retratos/alcalde.png | Actor/Character/Noble/Faceset.png |
+| sprites/retratos/relojera.png | Actor/Character/OldWoman/Faceset.png |
+| sprites/retratos/granjero.png | Actor/Character/OldMan/Faceset.png |
+| sprites/objetos/manzana.png | Items/Food/SeedBig3.png |
+| sprites/objetos/semilla.png | Items/Food/Seed1.png |
+| sprites/objetos/pala.png | Items/Tool/Shovel.png |
+| sprites/objetos/carta-del-alcalde.png | Items/Other/Letter.png |
+| sprites/objetos/pieza-del-reloj-1.png | Items/Resource/BarCopper.png |
+| sprites/objetos/pieza-del-reloj-2.png | Items/Resource/BarSilver.png |
+| sprites/objetos/pieza-del-reloj-3.png | Items/Resource/BarGold.png |
+| sprites/cofre.png | Items/Treasure/LittleTreasureChest.png (cerrado y abierto, 16×16 cada uno) |
+| sprites/cama.png | Pixel-boy y AAA (pixel-boy.itch.io) | CC0 1.0 (dominio público) |
 | Ninja Adventure (efectos) | audio/sfx/pasos.wav, abrir-menu.wav, compra.wav, venta.wav, cofre.wav, encargo-completado.wav | Pixel-boy y AAA (pixel-boy.itch.io) | CC0 1.0 (dominio público) |
 | Música | audio/*.mp3 | Juanpe Gómez, generada con IA (Flow, de Google) | Propia |
 | Casillas de agua | tilesets/agua.png | Generadas por código (tools/generar-agua.mjs), con la paleta de Kenney | Propia |
@@ -23,6 +37,18 @@ Archivos de Ninja Adventure (https://pixel-boy.itch.io/ninja-adventure-asset-pac
 | sprites/personajes/alcalde.png | Actor/Character/Noble/SpriteSheet.png |
 | sprites/personajes/relojera.png | Actor/Character/OldWoman/SpriteSheet.png |
 | sprites/personajes/granjero.png | Actor/Character/OldMan/SpriteSheet.png |
+| sprites/retratos/vendedora.png | Actor/Character/Woman/Faceset.png |
+| sprites/retratos/alcalde.png | Actor/Character/Noble/Faceset.png |
+| sprites/retratos/relojera.png | Actor/Character/OldWoman/Faceset.png |
+| sprites/retratos/granjero.png | Actor/Character/OldMan/Faceset.png |
+| sprites/objetos/manzana.png | Items/Food/SeedBig3.png |
+| sprites/objetos/semilla.png | Items/Food/Seed1.png |
+| sprites/objetos/pala.png | Items/Tool/Shovel.png |
+| sprites/objetos/carta-del-alcalde.png | Items/Other/Letter.png |
+| sprites/objetos/pieza-del-reloj-1.png | Items/Resource/BarCopper.png |
+| sprites/objetos/pieza-del-reloj-2.png | Items/Resource/BarSilver.png |
+| sprites/objetos/pieza-del-reloj-3.png | Items/Resource/BarGold.png |
+| sprites/cofre.png | Items/Treasure/LittleTreasureChest.png (cerrado y abierto, 16×16 cada uno) |
 | sprites/cama.png | Backgrounds/Tilesets/tileset_bed.png, recorte de la cama individual roja (x 80, y 48, 16×32) |
 | audio/sfx/pasos.wav | Audio/Sounds/Elemental/Grass.wav |
 | audio/sfx/abrir-menu.wav | Audio/Sounds/Menu/Menu5.wav |

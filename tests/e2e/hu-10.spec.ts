@@ -18,7 +18,7 @@ test('Escenario 1: Iniciar un diálogo', async ({ page }) => {
     const image = game.scene.getScene('DialogScene').children.getByName('retrato') as import('phaser').GameObjects.Image;
     return { texture: image.texture.key, visible: image.visible };
   });
-  expect(portrait).toEqual({ texture: 'alcalde', visible: true });
+  expect(portrait).toEqual({ texture: 'retrato-alcalde', visible: true });
 
   // El texto se escribe letra a letra: primero aparece una parte y luego crece hasta la línea completa.
   const first = await dialogState(page);

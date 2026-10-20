@@ -9,7 +9,8 @@ test('Escenario 1: Reanudar con el botón', async ({ page }) => {
 
   await choosePauseOption(page, 'Continuar');
 
-  await expect.poll(() => activeScenes(page)).toEqual(['GameScene']);
+  await expect.poll(() => activeScenes(page)).not.toContain('PauseScene');
+  expect(await activeScenes(page)).toContain('GameScene');
   expect(await isScenePaused(page, 'GameScene')).toBe(false);
 });
 
@@ -19,7 +20,8 @@ test('Escenario 2: Reanudar con Escape', async ({ page }) => {
 
   await press(page, 'Escape');
 
-  await expect.poll(() => activeScenes(page)).toEqual(['GameScene']);
+  await expect.poll(() => activeScenes(page)).not.toContain('PauseScene');
+  expect(await activeScenes(page)).toContain('GameScene');
   expect(await isScenePaused(page, 'GameScene')).toBe(false);
 });
 

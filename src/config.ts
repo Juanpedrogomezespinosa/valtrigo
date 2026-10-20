@@ -44,3 +44,10 @@ export const ZONE_FADE_MS = 500;
 // ("a menos de una casilla") y velocidad de escritura del texto, letra a letra.
 export const TALK_DISTANCE = TILE_SIZE;
 export const DIALOG_MS_PER_LETTER = 30;
+
+// Inventario (HU-13 y HU-15).
+export const INVENTORY_SLOTS = 20;
+export const MAX_STACK = 99;
+
+// Duración de los mensajes breves sin duración indicada en las historias ("Inventario lleno", "No se puede usar").
+export const MESSAGE_MS = 2000;

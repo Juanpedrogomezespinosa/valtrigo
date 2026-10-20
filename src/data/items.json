@@ -1,0 +1,9 @@
+{
+  "manzana": { "name": "Manzana", "consumable": true, "energy": 15 },
+  "semilla": { "name": "Semilla", "consumable": false },
+  "pala": { "name": "Pala", "consumable": false },
+  "carta-del-alcalde": { "name": "Carta del alcalde", "consumable": false },
+  "pieza-del-reloj-1": { "name": "Pieza del reloj (cobre)", "consumable": false },
+  "pieza-del-reloj-2": { "name": "Pieza del reloj (plata)", "consumable": false },
+  "pieza-del-reloj-3": { "name": "Pieza del reloj (oro)", "consumable": false }
+}

@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { SFX } from '../systems/audio';
+import { ITEMS } from '../systems/inventory';
 import { mapKey, ZONES, type ZoneId } from '../systems/zones';
 
 // Escena de arranque: carga los recursos y abre el menú principal.
@@ -22,6 +23,12 @@ export class BootScene extends Phaser.Scene {
     this.load.image('tiles-agua', 'assets/tilesets/agua.png');
     for (const character of ['jugador', 'vendedora', 'alcalde', 'relojera', 'granjero']) {
       this.load.spritesheet(character, `assets/sprites/personajes/${character}.png`, { frameWidth: 16, frameHeight: 16 });
+    }
+    for (const item of Object.keys(ITEMS)) {
+      this.load.image(`objeto-${item}`, `assets/sprites/objetos/${item}.png`);
+    }
+    for (const npc of ['vendedora', 'alcalde', 'relojera', 'granjero']) {
+      this.load.image(`retrato-${npc}`, `assets/sprites/retratos/${npc}.png`);
     }
     for (const [zone, { map }] of Object.entries(ZONES)) {
       this.load.tilemapTiledJSON(mapKey(zone as ZoneId), map);

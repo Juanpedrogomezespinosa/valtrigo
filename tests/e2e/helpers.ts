@@ -410,3 +410,45 @@ export async function talkIndicator(page: Page): Promise<{ visible: boolean; tar
 export async function waitForDialogLineComplete(page: Page): Promise<void> {
   await expect.poll(async () => (await dialogState(page))?.typing, { intervals: [25] }).toBe(false);
 }
+
+// --- Inventario y dinero ---
+
+export interface InventoryView {
+  selected: number;
+  slots: ({ item: string; name: string; quantity: number; icon: string } | null)[];
+}
+
+export async function inventoryView(page: Page): Promise<InventoryView | null> {
+  return page.evaluate(() => {
+    const game = (window as unknown as GameWindow).game;
+    if (!game.scene.isActive('InventoryScene')) return null;
+    return (game.scene.getScene('InventoryScene') as unknown as { getState(): InventoryView }).getState();
+  });
+}
+
+// Abre el juego y continúa una partida guardada con los datos indicados, en la plaza.
+export async function startWith(page: Page, overrides: Partial<TestGameState>): Promise<void> {
+  await setSavedGame(page, savedGame({ zone: 'plaza', position: { x: 20, y: 17 }, ...overrides }));
+  await openGame(page);
+  await press(page, 'ArrowDown'); // "Continuar"
+  await press(page, 'Enter');
+  await waitForScene(page, 'GameScene');
+}
+
+// Recoge objetos igual que lo hace el juego (window.pickUp, solo en desarrollo).
+export async function pickUp(page: Page, item: string, quantity: number): Promise<boolean> {
+  return page.evaluate(
+    ({ item, quantity }) => (window as unknown as { pickUp(i: string, q: number): boolean }).pickUp(item, quantity),
+    { item, quantity },
+  );
+}
+
+export async function hudMoney(page: Page): Promise<{ text: string; x: number; y: number; visible: boolean } | null> {
+  return page.evaluate(() => {
+    const game = (window as unknown as GameWindow).game;
+    if (!game.scene.isActive('HudScene')) return null;
+    const text = game.scene.getScene('HudScene').children.getByName('dinero') as import('phaser').GameObjects.Text;
+    const bounds = text.getBounds();
+    return { text: text.text, x: bounds.centerX, y: bounds.centerY, visible: text.visible };
+  });
+}

@@ -13,7 +13,8 @@ export interface DialogSceneData {
 
 const BOX_HEIGHT = 160;
 const MARGIN = 20;
-const PORTRAIT_SIZE = 96;
+// Los retratos miden 38×38: se amplían ×3 sin suavizar.
+const PORTRAIT_SIZE = 114;
 
 // Cuadro de diálogo de un NPC (HU-10), en la parte inferior de la pantalla, sobre la partida.
 // - Muestra el retrato y el nombre del NPC, y escribe cada línea letra a letra.
@@ -48,9 +49,8 @@ export class DialogScene extends Phaser.Scene {
       .setOrigin(0)
       .setStrokeStyle(2, Phaser.Display.Color.HexStringToColor(COLORS.text).color);
 
-    // Retrato: el NPC mirando de frente, ampliado.
     this.add
-      .image(MARGIN * 2, top + (BOX_HEIGHT - PORTRAIT_SIZE) / 2, this.npc, 0)
+      .image(MARGIN * 2, top + (BOX_HEIGHT - PORTRAIT_SIZE) / 2, `retrato-${this.npc}`)
       .setOrigin(0)
       .setDisplaySize(PORTRAIT_SIZE, PORTRAIT_SIZE)
       .setName('retrato');

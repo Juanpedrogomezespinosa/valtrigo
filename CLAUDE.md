@@ -155,7 +155,26 @@ Es un proyecto público con un fin doble: servir de base para un curso de testin
 - Los 4 NPC: alcalde en la plaza (24, 13), vendedora en la tienda (9, 4, junto al mostrador), relojera en la torre (5, 5) y granjero en la granja (16, 9). En Tiled son puntos llamados `npc` con la propiedad `personaje`.
 - Los NPC están quietos y miran hacia abajo. Tienen un cuerpo de 14×14, como el personaje, y son obstáculos.
 - "A menos de una casilla": el hueco entre el cuerpo del personaje y el del NPC es menor de 16 px (`TALK_DISTANCE`). Si hay varios NPC a tiro, se elige el más cercano. El indicador "E" se dibuja encima de ese NPC.
-- **Retratos:** como retrato se usa el primer fotograma del NPC (mirando de frente), ampliado a 96×96. Los retratos propios de Ninja Adventure (`Faceset.png`) no se copiaron antes de borrar el paquete; si se recuperan, basta con cargarlos y cambiar la imagen en DialogScene.
+- Retratos: los `Faceset.png` de Ninja Adventure (38×38) en public/assets/sprites/retratos/, ampliados ×3.
 - El texto se escribe a 30 ms por letra (`DIALOG_MS_PER_LETTER`).
 - El diálogo es una escena aparte (DialogScene) encima de la partida. Mientras está abierto, el personaje no se mueve, el indicador se oculta y no se puede cruzar puertas. Escape abre la pausa también con un diálogo abierto: el diálogo queda detenido y continúa al reanudar.
 - Las líneas de cada NPC están en src/data/dialogues.json. Hasta HU-11 todos usan su saludo (`greeting`).
+
+### Encargos: decisiones del autor (para HU-11, HU-19 y HU-20)
+
+- **Encargo 1:** lo ofrece el alcalde ("la vendedora tiene una carta para mí, ¿me la traes?"). Mientras el encargo 1 está activo, la vendedora entrega la Carta del alcalde. Eso forma parte del encargo 1, no es ofrecer el suyo, así que en ese caso no dice "Termina tu encargo actual primero".
+- **Orden:** cada NPC ofrece su encargo solo cuando están completados todos los anteriores de la lista de la historia del juego. Si su encargo aún no toca, el NPC dice su saludo normal, sin ofrecer nada.
+- **Encargo 6 ("durante la feria"):** está disponible en cuanto se completa el encargo 5. No depende del día del reloj (HU-11).
+
+### Inventario y dinero (HU-13 a HU-16)
+
+- Objetos en src/data/items.json (nombre, si es consumible y la energía que da). Iconos de Ninja Adventure en public/assets/sprites/objetos/<id>.png: Manzana (SeedBig3, una fruta roja), Semilla, Pala, Carta del alcalde y tres piezas del reloj (barras de cobre, plata y oro). Ver CREDITOS.md.
+- **Nombres provisionales de las piezas del reloj** (la historia no los da): "Pieza del reloj (cobre)", "(plata)" y "(oro)". Pendiente de confirmar por el autor.
+- El inventario de `GameState` es la lista de casillas ocupadas, en orden. Al vaciarse una casilla, las siguientes se desplazan.
+- Recoger objetos (src/systems/inventory.ts): primero se completan las casillas del mismo objeto (hasta 99) y después se usan casillas libres. Si no caben todas las unidades, no se recoge ninguna y aparece "Inventario lleno".
+- El inventario (InventoryScene) detiene la partida mientras está abierto, igual que la pausa. Cuadrícula de 5×4; al abrirlo está seleccionada la primera casilla; las flechas mueven la selección (sin dar la vuelta) y Enter usa el objeto. I o Escape lo cierran (Escape no abre la pausa).
+- Usar un objeto no consumible muestra "No se puede usar". La Manzana con la energía al máximo no se consume y no muestra mensaje (la historia no indica ninguno).
+- Los mensajes breves sin duración indicada ("Inventario lleno", "No se puede usar") duran 2 segundos (`MESSAGE_MS`).
+- HudScene: interfaz fija durante la partida, por encima de la partida, el inventario y la pausa, y por debajo de las opciones. Muestra el dinero arriba a la derecha ("[cantidad] monedas") y se actualiza en cada fotograma. "Inventario lleno" se muestra en esta capa.
+- En desarrollo, main.ts expone `window.pickUp(objeto, cantidad)`, la misma función que usarán cofres y tienda, para probar HU-15 sin depender de esas historias.
+- Retratos y objetos se copiaron de ~/Downloads/Ninja Adventure - Asset Pack (la carpeta descomprimida se borró; el zip se conserva).

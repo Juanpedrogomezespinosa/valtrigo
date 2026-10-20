@@ -4,10 +4,13 @@ import { BootScene } from './scenes/BootScene';
 import { CreditsScene } from './scenes/CreditsScene';
 import { DialogScene } from './scenes/DialogScene';
 import { GameScene } from './scenes/GameScene';
+import { HudScene } from './scenes/HudScene';
+import { InventoryScene } from './scenes/InventoryScene';
 import { MenuScene } from './scenes/MenuScene';
 import { OptionsScene } from './scenes/OptionsScene';
 import { PauseScene } from './scenes/PauseScene';
 import { getGameState, isGameInProgress } from './systems/gameState';
+import type { ItemId } from './systems/inventory';
 
 const game = new Phaser.Game({
   type: Phaser.AUTO,
@@ -27,9 +30,9 @@ const game = new Phaser.Game({
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
-  // El orden marca qué escena se dibuja encima: el diálogo sobre la partida, la pausa encima
-  // y las opciones sobre la pausa.
-  scene: [BootScene, MenuScene, GameScene, DialogScene, PauseScene, OptionsScene, CreditsScene],
+  // El orden marca qué escena se dibuja encima: sobre la partida, el diálogo, el inventario y la pausa;
+  // encima, la interfaz fija (el dinero sigue visible en la pausa, HU-16); y sobre todo, las opciones.
+  scene: [BootScene, MenuScene, GameScene, DialogScene, InventoryScene, PauseScene, HudScene, OptionsScene, CreditsScene],
 });
 
 // Expone el juego y el estado de la partida en desarrollo para que los tests de Playwright
@@ -38,5 +41,7 @@ if (import.meta.env.DEV) {
   Object.assign(window, {
     game,
     gameState: () => (isGameInProgress() ? getGameState() : null),
+    // Recoger objetos como lo hacen el juego (cofres, tienda): para probar HU-15 sin depender de otras historias.
+    pickUp: (item: ItemId, quantity: number) => (game.scene.getScene('GameScene') as GameScene).pickUp(item, quantity),
   });
 }
