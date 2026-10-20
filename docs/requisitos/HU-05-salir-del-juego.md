@@ -2,7 +2,7 @@
 
 # HU-05. Salir del juego
 
-Como jugador, quiero salir del juego desde el menú principal.
+Como jugador, quiero salir del juego desde el menú principal para cerrar la partida cuando termine.
 
 Criterios de aceptación:
 

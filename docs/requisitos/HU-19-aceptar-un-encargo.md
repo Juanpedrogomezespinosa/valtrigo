@@ -8,7 +8,7 @@ Criterios de aceptación:
 
 - Los NPC con encargo ofrecen el encargo en su diálogo con las opciones “Aceptar” y “Rechazar”.
 - Al aceptar, el encargo aparece en la lista de objetivos.
-- El jugador solo puede tener un encargo activo a la vez.
+- El jugador solo puede tener un encargo principal activo a la vez. Los pedidos del tablón no cuentan (HU-53).
 Escenario 1: Aceptar un encargo
 
 - Dado que el jugador no tiene ningún encargo activo

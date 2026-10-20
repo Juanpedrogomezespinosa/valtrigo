@@ -2,7 +2,7 @@
 
 # HU-34. Guardar las opciones
 
-Como jugador, quiero que mis ajustes de volumen se mantengan al volver a jugar.
+Como jugador, quiero que mis ajustes de volumen se mantengan al volver a jugar para no tener que volver a ajustarlos cada vez que abro el juego.
 
 Criterios de aceptación:
 

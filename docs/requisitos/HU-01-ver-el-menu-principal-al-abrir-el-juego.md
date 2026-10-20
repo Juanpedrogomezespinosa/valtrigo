@@ -7,7 +7,7 @@ Como jugador, quiero ver un menú principal al abrir el juego para elegir qué h
 Criterios de aceptación:
 
 - Al abrir el juego suena la música propia del menú principal.
-- El menú muestra las opciones “Nueva partida”, “Continuar”, “Guardar partida”, “Opciones”, “Créditos” y “Salir”, en ese orden.
+- El menú muestra las opciones “Nueva partida”, “Continuar”, “Partidas de práctica”, “Guardar partida”, “Opciones”, “Créditos” y “Salir”, en ese orden.
 - “Continuar” solo está activa si existe una partida guardada.
 - “Guardar partida” está desactivada si no hay partida en curso.
 Escenario 1: Primera apertura del juego
@@ -15,7 +15,7 @@ Escenario 1: Primera apertura del juego
 - Dado que el jugador abre el juego por primera vez
 - Cuando se carga el menú principal
 - Entonces suena la música del menú
-- Y aparecen las opciones “Nueva partida”, “Continuar”, “Guardar partida”, “Opciones”, “Créditos” y “Salir”
+- Y aparecen las opciones “Nueva partida”, “Continuar”, “Partidas de práctica”, “Guardar partida”, “Opciones”, “Créditos” y “Salir”
 - Y “Continuar” y “Guardar partida” aparecen desactivadas
 Escenario 2: Con partida guardada
 

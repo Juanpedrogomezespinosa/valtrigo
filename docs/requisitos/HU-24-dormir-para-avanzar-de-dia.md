@@ -14,7 +14,8 @@ Escenario 1: Dormir por la noche
 - Dado que son las 21:00 y el jugador está junto a la cama de su casa
 - Cuando pulsa E y elige “Sí”
 - Entonces la pantalla se funde a negro
-- Y el reloj marca el día siguiente a las 06:00
+- Y aparece el resumen del día (HU-39)
+- Y al pulsar E, el reloj marca el día siguiente a las 06:00
 - Y la energía es 100
 Escenario 2: Cancelar
 

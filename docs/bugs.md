@@ -92,7 +92,7 @@ B-15 · Día 6, casa del jugador · HU-24
 Trampas: no son bugs
 
 - La cámara no se mueve dentro de la casa del jugador, porque la zona es más pequeña que la pantalla (HU-09).
-- La tienda cierra a las 19:00 y el vendedor no responde desde ese momento (HU-17).
+- Fuera del horario de la tienda (de 07:00 a 19:00), al caminar hacia la puerta aparece el cuadro “La tienda está cerrada” y no se entra. Si el jugador está dentro cuando cierra, el vendedor dice “La tienda está cerrada” (HU-17).
 - Al dormirse a medianoche, el progreso no guardado del día se pierde (HU-24, HU-25).
 Caso de prueba de ejemplo: B-03
 

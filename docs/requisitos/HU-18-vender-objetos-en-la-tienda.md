@@ -6,7 +6,7 @@ Como jugador, quiero vender objetos para conseguir dinero.
 
 Criterios de aceptación:
 
-- Al vender, el jugador recibe el 50 % del precio de compra del objeto.
+- Al vender, el jugador recibe el 50 % del precio de compra del objeto. Los objetos que no se compran en la tienda (cosechas, peces, lo recogido en el bosque y la Manzana) se venden a su precio de venta.
 - Al vender, la cantidad del objeto en el inventario se reduce en las unidades vendidas.
 - Los objetos de encargo no se pueden vender.
 Escenario 1: Venta de un objeto

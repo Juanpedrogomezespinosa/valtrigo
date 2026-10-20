@@ -8,7 +8,7 @@ Criterios de aceptación:
 
 - Cada NPC con encargos muestra un diálogo distinto según el estado de su encargo activo: antes de aceptarlo, en curso o completado.
 - Si un NPC tiene varios encargos, ofrece el siguiente solo cuando el anterior está completado, respetando el orden de los encargos.
-- El diálogo cambia según el estado del encargo, no según el día del reloj.
+- El diálogo cambia según el estado del encargo. Además, un encargo solo se ofrece a partir de su día (HU-38).
 - Con el reloj de la torre reparado (encargo “Las piezas del reloj” completado), un NPC que no tiene nada que decir sobre sus encargos comenta que el reloj vuelve a funcionar.
 Escenario 1: Antes de aceptar el encargo
 

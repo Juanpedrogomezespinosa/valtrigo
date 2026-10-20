@@ -1,0 +1,2084 @@
+﻿"ID","Resumen","Descripción","Criterios de aceptación"
+"HU-01","HU-01. Ver el menú principal al abrir el juego","# HU-01. Ver el menú principal al abrir el juego
+
+# HU-01. Ver el menú principal al abrir el juego
+
+Como jugador, quiero ver un menú principal al abrir el juego para elegir qué hacer.
+
+Criterios de aceptación:
+
+- Al abrir el juego suena la música propia del menú principal.
+- El menú muestra las opciones “Nueva partida”, “Continuar”, “Partidas de práctica”, “Guardar partida”, “Opciones”, “Créditos” y “Salir”, en ese orden.
+- “Continuar” solo está activa si existe una partida guardada.
+- “Guardar partida” está desactivada si no hay partida en curso.
+Escenario 1: Primera apertura del juego
+
+- Dado que el jugador abre el juego por primera vez
+- Cuando se carga el menú principal
+- Entonces suena la música del menú
+- Y aparecen las opciones “Nueva partida”, “Continuar”, “Partidas de práctica”, “Guardar partida”, “Opciones”, “Créditos” y “Salir”
+- Y “Continuar” y “Guardar partida” aparecen desactivadas
+Escenario 2: Con partida guardada
+
+- Dado que existe una partida guardada
+- Cuando el jugador abre el juego
+- Entonces “Continuar” aparece activa
+Escenario 3: Navegación con teclado
+
+- Dado que el menú principal está abierto
+- Cuando el jugador pulsa la flecha arriba o abajo
+- Entonces la selección pasa a la opción anterior o siguiente, sin saltar ninguna
+- Y al pulsar Enter se activa la opción seleccionada
+Escenario 4: Opción desactivada
+
+- Dado que no existe ninguna partida guardada
+- Cuando el jugador selecciona “Continuar” y pulsa Enter
+- Entonces no ocurre nada y la selección se mantiene en “Continuar”
+Escenario 5: Volver desde Opciones
+
+- Dado que el jugador ha abierto “Opciones” desde el menú principal
+- Cuando pulsa “Volver” o Escape
+- Entonces regresa al menú principal con “Opciones” seleccionada","- Al abrir el juego suena la música propia del menú principal.
+- El menú muestra las opciones “Nueva partida”, “Continuar”, “Partidas de práctica”, “Guardar partida”, “Opciones”, “Créditos” y “Salir”, en ese orden.
+- “Continuar” solo está activa si existe una partida guardada.
+- “Guardar partida” está desactivada si no hay partida en curso."
+"HU-02","HU-02. Empezar una nueva partida","# HU-02. Empezar una nueva partida
+
+# HU-02. Empezar una nueva partida
+
+Como jugador, quiero empezar una partida nueva para jugar desde el principio.
+
+Criterios de aceptación:
+
+- Al pulsar “Nueva partida” se carga la zona inicial (exterior del pueblo) con el personaje en su posición de inicio.
+- Si existe una partida guardada, se pide confirmación antes de sobrescribirla.
+- La partida nueva empieza con día 1 a las 06:00, 100 monedas, energía al máximo (100) e inventario vacío.
+Escenario 1: Nueva partida sin partida guardada
+
+- Dado que no existe ninguna partida guardada
+- Cuando el jugador pulsa “Nueva partida”
+- Entonces se carga la zona inicial con el personaje en su posición de inicio
+- Y el reloj marca día 1 a las 06:00
+Escenario 2: Confirmación al sobrescribir
+
+- Dado que existe una partida guardada
+- Cuando el jugador pulsa “Nueva partida”
+- Entonces aparece el mensaje “¿Sobrescribir la partida guardada?” con los botones “Sí” y “No”
+- Y si pulsa “No”, vuelve al menú principal sin cambios
+Escenario 3: Confirmar la sobrescritura
+
+- Dado que existe una partida guardada del día 4
+- Cuando el jugador pulsa “Nueva partida” y después “Sí”
+- Entonces la partida anterior se reemplaza por la nueva
+- Y se carga la zona inicial en el día 1 a las 06:00
+Escenario 4: Datos iniciales
+
+- Dado que el jugador acaba de iniciar una partida nueva
+- Cuando consulta su dinero, su energía y su inventario
+- Entonces tiene 100 monedas y 100 puntos de energía
+- Y su inventario está vacío","- Al pulsar “Nueva partida” se carga la zona inicial (exterior del pueblo) con el personaje en su posición de inicio.
+- Si existe una partida guardada, se pide confirmación antes de sobrescribirla.
+- La partida nueva empieza con día 1 a las 06:00, 100 monedas, energía al máximo (100) e inventario vacío."
+"HU-03","HU-03. Continuar una partida guardada","# HU-03. Continuar una partida guardada
+
+# HU-03. Continuar una partida guardada
+
+Como jugador, quiero continuar mi última partida para no perder mi progreso.
+
+Criterios de aceptación:
+
+- “Continuar” carga la partida guardada directamente, sin mostrar selector.
+- Se restauran zona, posición, día, hora, dinero, energía, inventario, encargos activos y cofres abiertos.
+Escenario 1: Continuar una partida guardada
+
+- Dado que existe una partida guardada en la casa del jugador, en el día 3 a las 14:00, con 250 monedas
+- Cuando el jugador pulsa “Continuar”
+- Entonces se carga la casa del jugador en la posición guardada
+- Y el reloj marca día 3 a las 14:00 y el dinero es 250 monedas
+Escenario 2: Los cofres abiertos se mantienen
+
+- Dado que el jugador abrió el cofre 1 antes de guardar
+- Cuando el jugador pulsa “Continuar”
+- Entonces el cofre 1 aparece vacío
+- Y no se puede volver a abrir
+Escenario 3: Sin partida guardada
+
+- Dado que no existe ninguna partida guardada
+- Cuando el jugador abre el menú principal
+- Entonces “Continuar” aparece desactivada","- “Continuar” carga la partida guardada directamente, sin mostrar selector.
+- Se restauran zona, posición, día, hora, dinero, energía, inventario, encargos activos y cofres abiertos."
+"HU-04","HU-04. Guardar partida desde el menú principal","# HU-04. Guardar partida desde el menú principal
+
+# HU-04. Guardar partida desde el menú principal
+
+Como jugador, quiero guardar mi partida para poder retomarla más tarde.
+
+Criterios de aceptación:
+
+- “Guardar partida” está desactivada en el menú principal si no hay partida en curso.
+- Al guardar, se sobrescribe la única partida guardada.
+- Al guardar aparece el mensaje “Partida guardada” durante 2 segundos.
+Escenario 1: Guardar una partida en curso
+
+- Dado que el jugador tiene una partida en curso
+- Cuando pulsa “Guardar partida” desde el menú de pausa
+- Entonces aparece el mensaje “Partida guardada” durante 2 segundos
+- Y la partida guardada refleja el estado actual del juego
+Escenario 2: Guardar desactivado sin partida en curso
+
+- Dado que no hay ninguna partida en curso
+- Cuando el jugador abre el menú principal
+- Entonces “Guardar partida” aparece desactivada
+Escenario 3: Sobrescribir la partida guardada
+
+- Dado que existe una partida guardada del día 2
+- Cuando el jugador guarda la partida en el día 4
+- Entonces la partida del día 2 se reemplaza por la del día 4","- “Guardar partida” está desactivada en el menú principal si no hay partida en curso.
+- Al guardar, se sobrescribe la única partida guardada.
+- Al guardar aparece el mensaje “Partida guardada” durante 2 segundos."
+"HU-05","HU-05. Salir del juego","# HU-05. Salir del juego
+
+# HU-05. Salir del juego
+
+Como jugador, quiero salir del juego desde el menú principal para cerrar la partida cuando termine.
+
+Criterios de aceptación:
+
+- Al pulsar “Salir” aparece el mensaje “¿Salir del juego?” con los botones “Sí” y “No”.
+- “Sí” cierra el juego y “No” vuelve al menú principal con “Salir” seleccionada.
+- Salir no borra la partida guardada.
+Escenario 1: Confirmar la salida
+
+- Dado que el jugador está en el menú principal
+- Cuando pulsa “Salir” y después “Sí”
+- Entonces el juego se cierra
+Escenario 2: Cancelar la salida
+
+- Dado que el jugador está en el menú principal
+- Cuando pulsa “Salir” y después “No”
+- Entonces vuelve al menú principal
+- Y “Salir” queda seleccionada
+Escenario 3: La partida guardada se mantiene
+
+- Dado que existe una partida guardada
+- Cuando el jugador sale del juego desde el menú principal
+- Entonces al volver a abrir el juego “Continuar” sigue activa","- Al pulsar “Salir” aparece el mensaje “¿Salir del juego?” con los botones “Sí” y “No”.
+- “Sí” cierra el juego y “No” vuelve al menú principal con “Salir” seleccionada.
+- Salir no borra la partida guardada."
+"HU-06","HU-06. Mover al personaje con el teclado","# HU-06. Mover al personaje con el teclado
+
+# HU-06. Mover al personaje con el teclado
+
+Como jugador, quiero mover a mi personaje con las flechas o WASD para explorar el mundo.
+
+Criterios de aceptación:
+
+- El personaje se mueve en cuatro direcciones (arriba, abajo, izquierda y derecha) con las flechas y con WASD.
+- El personaje se mueve a velocidad constante y mira en la dirección del movimiento.
+- Si se pulsan dos direcciones a la vez, el personaje se mueve en la última pulsada, sin diagonales.
+- Con el menú de pausa abierto, el personaje no se mueve.
+Escenario 1: Movimiento con las flechas
+
+- Dado que el jugador está en una zona sin obstáculos
+- Cuando mantiene pulsada la flecha derecha durante 1 segundo
+- Entonces el personaje se desplaza hacia la derecha a velocidad constante
+- Y mira hacia la derecha
+Escenario 2: Movimiento con WASD
+
+- Dado que el jugador está en una zona sin obstáculos
+- Cuando pulsa la tecla W
+- Entonces el personaje se desplaza hacia arriba
+- Y mira hacia arriba
+Escenario 3: Dos direcciones a la vez
+
+- Dado que el jugador está en una zona sin obstáculos
+- Cuando pulsa la flecha arriba y, sin soltarla, la flecha derecha
+- Entonces el personaje se mueve hacia la derecha
+Escenario 4: Movimiento bloqueado en pausa
+
+- Dado que el menú de pausa está abierto
+- Cuando el jugador pulsa la flecha derecha
+- Entonces el personaje no se mueve","- El personaje se mueve en cuatro direcciones (arriba, abajo, izquierda y derecha) con las flechas y con WASD.
+- El personaje se mueve a velocidad constante y mira en la dirección del movimiento.
+- Si se pulsan dos direcciones a la vez, el personaje se mueve en la última pulsada, sin diagonales.
+- Con el menú de pausa abierto, el personaje no se mueve."
+"HU-07","HU-07. Colisiones con obstáculos","# HU-07. Colisiones con obstáculos
+
+# HU-07. Colisiones con obstáculos
+
+Como jugador, quiero que el personaje no atraviese árboles, casas, agua ni NPC para que el mundo se sienta sólido.
+
+Criterios de aceptación:
+
+- Árboles, casas, muros, mobiliario, agua y NPC son obstáculos.
+- El personaje se detiene junto al obstáculo y nunca se superpone con él.
+- Si una dirección está bloqueada y otra libre, el personaje se mueve en la libre.
+Escenario 1: Árbol
+
+- Dado que hay un árbol a la derecha del personaje
+- Cuando el jugador camina hacia la derecha
+- Entonces el personaje se detiene junto al árbol
+Escenario 2: Agua
+
+- Dado que hay un lago frente al personaje
+- Cuando el jugador camina hacia el agua
+- Entonces el personaje se detiene en la orilla
+Escenario 3: Dirección libre con otra bloqueada
+
+- Dado que hay un muro encima del personaje y espacio libre a su derecha
+- Cuando el jugador pulsa arriba y derecha a la vez
+- Entonces el personaje se mueve a la derecha
+Escenario 4: NPC en el camino
+
+- Dado que un NPC está en el camino del personaje
+- Cuando el jugador camina hacia el NPC
+- Entonces el personaje se detiene junto al NPC","- Árboles, casas, muros, mobiliario, agua y NPC son obstáculos.
+- El personaje se detiene junto al obstáculo y nunca se superpone con él.
+- Si una dirección está bloqueada y otra libre, el personaje se mueve en la libre."
+"HU-08","HU-08. Cambiar de zona","# HU-08. Cambiar de zona
+
+# HU-08. Cambiar de zona
+
+Como jugador, quiero entrar a edificios y cambiar de zona para explorar el pueblo.
+
+Criterios de aceptación:
+
+- El juego tiene 7 zonas conectadas por puertas: plaza, casa del jugador, tienda, granja, lago, torre y bosque.
+- Al cruzar una puerta, la pantalla se funde a negro en 0,5 segundos y el personaje aparece junto a la puerta de la zona de destino.
+- Durante la transición no se puede mover al personaje.
+Escenario 1: Entrar a la tienda
+
+- Dado que el jugador está frente a la puerta de la tienda del pueblo
+- Cuando camina sobre la puerta
+- Entonces la pantalla se funde a negro en 0,5 segundos
+- Y el personaje aparece en el interior de la tienda, junto a la puerta de salida
+Escenario 2: Salir de la tienda
+
+- Dado que el jugador está dentro de la tienda
+- Cuando camina sobre la puerta de salida
+- Entonces vuelve a la zona exterior junto a la puerta de la tienda
+Escenario 3: Transición en curso
+
+- Dado que una transición de zona está en curso
+- Cuando el jugador pulsa las flechas
+- Entonces el personaje no se mueve hasta que termina el fundido","- El juego tiene 7 zonas conectadas por puertas: plaza, casa del jugador, tienda, granja, lago, torre y bosque.
+- Al cruzar una puerta, la pantalla se funde a negro en 0,5 segundos y el personaje aparece junto a la puerta de la zona de destino.
+- Durante la transición no se puede mover al personaje."
+"HU-09","HU-09. Cámara que sigue al personaje","# HU-09. Cámara que sigue al personaje
+
+# HU-09. Cámara que sigue al personaje
+
+Como jugador, quiero que la cámara siga al personaje para ver siempre su entorno.
+
+Criterios de aceptación:
+
+- La cámara mantiene al personaje centrado en la pantalla mientras se mueve.
+- La cámara no muestra espacios fuera del mapa: se detiene en los bordes.
+- Si la zona es más pequeña que la pantalla, la cámara no se mueve y muestra la zona completa, centrada.
+Escenario 1: Seguimiento en una zona grande
+
+- Dado que el personaje está en el centro de una zona más grande que la pantalla
+- Cuando camina hacia la derecha
+- Entonces la cámara se desplaza con el personaje y lo mantiene centrado
+Escenario 2: Borde del mapa
+
+- Dado que el personaje está a dos casillas del borde izquierdo de la zona
+- Cuando camina hacia el borde
+- Entonces la cámara se detiene en el borde
+- Y no se muestra ningún espacio vacío fuera del mapa
+Escenario 3: Zona más pequeña que la pantalla
+
+- Dado que el jugador está dentro de la casa del jugador
+- Cuando el personaje se mueve por la casa
+- Entonces la cámara no se mueve
+- Y la casa se muestra completa y centrada
+Escenario 4: Cambio de zona
+
+- Dado que el personaje cruza una puerta
+- Cuando termina el fundido a negro
+- Entonces la cámara ya está centrada en la nueva zona","- La cámara mantiene al personaje centrado en la pantalla mientras se mueve.
+- La cámara no muestra espacios fuera del mapa: se detiene en los bordes.
+- Si la zona es más pequeña que la pantalla, la cámara no se mueve y muestra la zona completa, centrada."
+"HU-10","HU-10. Interactuar con personajes (NPC)","# HU-10. Interactuar con personajes (NPC)
+
+# HU-10. Interactuar con personajes (NPC)
+
+Como jugador, quiero hablar con los habitantes del pueblo para conocer la historia y recibir encargos.
+
+Criterios de aceptación:
+
+- Hay 4 NPC en el pueblo. Al estar a menos de una casilla de un NPC aparece el indicador “E”.
+- Al pulsar E, el NPC muestra su diálogo con su retrato y el texto aparece letra a letra.
+- Pulsar E durante la escritura muestra el texto completo; pulsar E de nuevo avanza a la siguiente línea.
+- El diálogo se cierra al terminar la última línea y el jugador puede moverse de nuevo.
+Escenario 1: Iniciar un diálogo
+
+- Dado que el jugador está junto a un NPC
+- Cuando pulsa E
+- Entonces aparece el retrato del NPC y su diálogo
+- Y el texto se escribe letra a letra
+Escenario 2: Mostrar el texto completo
+
+- Dado que un diálogo se está escribiendo
+- Cuando el jugador pulsa E
+- Entonces se muestra el texto completo de la línea
+- Y al pulsar E de nuevo, aparece la siguiente línea
+Escenario 3: Cerrar el diálogo
+
+- Dado que el jugador está en la última línea del diálogo
+- Cuando pulsa E
+- Entonces el diálogo se cierra
+- Y el personaje puede moverse de nuevo
+Escenario 4: Fuera de alcance
+
+- Dado que el jugador está a tres casillas de un NPC
+- Cuando pulsa E
+- Entonces no aparece ningún diálogo","- Hay 4 NPC en el pueblo. Al estar a menos de una casilla de un NPC aparece el indicador “E”.
+- Al pulsar E, el NPC muestra su diálogo con su retrato y el texto aparece letra a letra.
+- Pulsar E durante la escritura muestra el texto completo; pulsar E de nuevo avanza a la siguiente línea.
+- El diálogo se cierra al terminar la última línea y el jugador puede moverse de nuevo."
+"HU-11","HU-11. Diálogos distintos según el progreso","# HU-11. Diálogos distintos según el progreso
+
+# HU-11. Diálogos distintos según el progreso
+
+Como jugador, quiero que los NPC cambien lo que dicen según mi progreso para sentir que el mundo reacciona.
+
+Criterios de aceptación:
+
+- Cada NPC con encargos muestra un diálogo distinto según el estado de su encargo activo: antes de aceptarlo, en curso o completado.
+- Si un NPC tiene varios encargos, ofrece el siguiente solo cuando el anterior está completado, respetando el orden de los encargos.
+- El diálogo cambia según el estado del encargo. Además, un encargo solo se ofrece a partir de su día (HU-38).
+- Con el reloj de la torre reparado (encargo “Las piezas del reloj” completado), un NPC que no tiene nada que decir sobre sus encargos comenta que el reloj vuelve a funcionar.
+Escenario 1: Antes de aceptar el encargo
+
+- Dado que el jugador no ha aceptado el encargo del NPC
+- Cuando el jugador habla con el NPC
+- Entonces el NPC ofrece el encargo y el jugador puede aceptarlo o rechazarlo
+Escenario 2: Encargo activo
+
+- Dado que el jugador ha aceptado el encargo y aún no lo ha completado
+- Cuando habla con el NPC
+- Entonces el NPC recuerda el encargo y muestra un diálogo de seguimiento
+Escenario 3: Encargo completado
+
+- Dado que el jugador ha completado el encargo
+- Cuando habla con el NPC
+- Entonces el NPC muestra un diálogo de agradecimiento distinto a los anteriores
+Escenario 4: Siguiente encargo del mismo NPC
+
+- Dado que el NPC tiene un segundo encargo y el primero ya está completado
+- Cuando el jugador habla con el NPC
+- Entonces el NPC ofrece el segundo encargo
+Escenario 5: Reloj reparado
+
+- Dado que el encargo “Las piezas del reloj” está completado
+- Y el alcalde no tiene ningún encargo que ofrecer
+- Cuando el jugador habla con el alcalde
+- Entonces el alcalde comenta que el reloj vuelve a funcionar","- Cada NPC con encargos muestra un diálogo distinto según el estado de su encargo activo: antes de aceptarlo, en curso o completado.
+- Si un NPC tiene varios encargos, ofrece el siguiente solo cuando el anterior está completado, respetando el orden de los encargos.
+- El diálogo cambia según el estado del encargo. Además, un encargo solo se ofrece a partir de su día (HU-38).
+- Con el reloj de la torre reparado (encargo “Las piezas del reloj” completado), un NPC que no tiene nada que decir sobre sus encargos comenta que el reloj vuelve a funcionar."
+"HU-12","HU-12. Interactuar con objetos del mundo","# HU-12. Interactuar con objetos del mundo
+
+# HU-12. Interactuar con objetos del mundo
+
+Como jugador, quiero examinar carteles y cofres para descubrir pistas o recoger recursos.
+
+Criterios de aceptación:
+
+- Hay 3 cofres en el pueblo. Al abrir un cofre, su objeto se añade al inventario y el cofre no puede volver a abrirse.
+- Si el inventario está lleno, el cofre no se abre.
+- Los carteles muestran su texto al interactuar con ellos con la tecla E.
+- En la granja hay una Pala en el suelo. Al pulsar E junto a ella, se añade al inventario y desaparece del mapa. Si el inventario está lleno, no se recoge.
+Escenario 1: Abrir un cofre
+
+- Dado que el jugador está junto al cofre 1 y tiene espacio en el inventario
+- Cuando pulsa E
+- Entonces el objeto del cofre se añade al inventario
+- Y el cofre se muestra como abierto
+Escenario 2: Cofre ya abierto
+
+- Dado que el cofre 1 ya está abierto
+- Cuando el jugador pulsa E junto al cofre 1
+- Entonces no ocurre nada
+Escenario 3: Inventario lleno
+
+- Dado que el inventario está completo
+- Cuando el jugador pulsa E junto al cofre 2
+- Entonces aparece el mensaje “Inventario lleno”
+- Y el cofre 2 sigue cerrado
+Escenario 4: Leer un cartel
+
+- Dado que el jugador está junto a un cartel
+- Cuando pulsa E
+- Entonces aparece el texto del cartel
+- Y se cierra al pulsar E de nuevo
+Escenario 5: Recoger la Pala
+
+- Dado que el jugador está junto a la Pala de la granja y tiene espacio en el inventario
+- Cuando pulsa E
+- Entonces la Pala se añade al inventario
+- Y desaparece del mapa","- Hay 3 cofres en el pueblo. Al abrir un cofre, su objeto se añade al inventario y el cofre no puede volver a abrirse.
+- Si el inventario está lleno, el cofre no se abre.
+- Los carteles muestran su texto al interactuar con ellos con la tecla E.
+- En la granja hay una Pala en el suelo. Al pulsar E junto a ella, se añade al inventario y desaparece del mapa. Si el inventario está lleno, no se recoge."
+"HU-13","HU-13. Ver el inventario","# HU-13. Ver el inventario
+
+# HU-13. Ver el inventario
+
+Como jugador, quiero ver mi inventario para saber qué objetos tengo.
+
+Criterios de aceptación:
+
+- Al pulsar I se abre el inventario y al pulsar I o Escape se cierra.
+- Cada objeto muestra su icono, su nombre y su cantidad.
+- El inventario tiene 20 casillas; las casillas libres se muestran vacías.
+- Con el inventario abierto, el personaje no se mueve.
+Escenario 1: Abrir el inventario con objetos
+
+- Dado que el jugador tiene 3 Manzanas y 1 Pala
+- Cuando pulsa I
+- Entonces se muestra el inventario con la Manzana con cantidad 3 y la Pala con cantidad 1
+Escenario 2: Inventario vacío
+
+- Dado que el jugador no tiene objetos
+- Cuando pulsa I
+- Entonces se muestran las 20 casillas vacías
+Escenario 3: Cerrar el inventario
+
+- Dado que el inventario está abierto
+- Cuando el jugador pulsa I o Escape
+- Entonces el inventario se cierra y el juego continúa
+Escenario 4: Movimiento bloqueado
+
+- Dado que el inventario está abierto
+- Cuando el jugador pulsa la flecha derecha
+- Entonces el personaje no se mueve","- Al pulsar I se abre el inventario y al pulsar I o Escape se cierra.
+- Cada objeto muestra su icono, su nombre y su cantidad.
+- El inventario tiene 20 casillas; las casillas libres se muestran vacías.
+- Con el inventario abierto, el personaje no se mueve."
+"HU-14","HU-14. Usar objetos del inventario","# HU-14. Usar objetos del inventario
+
+# HU-14. Usar objetos del inventario
+
+Como jugador, quiero usar objetos como las manzanas para recuperar energía.
+
+Criterios de aceptación:
+
+- Desde el inventario, el jugador selecciona un objeto y pulsa Enter para usarlo.
+- Una Manzana recupera 15 puntos de energía, sin superar el máximo de 100.
+- Al usar un objeto consumible se reduce su cantidad en 1. Si la cantidad llega a 0, el objeto desaparece del inventario.
+- Si la energía está al máximo, la Manzana no se consume.
+- La energía aparece en la esquina superior derecha de la pantalla, debajo del dinero, con el formato “Energía: [actual]/100”.
+Escenario 1: Usar una Manzana
+
+- Dado que el jugador tiene 3 Manzanas y 60 puntos de energía
+- Cuando usa una Manzana
+- Entonces la energía sube a 75
+- Y la cantidad de Manzanas pasa a 2
+Escenario 2: Usar el último objeto
+
+- Dado que el jugador tiene 1 Manzana
+- Cuando la usa
+- Entonces la Manzana desaparece del inventario
+Escenario 3: Energía al máximo
+
+- Dado que el jugador tiene 100 puntos de energía y 1 Manzana
+- Cuando la usa
+- Entonces la energía se mantiene en 100
+- Y la Manzana no se consume
+Escenario 4: Objeto no consumible
+
+- Dado que el jugador selecciona la Pala
+- Cuando pulsa Enter
+- Entonces aparece el mensaje “No se puede usar”
+Escenario 5: Ver la energía
+
+- Dado que el jugador tiene 60 puntos de energía
+- Cuando usa una Manzana
+- Entonces la interfaz pasa de “Energía: 60/100” a “Energía: 75/100”","- Desde el inventario, el jugador selecciona un objeto y pulsa Enter para usarlo.
+- Una Manzana recupera 15 puntos de energía, sin superar el máximo de 100.
+- Al usar un objeto consumible se reduce su cantidad en 1. Si la cantidad llega a 0, el objeto desaparece del inventario.
+- Si la energía está al máximo, la Manzana no se consume.
+- La energía aparece en la esquina superior derecha de la pantalla, debajo del dinero, con el formato “Energía: [actual]/100”."
+"HU-15","HU-15. Límite de espacio en el inventario","# HU-15. Límite de espacio en el inventario
+
+# HU-15. Límite de espacio en el inventario
+
+Como jugador, quiero que el inventario tenga un límite de espacios para tener que decidir qué guardar.
+
+Criterios de aceptación:
+
+- El inventario tiene 20 casillas.
+- Cada casilla admite hasta 99 unidades del mismo objeto. Al llegar a 99, el resto ocupa una casilla nueva.
+- Si no hay casillas libres ni espacio parcial del mismo objeto, el objeto no se recoge y aparece el mensaje “Inventario lleno”.
+Escenario 1: Inventario completo
+
+- Dado que el inventario tiene las 20 casillas ocupadas por objetos distintos
+- Cuando el jugador recoge una Pala nueva
+- Entonces aparece el mensaje “Inventario lleno”
+- Y la Pala no se añade al inventario
+Escenario 2: Apilar hasta 99
+
+- Dado que el jugador tiene 98 Semillas en una casilla y hay casillas libres
+- Cuando recoge 3 Semillas
+- Entonces la primera casilla queda con 99 Semillas
+- Y se ocupa una casilla nueva con 2 Semillas
+Escenario 3: Completar una casilla sin espacio libre
+
+- Dado que el inventario tiene las 20 casillas ocupadas y una de ellas tiene 98 Semillas
+- Cuando el jugador recoge 1 Semilla
+- Entonces la casilla pasa a 99 Semillas
+- Y el inventario no cambia de número de casillas ocupadas","- El inventario tiene 20 casillas.
+- Cada casilla admite hasta 99 unidades del mismo objeto. Al llegar a 99, el resto ocupa una casilla nueva.
+- Si no hay casillas libres ni espacio parcial del mismo objeto, el objeto no se recoge y aparece el mensaje “Inventario lleno”."
+"HU-16","HU-16. Ver el dinero actual","# HU-16. Ver el dinero actual
+
+# HU-16. Ver el dinero actual
+
+Como jugador, quiero ver mi dinero en pantalla para saber si puedo comprar algo.
+
+Criterios de aceptación:
+
+- El dinero aparece en la esquina superior derecha de la pantalla durante la partida, con el formato “[cantidad] monedas”.
+- El dinero se actualiza al instante al comprar, vender, completar encargos o recibir recompensas.
+- El dinero sigue visible con el menú de pausa abierto.
+Escenario 1: Dinero inicial
+
+- Dado que el jugador empieza una partida nueva
+- Cuando mira la interfaz
+- Entonces aparece “100 monedas”
+Escenario 2: Actualización al comprar
+
+- Dado que el jugador tiene 100 monedas
+- Cuando compra un objeto que cuesta 30 monedas
+- Entonces aparece “70 monedas” en la interfaz
+Escenario 3: Actualización al completar un encargo
+
+- Dado que el jugador tiene 70 monedas
+- Cuando completa un encargo que paga 50 monedas
+- Entonces aparece “120 monedas” en la interfaz
+Escenario 4: Dinero visible en pausa
+
+- Dado que el jugador abre el menú de pausa
+- Cuando el menú se muestra
+- Entonces el dinero sigue visible en la esquina superior derecha","- El dinero aparece en la esquina superior derecha de la pantalla durante la partida, con el formato “[cantidad] monedas”.
+- El dinero se actualiza al instante al comprar, vender, completar encargos o recibir recompensas.
+- El dinero sigue visible con el menú de pausa abierto."
+"HU-17","HU-17. Comprar objetos en la tienda","# HU-17. Comprar objetos en la tienda
+
+# HU-17. Comprar objetos en la tienda
+
+Como jugador, quiero comprar objetos en la tienda del pueblo para mejorar mi equipo o mis suministros.
+
+Criterios de aceptación:
+
+- La tienda del pueblo abre de 07:00 a 19:00 y la atiende un único vendedor.
+- Fuera de ese horario, al caminar hacia la puerta de la tienda aparece un cuadro de diálogo con el texto “La tienda está cerrada” y no se entra. El cuadro se cierra con E.
+- Si el jugador sigue dentro cuando la tienda cierra, al hablar con el vendedor aparece “La tienda está cerrada” y no se abre el menú de compra.
+- La tienda vende Semilla (10 monedas), Semilla de zanahoria (20), Semilla de calabaza (40), Pala (30), Hacha (40), Regadera (40) y Caña de pescar (50).
+- Cada objeto de la tienda muestra su icono, su nombre y su precio en monedas.
+- Al comprar, se descuenta el precio del dinero y el objeto se añade al inventario.
+- Si el dinero no alcanza, aparece el mensaje “Dinero insuficiente” y no se realiza la compra.
+- Si el inventario está lleno, aparece el mensaje “Inventario lleno” y no se realiza la compra.
+Escenario 1: Compra correcta
+
+- Dado que el jugador tiene 100 monedas y la tienda está abierta
+- Cuando compra una Pala, que cuesta 30 monedas
+- Entonces el jugador tiene 70 monedas
+- Y la Pala aparece en el inventario con cantidad 1
+Escenario 2: Dinero insuficiente
+
+- Dado que el jugador tiene 20 monedas y la tienda está abierta
+- Cuando intenta comprar una Pala, que cuesta 30 monedas
+- Entonces aparece el mensaje “Dinero insuficiente”
+- Y el dinero y el inventario no cambian
+Escenario 3: Inventario lleno
+
+- Dado que el jugador tiene 100 monedas y el inventario está completo
+- Cuando intenta comprar una Pala
+- Entonces aparece el mensaje “Inventario lleno”
+- Y el dinero no cambia
+Escenario 4: Tienda cerrada
+
+- Dado que son las 20:00
+- Cuando el jugador camina hacia la puerta de la tienda
+- Entonces aparece el cuadro de diálogo “La tienda está cerrada”
+- Y el jugador sigue en la plaza
+Escenario 5: La tienda cierra con el jugador dentro
+
+- Dado que el jugador está dentro de la tienda y son las 19:00
+- Cuando habla con el vendedor
+- Entonces aparece el mensaje “La tienda está cerrada”
+- Y no se abre el menú de compra","- La tienda del pueblo abre de 07:00 a 19:00 y la atiende un único vendedor.
+- Fuera de ese horario, al caminar hacia la puerta de la tienda aparece un cuadro de diálogo con el texto “La tienda está cerrada” y no se entra. El cuadro se cierra con E.
+- Si el jugador sigue dentro cuando la tienda cierra, al hablar con el vendedor aparece “La tienda está cerrada” y no se abre el menú de compra.
+- La tienda vende Semilla (10 monedas), Semilla de zanahoria (20), Semilla de calabaza (40), Pala (30), Hacha (40), Regadera (40) y Caña de pescar (50).
+- Cada objeto de la tienda muestra su icono, su nombre y su precio en monedas.
+- Al comprar, se descuenta el precio del dinero y el objeto se añade al inventario.
+- Si el dinero no alcanza, aparece el mensaje “Dinero insuficiente” y no se realiza la compra.
+- Si el inventario está lleno, aparece el mensaje “Inventario lleno” y no se realiza la compra."
+"HU-18","HU-18. Vender objetos en la tienda","# HU-18. Vender objetos en la tienda
+
+# HU-18. Vender objetos en la tienda
+
+Como jugador, quiero vender objetos para conseguir dinero.
+
+Criterios de aceptación:
+
+- Al vender, el jugador recibe el 50 % del precio de compra del objeto. Los objetos que no se compran en la tienda (cosechas, peces, lo recogido en el bosque y la Manzana) se venden a su precio de venta.
+- Al vender, la cantidad del objeto en el inventario se reduce en las unidades vendidas.
+- Los objetos de encargo no se pueden vender.
+Escenario 1: Venta de un objeto
+
+- Dado que el jugador tiene 100 monedas, una Pala en el inventario y la tienda está abierta
+- Cuando vende una Pala, cuyo precio de compra es 30 monedas
+- Entonces el jugador tiene 115 monedas
+- Y la Pala desaparece del inventario
+Escenario 2: Venta de varias unidades
+
+- Dado que el jugador tiene 5 Semillas y la tienda está abierta
+- Cuando vende 3 Semillas, cuyo precio de venta es 5 monedas cada una
+- Entonces el jugador recibe 15 monedas
+- Y le quedan 2 Semillas en el inventario
+Escenario 3: Objeto de encargo
+
+- Dado que el jugador tiene una Carta del alcalde, que es un objeto de encargo
+- Cuando intenta venderla
+- Entonces aparece el mensaje “Este objeto no se puede vender”
+- Y la Carta del alcalde sigue en el inventario
+Escenario 4: Tienda cerrada
+
+- Dado que son las 19:30 y la tienda ya está cerrada
+- Cuando el jugador intenta vender un objeto
+- Entonces aparece el mensaje “La tienda está cerrada”
+- Y no se realiza ninguna venta","- Al vender, el jugador recibe el 50 % del precio de compra del objeto. Los objetos que no se compran en la tienda (cosechas, peces, lo recogido en el bosque y la Manzana) se venden a su precio de venta.
+- Al vender, la cantidad del objeto en el inventario se reduce en las unidades vendidas.
+- Los objetos de encargo no se pueden vender."
+"HU-19","HU-19. Aceptar un encargo","# HU-19. Aceptar un encargo
+
+# HU-19. Aceptar un encargo
+
+Como jugador, quiero aceptar encargos de los NPC para tener objetivos claros.
+
+Criterios de aceptación:
+
+- Los NPC con encargo ofrecen el encargo en su diálogo con las opciones “Aceptar” y “Rechazar”.
+- Al aceptar, el encargo aparece en la lista de objetivos.
+- El jugador solo puede tener un encargo principal activo a la vez. Los pedidos del tablón no cuentan (HU-53).
+Escenario 1: Aceptar un encargo
+
+- Dado que el jugador no tiene ningún encargo activo
+- Y el NPC ofrece el encargo “Entregar la Carta del alcalde”
+- Cuando el jugador pulsa “Aceptar”
+- Entonces el encargo aparece en la lista de objetivos
+- Y el NPC muestra su diálogo de encargo en curso
+Escenario 2: Rechazar un encargo
+
+- Dado que el NPC ofrece el encargo “Entregar la Carta del alcalde”
+- Cuando el jugador pulsa “Rechazar”
+- Entonces el encargo no aparece en la lista de objetivos
+- Y al volver a hablar con el NPC, vuelve a ofrecer el encargo
+Escenario 3: Encargo activo en curso
+
+- Dado que el jugador tiene activo el encargo “Entregar la Carta del alcalde”
+- Cuando habla con otro NPC que tiene un encargo
+- Entonces el NPC muestra el mensaje “Termina tu encargo actual primero”
+- Y no ofrece su encargo","- Los NPC con encargo ofrecen el encargo en su diálogo con las opciones “Aceptar” y “Rechazar”.
+- Al aceptar, el encargo aparece en la lista de objetivos.
+- El jugador solo puede tener un encargo principal activo a la vez. Los pedidos del tablón no cuentan (HU-53)."
+"HU-20","HU-20. Completar un encargo","# HU-20. Completar un encargo
+
+# HU-20. Completar un encargo
+
+Como jugador, quiero completar encargos y recibir recompensas para avanzar en la historia.
+
+Criterios de aceptación:
+
+- Un encargo se completa cuando se cumplen sus condiciones.
+- Al completarlo aparece el mensaje “Encargo completado” y se entregan las recompensas en monedas y en objetos.
+- Un encargo completado no se puede reclamar otra vez.
+Escenario 1: Completar el encargo
+
+- Dado que el jugador tiene activo el encargo “Entregar la Carta del alcalde” y tiene la Carta del alcalde
+- Cuando habla con el alcalde y entrega la carta
+- Entonces aparece el mensaje “Encargo completado”
+- Y el jugador recibe 50 monedas y 1 Manzana
+- Y la Carta del alcalde desaparece del inventario
+Escenario 2: Reclamar un encargo ya completado
+
+- Dado que el encargo “Entregar la Carta del alcalde” ya está completado
+- Cuando el jugador vuelve a hablar con el alcalde
+- Entonces no se entrega ninguna recompensa
+Escenario 3: Inventario lleno al completar
+
+- Dado que el inventario está completo
+- Cuando el jugador completa el encargo que da una Manzana
+- Entonces aparece el mensaje “Inventario lleno”
+- Y el encargo no se marca como completado","- Un encargo se completa cuando se cumplen sus condiciones.
+- Al completarlo aparece el mensaje “Encargo completado” y se entregan las recompensas en monedas y en objetos.
+- Un encargo completado no se puede reclamar otra vez."
+"HU-21","HU-21. Ver la lista de objetivos","# HU-21. Ver la lista de objetivos
+
+# HU-21. Ver la lista de objetivos
+
+Como jugador, quiero consultar mis objetivos activos para saber qué hacer después.
+
+Criterios de aceptación:
+
+- Al pulsar O se muestra la lista de encargos activos. Al pulsar O o Escape se cierra.
+- Cada encargo muestra su nombre, su descripción y el NPC que lo encargó.
+- La lista muestra primero el encargo principal y después los pedidos del tablón, que aparecen como encargados por el “Tablón de anuncios”.
+- Si no hay encargos ni pedidos activos, aparece el mensaje “No tienes encargos activos”.
+- La lista tiene también el apartado “Notas”, con las páginas del diario (HU-55).
+Escenario 1: Ver un encargo activo
+
+- Dado que el jugador tiene activo el encargo “Entregar la Carta del alcalde”
+- Cuando pulsa O
+- Entonces aparece el encargo con su nombre, su descripción y el alcalde como NPC que lo encargó
+Escenario 2: Sin encargos activos
+
+- Dado que el jugador no tiene encargos activos
+- Cuando pulsa O
+- Entonces aparece el mensaje “No tienes encargos activos”
+Escenario 3: Encargo completado
+
+- Dado que el encargo “Entregar la Carta del alcalde” se ha completado
+- Cuando el jugador pulsa O
+- Entonces el encargo no aparece en la lista","- Al pulsar O se muestra la lista de encargos activos. Al pulsar O o Escape se cierra.
+- Cada encargo muestra su nombre, su descripción y el NPC que lo encargó.
+- La lista muestra primero el encargo principal y después los pedidos del tablón, que aparecen como encargados por el “Tablón de anuncios”.
+- Si no hay encargos ni pedidos activos, aparece el mensaje “No tienes encargos activos”.
+- La lista tiene también el apartado “Notas”, con las páginas del diario (HU-55)."
+"HU-22","HU-22. Ver el día y la hora","# HU-22. Ver el día y la hora
+
+# HU-22. Ver el día y la hora
+
+Como jugador, quiero ver el día y la hora actual para planificar mis actividades.
+
+Criterios de aceptación:
+
+- La interfaz muestra “Día N” y la hora en formato HH:MM en la esquina superior izquierda.
+- La hora avanza 1 minuto de juego por cada segundo real.
+- Con el menú de pausa abierto, la hora no avanza.
+Escenario 1: Hora inicial
+
+- Dado que el jugador empieza una partida nueva
+- Cuando mira la interfaz
+- Entonces aparece “Día 1” y “06:00”
+Escenario 2: Avance del tiempo
+
+- Dado que son las 06:00
+- Cuando pasan 60 segundos reales
+- Entonces la hora es 07:00
+Escenario 3: Pausa
+
+- Dado que el menú de pausa está abierto a las 10:00
+- Cuando pasan 30 segundos reales
+- Entonces la hora sigue siendo 10:00
+Escenario 4: Medianoche
+
+- Dado que son las 23:59 y el jugador no ha dormido
+- Cuando pasa 1 segundo real
+- Entonces el personaje se duerme automáticamente
+- Y se inicia el día siguiente a las 06:00","- La interfaz muestra “Día N” y la hora en formato HH:MM en la esquina superior izquierda.
+- La hora avanza 1 minuto de juego por cada segundo real.
+- Con el menú de pausa abierto, la hora no avanza."
+"HU-23","HU-23. Ciclo día y noche","# HU-23. Ciclo día y noche
+
+# HU-23. Ciclo día y noche
+
+Como jugador, quiero que el juego tenga día y noche para sentir el paso del tiempo.
+
+Criterios de aceptación:
+
+- Entre las 20:00 y las 21:00 la pantalla se oscurece de forma gradual.
+- A partir de las 06:00 la luz vuelve a la normalidad de forma gradual durante una hora.
+- La oscuridad no impide leer la interfaz: día, hora, dinero y energía siguen visibles.
+Escenario 1: Atardecer
+
+- Dado que son las 20:00
+- Cuando pasan 30 minutos de juego
+- Entonces la pantalla está a mitad del oscurecimiento
+Escenario 2: Antes del atardecer
+
+- Dado que son las 19:59
+- Cuando el jugador mira la pantalla
+- Entonces la luz es normal
+Escenario 3: Interfaz en la oscuridad
+
+- Dado que la pantalla está completamente oscura
+- Cuando el jugador mira la interfaz
+- Entonces el día, la hora, el dinero y la energía siguen legibles
+Escenario 4: Amanecer
+
+- Dado que son las 06:00 y la pantalla está oscura
+- Cuando pasa 1 hora de juego
+- Entonces la luz es normal","- Entre las 20:00 y las 21:00 la pantalla se oscurece de forma gradual.
+- A partir de las 06:00 la luz vuelve a la normalidad de forma gradual durante una hora.
+- La oscuridad no impide leer la interfaz: día, hora, dinero y energía siguen visibles."
+"HU-24","HU-24. Dormir para avanzar de día","# HU-24. Dormir para avanzar de día
+
+# HU-24. Dormir para avanzar de día
+
+Como jugador, quiero dormir en mi casa para terminar el día y empezar el siguiente.
+
+Criterios de aceptación:
+
+- Al pulsar E junto a la cama de la casa del jugador aparece el mensaje “¿Dormir?” con las opciones “Sí” y “No”.
+- Al dormir, se avanza al día siguiente a las 06:00 y la energía vuelve a 100.
+- Se puede dormir a cualquier hora del día.
+Escenario 1: Dormir por la noche
+
+- Dado que son las 21:00 y el jugador está junto a la cama de su casa
+- Cuando pulsa E y elige “Sí”
+- Entonces la pantalla se funde a negro
+- Y aparece el resumen del día (HU-39)
+- Y al pulsar E, el reloj marca el día siguiente a las 06:00
+- Y la energía es 100
+Escenario 2: Cancelar
+
+- Dado que son las 21:00 y el jugador está junto a la cama
+- Cuando pulsa E y elige “No”
+- Entonces el juego continúa a las 21:00 sin cambios
+Escenario 3: Dormirse a medianoche
+
+- Dado que son las 23:59 y el jugador no ha dormido
+- Cuando el reloj llega a las 00:00
+- Entonces el personaje se duerme automáticamente
+- Y el día siguiente empieza a las 06:00
+- Y el progreso no guardado del día se pierde
+Escenario 4: Energía baja
+
+- Dado que la energía es 20
+- Cuando el jugador duerme en su cama
+- Entonces la energía es 100","- Al pulsar E junto a la cama de la casa del jugador aparece el mensaje “¿Dormir?” con las opciones “Sí” y “No”.
+- Al dormir, se avanza al día siguiente a las 06:00 y la energía vuelve a 100.
+- Se puede dormir a cualquier hora del día."
+"HU-25","HU-25. Guardado automático","# HU-25. Guardado automático
+
+# HU-25. Guardado automático
+
+Como jugador, quiero que el juego guarde solo al dormir para tener un punto de control claro.
+
+Criterios de aceptación:
+
+- Al dormir voluntariamente en la cama, la partida se guarda automáticamente, sin preguntar.
+- Al guardar automáticamente aparece brevemente el mensaje “Partida guardada”.
+- Si el personaje se duerme automáticamente a medianoche, la partida no se guarda.
+Escenario 1: Guardado al dormir
+
+- Dado que hay una partida en curso
+- Cuando el jugador duerme en la cama de su casa
+- Entonces la partida se guarda automáticamente
+- Y aparece el mensaje “Partida guardada”
+Escenario 2: Sin guardado a medianoche
+
+- Dado que son las 00:00 y el jugador no ha dormido desde la última partida guardada
+- Cuando el personaje se duerme automáticamente
+- Entonces la partida no se guarda
+Escenario 3: Sobrescritura
+
+- Dado que existe una partida guardada del día 2
+- Cuando el jugador duerme en la cama en el día 4
+- Entonces la partida guardada pasa a ser la del día 4","- Al dormir voluntariamente en la cama, la partida se guarda automáticamente, sin preguntar.
+- Al guardar automáticamente aparece brevemente el mensaje “Partida guardada”.
+- Si el personaje se duerme automáticamente a medianoche, la partida no se guarda."
+"HU-26","HU-26. Abrir el menú de pausa","# HU-26. Abrir el menú de pausa
+
+# HU-26. Abrir el menú de pausa
+
+Como jugador, quiero pausar el juego para descansar o cambiar ajustes sin perder el progreso.
+
+Criterios de aceptación:
+
+- Al pulsar Escape durante la partida se abre el menú de pausa y el juego se detiene.
+- El menú de pausa muestra las opciones “Continuar”, “Opciones”, “Guardar partida” y “Salir al menú principal”.
+- Con el menú de pausa abierto, el personaje no se mueve y no se abren diálogos.
+Escenario 1: Abrir la pausa
+
+- Dado que hay una partida en curso
+- Cuando el jugador pulsa Escape
+- Entonces se abre el menú de pausa con sus cuatro opciones
+- Y el juego se detiene
+Escenario 2: Guardar desde la pausa
+
+- Dado que el menú de pausa está abierto
+- Cuando el jugador pulsa “Guardar partida”
+- Entonces aparece el mensaje “Partida guardada” durante 2 segundos
+Escenario 3: Salir al menú principal sin guardar
+
+- Dado que el menú de pausa está abierto y la partida tiene cambios sin guardar
+- Cuando el jugador pulsa “Salir al menú principal”
+- Entonces aparece el mensaje “¿Salir sin guardar? Se perderá el progreso no guardado” con “Sí” y “No”
+- Y si pulsa “Sí”, vuelve al menú principal","- Al pulsar Escape durante la partida se abre el menú de pausa y el juego se detiene.
+- El menú de pausa muestra las opciones “Continuar”, “Opciones”, “Guardar partida” y “Salir al menú principal”.
+- Con el menú de pausa abierto, el personaje no se mueve y no se abren diálogos."
+"HU-27","HU-27. Reanudar desde la pausa","# HU-27. Reanudar desde la pausa
+
+# HU-27. Reanudar desde la pausa
+
+Como jugador, quiero reanudar la partida desde el menú de pausa para seguir donde lo dejé.
+
+Criterios de aceptación:
+
+- Al pulsar “Continuar” o volver a pulsar Escape, el juego se reanuda.
+- Al reanudar, el personaje y el reloj siguen en el mismo punto en que se pausó.
+Escenario 1: Reanudar con el botón
+
+- Dado que el menú de pausa está abierto
+- Cuando el jugador pulsa “Continuar”
+- Entonces el menú de pausa se cierra y el juego continúa
+Escenario 2: Reanudar con Escape
+
+- Dado que el menú de pausa está abierto
+- Cuando el jugador vuelve a pulsar Escape
+- Entonces el menú de pausa se cierra y el juego continúa
+Escenario 3: Misma posición y hora
+
+- Dado que el personaje está junto a un NPC a las 10:00 y el jugador abre la pausa
+- Cuando el jugador reanuda la partida
+- Entonces el personaje sigue junto al NPC
+- Y el reloj marca las 10:00 y continúa avanzando","- Al pulsar “Continuar” o volver a pulsar Escape, el juego se reanuda.
+- Al reanudar, el personaje y el reloj siguen en el mismo punto en que se pausó."
+"HU-28","HU-28. Ajustar el volumen de la música","# HU-28. Ajustar el volumen de la música
+
+# HU-28. Ajustar el volumen de la música
+
+Como jugador, quiero ajustar el volumen de la música para que no moleste.
+
+Criterios de aceptación:
+
+- El control de volumen musical tiene 10 barras, de 0 a 10.
+- El cambio de volumen se aplica al instante.
+- Con 0 barras no se escucha música.
+Escenario 1: Subir el volumen
+
+- Dado que el volumen de música está en 5 barras
+- Cuando el jugador sube una barra
+- Entonces el volumen de música pasa a 6 barras
+- Y el cambio se escucha al instante
+Escenario 2: Volumen en cero
+
+- Dado que el volumen de música está en 1 barra
+- Cuando el jugador baja a 0 barras
+- Entonces no se escucha música
+Escenario 3: Límite máximo
+
+- Dado que el volumen de música está en 10 barras
+- Cuando el jugador intenta subir más
+- Entonces el volumen se mantiene en 10 barras","- El control de volumen musical tiene 10 barras, de 0 a 10.
+- El cambio de volumen se aplica al instante.
+- Con 0 barras no se escucha música."
+"HU-29","HU-29. Ajustar el volumen de los efectos","# HU-29. Ajustar el volumen de los efectos
+
+# HU-29. Ajustar el volumen de los efectos
+
+Como jugador, quiero ajustar los efectos de sonido por separado para ajustar el volumen de los efectos sin cambiar el de la música.
+
+Criterios de aceptación:
+
+- El volumen de efectos tiene 10 barras y es independiente del volumen de música.
+- Al soltar el control de efectos, suena un efecto de prueba con el nuevo volumen.
+Escenario 1: Efectos independientes de la música
+
+- Dado que el volumen de música está en 5 barras y el de efectos en 5 barras
+- Cuando el jugador baja los efectos a 0 barras
+- Entonces la música sigue sonando a 5 barras
+- Y los efectos no se escuchan
+Escenario 2: Efecto de prueba
+
+- Dado que el jugador está en el menú de opciones
+- Cuando suelta el control de efectos en 7 barras
+- Entonces suena el efecto de prueba a 7 barras","- El volumen de efectos tiene 10 barras y es independiente del volumen de música.
+- Al soltar el control de efectos, suena un efecto de prueba con el nuevo volumen."
+"HU-30","HU-30. Silenciar todo el sonido","# HU-30. Silenciar todo el sonido
+
+# HU-30. Silenciar todo el sonido
+
+Como jugador, quiero silenciar todo el audio con un botón para jugar sin sonido.
+
+Criterios de aceptación:
+
+- El botón “Silenciar” está separado de los controles de volumen.
+- Con “Silenciar” activo no se escucha ni música ni efectos.
+- Los controles de volumen conservan sus valores mientras el sonido está silenciado.
+Escenario 1: Silenciar
+
+- Dado que el volumen de música está en 7 barras y el de efectos en 6 barras
+- Cuando el jugador activa “Silenciar”
+- Entonces no se escucha música ni efectos
+- Y los controles siguen marcando 7 y 6 barras
+Escenario 2: Silencio al reanudar
+
+- Dado que el sonido está silenciado
+- Cuando el jugador reanuda la partida desde la pausa
+- Entonces el juego sigue sin sonido
+Escenario 3: Recuperar el sonido
+
+- Dado que el sonido está silenciado con 7 y 6 barras
+- Cuando el jugador desactiva “Silenciar”
+- Entonces la música vuelve a sonar a 7 barras y los efectos a 6 barras","- El botón “Silenciar” está separado de los controles de volumen.
+- Con “Silenciar” activo no se escucha ni música ni efectos.
+- Los controles de volumen conservan sus valores mientras el sonido está silenciado."
+"HU-31","HU-31. Música de fondo según la zona","# HU-31. Música de fondo según la zona
+
+# HU-31. Música de fondo según la zona
+
+Como jugador, quiero que cada zona tenga su música para distinguir los lugares.
+
+Criterios de aceptación:
+
+- El juego tiene 8 pistas de música: 1 para el menú principal y 1 para cada una de las 7 zonas.
+- Al cambiar de zona, la música cambia a la de la nueva zona.
+- Si el jugador se mueve dentro de la misma zona, la música no se reinicia.
+Escenario 1: Cambio de zona
+
+- Dado que el jugador está en la zona exterior del pueblo
+- Cuando entra en la tienda
+- Entonces la música cambia a la pista de la tienda
+Escenario 2: Misma zona
+
+- Dado que el jugador está dentro de la tienda y la música de la tienda suena
+- Cuando se mueve por el interior de la tienda
+- Entonces la música no se reinicia
+Escenario 3: Música del menú
+
+- Dado que el jugador abre el menú principal
+- Cuando se carga el menú
+- Entonces suena la pista del menú principal","- El juego tiene 8 pistas de música: 1 para el menú principal y 1 para cada una de las 7 zonas.
+- Al cambiar de zona, la música cambia a la de la nueva zona.
+- Si el jugador se mueve dentro de la misma zona, la música no se reinicia."
+"HU-32","HU-32. Efectos de sonido en las acciones","# HU-32. Efectos de sonido en las acciones
+
+# HU-32. Efectos de sonido en las acciones
+
+Como jugador, quiero escuchar efectos al andar, recoger objetos y completar encargos para recibir feedback.
+
+Criterios de aceptación:
+
+- Las acciones principales reproducen su efecto de sonido: andar, abrir menús, comprar, vender, abrir cofres y completar encargos.
+- Los efectos de sonido se escuchan con el volumen de efectos configurado.
+- Al moverse entre las opciones de un menú suena un efecto de navegación.
+- Al activar una opción de un menú suena un efecto de confirmación. Las opciones desactivadas no reproducen ningún efecto.
+Escenario 1: Andar
+
+- Dado que el personaje está en una zona sin obstáculos
+- Cuando el jugador se mueve
+- Entonces se reproduce el efecto de pasos
+Escenario 2: Comprar
+
+- Dado que el jugador tiene dinero suficiente en la tienda
+- Cuando compra un objeto
+- Entonces se reproduce el efecto de compra
+Escenario 3: Abrir un cofre
+
+- Dado que el jugador está junto a un cofre cerrado
+- Cuando lo abre
+- Entonces se reproduce el efecto de cofre
+Escenario 4: Completar un encargo
+
+- Dado que el jugador completa un encargo
+- Cuando aparece el mensaje “Encargo completado”
+- Entonces se reproduce el efecto de encargo completado
+Escenario 5: Navegar por un menú
+
+- Dado que el menú principal está abierto
+- Cuando el jugador pulsa la flecha abajo y la selección cambia de opción
+- Entonces se reproduce el efecto de navegación
+Escenario 6: Activar una opción
+
+- Dado que el menú principal está abierto con ""Opciones"" seleccionada
+- Cuando el jugador pulsa Enter
+- Entonces se reproduce el efecto de confirmación
+- Y si la opción seleccionada está desactivada, no se reproduce ningún efecto","- Las acciones principales reproducen su efecto de sonido: andar, abrir menús, comprar, vender, abrir cofres y completar encargos.
+- Los efectos de sonido se escuchan con el volumen de efectos configurado.
+- Al moverse entre las opciones de un menú suena un efecto de navegación.
+- Al activar una opción de un menú suena un efecto de confirmación. Las opciones desactivadas no reproducen ningún efecto."
+"HU-33","HU-33. Cambiar los controles","# HU-33. Cambiar los controles
+
+# HU-33. Cambiar los controles
+
+Como jugador, quiero ver la lista de controles en el menú de opciones para saber qué tecla hace cada cosa.
+
+Criterios de aceptación:
+
+- La pantalla de opciones muestra una tabla con cada acción y su tecla asignada: mover (flechas o WASD), interactuar (E), inventario (I), objetivos (O), pausa (Escape), usar objeto (Enter).
+- La tabla es de solo lectura: las teclas no se pueden cambiar.
+Escenario 1: Consultar los controles
+
+- Dado que el jugador abre el menú de opciones
+- Cuando consulta la sección de controles
+- Entonces aparece una tabla con cada acción y su tecla
+Escenario 2: Intentar cambiar una tecla
+
+- Dado que la tabla de controles está visible
+- Cuando el jugador pulsa sobre la tecla de “Interactuar”
+- Entonces no se modifica la tecla asignada
+Escenario 3: Contenido completo
+
+- Dado que la tabla de controles está visible
+- Cuando el jugador la recorre
+- Entonces aparecen las seis acciones de la lista","- La pantalla de opciones muestra una tabla con cada acción y su tecla asignada: mover (flechas o WASD), interactuar (E), inventario (I), objetivos (O), pausa (Escape), usar objeto (Enter).
+- La tabla es de solo lectura: las teclas no se pueden cambiar."
+"HU-34","HU-34. Guardar las opciones","# HU-34. Guardar las opciones
+
+# HU-34. Guardar las opciones
+
+Como jugador, quiero que mis ajustes de volumen se mantengan al volver a jugar para no tener que volver a ajustarlos cada vez que abro el juego.
+
+Criterios de aceptación:
+
+- Los ajustes de música, efectos y silencio se guardan en el navegador del jugador.
+- Al abrir el juego, se cargan los últimos ajustes guardados.
+Escenario 1: Ajustes que se mantienen
+
+- Dado que el volumen de música está en 4 barras y el de efectos en 8 barras
+- Cuando el jugador cierra el juego y lo vuelve a abrir
+- Entonces el volumen de música es 4 barras y el de efectos es 8 barras
+Escenario 2: Silencio que se mantiene
+
+- Dado que el sonido está silenciado
+- Cuando el jugador vuelve a abrir el juego
+- Entonces el sonido sigue silenciado
+Escenario 3: Navegador sin almacenamiento
+
+- Dado que el navegador no permite guardar datos
+- Cuando el jugador cambia el volumen
+- Entonces el juego funciona con normalidad
+- Y los ajustes no se conservan al volver a abrir el juego","- Los ajustes de música, efectos y silencio se guardan en el navegador del jugador.
+- Al abrir el juego, se cargan los últimos ajustes guardados."
+"HU-35","HU-35. Pantalla de créditos","# HU-35. Pantalla de créditos
+
+# HU-35. Pantalla de créditos
+
+Como jugador, quiero ver los créditos del juego para conocer a quienes lo hicieron y los recursos usados.
+
+Criterios de aceptación:
+
+- La opción “Créditos” aparece en el menú principal.
+- Los créditos muestran el autor, Phaser y los recursos externos con su licencia.
+- Desde los créditos se vuelve al menú principal con “Volver” o con Escape.
+Escenario 1: Abrir los créditos
+
+- Dado que el jugador está en el menú principal
+- Cuando pulsa “Créditos”
+- Entonces aparece la pantalla de créditos
+Escenario 2: Contenido de los créditos
+
+- Dado que la pantalla de créditos está abierta
+- Cuando el jugador la lee
+- Entonces aparecen el autor, Phaser y la licencia de cada recurso externo
+Escenario 3: Volver al menú
+
+- Dado que la pantalla de créditos está abierta
+- Cuando el jugador pulsa Escape
+- Entonces vuelve al menú principal con “Créditos” seleccionada","- La opción “Créditos” aparece en el menú principal.
+- Los créditos muestran el autor, Phaser y los recursos externos con su licencia.
+- Desde los créditos se vuelve al menú principal con “Volver” o con Escape."
+"HU-36","HU-36. Texto legible","# HU-36. Texto legible
+
+# HU-36. Texto legible
+
+Como jugador, quiero que los textos sean legibles con buen contraste para jugar cómodamente.
+
+Criterios de aceptación:
+
+- El contraste entre el texto y el fondo es de al menos 4,5:1 en diálogos, menús y textos de interfaz.
+- El tamaño del texto es fijo y no se puede cambiar desde las opciones.
+- Todos los textos del juego están en español.
+Escenario 1: Contraste en diálogos
+
+- Dado que se muestra un diálogo de un NPC
+- Cuando el texto aparece en pantalla
+- Entonces el contraste entre texto y fondo es de al menos 4,5:1
+Escenario 2: Contraste en menús
+
+- Dado que el menú de pausa está abierto
+- Cuando el jugador mira las opciones
+- Entonces todos los textos cumplen un contraste de al menos 4,5:1
+Escenario 3: Idioma
+
+- Dado que el jugador recorre cualquier pantalla del juego
+- Cuando lee los textos
+- Entonces todos están en español","- El contraste entre el texto y el fondo es de al menos 4,5:1 en diálogos, menús y textos de interfaz.
+- El tamaño del texto es fijo y no se puede cambiar desde las opciones.
+- Todos los textos del juego están en español."
+"HU-37","HU-37. Final del juego","# HU-37. Final del juego
+
+# HU-37. Final del juego
+
+Como jugador, quiero ver un final al completar la historia para saber que he terminado el juego.
+
+Criterios de aceptación:
+
+- Al completar el último encargo (“La feria de Valtrigo”), cuando se cierra el diálogo del alcalde aparece el mensaje de final.
+- El mensaje de final se cierra con E y el jugador puede seguir jugando en el pueblo.
+- El mensaje de final solo aparece una vez.
+Escenario 1: Ver el final
+
+- Dado que el jugador tiene activo el encargo “La feria de Valtrigo”
+- Cuando habla con el alcalde y se cierra su diálogo
+- Entonces aparece el mensaje de final
+Escenario 2: Seguir jugando
+
+- Dado que el mensaje de final está visible
+- Cuando el jugador lo cierra con E
+- Entonces puede moverse por el pueblo con normalidad
+Escenario 3: Solo una vez
+
+- Dado que el jugador ya ha completado el último encargo
+- Cuando vuelve a hablar con el alcalde
+- Entonces no aparece el mensaje de final","- Al completar el último encargo (“La feria de Valtrigo”), cuando se cierra el diálogo del alcalde aparece el mensaje de final.
+- El mensaje de final se cierra con E y el jugador puede seguir jugando en el pueblo.
+- El mensaje de final solo aparece una vez."
+"HU-38","HU-38. Encargos principales por día","# HU-38. Encargos principales por día
+
+# HU-38. Encargos principales por día
+
+Como jugador, quiero que los encargos principales lleguen a lo largo de la semana para que la historia avance día a día.
+
+Criterios de aceptación:
+
+- Cada encargo principal se ofrece a partir de su día: “Entregar la Carta del alcalde” el día 1, “Semillas para la cosecha” el día 2, “Día de mercado” el día 4, “Las piezas del reloj” y “Manzanas para la feria” el día 6 y “La feria de Valtrigo” el día 7.
+- Un encargo se ofrece si ha llegado su día y están completados todos los anteriores. Si su día ya ha pasado, se sigue ofreciendo.
+- Si su día aún no ha llegado, el NPC dice su diálogo normal, sin ofrecer el encargo.
+Escenario 1: Antes de su día
+
+- Dado que es el día 1 y el encargo “Entregar la Carta del alcalde” está completado
+- Cuando el jugador habla con el granjero
+- Entonces el granjero no ofrece el encargo “Semillas para la cosecha”
+Escenario 2: El día del encargo
+
+- Dado que es el día 2 y el encargo “Entregar la Carta del alcalde” está completado
+- Cuando el jugador habla con el granjero
+- Entonces el granjero ofrece el encargo “Semillas para la cosecha”
+Escenario 3: Después de su día
+
+- Dado que es el día 3, el encargo “Entregar la Carta del alcalde” está completado y el jugador no ha aceptado el encargo “Semillas para la cosecha”
+- Cuando el jugador habla con el granjero
+- Entonces el granjero ofrece el encargo “Semillas para la cosecha”
+Escenario 4: Encargo anterior sin completar
+
+- Dado que es el día 4 y el encargo “Semillas para la cosecha” no está completado
+- Cuando el jugador habla con la vendedora
+- Entonces la vendedora no ofrece el encargo “Día de mercado”","- Cada encargo principal se ofrece a partir de su día: “Entregar la Carta del alcalde” el día 1, “Semillas para la cosecha” el día 2, “Día de mercado” el día 4, “Las piezas del reloj” y “Manzanas para la feria” el día 6 y “La feria de Valtrigo” el día 7.
+- Un encargo se ofrece si ha llegado su día y están completados todos los anteriores. Si su día ya ha pasado, se sigue ofreciendo.
+- Si su día aún no ha llegado, el NPC dice su diálogo normal, sin ofrecer el encargo."
+"HU-39","HU-39. Resumen del día al dormir","# HU-39. Resumen del día al dormir
+
+# HU-39. Resumen del día al dormir
+
+Como jugador, quiero ver un resumen al terminar el día para saber qué he conseguido.
+
+Criterios de aceptación:
+
+- Al dormir en la cama, después del fundido a negro, aparece la pantalla “Día N terminado”, con N el día que termina.
+- El resumen muestra las monedas ganadas ese día (ventas y recompensas), las cosechas recogidas y los peces pescados.
+- El resumen se cierra con E y entonces empieza el día siguiente a las 06:00.
+- Al dormirse a medianoche no aparece el resumen, porque el progreso del día se pierde.
+Escenario 1: Ver el resumen
+
+- Dado que es el día 2 y el jugador ha vendido 2 Nabos por 30 monedas y ha pescado 1 Trucha
+- Cuando duerme en la cama
+- Entonces aparece “Día 2 terminado”
+- Y el resumen muestra 30 monedas ganadas, 0 cosechas y 1 pez
+Escenario 2: Cerrar el resumen
+
+- Dado que el resumen del día está visible
+- Cuando el jugador pulsa E
+- Entonces el reloj marca el día siguiente a las 06:00
+Escenario 3: Las compras no restan
+
+- Dado que es el día 1 y el jugador solo ha comprado una Pala
+- Cuando duerme en la cama
+- Entonces el resumen muestra 0 monedas ganadas
+Escenario 4: Dormirse a medianoche
+
+- Dado que son las 23:59 y el jugador no ha dormido
+- Cuando el reloj llega a las 00:00
+- Entonces no aparece el resumen del día","- Al dormir en la cama, después del fundido a negro, aparece la pantalla “Día N terminado”, con N el día que termina.
+- El resumen muestra las monedas ganadas ese día (ventas y recompensas), las cosechas recogidas y los peces pescados.
+- El resumen se cierra con E y entonces empieza el día siguiente a las 06:00.
+- Al dormirse a medianoche no aparece el resumen, porque el progreso del día se pierde."
+"HU-40","HU-40. Horario de los NPC","# HU-40. Horario de los NPC
+
+# HU-40. Horario de los NPC
+
+Como jugador, quiero que los NPC sigan un horario para que el pueblo parezca vivo.
+
+Criterios de aceptación:
+
+- Horarios: el alcalde está en la plaza de 08:00 a 20:00. El granjero está en la granja de 06:00 a 17:00 y en el lago de 17:00 a 21:00. La relojera está en la torre de 09:00 a 22:00. La vendedora está en la tienda, que solo se puede visitar en su horario (HU-17).
+- Fuera de su horario, el NPC no está en ninguna zona.
+- El NPC aparece o desaparece al llegar la hora, aunque el jugador esté en la zona. Si el jugador está hablando con él, se queda hasta que se cierra el diálogo.
+Escenario 1: Dentro del horario
+
+- Dado que son las 10:00
+- Cuando el jugador entra en la plaza
+- Entonces el alcalde está en la plaza
+Escenario 2: Fuera del horario
+
+- Dado que son las 21:00
+- Cuando el jugador entra en la plaza
+- Entonces el alcalde no está en la plaza
+Escenario 3: Cambio de zona del granjero
+
+- Dado que son las 17:30
+- Cuando el jugador entra en el lago
+- Entonces el granjero está en el lago
+- Y no está en la granja
+Escenario 4: Llega la hora con el jugador en la zona
+
+- Dado que son las 19:59 y el jugador está en la plaza sin hablar con el alcalde
+- Cuando el reloj llega a las 20:00
+- Entonces el alcalde desaparece de la plaza
+Escenario 5: Llega la hora durante un diálogo
+
+- Dado que son las 19:59 y el jugador está hablando con el alcalde
+- Cuando el reloj llega a las 20:00
+- Entonces el diálogo continúa
+- Y el alcalde desaparece al cerrarse el diálogo","- Horarios: el alcalde está en la plaza de 08:00 a 20:00. El granjero está en la granja de 06:00 a 17:00 y en el lago de 17:00 a 21:00. La relojera está en la torre de 09:00 a 22:00. La vendedora está en la tienda, que solo se puede visitar en su horario (HU-17).
+- Fuera de su horario, el NPC no está en ninguna zona.
+- El NPC aparece o desaparece al llegar la hora, aunque el jugador esté en la zona. Si el jugador está hablando con él, se queda hasta que se cierra el diálogo."
+"HU-41","HU-41. Cavar parcelas con la Pala","# HU-41. Cavar parcelas con la Pala
+
+# HU-41. Cavar parcelas con la Pala
+
+Como jugador, quiero cavar la tierra de la granja para poder sembrar.
+
+Criterios de aceptación:
+
+- La granja tiene un huerto de 6×4 parcelas. Solo se puede cavar en ellas.
+- Al pulsar E junto a una parcela sin cavar, con una Pala en el inventario, la parcela queda cavada y se gastan 4 de energía.
+- Sin Pala aparece el mensaje “Necesitas una Pala” y la parcela no cambia.
+- Una parcela cavada sigue cavada los días siguientes.
+Escenario 1: Cavar
+
+- Dado que el jugador tiene una Pala y 100 de energía
+- Cuando pulsa E junto a una parcela sin cavar
+- Entonces la parcela queda cavada
+- Y la energía es 96
+Escenario 2: Sin Pala
+
+- Dado que el jugador no tiene ninguna Pala
+- Cuando pulsa E junto a una parcela sin cavar
+- Entonces aparece el mensaje “Necesitas una Pala”
+- Y la parcela no cambia
+Escenario 3: Fuera del huerto
+
+- Dado que el jugador tiene una Pala
+- Cuando pulsa E en cualquier otro sitio de la granja
+- Entonces no se cava nada
+Escenario 4: Al día siguiente
+
+- Dado que el jugador ha cavado una parcela
+- Cuando duerme y empieza el día siguiente
+- Entonces la parcela sigue cavada","- La granja tiene un huerto de 6×4 parcelas. Solo se puede cavar en ellas.
+- Al pulsar E junto a una parcela sin cavar, con una Pala en el inventario, la parcela queda cavada y se gastan 4 de energía.
+- Sin Pala aparece el mensaje “Necesitas una Pala” y la parcela no cambia.
+- Una parcela cavada sigue cavada los días siguientes."
+"HU-42","HU-42. Sembrar semillas","# HU-42. Sembrar semillas
+
+# HU-42. Sembrar semillas
+
+Como jugador, quiero sembrar semillas en las parcelas cavadas para obtener cosechas.
+
+Criterios de aceptación:
+
+- Hay tres semillas: “Semilla” (da Nabo, tarda 2 días), “Semilla de zanahoria” (Zanahoria, 3 días) y “Semilla de calabaza” (Calabaza, 4 días).
+- Al pulsar E junto a una parcela cavada y vacía aparece la lista de semillas del inventario. Al elegir una, se siembra, se gasta 1 unidad y 1 de energía.
+- Sin semillas aparece el mensaje “No tienes semillas” y la parcela no cambia.
+- En una parcela sembrada no se puede sembrar otra vez.
+Escenario 1: Sembrar
+
+- Dado que el jugador tiene 3 Semillas y está junto a una parcela cavada y vacía
+- Cuando pulsa E y elige “Semilla”
+- Entonces la parcela queda sembrada de Nabo
+- Y le quedan 2 Semillas
+- Y gasta 1 de energía
+Escenario 2: Elegir entre varias semillas
+
+- Dado que el jugador tiene Semillas y Semillas de calabaza
+- Cuando pulsa E junto a una parcela cavada y vacía
+- Entonces aparece la lista con “Semilla” y “Semilla de calabaza”
+Escenario 3: Sin semillas
+
+- Dado que el jugador no tiene semillas
+- Cuando pulsa E junto a una parcela cavada y vacía
+- Entonces aparece el mensaje “No tienes semillas”
+- Y la parcela no cambia
+Escenario 4: Parcela sin cavar
+
+- Dado que el jugador tiene Semillas y no tiene Pala
+- Cuando pulsa E junto a una parcela sin cavar
+- Entonces aparece el mensaje “Necesitas una Pala”
+- Y no se siembra nada","- Hay tres semillas: “Semilla” (da Nabo, tarda 2 días), “Semilla de zanahoria” (Zanahoria, 3 días) y “Semilla de calabaza” (Calabaza, 4 días).
+- Al pulsar E junto a una parcela cavada y vacía aparece la lista de semillas del inventario. Al elegir una, se siembra, se gasta 1 unidad y 1 de energía.
+- Sin semillas aparece el mensaje “No tienes semillas” y la parcela no cambia.
+- En una parcela sembrada no se puede sembrar otra vez."
+"HU-43","HU-43. Regar con la Regadera","# HU-43. Regar con la Regadera
+
+# HU-43. Regar con la Regadera
+
+Como jugador, quiero regar mis cultivos para que crezcan.
+
+Criterios de aceptación:
+
+- Al pulsar E junto a una parcela sembrada y sin regar ese día, con una Regadera en el inventario, la parcela queda regada y se gastan 2 de energía.
+- Una parcela regada se ve más oscura hasta el día siguiente.
+- Una parcela ya regada ese día no se puede volver a regar.
+- Sin Regadera aparece el mensaje “Necesitas una Regadera”.
+- Al empezar cada día, todas las parcelas quedan sin regar.
+Escenario 1: Regar
+
+- Dado que el jugador tiene una Regadera y 100 de energía
+- Cuando pulsa E junto a una parcela sembrada y sin regar
+- Entonces la parcela queda regada
+- Y la energía es 98
+Escenario 2: Ya regada
+
+- Dado que la parcela ya está regada ese día
+- Cuando el jugador pulsa E junto a ella
+- Entonces no se gasta energía
+Escenario 3: Sin Regadera
+
+- Dado que el jugador no tiene ninguna Regadera
+- Cuando pulsa E junto a una parcela sembrada
+- Entonces aparece el mensaje “Necesitas una Regadera”
+Escenario 4: Nuevo día
+
+- Dado que el jugador ha regado una parcela
+- Cuando duerme y empieza el día siguiente
+- Entonces la parcela está sin regar","- Al pulsar E junto a una parcela sembrada y sin regar ese día, con una Regadera en el inventario, la parcela queda regada y se gastan 2 de energía.
+- Una parcela regada se ve más oscura hasta el día siguiente.
+- Una parcela ya regada ese día no se puede volver a regar.
+- Sin Regadera aparece el mensaje “Necesitas una Regadera”.
+- Al empezar cada día, todas las parcelas quedan sin regar."
+"HU-44","HU-44. Crecimiento y cosecha","# HU-44. Crecimiento y cosecha
+
+# HU-44. Crecimiento y cosecha
+
+Como jugador, quiero ver crecer mis cultivos y cosecharlos para venderlos o comerlos.
+
+Criterios de aceptación:
+
+- Al empezar cada día, un cultivo que se regó el día anterior crece un día. Si no se regó, no crece, pero tampoco se pierde.
+- Un cultivo está listo cuando ha crecido todos los días que necesita (Nabo 2, Zanahoria 3, Calabaza 4). Cada cultivo se ve distinto cuando está listo.
+- Al pulsar E junto a un cultivo listo, se recoge 1 unidad, se gasta 1 de energía y la parcela queda cavada y vacía.
+- Si la cosecha no cabe en el inventario, aparece “Inventario lleno” y el cultivo sigue en la parcela.
+- Las cosechas se pueden comer: Nabo da 10 de energía, Zanahoria 15 y Calabaza 30.
+- Precios de venta: Nabo 15 monedas, Zanahoria 35 y Calabaza 80.
+Escenario 1: Crece con riego
+
+- Dado que el día 2 el jugador siembra un Nabo y lo riega
+- Y el día 3 lo vuelve a regar
+- Cuando empieza el día 4
+- Entonces el Nabo está listo
+Escenario 2: No crece sin riego
+
+- Dado que el día 2 el jugador siembra un Nabo y no lo riega
+- Cuando empieza el día 3
+- Entonces el Nabo no ha crecido
+Escenario 3: Cosechar
+
+- Dado que hay un Nabo listo
+- Cuando el jugador pulsa E junto a él
+- Entonces aparece 1 Nabo en el inventario
+- Y la parcela queda cavada y vacía
+Escenario 4: Inventario lleno
+
+- Dado que hay un Nabo listo y el inventario está completo
+- Cuando el jugador pulsa E junto a él
+- Entonces aparece el mensaje “Inventario lleno”
+- Y el Nabo sigue en la parcela","- Al empezar cada día, un cultivo que se regó el día anterior crece un día. Si no se regó, no crece, pero tampoco se pierde.
+- Un cultivo está listo cuando ha crecido todos los días que necesita (Nabo 2, Zanahoria 3, Calabaza 4). Cada cultivo se ve distinto cuando está listo.
+- Al pulsar E junto a un cultivo listo, se recoge 1 unidad, se gasta 1 de energía y la parcela queda cavada y vacía.
+- Si la cosecha no cabe en el inventario, aparece “Inventario lleno” y el cultivo sigue en la parcela.
+- Las cosechas se pueden comer: Nabo da 10 de energía, Zanahoria 15 y Calabaza 30.
+- Precios de venta: Nabo 15 monedas, Zanahoria 35 y Calabaza 80."
+"HU-45","HU-45. El manzano","# HU-45. El manzano
+
+# HU-45. El manzano
+
+Como jugador, quiero recoger manzanas del manzano de la granja para conseguir comida y cumplir encargos.
+
+Criterios de aceptación:
+
+- En la granja hay un manzano. Tiene 1 Manzana al empezar la partida y, después, una nueva cada 2 días si no se ha recogido la anterior.
+- Al pulsar E junto al manzano con una Manzana, se recoge y el manzano se queda sin fruta.
+- El manzano no necesita riego ni gasta energía.
+- Sin fruta, al pulsar E no ocurre nada y no aparece el indicador “E”.
+- La Manzana se obtiene del manzano (y de las recompensas de algunos encargos). No se compra en la tienda, pero se puede vender en ella por 10 monedas.
+Escenario 1: Recoger una Manzana
+
+- Dado que el manzano tiene una Manzana
+- Cuando el jugador pulsa E junto a él
+- Entonces aparece 1 Manzana en el inventario
+- Y el manzano se queda sin fruta
+Escenario 2: Vuelve a dar fruta
+
+- Dado que el jugador recogió la Manzana el día 2
+- Cuando empieza el día 4
+- Entonces el manzano tiene una Manzana
+Escenario 3: Todavía sin fruta
+
+- Dado que el jugador recogió la Manzana el día 2
+- Cuando empieza el día 3
+- Entonces el manzano no tiene fruta","- En la granja hay un manzano. Tiene 1 Manzana al empezar la partida y, después, una nueva cada 2 días si no se ha recogido la anterior.
+- Al pulsar E junto al manzano con una Manzana, se recoge y el manzano se queda sin fruta.
+- El manzano no necesita riego ni gasta energía.
+- Sin fruta, al pulsar E no ocurre nada y no aparece el indicador “E”.
+- La Manzana se obtiene del manzano (y de las recompensas de algunos encargos). No se compra en la tienda, pero se puede vender en ella por 10 monedas."
+"HU-46","HU-46. Gasto de energía por acción","# HU-46. Gasto de energía por acción
+
+# HU-46. Gasto de energía por acción
+
+Como jugador, quiero que trabajar me canse para tener que organizar mi día.
+
+Criterios de aceptación:
+
+- Cada acción de trabajo gasta energía: cavar 4, sembrar 1, regar 2, cosechar 1, pescar 3 cada vez que se lanza la caña salvo durante el concurso de pesca (HU-60), talar 5 y recoger setas o moras 1.
+- Andar, hablar, abrir cofres, comprar y vender no gastan energía.
+- La energía en pantalla se actualiza en cuanto se gasta.
+Escenario 1: Gastar energía
+
+- Dado que la energía es 50
+- Cuando el jugador cava una parcela
+- Entonces la energía es 46
+Escenario 2: Acciones gratuitas
+
+- Dado que la energía es 50
+- Cuando el jugador habla con un NPC y compra una Semilla
+- Entonces la energía sigue siendo 50","- Cada acción de trabajo gasta energía: cavar 4, sembrar 1, regar 2, cosechar 1, pescar 3 cada vez que se lanza la caña salvo durante el concurso de pesca (HU-60), talar 5 y recoger setas o moras 1.
+- Andar, hablar, abrir cofres, comprar y vender no gastan energía.
+- La energía en pantalla se actualiza en cuanto se gasta."
+"HU-47","HU-47. Agotamiento","# HU-47. Agotamiento
+
+# HU-47. Agotamiento
+
+Como jugador, quiero que la energía tenga un límite para que comer y dormir tengan sentido.
+
+Criterios de aceptación:
+
+- La energía no baja de 0.
+- Si la energía no alcanza para una acción, aparece el mensaje “Estás demasiado cansado” y la acción no se hace.
+- Sin energía se puede seguir andando, hablando, comprando, vendiendo, comiendo y durmiendo.
+Escenario 1: Energía insuficiente
+
+- Dado que la energía es 3
+- Cuando el jugador intenta cavar una parcela
+- Entonces aparece el mensaje “Estás demasiado cansado”
+- Y la parcela no cambia
+- Y la energía sigue siendo 3
+Escenario 2: Energía justa
+
+- Dado que la energía es 4
+- Cuando el jugador cava una parcela
+- Entonces la parcela queda cavada
+- Y la energía es 0
+Escenario 3: Recuperarse comiendo
+
+- Dado que la energía es 0 y el jugador tiene una Manzana
+- Cuando usa la Manzana desde el inventario
+- Entonces la energía sube
+- Y puede volver a trabajar","- La energía no baja de 0.
+- Si la energía no alcanza para una acción, aparece el mensaje “Estás demasiado cansado” y la acción no se hace.
+- Sin energía se puede seguir andando, hablando, comprando, vendiendo, comiendo y durmiendo."
+"HU-48","HU-48. Pescar en el lago","# HU-48. Pescar en el lago
+
+# HU-48. Pescar en el lago
+
+Como jugador, quiero pescar en el lago para conseguir peces y venderlos.
+
+Criterios de aceptación:
+
+- Al pulsar E mirando al agua del lago, a menos de una casilla, con una Caña de pescar en el inventario, el personaje lanza la caña y se gastan 3 de energía.
+- Entre 2 y 5 segundos después aparece “¡Pica!”. Si el jugador pulsa E antes de que pase 1 segundo, el pez va al inventario. Si tarda más, aparece “Se ha escapado”.
+- Si pulsa E antes de que aparezca “¡Pica!”, aparece “Has tirado demasiado pronto” y no pesca nada.
+- Pulsar una flecha recoge la caña sin pescar nada. La energía gastada no se devuelve.
+- Mientras pesca, el personaje no se mueve. Escape abre la pausa y la pesca continúa al reanudar.
+- Si el pez no cabe en el inventario, aparece “Inventario lleno” y se pierde.
+- Sin Caña de pescar aparece el mensaje “Necesitas una Caña de pescar”.
+Escenario 1: Pescar a tiempo
+
+- Dado que el jugador tiene una Caña de pescar y está mirando al agua
+- Cuando pulsa E y vuelve a pulsar E menos de 1 segundo después de que aparezca “¡Pica!”
+- Entonces aparece un pez en el inventario
+- Y la energía ha bajado 3
+Escenario 2: Demasiado tarde
+
+- Dado que aparece “¡Pica!”
+- Cuando el jugador no pulsa E en 1 segundo
+- Entonces aparece el mensaje “Se ha escapado”
+- Y el inventario no cambia
+Escenario 3: Demasiado pronto
+
+- Dado que el jugador ha lanzado la caña y aún no ha aparecido “¡Pica!”
+- Cuando pulsa E
+- Entonces aparece el mensaje “Has tirado demasiado pronto”
+- Y el inventario no cambia
+Escenario 4: Recoger la caña
+
+- Dado que el jugador ha lanzado la caña
+- Cuando pulsa una flecha
+- Entonces deja de pescar sin pescar nada
+Escenario 5: Sin caña
+
+- Dado que el jugador no tiene ninguna Caña de pescar
+- Cuando pulsa E mirando al agua
+- Entonces aparece el mensaje “Necesitas una Caña de pescar”","- Al pulsar E mirando al agua del lago, a menos de una casilla, con una Caña de pescar en el inventario, el personaje lanza la caña y se gastan 3 de energía.
+- Entre 2 y 5 segundos después aparece “¡Pica!”. Si el jugador pulsa E antes de que pase 1 segundo, el pez va al inventario. Si tarda más, aparece “Se ha escapado”.
+- Si pulsa E antes de que aparezca “¡Pica!”, aparece “Has tirado demasiado pronto” y no pesca nada.
+- Pulsar una flecha recoge la caña sin pescar nada. La energía gastada no se devuelve.
+- Mientras pesca, el personaje no se mueve. Escape abre la pausa y la pesca continúa al reanudar.
+- Si el pez no cabe en el inventario, aparece “Inventario lleno” y se pierde.
+- Sin Caña de pescar aparece el mensaje “Necesitas una Caña de pescar”."
+"HU-49","HU-49. Peces según la hora","# HU-49. Peces según la hora
+
+# HU-49. Peces según la hora
+
+Como jugador, quiero que el pez dependa de la hora para que merezca la pena pescar en distintos momentos.
+
+Criterios de aceptación:
+
+- El pez depende de la hora en la que aparece “¡Pica!”: Trucha de 06:00 a 10:00, Carpa de 10:00 a 20:00 y Siluro de 20:00 a 24:00.
+- Cada pez sale con un tamaño al azar dentro del rango de su especie: Carpa de 20 a 45 cm, Trucha de 25 a 50 cm y Siluro de 50 a 120 cm.
+- Al pescar aparece el mensaje “Has pescado una [especie] de [tamaño] cm” (“un Siluro” para el Siluro). El tamaño no se guarda en el inventario: los peces de la misma especie se apilan.
+- Precios de venta: Carpa 15 monedas, Trucha 20 y Siluro 50. Los peces no se pueden comer.
+Escenario 1: Por la mañana
+
+- Dado que son las 07:00
+- Cuando el jugador pesca un pez
+- Entonces es una Trucha
+- Y aparece el mensaje “Has pescado una Trucha de [tamaño] cm”, con un tamaño entre 25 y 50
+Escenario 2: Por la tarde
+
+- Dado que son las 15:00
+- Cuando el jugador pesca un pez
+- Entonces es una Carpa
+Escenario 3: Por la noche
+
+- Dado que son las 22:00
+- Cuando el jugador pesca un pez
+- Entonces es un Siluro
+Escenario 4: Cambio de franja
+
+- Dado que son las 09:59 y el jugador ha lanzado la caña
+- Cuando “¡Pica!” aparece a las 10:00
+- Entonces el pez es una Carpa","- El pez depende de la hora en la que aparece “¡Pica!”: Trucha de 06:00 a 10:00, Carpa de 10:00 a 20:00 y Siluro de 20:00 a 24:00.
+- Cada pez sale con un tamaño al azar dentro del rango de su especie: Carpa de 20 a 45 cm, Trucha de 25 a 50 cm y Siluro de 50 a 120 cm.
+- Al pescar aparece el mensaje “Has pescado una [especie] de [tamaño] cm” (“un Siluro” para el Siluro). El tamaño no se guarda en el inventario: los peces de la misma especie se apilan.
+- Precios de venta: Carpa 15 monedas, Trucha 20 y Siluro 50. Los peces no se pueden comer."
+"HU-50","HU-50. Recoger en el bosque","# HU-50. Recoger en el bosque
+
+# HU-50. Recoger en el bosque
+
+Como jugador, quiero recoger lo que da el bosque para conseguir comida y cosas que vender.
+
+Criterios de aceptación:
+
+- En el bosque hay puntos fijos: 4 de Setas, 3 de Moras y 5 troncos.
+- Al pulsar E junto a un punto de Setas o de Moras, se recoge 1 unidad, se gasta 1 de energía y el punto desaparece.
+- Al pulsar E junto a un tronco, con un Hacha en el inventario, se tala: se recibe 1 Leña, se gastan 5 de energía y el tronco desaparece. Sin Hacha aparece el mensaje “Necesitas un Hacha”.
+- Al empezar cada día, todos los puntos y troncos vuelven a aparecer.
+- Si no cabe en el inventario, aparece “Inventario lleno” y el punto o el tronco siguen ahí.
+- Precios de venta: Setas 8 monedas, Moras 5 y Leña 3. Las Setas dan 10 de energía y las Moras 5; la Leña no se puede comer.
+Escenario 1: Recoger
+
+- Dado que el jugador está junto a un punto de Setas
+- Cuando pulsa E
+- Entonces aparece 1 Seta en el inventario
+- Y el punto desaparece
+Escenario 2: Talar
+
+- Dado que el jugador tiene un Hacha y 100 de energía
+- Cuando pulsa E junto a un tronco
+- Entonces aparece 1 Leña en el inventario
+- Y la energía es 95
+- Y el tronco desaparece
+Escenario 3: Sin Hacha
+
+- Dado que el jugador no tiene ningún Hacha
+- Cuando pulsa E junto a un tronco
+- Entonces aparece el mensaje “Necesitas un Hacha”
+- Y el tronco sigue en el bosque
+Escenario 4: Vuelve al día siguiente
+
+- Dado que el jugador ha recogido un punto de Setas
+- Cuando duerme y empieza el día siguiente
+- Entonces el punto vuelve a estar en el bosque
+Escenario 5: Inventario lleno
+
+- Dado que el inventario está completo
+- Cuando el jugador pulsa E junto a un punto de Moras
+- Entonces aparece el mensaje “Inventario lleno”
+- Y el punto sigue en el bosque","- En el bosque hay puntos fijos: 4 de Setas, 3 de Moras y 5 troncos.
+- Al pulsar E junto a un punto de Setas o de Moras, se recoge 1 unidad, se gasta 1 de energía y el punto desaparece.
+- Al pulsar E junto a un tronco, con un Hacha en el inventario, se tala: se recibe 1 Leña, se gastan 5 de energía y el tronco desaparece. Sin Hacha aparece el mensaje “Necesitas un Hacha”.
+- Al empezar cada día, todos los puntos y troncos vuelven a aparecer.
+- Si no cabe en el inventario, aparece “Inventario lleno” y el punto o el tronco siguen ahí.
+- Precios de venta: Setas 8 monedas, Moras 5 y Leña 3. Las Setas dan 10 de energía y las Moras 5; la Leña no se puede comer."
+"HU-51","HU-51. Nueva zona: el Bosque","# HU-51. Nueva zona: el Bosque
+
+# HU-51. Nueva zona: el Bosque
+
+Como jugador, quiero explorar un bosque junto al lago para tener más sitios que descubrir.
+
+Criterios de aceptación:
+
+- El bosque es una zona nueva conectada con el lago por un camino en el borde oeste del lago.
+- El bosque tiene su propia música, que entra al llegar como en las demás zonas (HU-31).
+- El cambio de zona funciona como el resto de puertas (HU-08).
+Escenario 1: Entrar al bosque
+
+- Dado que el jugador está en el lago
+- Cuando camina por el camino del oeste
+- Entonces aparece en el bosque, junto a la salida hacia el lago
+- Y suena la música del bosque
+Escenario 2: Volver al lago
+
+- Dado que el jugador está en el bosque
+- Cuando camina por la salida hacia el lago
+- Entonces aparece en el lago, junto al camino del bosque","- El bosque es una zona nueva conectada con el lago por un camino en el borde oeste del lago.
+- El bosque tiene su propia música, que entra al llegar como en las demás zonas (HU-31).
+- El cambio de zona funciona como el resto de puertas (HU-08)."
+"HU-52","HU-52. Tablón de anuncios","# HU-52. Tablón de anuncios
+
+# HU-52. Tablón de anuncios
+
+Como jugador, quiero leer pedidos en un tablón de la plaza para tener tareas cada día.
+
+Criterios de aceptación:
+
+- En la plaza hay un tablón de anuncios. Al pulsar E junto a él se muestra el pedido del día, con las opciones “Aceptar” y “Rechazar”.
+- Cada día tiene un pedido fijo, siempre el mismo para ese día. Día 1: 3 Leñas. Día 2: 2 Moras. Día 3: 1 Trucha. Día 4: 2 Nabos. Día 5: 3 Setas. Día 6: 1 Carpa. A partir del día 7 se repite la lista desde el día 1.
+- El pedido del día solo se puede aceptar ese día. Una vez aceptado, el tablón muestra “Ya has aceptado el pedido de hoy”.
+- Si se rechaza, se puede volver a leer y aceptar ese mismo día.
+- Los pedidos aceptados se entregan en el tablón (HU-54).
+Escenario 1: Leer el pedido
+
+- Dado que es el día 1
+- Cuando el jugador pulsa E junto al tablón
+- Entonces aparece el pedido “Leña para el horno”, que pide 3 Leñas
+Escenario 2: Aceptar
+
+- Dado que el tablón muestra el pedido del día
+- Cuando el jugador pulsa “Aceptar”
+- Entonces el pedido aparece en la lista de objetivos
+Escenario 3: Ya aceptado
+
+- Dado que el jugador ha aceptado el pedido de hoy
+- Cuando vuelve a pulsar E junto al tablón
+- Entonces aparece el mensaje “Ya has aceptado el pedido de hoy”
+Escenario 4: Mismo pedido cada partida
+
+- Dado que dos partidas distintas están en el día 3
+- Cuando el jugador lee el tablón en cada una
+- Entonces las dos muestran el mismo pedido","- En la plaza hay un tablón de anuncios. Al pulsar E junto a él se muestra el pedido del día, con las opciones “Aceptar” y “Rechazar”.
+- Cada día tiene un pedido fijo, siempre el mismo para ese día. Día 1: 3 Leñas. Día 2: 2 Moras. Día 3: 1 Trucha. Día 4: 2 Nabos. Día 5: 3 Setas. Día 6: 1 Carpa. A partir del día 7 se repite la lista desde el día 1.
+- El pedido del día solo se puede aceptar ese día. Una vez aceptado, el tablón muestra “Ya has aceptado el pedido de hoy”.
+- Si se rechaza, se puede volver a leer y aceptar ese mismo día.
+- Los pedidos aceptados se entregan en el tablón (HU-54)."
+"HU-53","HU-53. Pedidos simultáneos","# HU-53. Pedidos simultáneos
+
+# HU-53. Pedidos simultáneos
+
+Como jugador, quiero llevar varios pedidos a la vez sin que bloqueen la historia para avanzar en la historia mientras cumplo otros pedidos.
+
+Criterios de aceptación:
+
+- Se pueden tener hasta 3 pedidos del tablón activos a la vez.
+- Con 3 pedidos activos, el tablón muestra “Ya tienes 3 pedidos activos” y no deja aceptar otro.
+- Los pedidos no tienen fecha límite.
+- Los pedidos del tablón no cuentan como encargo activo para los NPC: no impiden aceptar ni completar un encargo principal.
+Escenario 1: Pedido y encargo a la vez
+
+- Dado que el jugador tiene activo un pedido del tablón
+- Cuando el alcalde le ofrece “Entregar la Carta del alcalde”
+- Entonces puede aceptarlo
+Escenario 2: Límite de pedidos
+
+- Dado que el jugador tiene 3 pedidos del tablón activos
+- Cuando pulsa E junto al tablón un día con pedido nuevo
+- Entonces aparece el mensaje “Ya tienes 3 pedidos activos”
+- Y no puede aceptar el pedido
+Escenario 3: Sin fecha límite
+
+- Dado que el jugador aceptó el pedido del día 1
+- Cuando empieza el día 3
+- Entonces el pedido sigue activo","- Se pueden tener hasta 3 pedidos del tablón activos a la vez.
+- Con 3 pedidos activos, el tablón muestra “Ya tienes 3 pedidos activos” y no deja aceptar otro.
+- Los pedidos no tienen fecha límite.
+- Los pedidos del tablón no cuentan como encargo activo para los NPC: no impiden aceptar ni completar un encargo principal."
+"HU-54","HU-54. Entregar un pedido","# HU-54. Entregar un pedido
+
+# HU-54. Entregar un pedido
+
+Como jugador, quiero entregar los pedidos en el tablón para cobrar la recompensa de los pedidos del tablón.
+
+Criterios de aceptación:
+
+- Al pulsar E junto al tablón con un pedido activo cuyos objetos están en el inventario, se entregan los objetos, se cobra la recompensa y aparece el mensaje “Pedido completado”.
+- Si hay varios pedidos que se pueden entregar, se entregan todos.
+- Recompensas: Día 1, 20 monedas. Día 2, 15 monedas. Día 3, 30 monedas. Día 4, 40 monedas y 2 Semillas de zanahoria. Día 5, 30 monedas. Día 6, 25 monedas.
+- Antes de entregar, se comprueba que la recompensa cabe en el inventario. Si no cabe, aparece “Inventario lleno” y el pedido sigue activo.
+Escenario 1: Entregar
+
+- Dado que el jugador tiene activo el pedido “Leña para el horno” y 3 Leñas
+- Cuando pulsa E junto al tablón
+- Entonces aparece el mensaje “Pedido completado”
+- Y el jugador recibe 20 monedas
+- Y las 3 Leñas desaparecen del inventario
+Escenario 2: Faltan objetos
+
+- Dado que el jugador tiene activo el pedido “Leña para el horno” y 2 Leñas
+- Cuando pulsa E junto al tablón
+- Entonces el pedido sigue activo
+- Y las Leñas siguen en el inventario
+Escenario 3: Inventario lleno
+
+- Dado que el jugador tiene activo el pedido del día 4, 2 Nabos y el inventario completo con otros objetos
+- Cuando pulsa E junto al tablón
+- Entonces aparece el mensaje “Inventario lleno”
+- Y el pedido sigue activo","- Al pulsar E junto al tablón con un pedido activo cuyos objetos están en el inventario, se entregan los objetos, se cobra la recompensa y aparece el mensaje “Pedido completado”.
+- Si hay varios pedidos que se pueden entregar, se entregan todos.
+- Recompensas: Día 1, 20 monedas. Día 2, 15 monedas. Día 3, 30 monedas. Día 4, 40 monedas y 2 Semillas de zanahoria. Día 5, 30 monedas. Día 6, 25 monedas.
+- Antes de entregar, se comprueba que la recompensa cabe en el inventario. Si no cabe, aparece “Inventario lleno” y el pedido sigue activo."
+"HU-55","HU-55. Páginas del diario","# HU-55. Páginas del diario
+
+# HU-55. Páginas del diario
+
+Como jugador, quiero encontrar páginas del diario de la relojera para descubrir por qué se paró el reloj.
+
+Criterios de aceptación:
+
+- Hay 5 páginas del diario escondidas: en la torre, en el bosque, en el lago, en la granja y en la plaza.
+- Al pulsar E junto a una página, se recoge, desaparece del mapa y aparece el mensaje “Has encontrado una página del diario”. Las páginas no ocupan sitio en el inventario.
+- La lista de objetivos (O) tiene dos apartados, “Encargos” y “Notas”, que se cambian con ← →. “Notas” muestra las páginas en orden, con su texto. Las que faltan aparecen como “Página sin encontrar”.
+Escenario 1: Encontrar una página
+
+- Dado que el jugador está junto a la página del lago
+- Cuando pulsa E
+- Entonces aparece el mensaje “Has encontrado una página del diario”
+- Y la página desaparece del mapa
+Escenario 2: Leer las notas
+
+- Dado que el jugador ha encontrado la página 3
+- Cuando abre la lista de objetivos y pasa a “Notas”
+- Entonces aparece el texto de la página 3
+- Y las páginas 1, 2, 4 y 5 aparecen como “Página sin encontrar”","- Hay 5 páginas del diario escondidas: en la torre, en el bosque, en el lago, en la granja y en la plaza.
+- Al pulsar E junto a una página, se recoge, desaparece del mapa y aparece el mensaje “Has encontrado una página del diario”. Las páginas no ocupan sitio en el inventario.
+- La lista de objetivos (O) tiene dos apartados, “Encargos” y “Notas”, que se cambian con ← →. “Notas” muestra las páginas en orden, con su texto. Las que faltan aparecen como “Página sin encontrar”."
+"HU-56","HU-56. Puzle del reloj","# HU-56. Puzle del reloj
+
+# HU-56. Puzle del reloj
+
+Como jugador, quiero colocar yo mismo las piezas en el reloj para repararlo.
+
+Criterios de aceptación:
+
+- El encargo “Las piezas del reloj” ya no se completa entregando las piezas a la relojera, sino colocándolas en el mecanismo del reloj, en la torre.
+- Al pulsar E junto al mecanismo, con el encargo activo y las tres piezas en el inventario, se elige qué pieza va en cada uno de sus tres huecos, de abajo arriba.
+- El orden correcto es Engranaje de cobre, Muelle de plata y Péndulo de oro. La relojera da la pista en su diálogo de encargo en curso: “primero lo que gira, luego lo que empuja y arriba lo que marca el compás”.
+- Con el orden correcto, las piezas salen del inventario, aparece el mensaje “Encargo completado” y se cobra la recompensa.
+- Con un orden incorrecto, aparece “El reloj no arranca” y las piezas siguen en el inventario. Se puede volver a intentar.
+- Sin el encargo activo o sin las tres piezas, el mecanismo muestra “Faltan piezas”.
+Escenario 1: Orden correcto
+
+- Dado que el encargo “Las piezas del reloj” está activo y el jugador tiene las tres piezas
+- Cuando coloca el Engranaje de cobre, el Muelle de plata y el Péndulo de oro, en ese orden
+- Entonces aparece el mensaje “Encargo completado”
+- Y el jugador recibe 100 monedas y 2 Manzanas
+- Y las tres piezas desaparecen del inventario
+Escenario 2: Orden incorrecto
+
+- Dado que el encargo “Las piezas del reloj” está activo y el jugador tiene las tres piezas
+- Cuando coloca el Péndulo de oro en el primer hueco
+- Entonces aparece el mensaje “El reloj no arranca”
+- Y las tres piezas siguen en el inventario
+Escenario 3: Faltan piezas
+
+- Dado que el jugador solo tiene dos piezas
+- Cuando pulsa E junto al mecanismo
+- Entonces aparece el mensaje “Faltan piezas”","- El encargo “Las piezas del reloj” ya no se completa entregando las piezas a la relojera, sino colocándolas en el mecanismo del reloj, en la torre.
+- Al pulsar E junto al mecanismo, con el encargo activo y las tres piezas en el inventario, se elige qué pieza va en cada uno de sus tres huecos, de abajo arriba.
+- El orden correcto es Engranaje de cobre, Muelle de plata y Péndulo de oro. La relojera da la pista en su diálogo de encargo en curso: “primero lo que gira, luego lo que empuja y arriba lo que marca el compás”.
+- Con el orden correcto, las piezas salen del inventario, aparece el mensaje “Encargo completado” y se cobra la recompensa.
+- Con un orden incorrecto, aparece “El reloj no arranca” y las piezas siguen en el inventario. Se puede volver a intentar.
+- Sin el encargo activo o sin las tres piezas, el mecanismo muestra “Faltan piezas”."
+"HU-57","HU-57. Torre cerrada hasta el día 5","# HU-57. Torre cerrada hasta el día 5
+
+# HU-57. Torre cerrada hasta el día 5
+
+Como jugador, quiero que la torre se abra a mitad de semana para que la historia se descubra poco a poco.
+
+Criterios de aceptación:
+
+- Antes del día 5, al caminar hacia la puerta de la torre aparece un cuadro de diálogo con el texto “La torre está cerrada” y no se cambia de zona. El cuadro se cierra con E.
+- Desde el día 5, la puerta funciona como las demás (HU-08), a cualquier hora.
+Escenario 1: Antes del día 5
+
+- Dado que es el día 4
+- Cuando el jugador camina hacia la puerta de la torre
+- Entonces aparece el cuadro de diálogo “La torre está cerrada”
+- Y el jugador sigue en la plaza
+Escenario 2: Cerrar el aviso
+
+- Dado que el cuadro de diálogo “La torre está cerrada” está visible
+- Cuando el jugador pulsa E
+- Entonces el cuadro se cierra y el jugador puede moverse
+Escenario 3: Desde el día 5
+
+- Dado que es el día 5
+- Cuando el jugador camina hacia la puerta de la torre
+- Entonces entra en la torre","- Antes del día 5, al caminar hacia la puerta de la torre aparece un cuadro de diálogo con el texto “La torre está cerrada” y no se cambia de zona. El cuadro se cierra con E.
+- Desde el día 5, la puerta funciona como las demás (HU-08), a cualquier hora."
+"HU-58","HU-58. La feria","# HU-58. La feria
+
+# HU-58. La feria
+
+Como jugador, quiero que el pueblo celebre la feria para sentir que mi trabajo ha servido.
+
+Criterios de aceptación:
+
+- La feria se celebra en la plaza durante todo el día 7.
+- Durante la feria, la plaza tiene guirnaldas y dos puestos: el de la cosecha (HU-59) y el de pesca (HU-60).
+- Antes y después del día 7, la plaza tiene su aspecto normal y no hay puestos.
+- Pasado el día 7, el encargo “La feria de Valtrigo” se puede seguir completando al hablar con el alcalde, aunque ya no haya feria.
+Escenario 1: Día de feria
+
+- Dado que es el día 7
+- Cuando el jugador entra en la plaza
+- Entonces la plaza tiene guirnaldas
+- Y están los puestos de la cosecha y de pesca
+Escenario 2: Antes de la feria
+
+- Dado que es el día 6
+- Cuando el jugador entra en la plaza
+- Entonces no hay guirnaldas ni puestos
+Escenario 3: Después de la feria
+
+- Dado que es el día 8
+- Cuando el jugador entra en la plaza
+- Entonces no hay guirnaldas ni puestos
+Escenario 4: Encargo final después de la feria
+
+- Dado que es el día 8 y el encargo “La feria de Valtrigo” está activo
+- Cuando el jugador habla con el alcalde
+- Entonces aparece el mensaje “Encargo completado”","- La feria se celebra en la plaza durante todo el día 7.
+- Durante la feria, la plaza tiene guirnaldas y dos puestos: el de la cosecha (HU-59) y el de pesca (HU-60).
+- Antes y después del día 7, la plaza tiene su aspecto normal y no hay puestos.
+- Pasado el día 7, el encargo “La feria de Valtrigo” se puede seguir completando al hablar con el alcalde, aunque ya no haya feria."
+"HU-59","HU-59. Concurso de la cosecha","# HU-59. Concurso de la cosecha
+
+# HU-59. Concurso de la cosecha
+
+Como jugador, quiero presentar mi mejor cosecha en la feria para ganar un premio.
+
+Criterios de aceptación:
+
+- Al pulsar E junto al puesto de la cosecha aparece la lista de cosechas del inventario. Al elegir una, se entrega y se cobra el premio: Nabo 20 monedas, Zanahoria 50 y Calabaza 100.
+- Solo se puede participar una vez por partida. Después, el puesto muestra “Ya has participado”.
+- Sin cosechas aparece el mensaje “Necesitas una cosecha para participar”.
+Escenario 1: Participar
+
+- Dado que el jugador tiene una Calabaza
+- Cuando la presenta en el puesto de la cosecha
+- Entonces recibe 100 monedas
+- Y la Calabaza desaparece del inventario
+Escenario 2: Solo una vez
+
+- Dado que el jugador ya ha participado en el concurso de la cosecha
+- Cuando pulsa E junto al puesto
+- Entonces aparece el mensaje “Ya has participado”
+Escenario 3: Sin cosechas
+
+- Dado que el jugador no tiene cosechas
+- Cuando pulsa E junto al puesto de la cosecha
+- Entonces aparece el mensaje “Necesitas una cosecha para participar”","- Al pulsar E junto al puesto de la cosecha aparece la lista de cosechas del inventario. Al elegir una, se entrega y se cobra el premio: Nabo 20 monedas, Zanahoria 50 y Calabaza 100.
+- Solo se puede participar una vez por partida. Después, el puesto muestra “Ya has participado”.
+- Sin cosechas aparece el mensaje “Necesitas una cosecha para participar”."
+"HU-60","HU-60. Concurso de pesca","# HU-60. Concurso de pesca
+
+# HU-60. Concurso de pesca
+
+Como jugador, quiero participar en el concurso de pesca de la feria para ganar un premio.
+
+Criterios de aceptación:
+
+- Al pulsar E junto al puesto de pesca aparece “¿Inscribirte en el concurso de pesca?” con “Sí” y “No”.
+- Al inscribirse empieza el concurso, que dura 1 minuto y 30 segundos de tiempo real (90 minutos de juego). Cuenta el pez más grande pescado en el lago durante ese tiempo (HU-49).
+- Al terminar el concurso aparece “Concurso terminado: tu mejor pez mide N cm” y se cobra el premio: menos de 40 cm, 20 monedas; de 40 a 79 cm, 50; 80 cm o más, 100. Si no ha pescado nada, aparece “Concurso terminado: no has pescado nada” y no hay premio.
+- Durante el concurso, pescar no gasta energía.
+- Los peces pescados durante el concurso se quedan en el inventario.
+- Solo se puede participar una vez por partida. Después, el puesto muestra “Ya has participado”.
+Escenario 1: Inscribirse
+
+- Dado que es el día 7
+- Cuando el jugador pulsa E junto al puesto de pesca y elige “Sí”
+- Entonces empieza el concurso de pesca
+Escenario 2: Ganar un premio
+
+- Dado que el concurso de pesca está en marcha
+- Y el jugador pesca una Carpa de 30 cm y una Trucha de 45 cm
+- Cuando termina el concurso
+- Entonces aparece “Concurso terminado: tu mejor pez mide 45 cm”
+- Y el jugador recibe 50 monedas
+Escenario 3: Sin peces
+
+- Dado que el concurso de pesca está en marcha y el jugador no pesca nada
+- Cuando termina el concurso
+- Entonces aparece “Concurso terminado: no has pescado nada”
+- Y el dinero no cambia
+Escenario 4: Duración
+
+- Dado que el jugador se inscribe en el concurso a las 10:00
+- Cuando pasan 1 minuto y 30 segundos de tiempo real
+- Entonces el concurso termina a las 11:30
+Escenario 5: Solo una vez
+
+- Dado que el jugador ya ha participado en el concurso de pesca
+- Cuando pulsa E junto al puesto
+- Entonces aparece el mensaje “Ya has participado”","- Al pulsar E junto al puesto de pesca aparece “¿Inscribirte en el concurso de pesca?” con “Sí” y “No”.
+- Al inscribirse empieza el concurso, que dura 1 minuto y 30 segundos de tiempo real (90 minutos de juego). Cuenta el pez más grande pescado en el lago durante ese tiempo (HU-49).
+- Al terminar el concurso aparece “Concurso terminado: tu mejor pez mide N cm” y se cobra el premio: menos de 40 cm, 20 monedas; de 40 a 79 cm, 50; 80 cm o más, 100. Si no ha pescado nada, aparece “Concurso terminado: no has pescado nada” y no hay premio.
+- Durante el concurso, pescar no gasta energía.
+- Los peces pescados durante el concurso se quedan en el inventario.
+- Solo se puede participar una vez por partida. Después, el puesto muestra “Ya has participado”."
+"HU-61","HU-61. Partidas de práctica","# HU-61. Partidas de práctica
+
+# HU-61. Partidas de práctica
+
+Como jugador, quiero empezar partidas preparadas en momentos concretos de la historia para probar el juego sin tener que jugar desde el principio.
+
+Criterios de aceptación:
+
+- La opción “Partidas de práctica” del menú principal abre la lista de partidas preparadas. Escape o “Volver” regresan al menú con “Partidas de práctica” seleccionada.
+- Partidas: “Día 2: la granja” (con Pala, Regadera y 5 Semillas), “Día 3: el lago” (con Caña de pescar), “Día 4: día de mercado” (con 4 Nabos listos en el huerto), “Día 5: la torre” (con las piezas de la granja y del lago), “Día 6: la reparación” (con las tres piezas y el encargo 4 activo), “Día 7: la feria” e “Inventario lleno” (día 1 con las 20 casillas ocupadas).
+- Cada partida empieza a las 06:00 en la zona indicada, con los encargos anteriores completados.
+- Empezar una partida de práctica no modifica la partida guardada. Se guarda igual que cualquier partida (al dormir o desde la pausa).
+Escenario 1: Abrir la lista
+
+- Dado que el menú principal está abierto
+- Cuando el jugador activa “Partidas de práctica”
+- Entonces aparece la lista de partidas preparadas
+Escenario 2: Empezar una partida preparada
+
+- Dado que la lista de partidas de práctica está abierta
+- Cuando el jugador elige “Día 5: la torre”
+- Entonces la partida empieza el día 5 a las 06:00 en la plaza
+- Y el inventario tiene el Engranaje de cobre y el Muelle de plata
+Escenario 3: La partida guardada no cambia
+
+- Dado que existe una partida guardada
+- Cuando el jugador empieza una partida de práctica
+- Entonces la partida guardada no cambia
+Escenario 4: Volver
+
+- Dado que la lista de partidas de práctica está abierta
+- Cuando el jugador pulsa Escape
+- Entonces regresa al menú principal con “Partidas de práctica” seleccionada","- La opción “Partidas de práctica” del menú principal abre la lista de partidas preparadas. Escape o “Volver” regresan al menú con “Partidas de práctica” seleccionada.
+- Partidas: “Día 2: la granja” (con Pala, Regadera y 5 Semillas), “Día 3: el lago” (con Caña de pescar), “Día 4: día de mercado” (con 4 Nabos listos en el huerto), “Día 5: la torre” (con las piezas de la granja y del lago), “Día 6: la reparación” (con las tres piezas y el encargo 4 activo), “Día 7: la feria” e “Inventario lleno” (día 1 con las 20 casillas ocupadas).
+- Cada partida empieza a las 06:00 en la zona indicada, con los encargos anteriores completados.
+- Empezar una partida de práctica no modifica la partida guardada. Se guarda igual que cualquier partida (al dormir o desde la pausa)."

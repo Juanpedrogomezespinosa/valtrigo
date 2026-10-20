@@ -2,7 +2,7 @@
 
 # HU-29. Ajustar el volumen de los efectos
 
-Como jugador, quiero ajustar los efectos de sonido por separado.
+Como jugador, quiero ajustar los efectos de sonido por separado para ajustar el volumen de los efectos sin cambiar el de la música.
 
 Criterios de aceptación:
 

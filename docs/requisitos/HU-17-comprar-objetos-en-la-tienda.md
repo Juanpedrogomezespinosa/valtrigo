@@ -7,6 +7,9 @@ Como jugador, quiero comprar objetos en la tienda del pueblo para mejorar mi equ
 Criterios de aceptación:
 
 - La tienda del pueblo abre de 07:00 a 19:00 y la atiende un único vendedor.
+- Fuera de ese horario, al caminar hacia la puerta de la tienda aparece un cuadro de diálogo con el texto “La tienda está cerrada” y no se entra. El cuadro se cierra con E.
+- Si el jugador sigue dentro cuando la tienda cierra, al hablar con el vendedor aparece “La tienda está cerrada” y no se abre el menú de compra.
+- La tienda vende Semilla (10 monedas), Semilla de zanahoria (20), Semilla de calabaza (40), Pala (30), Hacha (40), Regadera (40) y Caña de pescar (50).
 - Cada objeto de la tienda muestra su icono, su nombre y su precio en monedas.
 - Al comprar, se descuenta el precio del dinero y el objeto se añade al inventario.
 - Si el dinero no alcanza, aparece el mensaje “Dinero insuficiente” y no se realiza la compra.
@@ -32,7 +35,13 @@ Escenario 3: Inventario lleno
 Escenario 4: Tienda cerrada
 
 - Dado que son las 20:00
-- Cuando el jugador intenta hablar con el vendedor
+- Cuando el jugador camina hacia la puerta de la tienda
+- Entonces aparece el cuadro de diálogo “La tienda está cerrada”
+- Y el jugador sigue en la plaza
+Escenario 5: La tienda cierra con el jugador dentro
+
+- Dado que el jugador está dentro de la tienda y son las 19:00
+- Cuando habla con el vendedor
 - Entonces aparece el mensaje “La tienda está cerrada”
 - Y no se abre el menú de compra
 

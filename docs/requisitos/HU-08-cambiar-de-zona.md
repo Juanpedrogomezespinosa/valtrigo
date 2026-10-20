@@ -6,7 +6,7 @@ Como jugador, quiero entrar a edificios y cambiar de zona para explorar el puebl
 
 Criterios de aceptación:
 
-- El juego tiene 6 zonas conectadas por puertas.
+- El juego tiene 7 zonas conectadas por puertas: plaza, casa del jugador, tienda, granja, lago, torre y bosque.
 - Al cruzar una puerta, la pantalla se funde a negro en 0,5 segundos y el personaje aparece junto a la puerta de la zona de destino.
 - Durante la transición no se puede mover al personaje.
 Escenario 1: Entrar a la tienda

@@ -213,7 +213,7 @@ Es un proyecto público con un fin doble: servir de base para un curso de testin
 
 ### Tienda (HU-17 y HU-18)
 
-- Decisiones del autor: la tienda vende Semilla (10 monedas) y Pala (30). Al vender se recibe el 50 % del precio de compra (`price` en src/data/items.json); la Manzana no se compra pero se puede vender a 10 (precio 20). Los objetos de encargo (`questItem`: Carta del alcalde y piezas del reloj) no se pueden vender.
+- Decisiones del autor: la tienda vende Semilla (10 monedas) y Pala (30). Al vender se recibe el 50 % del precio de compra (`price` en src/data/items.json); la Manzana no se compra; su precio de venta está en HU-45. Los objetos de encargo (`questItem`: Carta del alcalde y piezas del reloj) no se pueden vender.
 - Catálogo y horario en src/data/shop.json. Abierta desde las 07:00 hasta antes de las 19:00: a las 19:00 ya está cerrada. La lógica está en src/systems/economy.ts.
 - **Hablar con la vendedora** (decisión del autor): con la tienda cerrada solo aparece "La tienda está cerrada" (no hay diálogo ni carta). Con la tienda abierta, si tiene algo del encargo que decir (dar la carta, ofrecer o completar el encargo 3), lo dice y al cerrar el diálogo se abre la tienda; si no, la tienda se abre directamente.
 - ShopScene: como el inventario, no detiene el tiempo y el personaje no se mueve. ← → cambian entre "Comprar" y "Vender", ↑ ↓ eligen un objeto, Enter compra o vende **una unidad** (decisión del autor) y Escape cierra. "Vender" lista el inventario con lo que se recibe por unidad.

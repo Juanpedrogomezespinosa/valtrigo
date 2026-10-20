@@ -8,7 +8,9 @@ Criterios de aceptación:
 
 - Al pulsar O se muestra la lista de encargos activos. Al pulsar O o Escape se cierra.
 - Cada encargo muestra su nombre, su descripción y el NPC que lo encargó.
-- Si no hay encargos activos, aparece el mensaje “No tienes encargos activos”.
+- La lista muestra primero el encargo principal y después los pedidos del tablón, que aparecen como encargados por el “Tablón de anuncios”.
+- Si no hay encargos ni pedidos activos, aparece el mensaje “No tienes encargos activos”.
+- La lista tiene también el apartado “Notas”, con las páginas del diario (HU-55).
 Escenario 1: Ver un encargo activo
 
 - Dado que el jugador tiene activo el encargo “Entregar la Carta del alcalde”

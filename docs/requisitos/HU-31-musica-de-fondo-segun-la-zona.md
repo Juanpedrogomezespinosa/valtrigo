@@ -6,7 +6,7 @@ Como jugador, quiero que cada zona tenga su música para distinguir los lugares.
 
 Criterios de aceptación:
 
-- El juego tiene 7 pistas de música: 1 para el menú principal y 1 para cada una de las 6 zonas.
+- El juego tiene 8 pistas de música: 1 para el menú principal y 1 para cada una de las 7 zonas.
 - Al cambiar de zona, la música cambia a la de la nueva zona.
 - Si el jugador se mueve dentro de la misma zona, la música no se reinicia.
 Escenario 1: Cambio de zona
@@ -24,4 +24,3 @@ Escenario 3: Música del menú
 - Dado que el jugador abre el menú principal
 - Cuando se carga el menú
 - Entonces suena la pista del menú principal
-
