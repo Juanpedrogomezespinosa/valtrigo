@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { expect, test } from './fixtures';
-import { currentGameState, isChestOpen, openGame, press, savedGame, setSavedGame, waitForScene } from './helpers';
+import { currentGameState, expectClockAt, expectSameGame, isChestOpen, openGame, press, savedGame, setSavedGame, waitForScene } from './helpers';
 
 // HU-03. Continuar una partida guardada
 
@@ -44,10 +44,10 @@ test('Escenario 1: Continuar una partida guardada', async ({ page }) => {
   expect(state?.zone).toBe('casa');
   expect(await playerTile(page)).toEqual(saved.position);
   expect(state?.day).toBe(3);
-  expect(state?.minutes).toBe(14 * 60);
+  expectClockAt(state?.minutes, 14 * 60);
   expect(state?.money).toBe(250);
   // El resto de datos guardados (energía, inventario, encargos y cofres) también se restaura.
-  expect(state).toEqual(saved);
+  expectSameGame(state, saved);
 });
 
 test('Escenario 2: Los cofres abiertos se mantienen', async ({ page }) => {

@@ -155,6 +155,13 @@ function addWorldItem(map, { id, x, y }) {
   map.points.push({ name: 'objeto', x, y, properties: { id } });
 }
 
+// Cama de la casa del jugador (HU-24): ocupa dos casillas de alto a partir de (x, y).
+// `despertar` es la casilla junto a la cama donde aparece el personaje al empezar un nuevo día.
+function addBed(map, { x, y, wakeX, wakeY }) {
+  map.points.push({ name: 'cama', x, y });
+  map.points.push({ name: 'despertar', x: wakeX, y: wakeY, properties: { mirando: 'down' } });
+}
+
 // Posición de un NPC (HU-10). `character` es su identificador en src/data/dialogues.json.
 function addNpc(map, { character, x, y }) {
   map.points.push({ name: 'npc', x, y, properties: { personaje: character } });
@@ -448,6 +455,7 @@ function casa() {
   setTile(map.obstacles, map, 8, 4, INTERIOR.table);
   setTile(map.obstacles, map, 8, 5, INTERIOR.chair);
   setTile(map.obstacles, map, 10, 2, INTERIOR.barrel);
+  addBed(map, { x: 1, y: 3, wakeX: 2, wakeY: 4 });
   return map;
 }
 

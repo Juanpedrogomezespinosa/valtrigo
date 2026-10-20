@@ -4,6 +4,8 @@ import {
   activeScenes,
   clickText,
   currentGameState,
+  expectClockAt,
+  expectSameGame,
   openGame,
   press,
   readSavedGame,
@@ -45,7 +47,7 @@ test('Escenario 1: Nueva partida sin partida guardada', async ({ page }) => {
   expect(state?.zone).toBe('plaza');
   expect(await playerTile(page)).toEqual(await startPosition(page));
   expect(state?.day).toBe(1);
-  expect(state?.minutes).toBe(6 * 60);
+  expectClockAt(state?.minutes, 6 * 60);
 });
 
 test('Escenario 2: Confirmación al sobrescribir', async ({ page }) => {
@@ -79,8 +81,8 @@ test('Escenario 3: Confirmar la sobrescritura', async ({ page }) => {
   const state = await currentGameState(page);
   expect(state?.zone).toBe('plaza');
   expect(state?.day).toBe(1);
-  expect(state?.minutes).toBe(6 * 60);
-  expect(await readSavedGame(page)).toEqual(state);
+  expectClockAt(state?.minutes, 6 * 60);
+  expectSameGame(await readSavedGame(page), state);
 });
 
 test('Escenario 4: Datos iniciales', async ({ page }) => {

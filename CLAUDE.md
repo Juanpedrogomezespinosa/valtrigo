@@ -86,7 +86,7 @@ Es un proyecto público con un fin doble: servir de base para un curso de testin
 - `hasGameInProgress()` ha pasado de save.ts a gameState.ts (`isGameInProgress()`), porque la partida en curso no es parte del guardado.
 - En desarrollo, main.ts expone también `window.gameState()` para que los tests consulten la partida en curso.
 - El escenario 2 de HU-01 ya está activo: una partida guardada válida activa "Continuar" (que aún no hace nada hasta HU-03).
-- Hasta HU-31, en la plaza sigue sonando la música del menú. Hasta HU-22 no se muestra el reloj en pantalla, y hasta HU-06 el personaje no se mueve.
+- Hasta HU-31, en la plaza sigue sonando la música del menú.
 
 ### Continuar partida (HU-03)
 
@@ -206,3 +206,33 @@ Es un proyecto público con un fin doble: servir de base para un curso de testin
 - Los mensajes durante la partida ("Encargo completado", "Inventario lleno") salen arriba en el centro, para que no los tape el cuadro de diálogo.
 - Lista de objetivos (ObjectivesScene, tecla O): igual que el inventario, el tiempo sigue y el personaje no se mueve. Se cierra con O o Escape. Muestra el nombre, la descripción y "Encargado por: [NPC]", o "No tienes encargos activos".
 - Los tests usan un `test` propio (tests/e2e/fixtures.ts) que hace fallar cualquier test en el que la página lance un error de JavaScript.
+
+### Tienda (HU-17 y HU-18)
+
+- Decisiones del autor: la tienda vende Semilla (10 monedas) y Pala (30). Al vender se recibe el 50 % del precio de compra (`price` en src/data/items.json); la Manzana no se compra pero se puede vender a 10 (precio 20). Los objetos de encargo (`questItem`: Carta del alcalde y piezas del reloj) no se pueden vender.
+- Catálogo y horario en src/data/shop.json. Abierta desde las 07:00 hasta antes de las 19:00: a las 19:00 ya está cerrada. La lógica está en src/systems/economy.ts.
+- **Hablar con la vendedora** (decisión del autor): con la tienda cerrada solo aparece "La tienda está cerrada" (no hay diálogo ni carta). Con la tienda abierta, si tiene algo del encargo que decir (dar la carta, ofrecer o completar el encargo 3), lo dice y al cerrar el diálogo se abre la tienda; si no, la tienda se abre directamente.
+- ShopScene: como el inventario, no detiene el tiempo y el personaje no se mueve. ← → cambian entre "Comprar" y "Vender", ↑ ↓ eligen un objeto, Enter compra o vende **una unidad** (decisión del autor) y Escape cierra. "Vender" lista el inventario con lo que se recibe por unidad.
+- Al comprar se comprueba primero el dinero ("Dinero insuficiente") y después el espacio ("Inventario lleno"). Cada compra o venta vuelve a comprobar el horario: si la tienda ha cerrado mientras estaba abierta la pantalla, aparece "La tienda está cerrada" y no se hace nada.
+- Vender Semillas con el encargo 3 activo suma a su progreso (`recordSale`).
+
+### Reloj (HU-22) y medianoche
+
+- El reloj (src/systems/time.ts) avanza 1 minuto de juego por segundo real (`GAME_MINUTES_PER_SECOND`), contado con el tiempo real entre fotogramas. Avanza mientras GameScene se actualiza: se detiene con la pausa y sigue con diálogos, inventario, objetivos y tienda (decisión del autor sobre el inventario, aplicada igual al resto). Phaser también detiene el juego cuando la pestaña del navegador está oculta.
+- Durante un cambio de zona el reloj sigue avanzando.
+- La interfaz muestra "Día N" y la hora (HH:MM) arriba a la izquierda.
+- **Medianoche** (decisiones del autor, para HU-22 escenario 4 y HU-24 escenario 3): al llegar a las 24:00 se cierra lo que esté abierto, la pantalla se funde a negro (0,5 s) y empieza el día siguiente a las 06:00. El personaje despierta en su casa, junto a la cama (punto `despertar`), con la energía a 100. El progreso no guardado se pierde: el resto del estado vuelve a la última partida guardada (o al de una partida nueva si no hay ninguna). No se guarda (HU-25). Lógica en src/systems/sleep.ts.
+- La cama (public/assets/sprites/cama.png, 16×32) está en la casa, en las casillas (1, 3) y (1, 4), y es un obstáculo. En Tiled es el punto `cama`; el punto `despertar` está en (2, 4).
+- Tests y reloj: como la hora avanza sola, los tests que comparan estados o leen la hora admiten 1 minuto de diferencia (`expectSameGame` y `expectClockAt` en tests/e2e/helpers.ts). Los escenarios 2 y 3 de HU-22 esperan 60 y 30 segundos reales.
+
+### Día y noche (HU-23)
+
+- NightScene: capa de color azul noche (`NIGHT_COLOR`) sobre la partida, por debajo de diálogos, menús e interfaz. Su opacidad sale de `darkness()` (src/systems/time.ts): sube de 0 a 1 entre las 20:00 y las 21:00, vale 1 hasta las 06:00 y baja de 1 a 0 entre las 06:00 y las 07:00.
+- **"Completamente oscura" es una opacidad del 65 %** (`NIGHT_MAX_ALPHA`), no negro total, para que de noche se pueda seguir jugando. Pendiente de confirmar por el autor.
+- Afecta a todas las zonas, también a los interiores. Una partida nueva empieza a las 06:00, así que empieza a oscuras y se va aclarando durante la primera hora, como dice la historia.
+
+### Dormir y guardado automático (HU-24 y HU-25)
+
+- E junto a la cama abre "¿Dormir?" con "Sí" y "No" (el mismo cuadro de confirmación que el menú, dibujado en la capa de interfaz). Mientras está abierto el personaje no se mueve y Escape equivale a "No".
+- **Qué se guarda al dormir** (decisión del autor, lectura literal de HU-25 escenario 3): la partida tal como está al acostarse (si se duerme el día 4 a las 21:00, se guarda el día 4 a las 21:00, junto a la cama). Después aparece "Partida guardada" (2 s, arriba), la pantalla se funde a negro (0,5 s) y empieza el día siguiente a las 06:00 con la energía a 100, junto a la cama. Ese estado de la mañana no se guarda hasta el próximo guardado.
+- Dormir en la cama y dormirse a medianoche comparten el fundido y el despertar (`sleepUntilMorning` en GameScene, src/systems/sleep.ts). A medianoche no se guarda y se pierde lo no guardado.

@@ -1,5 +1,5 @@
 import { expect, test } from './fixtures';
-import { hudMoney, openPause, press, startNewGame, startNextTo } from './helpers';
+import { at, hudMoney, openPause, press, selectShopRow, startNewGame, startNextTo } from './helpers';
 
 // HU-16. Ver el dinero actual
 
@@ -13,9 +13,16 @@ test('Escenario 1: Dinero inicial', async ({ page }) => {
   expect(money?.y).toBeLessThan(540 * 0.15);
 });
 
-// Pendiente: la tienda se implementa en HU-17.
-test.fixme('Escenario 2: Actualización al comprar', async () => {
-  // Con 100 monedas, comprar un objeto de 30: aparece "70 monedas".
+test('Escenario 2: Actualización al comprar', async ({ page }) => {
+  // La Pala cuesta 30 monedas.
+  await startNextTo(page, 'vendedora', { minutes: at(10), money: 100, inventory: [] });
+  expect((await hudMoney(page))?.text).toBe('100 monedas');
+
+  await press(page, 'e');
+  await selectShopRow(page, 'pala');
+  await press(page, 'Enter');
+
+  await expect.poll(async () => (await hudMoney(page))?.text).toBe('70 monedas');
 });
 
 test('Escenario 3: Actualización al completar un encargo', async ({ page }) => {

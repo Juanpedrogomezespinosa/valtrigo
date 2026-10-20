@@ -1,9 +1,9 @@
 {
-  "manzana": { "name": "Manzana", "consumable": true, "energy": 15 },
-  "semilla": { "name": "Semilla", "consumable": false },
-  "pala": { "name": "Pala", "consumable": false },
-  "carta-del-alcalde": { "name": "Carta del alcalde", "consumable": false },
-  "pieza-del-reloj-1": { "name": "Engranaje de cobre", "consumable": false },
-  "pieza-del-reloj-2": { "name": "Muelle de plata", "consumable": false },
-  "pieza-del-reloj-3": { "name": "Péndulo de oro", "consumable": false }
+  "manzana": { "name": "Manzana", "consumable": true, "energy": 15, "price": 20, "questItem": false },
+  "semilla": { "name": "Semilla", "consumable": false, "price": 10, "questItem": false },
+  "pala": { "name": "Pala", "consumable": false, "price": 30, "questItem": false },
+  "carta-del-alcalde": { "name": "Carta del alcalde", "consumable": false, "price": 0, "questItem": true },
+  "pieza-del-reloj-1": { "name": "Engranaje de cobre", "consumable": false, "price": 0, "questItem": true },
+  "pieza-del-reloj-2": { "name": "Muelle de plata", "consumable": false, "price": 0, "questItem": true },
+  "pieza-del-reloj-3": { "name": "Péndulo de oro", "consumable": false, "price": 0, "questItem": true }
 }

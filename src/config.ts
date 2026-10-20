@@ -51,3 +51,16 @@ export const MAX_STACK = 99;
 
 // Duración de los mensajes breves sin duración indicada en las historias ("Inventario lleno", "No se puede usar").
 export const MESSAGE_MS = 2000;
+
+// Reloj (HU-22): minutos de juego por cada segundo real.
+export const GAME_MINUTES_PER_SECOND = 1;
+// Hora a la que empieza cada día al despertar (HU-22 y HU-24).
+export const WAKE_UP_MINUTES = 6 * 60;
+export const MINUTES_PER_DAY = 24 * 60;
+// Fundido a negro al dormir (HU-24).
+export const SLEEP_FADE_MS = 500;
+
+// Ciclo día y noche (HU-23): color y opacidad de la oscuridad completa. No es negro total
+// para que de noche se pueda seguir jugando.
+export const NIGHT_COLOR = 0x0a1030;
+export const NIGHT_MAX_ALPHA = 0.65;

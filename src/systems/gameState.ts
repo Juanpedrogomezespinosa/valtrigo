@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { NEW_GAME } from '../config';
+import { resetClock } from './time';
 import { findMapPoint, pointTile, type TilePosition, type ZoneId } from './zones';
 
 export interface InventoryItem {
@@ -48,6 +49,7 @@ export function createNewGameState(scene: Phaser.Scene): GameState {
 
 export function startGame(state: GameState): void {
   current = state;
+  resetClock();
 }
 
 // Termina la partida en curso sin guardarla (al salir al menú principal).

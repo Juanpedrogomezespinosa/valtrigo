@@ -7,8 +7,10 @@ import { GameScene } from './scenes/GameScene';
 import { HudScene } from './scenes/HudScene';
 import { InventoryScene } from './scenes/InventoryScene';
 import { MenuScene } from './scenes/MenuScene';
+import { NightScene } from './scenes/NightScene';
 import { ObjectivesScene } from './scenes/ObjectivesScene';
 import { OptionsScene } from './scenes/OptionsScene';
+import { ShopScene } from './scenes/ShopScene';
 import { PauseScene } from './scenes/PauseScene';
 import { getGameState, isGameInProgress } from './systems/gameState';
 import type { ItemId } from './systems/inventory';
@@ -31,9 +33,23 @@ const game = new Phaser.Game({
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
-  // El orden marca qué escena se dibuja encima: sobre la partida, el diálogo, el inventario, los objetivos y la pausa;
+  // El orden marca qué escena se dibuja encima: sobre la partida, la capa de noche, el diálogo, el inventario,
+  // los objetivos, la tienda y la pausa;
   // encima, la interfaz fija (el dinero sigue visible en la pausa, HU-16); y sobre todo, las opciones.
-  scene: [BootScene, MenuScene, GameScene, DialogScene, InventoryScene, ObjectivesScene, PauseScene, HudScene, OptionsScene, CreditsScene],
+  scene: [
+    BootScene,
+    MenuScene,
+    GameScene,
+    NightScene,
+    DialogScene,
+    InventoryScene,
+    ObjectivesScene,
+    ShopScene,
+    PauseScene,
+    HudScene,
+    OptionsScene,
+    CreditsScene,
+  ],
 });
 
 // Expone el juego y el estado de la partida en desarrollo para que los tests de Playwright

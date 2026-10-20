@@ -10,7 +10,7 @@
  "tilewidth": 16,
  "tileheight": 16,
  "nextlayerid": 4,
- "nextobjectid": 3,
+ "nextobjectid": 5,
  "layers": [
   {
    "id": 1,
@@ -285,6 +285,37 @@
     },
     {
      "id": 2,
+     "name": "cama",
+     "type": "",
+     "point": true,
+     "x": 24,
+     "y": 56,
+     "width": 0,
+     "height": 0,
+     "rotation": 0,
+     "visible": true
+    },
+    {
+     "id": 3,
+     "name": "despertar",
+     "type": "",
+     "point": true,
+     "x": 40,
+     "y": 72,
+     "width": 0,
+     "height": 0,
+     "rotation": 0,
+     "visible": true,
+     "properties": [
+      {
+       "name": "mirando",
+       "type": "string",
+       "value": "down"
+      }
+     ]
+    },
+    {
+     "id": 4,
      "name": "puerta",
      "type": "",
      "x": 96,

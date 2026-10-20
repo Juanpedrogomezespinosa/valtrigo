@@ -14,6 +14,7 @@ import {
   setSavedGame,
   startNewGame,
   waitForScene,
+  expectSameGame,
   measureTextVisible,
 } from './helpers';
 
@@ -37,7 +38,7 @@ test('Escenario 1: Guardar una partida en curso', async ({ page }) => {
   );
   expect(visibleFor).toBeGreaterThanOrEqual(1900);
   expect(visibleFor).toBeLessThan(2400);
-  expect(await readSavedGame(page)).toEqual(await currentGameState(page));
+  expectSameGame(await readSavedGame(page), await currentGameState(page));
 });
 
 test('Escenario 2: Guardar desactivado sin partida en curso', async ({ page }) => {

@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { COLORS, FONT_FAMILY, MESSAGE_MS, TALK_DISTANCE, TILE_SIZE, WORLD_ZOOM, ZONE_FADE_MS } from '../config';
+import { COLORS, FONT_FAMILY, MESSAGE_MS, SLEEP_FADE_MS, TALK_DISTANCE, TILE_SIZE, WORLD_ZOOM, ZONE_FADE_MS } from '../config';
 import chests from '../data/chests.json';
 import dialogues from '../data/dialogues.json';
 import signs from '../data/signs.json';
@@ -7,10 +7,15 @@ import worldItems from '../data/worldItems.json';
 import { Chest } from '../entities/Chest';
 import { Npc } from '../entities/Npc';
 import { Player, type Direction } from '../entities/Player';
-import { getGameState } from '../systems/gameState';
+import { getGameState, startGame } from '../systems/gameState';
 import { addItem, type ItemId } from '../systems/inventory';
+import { isShopOpen } from '../systems/economy';
+import { writeSave } from '../systems/save';
+import { stateAfterMidnight, stateAfterSleeping } from '../systems/sleep';
+import { advanceTime } from '../systems/time';
 import { acceptQuest, canReceiveReward, completeQuest, conversationWith, type NpcId } from '../systems/quests';
 import { findMapPoint, getProperty, mapKey, mapObjects, pointTile, type MapObject, type ZoneId } from '../systems/zones';
+import { showConfirmDialog } from '../ui/confirmDialog';
 import { showMessage } from '../ui/message';
 import type { DialogSceneData } from './DialogScene';
 import type { OverlaySceneData } from './InventoryScene';
@@ -29,7 +34,7 @@ interface Door {
 
 // Algo con lo que se interactúa pulsando E a menos de una casilla: NPC, cofres, carteles y objetos sueltos.
 interface Interactable {
-  kind: 'npc' | 'cofre' | 'cartel' | 'objeto';
+  kind: 'npc' | 'cofre' | 'cartel' | 'objeto' | 'cama';
   id: string;
   // Lo que ocupa en el mundo.
   area: Phaser.Geom.Rectangle;
@@ -48,6 +53,8 @@ export class GameScene extends Phaser.Scene {
   private chests: Chest[] = [];
   private indicator!: Phaser.GameObjects.Text;
   private changingZone = false;
+  private sleeping = false;
+  private sleepPromptOpen = false;
   private dialogOpen = false;
   // Inventario (HU-13) o lista de objetivos (HU-21) abiertos: el tiempo sigue, pero el personaje no se mueve.
   private overlayOpen = false;
@@ -63,6 +70,8 @@ export class GameScene extends Phaser.Scene {
   create(): void {
     const state = getGameState();
     this.changingZone = false;
+    this.sleeping = false;
+    this.sleepPromptOpen = false;
     this.dialogOpen = false;
     this.overlayOpen = false;
 
@@ -91,6 +100,7 @@ export class GameScene extends Phaser.Scene {
       if (object.name === 'cofre') this.addChest(object);
       if (object.name === 'cartel') this.addSign(object);
       if (object.name === 'objeto') this.addWorldItem(object);
+      if (object.name === 'cama') this.addBed(object);
     }
 
     // Indicador "E" sobre aquello con lo que se puede interactuar (HU-10).
@@ -110,13 +120,21 @@ export class GameScene extends Phaser.Scene {
     this.setUpCamera(map.widthInPixels, map.heightInPixels);
     this.setUpKeys();
 
-    // Interfaz fija (dinero y energía), por encima de la partida.
-    if (!this.scene.isActive('HudScene')) {
-      this.scene.launch('HudScene');
+    // Capa de noche (HU-23) e interfaz fija (día, hora, dinero y energía), por encima de la partida.
+    for (const key of ['NightScene', 'HudScene']) {
+      if (!this.scene.isActive(key)) {
+        this.scene.launch(key);
+      }
     }
   }
 
-  update(): void {
+  update(_time: number, delta: number): void {
+    // HU-22: el reloj avanza mientras la partida no está en pausa (esta escena en pausa no se actualiza),
+    // también con diálogos, inventario, objetivos o tienda abiertos.
+    if (!this.sleeping && advanceTime(delta)) {
+      this.fallAsleepAtMidnight();
+    }
+
     // Durante un cambio de zona, un diálogo o con el inventario abierto, el personaje no se mueve.
     if (this.isBusy()) {
       return;
@@ -183,7 +201,8 @@ export class GameScene extends Phaser.Scene {
     // Escape abre el menú de pausa y detiene la partida (HU-26), salvo durante un cambio de zona.
     // Con el inventario o los objetivos abiertos, Escape los cierra y no abre la pausa.
     keyboard.on('keydown-ESC', () => {
-      if (this.changingZone || this.overlayOpen) {
+      // Con "¿Dormir?" abierto, Escape equivale a "No" (lo gestiona el propio cuadro).
+      if (this.changingZone || this.sleeping || this.sleepPromptOpen || this.overlayOpen) {
         return;
       }
       this.player.stand();
@@ -204,12 +223,67 @@ export class GameScene extends Phaser.Scene {
 
   // Hay algo en curso que impide moverse, abrir la pausa o interactuar.
   private isBusy(): boolean {
-    return this.changingZone || this.dialogOpen || this.overlayOpen;
+    return this.changingZone || this.sleeping || this.sleepPromptOpen || this.dialogOpen || this.overlayOpen;
+  }
+
+  // HU-24: E junto a la cama pregunta "¿Dormir?". El cuadro se dibuja en la capa de interfaz.
+  private askToSleep(): void {
+    this.sleepPromptOpen = true;
+    this.player.stand();
+    this.indicator.setVisible(false);
+    showConfirmDialog(this.scene.get('HudScene'), '¿Dormir?', (yes) => {
+      this.sleepPromptOpen = false;
+      if (yes) {
+        this.goToBed();
+      }
+    });
+  }
+
+  // HU-24 y HU-25: al dormir se guarda la partida tal como está al acostarse (decisión del autor:
+  // "la del día 4" si se duerme el día 4), aparece "Partida guardada", la pantalla se funde a negro
+  // y empieza el día siguiente a las 06:00 con la energía a 100.
+  private goToBed(): void {
+    if (writeSave(getGameState())) {
+      showMessage(this.scene.get('HudScene'), 'Partida guardada', MESSAGE_MS, 'top');
+    }
+    this.sleepUntilMorning(() => stateAfterSleeping(this));
+  }
+
+  // Funde a negro y empieza el día siguiente con el estado que devuelve `nextState`.
+  private sleepUntilMorning(nextState: () => ReturnType<typeof stateAfterSleeping>): void {
+    this.sleeping = true;
+    this.player.stand();
+    this.indicator.setVisible(false);
+    const camera = this.cameras.main;
+    camera.fadeOut(SLEEP_FADE_MS, 0, 0, 0);
+    camera.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
+      startGame(nextState());
+      const data: GameSceneData = { facing: 'down' };
+      this.scene.restart(data);
+    });
+  }
+
+  // HU-22 (escenario 4) y HU-24 (escenario 3): a medianoche el personaje se duerme. Se cierra lo que
+  // estuviera abierto, la pantalla se funde a negro y empieza el día siguiente en su casa.
+  private fallAsleepAtMidnight(): void {
+    this.sleeping = true;
+    this.player.stand();
+    this.indicator.setVisible(false);
+    for (const key of ['DialogScene', 'InventoryScene', 'ObjectivesScene', 'ShopScene']) {
+      this.scene.stop(key);
+    }
+    this.dialogOpen = false;
+    this.overlayOpen = false;
+    this.sleepUntilMorning(() => stateAfterMidnight(this));
+  }
+
+  isSleeping(): boolean {
+    return this.sleeping;
   }
 
   // HU-13 (I) y HU-21 (O): inventario y lista de objetivos. Mientras están abiertos el personaje
   // no se mueve, pero el tiempo sigue (decisión del autor).
-  private openOverlay(sceneKey: 'InventoryScene' | 'ObjectivesScene'): void {
+  private openOverlay(sceneKey: 'InventoryScene' | 'ObjectivesScene' | 'ShopScene'): void {
     if (this.isBusy()) {
       return;
     }
@@ -261,7 +335,8 @@ export class GameScene extends Phaser.Scene {
     }
   }
 
-  private openDialog(data: Omit<DialogSceneData, 'onClose'>): void {
+  // Abre un diálogo. `afterClose` se ejecuta al cerrarlo (por ejemplo, abrir la tienda).
+  private openDialog(data: Omit<DialogSceneData, 'onClose'>, afterClose?: () => void): void {
     this.dialogOpen = true;
     this.player.stand();
     this.indicator.setVisible(false);
@@ -269,6 +344,7 @@ export class GameScene extends Phaser.Scene {
       ...data,
       onClose: () => {
         this.dialogOpen = false;
+        afterClose?.();
       },
     } satisfies DialogSceneData);
   }
@@ -288,8 +364,23 @@ export class GameScene extends Phaser.Scene {
   }
 
   // HU-11, HU-19 y HU-20: lo que dice el NPC depende del estado de los encargos (src/systems/quests.ts).
+  // La vendedora atiende la tienda (HU-17 y HU-18). Decisión del autor: con la tienda cerrada solo
+  // dice "La tienda está cerrada"; con la tienda abierta, si tiene algo del encargo que decir (dar la
+  // carta, ofrecer o completar su encargo), lo dice y después se abre la tienda; si no, la tienda se
+  // abre directamente.
   private talkTo(id: NpcId): void {
+    if (id === 'vendedora' && !isShopOpen()) {
+      showMessage(this.scene.get('HudScene'), 'La tienda está cerrada', MESSAGE_MS, 'top');
+      return;
+    }
+
     const conversation = conversationWith(id);
+    const afterClose = id === 'vendedora' ? () => this.openOverlay('ShopScene') : undefined;
+    if (id === 'vendedora' && !['give-letter', 'offer', 'complete'].includes(conversation.kind)) {
+      this.openOverlay('ShopScene');
+      return;
+    }
+
     const npcDialog = {
       speaker: id,
       title: dialogues.npcs[id].name,
@@ -302,14 +393,17 @@ export class GameScene extends Phaser.Scene {
         // HU-19: "Aceptar" o "Rechazar". Al aceptar, el NPC sigue con su diálogo de encargo en curso.
         const { quest } = conversation;
         const questLines = dialogues.npcs[id].quests as Record<string, { active: string[] }>;
-        this.openDialog({
-          ...npcDialog,
-          lines: conversation.lines,
-          choice: {
-            options: ['Aceptar', 'Rechazar'],
-            onChoose: (index) => (index === 0 && acceptQuest(quest) ? questLines[quest.id].active : null),
+        this.openDialog(
+          {
+            ...npcDialog,
+            lines: conversation.lines,
+            choice: {
+              options: ['Aceptar', 'Rechazar'],
+              onChoose: (index) => (index === 0 && acceptQuest(quest) ? questLines[quest.id].active : null),
+            },
           },
-        });
+          afterClose,
+        );
         return;
       }
 
@@ -317,18 +411,21 @@ export class GameScene extends Phaser.Scene {
         // HU-20: si la recompensa no cabe en el inventario, el encargo no se completa.
         if (!canReceiveReward(conversation.quest)) {
           showMessage(this.scene.get('HudScene'), 'Inventario lleno', MESSAGE_MS, 'top');
+          afterClose?.();
           return;
         }
         completeQuest(conversation.quest);
         showMessage(this.scene.get('HudScene'), 'Encargo completado', MESSAGE_MS, 'top');
-        this.openDialog({ ...npcDialog, lines: conversation.lines });
+        this.openDialog({ ...npcDialog, lines: conversation.lines }, afterClose);
         return;
       }
 
       case 'give-letter':
         // Decisión del autor: con el encargo 1 activo, la vendedora entrega la Carta del alcalde.
         if (this.pickUp('carta-del-alcalde', 1)) {
-          this.openDialog({ ...npcDialog, lines: conversation.lines });
+          this.openDialog({ ...npcDialog, lines: conversation.lines }, afterClose);
+        } else {
+          afterClose?.();
         }
         return;
 
@@ -395,6 +492,20 @@ export class GameScene extends Phaser.Scene {
       },
     };
     this.interactables.push(interactable);
+  }
+
+  // Cama de la casa del jugador: ocupa dos casillas de alto y es un obstáculo. E junto a ella para dormir (HU-24).
+  private addBed(object: MapObject): void {
+    const tile = tileArea(object);
+    const bed = this.physics.add.staticImage(tile.centerX, tile.top + TILE_SIZE, 'cama');
+    this.physics.add.collider(this.player, bed);
+    this.interactables.push({
+      kind: 'cama',
+      id: 'cama',
+      area: new Phaser.Geom.Rectangle(tile.x, tile.y, TILE_SIZE, TILE_SIZE * 2),
+      isAvailable: () => true,
+      interact: () => this.askToSleep(),
+    });
   }
 
   // --- Cámara ---

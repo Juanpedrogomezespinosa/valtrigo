@@ -1,0 +1,35 @@
+import Phaser from 'phaser';
+import { MAX_ENERGY, WAKE_UP_MINUTES } from '../config';
+import { createNewGameState, getGameState, type GameState } from './gameState';
+import { readSave } from './save';
+import { findMapPoint, pointTile } from './zones';
+
+// Dormir y despertar (HU-22, HU-24 y HU-25).
+// Al empezar un nuevo día el personaje despierta en su casa, junto a la cama, a las 06:00 y con la
+// energía al máximo.
+
+function wakeUp(scene: Phaser.Scene, base: GameState, day: number): GameState {
+  return {
+    ...structuredClone(base),
+    day,
+    minutes: WAKE_UP_MINUTES,
+    energy: MAX_ENERGY,
+    zone: 'casa',
+    position: pointTile(findMapPoint(scene, 'casa', 'despertar')),
+  };
+}
+
+// HU-24: dormir en la cama. El día siguiente empieza con el estado actual.
+export function stateAfterSleeping(scene: Phaser.Scene): GameState {
+  const current = getGameState();
+  return wakeUp(scene, current, current.day + 1);
+}
+
+// HU-22 (escenario 4) y HU-24 (escenario 3): dormirse automáticamente a medianoche.
+// Decisión del autor: el progreso no guardado se pierde, es decir, dinero, inventario, encargos, cofres...
+// vuelven a como estaban en la última partida guardada (o a los de una partida nueva si no hay ninguna),
+// pero el reloj pasa al día siguiente. No se guarda (HU-25).
+export function stateAfterMidnight(scene: Phaser.Scene): GameState {
+  const base = readSave() ?? createNewGameState(scene);
+  return wakeUp(scene, base, getGameState().day + 1);
+}

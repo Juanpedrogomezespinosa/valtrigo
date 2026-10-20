@@ -25,6 +25,7 @@ export class BootScene extends Phaser.Scene {
       this.load.spritesheet(character, `assets/sprites/personajes/${character}.png`, { frameWidth: 16, frameHeight: 16 });
     }
     this.load.spritesheet('cofre', 'assets/sprites/cofre.png', { frameWidth: 16, frameHeight: 16 });
+    this.load.image('cama', 'assets/sprites/cama.png');
     for (const item of Object.keys(ITEMS)) {
       this.load.image(`objeto-${item}`, `assets/sprites/objetos/${item}.png`);
     }

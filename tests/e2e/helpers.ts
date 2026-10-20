@@ -551,3 +551,99 @@ export async function objectivesTexts(page: Page): Promise<string[] | null> {
       .map((child) => (child as import('phaser').GameObjects.Text).text);
   });
 }
+
+// --- Tienda ---
+
+export interface ShopView {
+  tab: string;
+  selected: number;
+  rows: { item: string; name: string; quantity?: number; price: number; icon: string }[];
+}
+
+export async function shopView(page: Page): Promise<ShopView | null> {
+  return page.evaluate(() => {
+    const game = (window as unknown as GameWindow).game;
+    if (!game.scene.isActive('ShopScene')) return null;
+    return (game.scene.getScene('ShopScene') as unknown as { getState(): ShopView }).getState();
+  });
+}
+
+// Selecciona un objeto de la pestaña actual de la tienda.
+export async function selectShopRow(page: Page, item: string): Promise<void> {
+  const view = (await shopView(page))!;
+  const target = view.rows.findIndex((row) => row.item === item);
+  const delta = target - view.selected;
+  for (let i = 0; i < Math.abs(delta); i++) {
+    await press(page, delta > 0 ? 'ArrowDown' : 'ArrowUp');
+  }
+}
+
+// Las horas en el formato del estado: minutos desde las 00:00.
+export const at = (hours: number, minutes = 0) => hours * 60 + minutes;
+
+// Compara dos estados de partida. Como el reloj avanza 1 minuto por segundo real, entre leer uno y otro
+// puede haber pasado un minuto: los minutos pueden diferir en 1 como mucho; todo lo demás debe coincidir.
+export function expectSameGame(actual: TestGameState | null, expected: TestGameState | null): void {
+  expect(actual).not.toBeNull();
+  expect(expected).not.toBeNull();
+  const { minutes: actualMinutes, ...actualRest } = actual!;
+  const { minutes: expectedMinutes, ...expectedRest } = expected!;
+  expect(actualRest).toEqual(expectedRest);
+  expect(Math.abs(actualMinutes - expectedMinutes)).toBeLessThanOrEqual(1);
+}
+
+// El reloj marca la hora indicada. Puede haber avanzado 1 minuto desde que se cargó la partida,
+// porque avanza 1 minuto por segundo real.
+export function expectClockAt(minutes: number | undefined, expected: number): void {
+  expect(minutes).toBeGreaterThanOrEqual(expected);
+  expect(minutes).toBeLessThanOrEqual(expected + 1);
+}
+
+export async function hudClock(page: Page): Promise<{ day: string; time: string } | null> {
+  return page.evaluate(() => {
+    const game = (window as unknown as GameWindow).game;
+    if (!game.scene.isActive('HudScene')) return null;
+    const hud = game.scene.getScene('HudScene');
+    return {
+      day: (hud.children.getByName('dia') as import('phaser').GameObjects.Text).text,
+      time: (hud.children.getByName('hora') as import('phaser').GameObjects.Text).text,
+    };
+  });
+}
+
+export const clockText = (minutes: number) =>
+  `${String(Math.floor(minutes / 60)).padStart(2, '0')}:${String(minutes % 60).padStart(2, '0')}`;
+
+// Oscuridad de la capa de noche, entre 0 (luz normal) y 1 (completamente oscura).
+export async function screenDarkness(page: Page): Promise<number> {
+  return page.evaluate(() => {
+    const game = (window as unknown as GameWindow).game;
+    return (game.scene.getScene('NightScene') as unknown as { getDarkness(): number }).getDarkness();
+  });
+}
+
+// --- Dormir (HU-24 y HU-25) ---
+
+// Junto a la cama de la casa (la cama ocupa las casillas 1,3 y 1,4).
+export const NEXT_TO_BED = { x: 2, y: 4 };
+
+export async function isSleeping(page: Page): Promise<boolean> {
+  return page.evaluate(() => {
+    const game = (window as unknown as GameWindow).game;
+    return game.scene.isActive('GameScene') && (game.scene.getScene('GameScene') as unknown as { isSleeping(): boolean }).isSleeping();
+  });
+}
+
+// Espera a que termine el sueño y la partida siga en el día siguiente.
+export async function waitForMorning(page: Page, day: number): Promise<void> {
+  await expect
+    .poll(async () => (await currentGameState(page))?.day === day && !(await isSleeping(page)), { timeout: 5000, intervals: [25] })
+    .toBe(true);
+}
+
+// Pulsa E junto a la cama y responde a "¿Dormir?".
+export async function answerSleep(page: Page, answer: 'Sí' | 'No'): Promise<void> {
+  await press(page, 'e');
+  expect(await sceneTexts(page, 'HudScene')).toContain('¿Dormir?');
+  await clickText(page, 'HudScene', answer);
+}
