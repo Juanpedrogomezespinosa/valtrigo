@@ -377,3 +377,36 @@ export async function measureZoneChange(page: Page, trigger: () => Promise<void>
   await trigger();
   return measuring;
 }
+
+// --- NPC y diálogos ---
+
+export interface DialogState {
+  npc: string;
+  lineIndex: number;
+  shownText: string;
+  fullText: string;
+  typing: boolean;
+}
+
+export async function dialogState(page: Page): Promise<DialogState | null> {
+  return page.evaluate(() => {
+    const game = (window as unknown as GameWindow).game;
+    if (!game.scene.isActive('DialogScene')) return null;
+    return (game.scene.getScene('DialogScene') as unknown as { getState(): DialogState }).getState();
+  });
+}
+
+export async function talkIndicator(page: Page): Promise<{ visible: boolean; target: string | null }> {
+  return page.evaluate(() => {
+    const game = (window as unknown as GameWindow).game;
+    const scene = game.scene.getScene('GameScene') as unknown as {
+      isTalkIndicatorVisible(): boolean;
+      getTalkTarget(): string | null;
+    };
+    return { visible: scene.isTalkIndicatorVisible(), target: scene.getTalkTarget() };
+  });
+}
+
+export async function waitForDialogLineComplete(page: Page): Promise<void> {
+  await expect.poll(async () => (await dialogState(page))?.typing, { intervals: [25] }).toBe(false);
+}

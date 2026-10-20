@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH } from './config';
 import { BootScene } from './scenes/BootScene';
 import { CreditsScene } from './scenes/CreditsScene';
+import { DialogScene } from './scenes/DialogScene';
 import { GameScene } from './scenes/GameScene';
 import { MenuScene } from './scenes/MenuScene';
 import { OptionsScene } from './scenes/OptionsScene';
@@ -26,8 +27,9 @@ const game = new Phaser.Game({
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
-  // El orden marca qué escena se dibuja encima: la pausa sobre la partida y las opciones sobre la pausa.
-  scene: [BootScene, MenuScene, GameScene, PauseScene, OptionsScene, CreditsScene],
+  // El orden marca qué escena se dibuja encima: el diálogo sobre la partida, la pausa encima
+  // y las opciones sobre la pausa.
+  scene: [BootScene, MenuScene, GameScene, DialogScene, PauseScene, OptionsScene, CreditsScene],
 });
 
 // Expone el juego y el estado de la partida en desarrollo para que los tests de Playwright

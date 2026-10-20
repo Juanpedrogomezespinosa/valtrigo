@@ -63,7 +63,20 @@ test('Escenario 3: Dirección libre con otra bloqueada', async ({ page }) => {
   expect(after.y).toBe(before.y);
 });
 
-// Pendiente: los NPC se crean en HU-10.
-test.fixme('Escenario 4: NPC en el camino', async () => {
-  // Colocar un NPC en el camino del personaje y comprobar que se detiene junto a él.
+test('Escenario 4: NPC en el camino', async ({ page }) => {
+  // El alcalde está en la plaza, en la casilla (24, 13). El personaje empieza dos casillas a su izquierda.
+  await startAt(page, 'plaza', { x: 22, y: 13 });
+  const npcLeft = 24 * TILE + 1; // cuerpo de 14×14 centrado en su casilla
+
+  await page.keyboard.down('ArrowRight');
+  await page.waitForTimeout(800);
+  const first = await playerBody(page);
+  await page.waitForTimeout(300);
+  const second = await playerBody(page);
+  await page.keyboard.up('ArrowRight');
+
+  // Se detiene junto al NPC, sin superponerse.
+  expect(second.right).toBeCloseTo(npcLeft, 0);
+  expect(second.right).toBeLessThanOrEqual(npcLeft);
+  expect(second.left).toBe(first.left);
 });

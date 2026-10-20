@@ -10,7 +10,7 @@
  "tilewidth": 16,
  "tileheight": 16,
  "nextlayerid": 4,
- "nextobjectid": 3,
+ "nextobjectid": 4,
  "layers": [
   {
    "id": 1,
@@ -1389,6 +1389,25 @@
     },
     {
      "id": 2,
+     "name": "npc",
+     "type": "",
+     "point": true,
+     "x": 264,
+     "y": 152,
+     "width": 0,
+     "height": 0,
+     "rotation": 0,
+     "visible": true,
+     "properties": [
+      {
+       "name": "personaje",
+       "type": "string",
+       "value": "granjero"
+      }
+     ]
+    },
+    {
+     "id": 3,
      "name": "puerta",
      "type": "",
      "x": 0,

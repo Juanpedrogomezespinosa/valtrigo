@@ -1,6 +1,9 @@
 import Phaser from 'phaser';
-import { WORLD_ZOOM, ZONE_FADE_MS } from '../config';
+import { COLORS, FONT_FAMILY, TALK_DISTANCE, WORLD_ZOOM, ZONE_FADE_MS } from '../config';
+import dialogues from '../data/dialogues.json';
+import { Npc } from '../entities/Npc';
 import { Player, type Direction } from '../entities/Player';
+import type { DialogSceneData, NpcId } from './DialogScene';
 import { getGameState } from '../systems/gameState';
 import { findMapPoint, getProperty, mapKey, mapObjects, pointTile, type ZoneId } from '../systems/zones';
 
@@ -23,6 +26,9 @@ export class GameScene extends Phaser.Scene {
   private facing?: Direction;
   private doors: Door[] = [];
   private changingZone = false;
+  private npcs: Npc[] = [];
+  private talkIndicator!: Phaser.GameObjects.Text;
+  private dialogOpen = false;
 
   constructor() {
     super('GameScene');
@@ -35,6 +41,7 @@ export class GameScene extends Phaser.Scene {
   create(): void {
     const state = getGameState();
     this.changingZone = false;
+    this.dialogOpen = false;
 
     const map = this.make.tilemap({ key: mapKey(state.zone) });
     const tiles = [
@@ -51,6 +58,28 @@ export class GameScene extends Phaser.Scene {
     this.player = new Player(this, state.position, this.facing);
     this.player.setObstacles(obstacles);
     this.physics.add.collider(this.player, obstacles);
+
+    // NPC de la zona (HU-10): son obstáculos para el personaje (HU-07).
+    this.npcs = mapObjects(this, state.zone)
+      .filter((object) => object.name === 'npc')
+      .map((object) => new Npc(this, getProperty(object, 'personaje')!, pointTile(object)));
+    this.physics.add.collider(this.player, this.npcs);
+
+    // Indicador "E" sobre el NPC con el que se puede hablar.
+    this.talkIndicator = this.add
+      .text(0, 0, 'E', {
+        fontFamily: FONT_FAMILY,
+        fontSize: '8px',
+        color: COLORS.background,
+        backgroundColor: COLORS.text,
+        padding: { x: 2, y: 0 },
+      })
+      .setResolution(WORLD_ZOOM * 2)
+      .setOrigin(0.5, 1)
+      .setDepth(10)
+      .setVisible(false);
+
+    this.input.keyboard!.on('keydown-E', () => this.talk());
 
     this.doors = mapObjects(this, state.zone)
       .filter((object) => object.name === 'puerta')
@@ -70,6 +99,10 @@ export class GameScene extends Phaser.Scene {
       }
       this.player.stand();
       this.scene.pause();
+      // Con la pausa abierta, un diálogo abierto también se detiene (HU-26).
+      if (this.scene.isActive('DialogScene')) {
+        this.scene.pause('DialogScene');
+      }
       this.scene.launch('PauseScene');
     });
 
@@ -82,6 +115,65 @@ export class GameScene extends Phaser.Scene {
 
   isChangingZone(): boolean {
     return this.changingZone;
+  }
+
+  isDialogOpen(): boolean {
+    return this.dialogOpen;
+  }
+
+  // NPC con el que se puede hablar ahora mismo, si hay alguno.
+  getTalkTarget(): string | null {
+    return this.talkTarget()?.character ?? null;
+  }
+
+  isTalkIndicatorVisible(): boolean {
+    return this.talkIndicator.visible;
+  }
+
+  // El NPC más cercano que esté a menos de una casilla del personaje.
+  private talkTarget(): Npc | null {
+    let nearest: Npc | null = null;
+    let nearestGap = Infinity;
+    for (const npc of this.npcs) {
+      const gap = npc.gapTo(this.player.body);
+      if (gap < TALK_DISTANCE && gap < nearestGap) {
+        nearest = npc;
+        nearestGap = gap;
+      }
+    }
+    return nearest;
+  }
+
+  // HU-10: E junto a un NPC abre su diálogo. Mientras está abierto, el personaje no se mueve.
+  private talk(): void {
+    if (this.changingZone || this.dialogOpen) {
+      return;
+    }
+    const npc = this.talkTarget();
+    if (!npc) {
+      return;
+    }
+
+    const id = npc.character as NpcId;
+    this.dialogOpen = true;
+    this.player.stand();
+    this.talkIndicator.setVisible(false);
+    const data: DialogSceneData = {
+      npc: id,
+      lines: dialogues[id].greeting,
+      onClose: () => {
+        this.dialogOpen = false;
+      },
+    };
+    this.scene.launch('DialogScene', data);
+  }
+
+  private updateTalkIndicator(): void {
+    const npc = this.talkTarget();
+    this.talkIndicator.setVisible(npc !== null);
+    if (npc) {
+      this.talkIndicator.setPosition(npc.x, npc.y - npc.height / 2 - 1);
+    }
   }
 
   // HU-09: la cámara sigue al personaje y lo mantiene centrado, pero se detiene en los bordes del mapa.
@@ -102,11 +194,12 @@ export class GameScene extends Phaser.Scene {
 
   update(): void {
     // Durante el fundido de un cambio de zona el personaje no se mueve (HU-08).
-    if (this.changingZone) {
+    if (this.changingZone || this.dialogOpen) {
       return;
     }
 
     this.player.update();
+    this.updateTalkIndicator();
     getGameState().position = this.player.getTilePosition();
 
     const door = this.doors.find((candidate) => this.isCrossing(candidate));

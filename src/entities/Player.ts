@@ -103,9 +103,13 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     return [...new Set(held.map(({ direction }) => direction))];
   }
 
-  // Comprueba si el cuerpo, desplazado 1 píxel en esa dirección, chocaría con un obstáculo o con el borde del mapa.
+  // Comprueba si el cuerpo, desplazado una fracción de píxel en esa dirección, chocaría con un obstáculo
+  // o con el borde del mapa. Solo cuenta como bloqueada si ya está tocando el obstáculo: hasta entonces
+  // el personaje avanza y la física lo detiene justo al lado.
   private canMove(direction: Direction): boolean {
-    const { x: dx, y: dy } = VELOCITY[direction];
+    const probe = 0.05;
+    const dx = VELOCITY[direction].x * probe;
+    const dy = VELOCITY[direction].y * probe;
     // En el eje perpendicular se encoge un poco, para no contar como bloqueo un obstáculo que solo roza el lateral.
     const margin = 0.1;
     const area = new Phaser.Geom.Rectangle(
@@ -120,8 +124,12 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       return false;
     }
 
-    const blocking = this.obstacles?.getTilesWithinWorldXY(area.x, area.y, area.width, area.height, { isColliding: true });
-    return !blocking?.length;
+    const blockingTiles = this.obstacles?.getTilesWithinWorldXY(area.x, area.y, area.width, area.height, {
+      isColliding: true,
+    });
+    // Los NPC tienen cuerpos estáticos: también bloquean el paso.
+    const blockingBodies = this.scene.physics.overlapRect(area.x, area.y, area.width, area.height, false, true);
+    return !blockingTiles?.length && blockingBodies.length === 0;
   }
 }
 

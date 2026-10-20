@@ -73,6 +73,9 @@ export class PauseScene extends Phaser.Scene {
   private resumeGame(): void {
     this.scene.stop();
     this.scene.resume('GameScene');
+    if (this.scene.isPaused('DialogScene')) {
+      this.scene.resume('DialogScene');
+    }
   }
 
   // HU-04: guarda la partida, sobrescribiendo la anterior, y muestra "Partida guardada" durante 2 segundos.
@@ -100,6 +103,7 @@ export class PauseScene extends Phaser.Scene {
 
   private quitGame(): void {
     endGame();
+    this.scene.stop('DialogScene');
     this.scene.stop('GameScene');
     this.scene.start('MenuScene');
   }

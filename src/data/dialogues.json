@@ -1,0 +1,31 @@
+{
+  "alcalde": {
+    "name": "Alcalde",
+    "greeting": [
+      "¡Ah, una cara nueva! Soy el alcalde de Valtrigo.",
+      "Desde que el reloj de la torre se paró, nadie sabe a qué hora hacer nada.",
+      "Y la feria anual está a la vuelta de la esquina... ¡Qué desastre!"
+    ]
+  },
+  "vendedora": {
+    "name": "Vendedora",
+    "greeting": [
+      "¡Bienvenido a la tienda! Si no lo tengo, es que no lo necesitas.",
+      "Sin reloj, abro cuando me despierto. Hoy he madrugado: ¡qué suerte la tuya!"
+    ]
+  },
+  "relojera": {
+    "name": "Relojera",
+    "greeting": [
+      "Hola. Soy la relojera de Valtrigo.",
+      "El reloj de la torre... es más complicado de lo que parece."
+    ]
+  },
+  "granjero": {
+    "name": "Granjero",
+    "greeting": [
+      "Buenas. Aquí en la granja las cosas van despacio.",
+      "Sin reloj no sé cuándo sembrar, pero la tierra sabe esperar."
+    ]
+  }
+}

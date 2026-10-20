@@ -136,7 +136,12 @@ function addDoor(map, { x, y, width = 1, height = 1, zone, direction }) {
 
 // Punto donde aparece el personaje al llegar desde otra zona, mirando hacia `facing`.
 function addArrival(map, { from, x, y, facing }) {
-  map.points.push({ name: `llegada-${from}`, x, y, facing });
+  map.points.push({ name: `llegada-${from}`, x, y, properties: { mirando: facing } });
+}
+
+// Posición de un NPC (HU-10). `character` es su identificador en src/data/dialogues.json.
+function addNpc(map, { character, x, y }) {
+  map.points.push({ name: 'npc', x, y, properties: { personaje: character } });
 }
 
 function addWater(map, x1, y1, x2, y2) {
@@ -272,7 +277,9 @@ function toTiled(map) {
             height: 0,
             rotation: 0,
             visible: true,
-            ...(point.facing && { properties: [{ name: 'mirando', type: 'string', value: point.facing }] }),
+            ...(point.properties && {
+              properties: Object.entries(point.properties).map(([name, value]) => ({ name, type: 'string', value })),
+            }),
           })),
           ...map.doors.map((door) => ({
             name: 'puerta',
@@ -372,6 +379,8 @@ function plaza() {
   addDoor(map, { x: 19, y: 29, width: 3, zone: 'lago', direction: 'down' });
   addArrival(map, { from: 'lago', x: 20, y: 28, facing: 'up' });
 
+  addNpc(map, { character: 'alcalde', x: 24, y: 13 });
+
   // Borde de árboles, con huecos para las salidas.
   const exits = new Set();
   for (let x = 36; x < 40; x++) for (let y = 13; y <= 15; y++) exits.add(key(x, y));
@@ -432,6 +441,7 @@ function tienda() {
   for (let x = 3; x <= 8; x++) setTile(map.obstacles, map, x, 4, INTERIOR.table);
   setTile(map.obstacles, map, 1, 2, INTERIOR.barrel);
   setTile(map.obstacles, map, 10, 2, INTERIOR.barrel);
+  addNpc(map, { character: 'vendedora', x: 9, y: 4 });
   return map;
 }
 
@@ -442,6 +452,7 @@ function torre() {
   setTile(map.obstacles, map, 7, 1, INTERIOR.shelf);
   setTile(map.obstacles, map, 3, 4, INTERIOR.workbench);
   setTile(map.obstacles, map, 8, 2, INTERIOR.barrel);
+  addNpc(map, { character: 'relojera', x: 5, y: 5 });
   return map;
 }
 
@@ -468,6 +479,7 @@ function granja() {
 
   addDoor(map, { x: 0, y: 10, height: 3, zone: 'plaza', direction: 'left' });
   addArrival(map, { from: 'plaza', x: 1, y: 11, facing: 'right' });
+  addNpc(map, { character: 'granjero', x: 16, y: 9 });
 
   const exits = new Set();
   for (let x = 0; x < 2; x++) for (let y = 10; y <= 12; y++) exits.add(key(x, y));

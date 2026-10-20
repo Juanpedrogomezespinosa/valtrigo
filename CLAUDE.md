@@ -131,8 +131,7 @@ Es un proyecto público con un fin doble: servir de base para un curso de testin
 - El cuerpo de colisión del personaje mide 14×14 y está centrado en su casilla de 16×16. Los gráficos tienen bordes transparentes, así que no se ve superposición, y queda algo de margen para pasar por huecos de una casilla.
 - El personaje no puede salir de los límites del mapa.
 - Si la dirección que manda (la última pulsada) está bloqueada, se usa la siguiente pulsada que esté libre. Si todas están bloqueadas, el personaje se queda quieto mirando hacia la que manda.
-- Para saber si una dirección está bloqueada se desplaza 1 px el cuerpo y se miran las casillas sólidas que tocaría.
-- El escenario 4 de HU-07 (NPC) está como `test.fixme` hasta HU-10.
+- Para saber si una dirección está bloqueada se desplaza el cuerpo una fracción de píxel (0,05) y se miran las casillas sólidas y los NPC que tocaría. Solo cuenta como bloqueada si ya está tocando el obstáculo; así el personaje se detiene pegado a él y no a 1 px.
 
 ### Cámara (HU-09)
 
@@ -150,3 +149,13 @@ Es un proyecto público con un fin doble: servir de base para un curso de testin
 - Las teclas que se mantienen pulsadas al cruzar no siguen moviendo al personaje en la nueva zona: hay que volver a pulsarlas. Así no se vuelve a cruzar la puerta sin querer.
 - **El paso de tiempo de Phaser no se suaviza** (`fps.smoothStep: false` en main.ts). Con suavizado, si el equipo va lento, el reloj de Phaser va más despacio que el real y las duraciones de las historias (fundidos y, en HU-22, el reloj del juego) se alargan.
 - Los tests que miden tiempos (el mensaje de 2 s y el fundido de 0,5 s) miden dentro del navegador (`measureTextVisible` y `measureZoneChange` en tests/e2e/helpers.ts), para no depender de la latencia entre Playwright y el navegador.
+
+### NPC y diálogos (HU-10)
+
+- Los 4 NPC: alcalde en la plaza (24, 13), vendedora en la tienda (9, 4, junto al mostrador), relojera en la torre (5, 5) y granjero en la granja (16, 9). En Tiled son puntos llamados `npc` con la propiedad `personaje`.
+- Los NPC están quietos y miran hacia abajo. Tienen un cuerpo de 14×14, como el personaje, y son obstáculos.
+- "A menos de una casilla": el hueco entre el cuerpo del personaje y el del NPC es menor de 16 px (`TALK_DISTANCE`). Si hay varios NPC a tiro, se elige el más cercano. El indicador "E" se dibuja encima de ese NPC.
+- **Retratos:** como retrato se usa el primer fotograma del NPC (mirando de frente), ampliado a 96×96. Los retratos propios de Ninja Adventure (`Faceset.png`) no se copiaron antes de borrar el paquete; si se recuperan, basta con cargarlos y cambiar la imagen en DialogScene.
+- El texto se escribe a 30 ms por letra (`DIALOG_MS_PER_LETTER`).
+- El diálogo es una escena aparte (DialogScene) encima de la partida. Mientras está abierto, el personaje no se mueve, el indicador se oculta y no se puede cruzar puertas. Escape abre la pausa también con un diálogo abierto: el diálogo queda detenido y continúa al reanudar.
+- Las líneas de cada NPC están en src/data/dialogues.json. Hasta HU-11 todos usan su saludo (`greeting`).

@@ -39,3 +39,8 @@ export const PLAYER_SPEED = 64;
 
 // Duración del fundido a negro al cruzar una puerta (HU-08).
 export const ZONE_FADE_MS = 500;
+
+// Diálogos (HU-10): distancia máxima entre el personaje y un NPC para hablar con él
+// ("a menos de una casilla") y velocidad de escritura del texto, letra a letra.
+export const TALK_DISTANCE = TILE_SIZE;
+export const DIALOG_MS_PER_LETTER = 30;
