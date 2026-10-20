@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 import { activeScenes, choosePauseOption, isScenePaused, openPause, press, startNewGame } from './helpers';
 
 // HU-27. Reanudar desde la pausa

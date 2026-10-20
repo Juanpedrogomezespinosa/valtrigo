@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 import { openPause, playerInfo, startNewGame } from './helpers';
 
 // HU-06. Mover al personaje con el teclado

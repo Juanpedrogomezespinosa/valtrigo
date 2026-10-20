@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 import { currentGameState, pickUp, sceneTexts, startWith } from './helpers';
 
 // HU-15. Límite de espacio en el inventario

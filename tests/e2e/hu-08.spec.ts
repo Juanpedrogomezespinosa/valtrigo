@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 import { isChangingZone, measureZoneChange, playerTile, startAt, waitForZone } from './helpers';
 
 // HU-08. Cambiar de zona

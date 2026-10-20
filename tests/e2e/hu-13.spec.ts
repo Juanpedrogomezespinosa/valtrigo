@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 import { activeScenes, inventoryView, playerInfo, press, startWith } from './helpers';
 
 // HU-13. Ver el inventario

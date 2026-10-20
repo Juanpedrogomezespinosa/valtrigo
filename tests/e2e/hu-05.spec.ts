@@ -1,4 +1,5 @@
-import { expect, test, type Page } from '@playwright/test';
+import type { Page } from '@playwright/test';
+import { expect, test } from './fixtures';
 import { activeScenes, clickText, openGame, press, readSavedGame, savedGame, sceneTexts, setSavedGame } from './helpers';
 
 // HU-05. Salir del juego

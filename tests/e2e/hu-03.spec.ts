@@ -1,4 +1,5 @@
-import { expect, test, type Page } from '@playwright/test';
+import type { Page } from '@playwright/test';
+import { expect, test } from './fixtures';
 import { currentGameState, isChestOpen, openGame, press, savedGame, setSavedGame, waitForScene } from './helpers';
 
 // HU-03. Continuar una partida guardada

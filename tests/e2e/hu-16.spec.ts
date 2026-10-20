@@ -1,5 +1,5 @@
-import { expect, test } from '@playwright/test';
-import { hudMoney, openPause, startNewGame } from './helpers';
+import { expect, test } from './fixtures';
+import { hudMoney, openPause, press, startNewGame, startNextTo } from './helpers';
 
 // HU-16. Ver el dinero actual
 
@@ -18,9 +18,18 @@ test.fixme('Escenario 2: Actualización al comprar', async () => {
   // Con 100 monedas, comprar un objeto de 30: aparece "70 monedas".
 });
 
-// Pendiente: completar encargos se implementa en HU-20.
-test.fixme('Escenario 3: Actualización al completar un encargo', async () => {
-  // Con 70 monedas, completar un encargo que paga 50: aparece "120 monedas".
+test('Escenario 3: Actualización al completar un encargo', async ({ page }) => {
+  // El encargo 1 (entregar la Carta del alcalde) paga 50 monedas.
+  await startNextTo(page, 'alcalde', {
+    money: 70,
+    activeQuests: ['encargo-1'],
+    inventory: [{ item: 'carta-del-alcalde', quantity: 1 }],
+  });
+  expect((await hudMoney(page))?.text).toBe('70 monedas');
+
+  await press(page, 'e');
+
+  await expect.poll(async () => (await hudMoney(page))?.text).toBe('120 monedas');
 });
 
 test('Escenario 4: Dinero visible en pausa', async ({ page }) => {

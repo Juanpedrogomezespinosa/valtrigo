@@ -1,0 +1,57 @@
+[
+  {
+    "id": "encargo-1",
+    "npc": "alcalde",
+    "name": "Entregar la Carta del alcalde",
+    "description": "La vendedora de la tienda tiene una carta para el alcalde. Recógela y llévasela.",
+    "requirement": { "type": "deliver", "items": [{ "item": "carta-del-alcalde", "quantity": 1 }] },
+    "reward": { "money": 50, "items": [{ "item": "manzana", "quantity": 1 }] }
+  },
+  {
+    "id": "encargo-2",
+    "npc": "granjero",
+    "name": "Semillas para la cosecha",
+    "description": "El granjero necesita 3 Semillas para su cosecha. Llévaselas a la granja.",
+    "requirement": { "type": "deliver", "items": [{ "item": "semilla", "quantity": 3 }] },
+    "reward": { "money": 40, "items": [] }
+  },
+  {
+    "id": "encargo-3",
+    "npc": "vendedora",
+    "name": "Día de mercado",
+    "description": "Vende 5 Semillas en la tienda y vuelve a hablar con la vendedora.",
+    "requirement": { "type": "sell", "item": "semilla", "quantity": 5 },
+    "reward": { "money": 20, "items": [{ "item": "manzana", "quantity": 1 }] }
+  },
+  {
+    "id": "encargo-4",
+    "npc": "relojera",
+    "name": "Las piezas del reloj",
+    "description": "Lleva a la relojera el Engranaje de cobre, el Muelle de plata y el Péndulo de oro para reparar el reloj.",
+    "requirement": {
+      "type": "deliver",
+      "items": [
+        { "item": "pieza-del-reloj-1", "quantity": 1 },
+        { "item": "pieza-del-reloj-2", "quantity": 1 },
+        { "item": "pieza-del-reloj-3", "quantity": 1 }
+      ]
+    },
+    "reward": { "money": 100, "items": [{ "item": "manzana", "quantity": 2 }] }
+  },
+  {
+    "id": "encargo-5",
+    "npc": "granjero",
+    "name": "Manzanas para la feria",
+    "description": "El granjero quiere preparar una tarta para la feria. Llévale 2 Manzanas.",
+    "requirement": { "type": "deliver", "items": [{ "item": "manzana", "quantity": 2 }] },
+    "reward": { "money": 30, "items": [] }
+  },
+  {
+    "id": "encargo-6",
+    "npc": "alcalde",
+    "name": "La feria de Valtrigo",
+    "description": "Habla con el alcalde durante la feria.",
+    "requirement": { "type": "talk" },
+    "reward": { "money": 80, "items": [] }
+  }
+]

@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 
 // Comprobación del entorno: el juego carga y Phaser abre el menú principal.
 // No corresponde a ninguna historia de usuario.

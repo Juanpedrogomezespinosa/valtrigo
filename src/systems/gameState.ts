@@ -16,7 +16,11 @@ export interface GameState {
   money: number;
   energy: number;
   inventory: InventoryItem[];
+  // Encargo activo (como mucho uno, HU-19), encargos completados y progreso de los que lo necesitan
+  // (por ejemplo, semillas vendidas desde que se aceptó "Día de mercado").
   activeQuests: string[];
+  completedQuests: string[];
+  questProgress: Record<string, number>;
   openedChests: string[];
   // Objetos sueltos del mundo que ya se han recogido (HU-12), como la Pala de la granja.
   pickedUpItems: string[];
@@ -35,6 +39,8 @@ export function createNewGameState(scene: Phaser.Scene): GameState {
     energy: NEW_GAME.energy,
     inventory: [],
     activeQuests: [],
+    completedQuests: [],
+    questProgress: {},
     openedChests: [],
     pickedUpItems: [],
   };

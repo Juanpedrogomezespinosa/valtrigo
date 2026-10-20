@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 import { openGame, playedEffects, press, recordEffects } from './helpers';
 
 // HU-32. Efectos de sonido en las acciones

@@ -105,6 +105,7 @@ export class PauseScene extends Phaser.Scene {
     endGame();
     this.scene.stop('DialogScene');
     this.scene.stop('InventoryScene');
+    this.scene.stop('ObjectivesScene');
     this.scene.stop('HudScene');
     this.scene.stop('GameScene');
     this.scene.start('MenuScene');

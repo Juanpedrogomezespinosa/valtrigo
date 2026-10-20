@@ -158,7 +158,7 @@ Es un proyecto público con un fin doble: servir de base para un curso de testin
 - Retratos: los `Faceset.png` de Ninja Adventure (38×38) en public/assets/sprites/retratos/, ampliados ×3.
 - El texto se escribe a 30 ms por letra (`DIALOG_MS_PER_LETTER`).
 - El diálogo es una escena aparte (DialogScene) encima de la partida. Mientras está abierto, el personaje no se mueve, el indicador se oculta y no se puede cruzar puertas. Escape abre la pausa también con un diálogo abierto: el diálogo queda detenido y continúa al reanudar.
-- Las líneas de cada NPC están en src/data/dialogues.json. Hasta HU-11 todos usan su saludo (`greeting`).
+- Las líneas de cada NPC están en src/data/dialogues.json: su saludo (`greeting`) y, para cada encargo suyo, `offer`, `active`, `complete` y `thanks`.
 
 ### Encargos: decisiones del autor (para HU-11, HU-19 y HU-20)
 
@@ -188,3 +188,21 @@ Es un proyecto público con un fin doble: servir de base para un curso de testin
 - Carteles con pistas (decisión del autor): dos en la plaza (centro y camino del lago), uno a la entrada de la granja y otro a la entrada del lago. Son casillas sólidas. Su texto aparece completo, sin escribirse letra a letra, porque HU-12 dice que la segunda E lo cierra.
 - Todo lo que se activa con E (NPC, cofres cerrados, carteles y objetos) usa el mismo alcance (menos de una casilla) y el mismo indicador "E". Un cofre ya abierto no muestra el indicador.
 - El cuadro de diálogo (DialogScene) sirve para NPC y carteles: título, retrato opcional y texto letra a letra o completo.
+
+### Encargos (HU-11, HU-19, HU-20 y HU-21)
+
+- Los 6 encargos están en src/data/quests.json, en el orden de la historia del juego, con nombre, descripción, NPC, condición y recompensa. Tipos de condición: `deliver` (entregar objetos al NPC), `sell` (vender en la tienda; se cuenta desde que se acepta el encargo, en `questProgress`) y `talk` (hablar con el NPC con el encargo activo).
+- Todos se completan al hablar con el NPC que los encargó cuando se cumplen sus condiciones. El encargo 6 ("hablar con el alcalde durante la feria") se completa la siguiente vez que se habla con él después de aceptarlo.
+- `GameState` tiene dos campos nuevos: `completedQuests` y `questProgress`. Las partidas guardadas sin ellos se cargan con valores vacíos.
+- La lógica de lo que dice cada NPC está en `conversationWith()` (src/systems/quests.ts), en este orden:
+  1. Si el encargo activo es suyo: agradece y completa (si se cumple la condición) o da el seguimiento (`active`).
+  2. Si hay otro encargo activo: la vendedora entrega la carta (encargo 1, si no se tiene); un NPC con encargos pendientes dice "Termina tu encargo actual primero".
+  3. Si no hay encargo activo y el siguiente de la lista es suyo, lo ofrece con "Aceptar" y "Rechazar".
+  4. Si ya completó algún encargo suyo, da las gracias (`thanks` del último).
+  5. Si no, su saludo.
+- Al aceptar, el NPC sigue con su diálogo `active` (HU-19). Al rechazar, se cierra el diálogo y la próxima vez lo vuelve a ofrecer.
+- Al completar: primero se comprueba que la recompensa cabe en el inventario **tal y como está** (antes de entregar los objetos pedidos). Si no cabe, aparece "Inventario lleno" y el encargo sigue activo (HU-20, escenario 3). Si cabe, se entregan los objetos, se cobra la recompensa, aparece "Encargo completado" y el NPC dice su diálogo `complete`.
+- Las opciones del diálogo se eligen con ← → (con los efectos de navegación y confirmación) y se confirman con E, Enter o un clic.
+- Los mensajes durante la partida ("Encargo completado", "Inventario lleno") salen arriba en el centro, para que no los tape el cuadro de diálogo.
+- Lista de objetivos (ObjectivesScene, tecla O): igual que el inventario, el tiempo sigue y el personaje no se mueve. Se cierra con O o Escape. Muestra el nombre, la descripción y "Encargado por: [NPC]", o "No tienes encargos activos".
+- Los tests usan un `test` propio (tests/e2e/fixtures.ts) que hace fallar cualquier test en el que la página lance un error de JavaScript.

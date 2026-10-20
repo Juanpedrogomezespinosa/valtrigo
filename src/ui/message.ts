@@ -3,11 +3,18 @@ import { COLORS, FONT_FAMILY } from '../config';
 
 const DEPTH = 200;
 
-// Mensaje breve en la parte inferior de la pantalla, como "Partida guardada".
+// Mensaje breve, centrado abajo (por defecto) o arriba, como "Partida guardada".
+// Durante la partida se usa arriba, para que no lo tape el cuadro de diálogo.
 // Desaparece solo al cabo de `durationMs` milisegundos reales.
-export function showMessage(scene: Phaser.Scene, message: string, durationMs: number): void {
+export function showMessage(
+  scene: Phaser.Scene,
+  message: string,
+  durationMs: number,
+  position: 'top' | 'bottom' = 'bottom',
+): void {
+  const y = position === 'top' ? 40 : scene.scale.height - 60;
   const text = scene.add
-    .text(scene.scale.width / 2, scene.scale.height - 60, message, {
+    .text(scene.scale.width / 2, y, message, {
       fontFamily: FONT_FAMILY,
       fontSize: '24px',
       color: COLORS.text,

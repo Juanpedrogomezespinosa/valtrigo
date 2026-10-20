@@ -90,6 +90,8 @@ export interface TestGameState {
   energy: number;
   inventory: { item: string; quantity: number }[];
   activeQuests: string[];
+  completedQuests: string[];
+  questProgress: Record<string, number>;
   openedChests: string[];
   pickedUpItems: string[];
 }
@@ -105,6 +107,8 @@ export function savedGame(overrides: Partial<TestGameState> = {}): TestGameState
     energy: 80,
     inventory: [{ item: 'semilla', quantity: 3 }],
     activeQuests: [],
+    completedQuests: [],
+    questProgress: {},
     openedChests: [],
     pickedUpItems: [],
     ...overrides,
@@ -487,4 +491,63 @@ export async function startAtWith(
   overrides: Partial<TestGameState>,
 ): Promise<void> {
   await startWith(page, { zone, position, ...overrides });
+}
+
+// --- Encargos ---
+
+// Dónde ponerse para hablar con cada NPC.
+export const NEXT_TO: Record<string, { zone: string; position: { x: number; y: number } }> = {
+  alcalde: { zone: 'plaza', position: { x: 24, y: 14 } },
+  vendedora: { zone: 'tienda', position: { x: 9, y: 5 } },
+  relojera: { zone: 'torre', position: { x: 5, y: 6 } },
+  granjero: { zone: 'granja', position: { x: 16, y: 10 } },
+};
+
+// Continúa una partida junto a un NPC, con los datos indicados.
+export async function startNextTo(page: Page, npc: string, overrides: Partial<TestGameState>): Promise<void> {
+  await startWith(page, { zone: NEXT_TO[npc].zone, position: NEXT_TO[npc].position, ...overrides });
+}
+
+// Habla con el NPC (si no hay un diálogo abierto) y avanza el diálogo línea a línea, esperando a que
+// cada una se escriba entera, hasta que aparecen opciones o se cierra. Devuelve las líneas mostradas.
+export async function talkUntilChoiceOrEnd(page: Page): Promise<string[]> {
+  if (!(await dialogState(page))) {
+    await press(page, 'e');
+  }
+  const lines: string[] = [];
+  for (;;) {
+    await expect
+      .poll(async () => {
+        const state = await dialogState(page);
+        return state === null || !state.typing;
+      }, { intervals: [25] })
+      .toBe(true);
+    const state = await dialogState(page);
+    if (!state) return lines;
+    lines.push(state.fullText);
+    if (state.choice) return lines;
+    await press(page, 'e');
+  }
+}
+
+// Elige una opción del diálogo con las flechas y la confirma con Enter.
+export async function chooseDialogOption(page: Page, option: string): Promise<void> {
+  const state = await dialogState(page);
+  const target = state!.choice!.options.indexOf(option);
+  const delta = target - state!.choice!.selected;
+  for (let i = 0; i < Math.abs(delta); i++) {
+    await press(page, delta > 0 ? 'ArrowRight' : 'ArrowLeft');
+  }
+  await press(page, 'Enter');
+}
+
+export async function objectivesTexts(page: Page): Promise<string[] | null> {
+  return page.evaluate(() => {
+    const game = (window as unknown as GameWindow).game;
+    if (!game.scene.isActive('ObjectivesScene')) return null;
+    return game.scene
+      .getScene('ObjectivesScene')
+      .children.list.filter((child) => child.type === 'Text')
+      .map((child) => (child as import('phaser').GameObjects.Text).text);
+  });
 }

@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 import { playerBody, playerInfo, startAt } from './helpers';
 
 // HU-07. Colisiones con obstáculos

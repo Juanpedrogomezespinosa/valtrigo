@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 import { cameraInfo, isChangingZone, playerInfo, startAt, startNewGame, waitForZone } from './helpers';
 
 // HU-09. Cámara que sigue al personaje

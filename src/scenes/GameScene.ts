@@ -9,10 +9,11 @@ import { Npc } from '../entities/Npc';
 import { Player, type Direction } from '../entities/Player';
 import { getGameState } from '../systems/gameState';
 import { addItem, type ItemId } from '../systems/inventory';
+import { acceptQuest, canReceiveReward, completeQuest, conversationWith, type NpcId } from '../systems/quests';
 import { findMapPoint, getProperty, mapKey, mapObjects, pointTile, type MapObject, type ZoneId } from '../systems/zones';
 import { showMessage } from '../ui/message';
-import type { DialogSceneData, NpcId } from './DialogScene';
-import type { InventorySceneData } from './InventoryScene';
+import type { DialogSceneData } from './DialogScene';
+import type { OverlaySceneData } from './InventoryScene';
 
 export interface GameSceneData {
   // Hacia dónde mira el personaje al aparecer (al llegar por una puerta).
@@ -48,7 +49,8 @@ export class GameScene extends Phaser.Scene {
   private indicator!: Phaser.GameObjects.Text;
   private changingZone = false;
   private dialogOpen = false;
-  private inventoryOpen = false;
+  // Inventario (HU-13) o lista de objetivos (HU-21) abiertos: el tiempo sigue, pero el personaje no se mueve.
+  private overlayOpen = false;
 
   constructor() {
     super('GameScene');
@@ -62,7 +64,7 @@ export class GameScene extends Phaser.Scene {
     const state = getGameState();
     this.changingZone = false;
     this.dialogOpen = false;
-    this.inventoryOpen = false;
+    this.overlayOpen = false;
 
     const map = this.make.tilemap({ key: mapKey(state.zone) });
     const tiles = [
@@ -135,7 +137,7 @@ export class GameScene extends Phaser.Scene {
     if (addItem(item, quantity)) {
       return true;
     }
-    showMessage(this.scene.get('HudScene'), 'Inventario lleno', MESSAGE_MS);
+    showMessage(this.scene.get('HudScene'), 'Inventario lleno', MESSAGE_MS, 'top');
     return false;
   }
 
@@ -149,8 +151,8 @@ export class GameScene extends Phaser.Scene {
     return this.dialogOpen;
   }
 
-  isInventoryOpen(): boolean {
-    return this.inventoryOpen;
+  isOverlayOpen(): boolean {
+    return this.overlayOpen;
   }
 
   // Identificador de aquello con lo que se puede interactuar ahora mismo, si hay algo.
@@ -175,12 +177,13 @@ export class GameScene extends Phaser.Scene {
   private setUpKeys(): void {
     const keyboard = this.input.keyboard!;
     keyboard.on('keydown-E', () => this.interact());
-    keyboard.on('keydown-I', () => this.openInventory());
+    keyboard.on('keydown-I', () => this.openOverlay('InventoryScene'));
+    keyboard.on('keydown-O', () => this.openOverlay('ObjectivesScene'));
 
     // Escape abre el menú de pausa y detiene la partida (HU-26), salvo durante un cambio de zona.
-    // Con el inventario abierto, Escape lo cierra (InventoryScene) y no abre la pausa.
+    // Con el inventario o los objetivos abiertos, Escape los cierra y no abre la pausa.
     keyboard.on('keydown-ESC', () => {
-      if (this.changingZone || this.inventoryOpen) {
+      if (this.changingZone || this.overlayOpen) {
         return;
       }
       this.player.stand();
@@ -201,23 +204,24 @@ export class GameScene extends Phaser.Scene {
 
   // Hay algo en curso que impide moverse, abrir la pausa o interactuar.
   private isBusy(): boolean {
-    return this.changingZone || this.dialogOpen || this.inventoryOpen;
+    return this.changingZone || this.dialogOpen || this.overlayOpen;
   }
 
-  // HU-13: I abre el inventario. Mientras está abierto el personaje no se mueve, pero el tiempo sigue.
-  private openInventory(): void {
+  // HU-13 (I) y HU-21 (O): inventario y lista de objetivos. Mientras están abiertos el personaje
+  // no se mueve, pero el tiempo sigue (decisión del autor).
+  private openOverlay(sceneKey: 'InventoryScene' | 'ObjectivesScene'): void {
     if (this.isBusy()) {
       return;
     }
-    this.inventoryOpen = true;
+    this.overlayOpen = true;
     this.player.stand();
     this.indicator.setVisible(false);
-    const data: InventorySceneData = {
+    const data: OverlaySceneData = {
       onClose: () => {
-        this.inventoryOpen = false;
+        this.overlayOpen = false;
       },
     };
-    this.scene.launch('InventoryScene', data);
+    this.scene.launch(sceneKey, data);
   }
 
   // --- Interacciones con E (HU-10 y HU-12) ---
@@ -279,15 +283,58 @@ export class GameScene extends Phaser.Scene {
       id,
       area: bodyArea(npc.body),
       isAvailable: () => true,
-      interact: () =>
-        this.openDialog({
-          speaker: id,
-          title: dialogues[id].name,
-          portrait: `retrato-${id}`,
-          lines: dialogues[id].greeting,
-          typewriter: true,
-        }),
+      interact: () => this.talkTo(id),
     });
+  }
+
+  // HU-11, HU-19 y HU-20: lo que dice el NPC depende del estado de los encargos (src/systems/quests.ts).
+  private talkTo(id: NpcId): void {
+    const conversation = conversationWith(id);
+    const npcDialog = {
+      speaker: id,
+      title: dialogues.npcs[id].name,
+      portrait: `retrato-${id}`,
+      typewriter: true,
+    };
+
+    switch (conversation.kind) {
+      case 'offer': {
+        // HU-19: "Aceptar" o "Rechazar". Al aceptar, el NPC sigue con su diálogo de encargo en curso.
+        const { quest } = conversation;
+        const questLines = dialogues.npcs[id].quests as Record<string, { active: string[] }>;
+        this.openDialog({
+          ...npcDialog,
+          lines: conversation.lines,
+          choice: {
+            options: ['Aceptar', 'Rechazar'],
+            onChoose: (index) => (index === 0 && acceptQuest(quest) ? questLines[quest.id].active : null),
+          },
+        });
+        return;
+      }
+
+      case 'complete': {
+        // HU-20: si la recompensa no cabe en el inventario, el encargo no se completa.
+        if (!canReceiveReward(conversation.quest)) {
+          showMessage(this.scene.get('HudScene'), 'Inventario lleno', MESSAGE_MS, 'top');
+          return;
+        }
+        completeQuest(conversation.quest);
+        showMessage(this.scene.get('HudScene'), 'Encargo completado', MESSAGE_MS, 'top');
+        this.openDialog({ ...npcDialog, lines: conversation.lines });
+        return;
+      }
+
+      case 'give-letter':
+        // Decisión del autor: con el encargo 1 activo, la vendedora entrega la Carta del alcalde.
+        if (this.pickUp('carta-del-alcalde', 1)) {
+          this.openDialog({ ...npcDialog, lines: conversation.lines });
+        }
+        return;
+
+      default:
+        this.openDialog({ ...npcDialog, lines: conversation.lines });
+    }
   }
 
   // HU-12: un cofre se abre una sola vez y da su objeto. Si el inventario está lleno, sigue cerrado.

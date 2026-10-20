@@ -18,8 +18,9 @@ interface SlotView {
   quantity: Phaser.GameObjects.Text;
 }
 
-export interface InventorySceneData {
-  // Se llama al cerrar el inventario.
+// Datos de las pantallas que se abren encima de la partida sin detenerla (inventario y objetivos).
+export interface OverlaySceneData {
+  // Se llama al cerrarla.
   onClose: () => void;
 }
 
@@ -37,7 +38,7 @@ export class InventoryScene extends Phaser.Scene {
     super('InventoryScene');
   }
 
-  init(data: InventorySceneData): void {
+  init(data: OverlaySceneData): void {
     this.onClose = data.onClose;
   }
 
