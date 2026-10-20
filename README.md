@@ -6,7 +6,7 @@ El juego se ha desarrollado a partir de historias de usuario y criterios de acep
 
 ## Enlaces
 
-- **Juego desplegado:** [enlace al juego]
+- **Juego desplegado:** 
 - **Historias de usuario y criterios de aceptación:** [docs/requisitos/](docs/requisitos/)
 - **Casos de prueba:** [docs/casos-de-prueba/](docs/casos-de-prueba/)
 - **Catálogo de bugs sembrados:** [docs/bugs.md](docs/bugs.md)
