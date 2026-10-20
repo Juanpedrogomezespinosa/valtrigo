@@ -70,7 +70,7 @@ Es un proyecto público con un fin doble: servir de base para un curso de testin
 ### Mundo y gráficos
 
 - Gráficos: paquetes Tiny Town y Tiny Dungeon de Kenney (CC0), casillas de 16×16. Están en public/assets/tilesets/ y public/assets/sprites/, sin modificar. public/assets/CREDITOS.md recoge el autor y la licencia de cada recurso (para HU-35).
-- Mapas en formato Tiled (JSON) en public/assets/maps/, con tres capas: `suelo`, `obstaculos` (todo lo que hay en ella será sólido en HU-07) y `puntos` (objetos con nombre, como `inicio`).
+- Mapas en formato Tiled (JSON) en public/assets/maps/, con tres capas: `suelo`, `obstaculos` (todo lo que hay en ella es sólido) y `puntos` (el punto `inicio`, los puntos de llegada y las puertas).
 - `node tools/generar-mapas.mjs` genera la versión inicial de los mapas. Después se pueden retocar en Tiled; volver a ejecutar el script sobrescribe esos cambios.
 - Las 6 zonas son: exterior del pueblo (`plaza`, zona inicial), casa del jugador, tienda, granja (con el granero), lago y torre. Cada zona usa la pista de música con su nombre. src/data/zones.json lista las zonas y su mapa.
 - En la plaza: casa del jugador al oeste, torre del reloj al norte, tienda al este, camino al este hacia la granja y camino al sur hacia el lago. Árboles otoñales, por la historia del juego.
@@ -127,15 +127,26 @@ Es un proyecto público con un fin doble: servir de base para un curso de testin
 
 ### Colisiones (HU-07)
 
-- Todas las casillas de la capa `obstaculos` son sólidas: árboles, edificios, muros, muebles, el pozo y el cartel. El agua irá en esa capa cuando exista el lago (HU-08).
+- Todas las casillas de la capa `obstaculos` son sólidas: árboles, edificios, muros, muebles, el pozo, el cartel y el agua.
 - El cuerpo de colisión del personaje mide 14×14 y está centrado en su casilla de 16×16. Los gráficos tienen bordes transparentes, así que no se ve superposición, y queda algo de margen para pasar por huecos de una casilla.
-- El personaje no puede salir de los límites del mapa. Las salidas de la plaza hacia la granja y el lago se convertirán en cambios de zona en HU-08.
+- El personaje no puede salir de los límites del mapa.
 - Si la dirección que manda (la última pulsada) está bloqueada, se usa la siguiente pulsada que esté libre. Si todas están bloqueadas, el personaje se queda quieto mirando hacia la que manda.
 - Para saber si una dirección está bloqueada se desplaza 1 px el cuerpo y se miran las casillas sólidas que tocaría.
-- Los escenarios 2 (agua) y 4 (NPC) de HU-07 están como `test.fixme` hasta HU-08 (lago) y HU-10 (NPC).
+- El escenario 4 de HU-07 (NPC) está como `test.fixme` hasta HU-10.
 
 ### Cámara (HU-09)
 
 - La cámara sigue al personaje sin retardo (`startFollow`), así que siempre lo mantiene centrado, y redondea a píxeles enteros para que el pixel art no tiemble.
 - Sus límites son los del mapa, ampliados en cada eje en el que el mapa sea más pequeño que la vista (320×180 px de mundo con zoom ×3) y centrados sobre él. En los mapas grandes se detiene en los bordes. En los ejes pequeños no se mueve y la zona queda centrada, con el color de fondo alrededor.
-- El escenario 4 de HU-09 (cámara tras cruzar una puerta) está como `test.fixme` hasta HU-08.
+
+### Cambios de zona (HU-08)
+
+- Las 6 zonas y sus conexiones: plaza ↔ casa, plaza ↔ tienda y plaza ↔ torre (puertas de los edificios), plaza ↔ granja (camino del este) y plaza ↔ lago (camino del sur). Las salidas por los caminos funcionan como puertas: un rectángulo en el borde del mapa.
+- Mapas nuevos: tienda (12×9) y torre (10×12), que son interiores más pequeños que la pantalla; granja (30×22), con el granero y un cercado delante; y lago (30×22), con el lago en el centro, bosque alrededor y un claro al este. El granero no tiene puerta, porque no se puede entrar.
+- **El agua no está en los paquetes de Kenney.** public/assets/tilesets/agua.png se genera con `node tools/generar-agua.mjs` (centro, brillo y orillas) con la paleta de Kenney. Los mapas usan ahora tres hojas: Tiny Town, Tiny Dungeon y agua.
+- En Tiled, cada puerta es un rectángulo llamado `puerta` en la capa `puntos`, con las propiedades `zona` (destino) y `direccion` (hacia dónde hay que caminar para cruzarla). Al llegar, el personaje aparece en el punto `llegada-<zona de origen>` del mapa de destino, mirando hacia su propiedad `mirando` (alejándose de la puerta).
+- Una puerta se cruza al caminar hacia ella (el personaje mira en su `direccion`) cuando su cuerpo la toca con al menos la mitad de su anchura. Las puertas de los edificios son casillas sólidas: basta con llegar a ellas, sin alinearse al píxel.
+- Transición: fundido a negro de 0,5 s (`ZONE_FADE_MS`) y, al terminar, la nueva zona aparece directamente, sin fundido de entrada, porque la historia solo describe el fundido a negro. Durante el fundido el personaje no se mueve y Escape no abre la pausa.
+- Las teclas que se mantienen pulsadas al cruzar no siguen moviendo al personaje en la nueva zona: hay que volver a pulsarlas. Así no se vuelve a cruzar la puerta sin querer.
+- **El paso de tiempo de Phaser no se suaviza** (`fps.smoothStep: false` en main.ts). Con suavizado, si el equipo va lento, el reloj de Phaser va más despacio que el real y las duraciones de las historias (fundidos y, en HU-22, el reloj del juego) se alargan.
+- Los tests que miden tiempos (el mensaje de 2 s y el fundido de 0,5 s) miden dentro del navegador (`measureTextVisible` y `measureZoneChange` en tests/e2e/helpers.ts), para no depender de la latencia entre Playwright y el navegador.

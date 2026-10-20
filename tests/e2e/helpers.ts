@@ -245,3 +245,135 @@ export async function cameraInfo(page: Page): Promise<CameraInfo> {
     };
   });
 }
+
+// --- Cambios de zona ---
+
+export async function isChangingZone(page: Page): Promise<boolean> {
+  return page.evaluate(() => {
+    const game = (window as unknown as GameWindow).game;
+    const scene = game.scene.getScene('GameScene') as unknown as { isChangingZone(): boolean };
+    return game.scene.isActive('GameScene') && scene.isChangingZone();
+  });
+}
+
+export async function playerTile(page: Page): Promise<{ x: number; y: number }> {
+  return page.evaluate(() => {
+    const game = (window as unknown as GameWindow).game;
+    const scene = game.scene.getScene('GameScene') as unknown as { player: { getTilePosition(): { x: number; y: number } } };
+    return scene.player.getTilePosition();
+  });
+}
+
+// Espera a que el personaje esté en la zona indicada, con el cambio de zona terminado.
+export async function waitForZone(page: Page, zone: string): Promise<void> {
+  await expect
+    .poll(async () => (await currentGameState(page))?.zone === zone && !(await isChangingZone(page)), {
+      timeout: 5000,
+      intervals: [25],
+    })
+    .toBe(true);
+}
+
+// --- Mediciones de tiempo ---
+// Se miden dentro del navegador, fotograma a fotograma. Si se midieran desde Playwright, cada consulta
+// tardaría lo que tarde la comunicación con el navegador, que con varios tests en paralelo puede ser mucho.
+// La medición empieza antes de `trigger`, para no perderse el principio.
+
+// Cuánto tiempo (ms) está visible un texto en una escena desde que aparece hasta que desaparece.
+export async function measureTextVisible(
+  page: Page,
+  sceneKey: string,
+  text: string,
+  trigger: () => Promise<void>,
+): Promise<number> {
+  const measuring = page.evaluate(
+    ({ sceneKey, text }) =>
+      new Promise<number>((resolve) => {
+        const game = (window as unknown as GameWindow).game;
+        const isVisible = () =>
+          game.scene
+            .getScene(sceneKey)
+            .children.list.some(
+              (child) =>
+                child.type === 'Text' &&
+                (child as import('phaser').GameObjects.Text).text === text &&
+                (child as import('phaser').GameObjects.Text).visible,
+            );
+        let shownAt: number | null = null;
+        const tick = () => {
+          const now = performance.now();
+          const visible = isVisible();
+          if (shownAt === null && visible) shownAt = now;
+          if (shownAt !== null && !visible) return resolve(now - shownAt);
+          requestAnimationFrame(tick);
+        };
+        tick();
+      }),
+    { sceneKey, text },
+  );
+  await trigger();
+  return measuring;
+}
+
+export interface ZoneChangeMeasure {
+  // Desde que empieza el fundido hasta que el personaje está en la nueva zona.
+  duration: number;
+  // Estado del fundido a mitad de la transición.
+  halfway: { running: boolean; towardsBlack: boolean; progress: number };
+  // Posiciones del personaje durante el fundido.
+  positions: { x: number; y: number }[];
+  // Momentos (ms desde el inicio del fundido) en que se pulsó una flecha durante el fundido.
+  arrowPresses: number[];
+}
+
+// Observa el próximo cambio de zona: empieza a medir y después ejecuta `trigger`.
+export async function measureZoneChange(page: Page, trigger: () => Promise<void>): Promise<ZoneChangeMeasure> {
+  const measuring = page.evaluate(
+    () =>
+      new Promise<ZoneChangeMeasure>((resolve) => {
+        const game = (window as unknown as GameWindow).game;
+        type Scene = import('phaser').Scene & {
+          isChangingZone(): boolean;
+          player: { x: number; y: number };
+        };
+        const scene = () => game.scene.getScene('GameScene') as Scene;
+        const changing = () => game.scene.isActive('GameScene') && scene().isChangingZone();
+        let start: number | null = null;
+        let halfway: ZoneChangeMeasure['halfway'] | null = null;
+        const positions: ZoneChangeMeasure['positions'] = [];
+        const arrowPresses: number[] = [];
+        let leftOldZone = false;
+
+        const onKey = (event: KeyboardEvent) => {
+          if (start !== null && changing() && event.key.startsWith('Arrow')) arrowPresses.push(performance.now() - start);
+        };
+        window.addEventListener('keydown', onKey);
+
+        const tick = () => {
+          const now = performance.now();
+          if (start === null) {
+            if (changing()) start = now;
+          } else if (!leftOldZone) {
+            if (changing()) {
+              positions.push({ x: scene().player.x, y: scene().player.y });
+              if (halfway === null && now - start >= 250) {
+                const effect = scene().cameras.main.fadeEffect;
+                halfway = { running: effect.isRunning, towardsBlack: effect.direction, progress: effect.progress };
+              }
+            } else {
+              leftOldZone = true;
+            }
+          }
+          // Termina cuando la escena vuelve a estar activa en la nueva zona.
+          if (leftOldZone && game.scene.isActive('GameScene') && !scene().isChangingZone()) {
+            window.removeEventListener('keydown', onKey);
+            return resolve({ duration: now - start!, halfway: halfway!, positions, arrowPresses });
+          }
+          requestAnimationFrame(tick);
+        };
+        tick();
+      }),
+  );
+  await trigger();
+  return measuring;
+}

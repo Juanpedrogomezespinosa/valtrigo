@@ -36,3 +36,6 @@ export const MAX_ENERGY = 100;
 
 // Velocidad del personaje en píxeles por segundo: 4 casillas por segundo (HU-06).
 export const PLAYER_SPEED = 64;
+
+// Duración del fundido a negro al cruzar una puerta (HU-08).
+export const ZONE_FADE_MS = 500;

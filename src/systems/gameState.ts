@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { NEW_GAME } from '../config';
-import { findMapPoint, type TilePosition, type ZoneId } from './zones';
+import { findMapPoint, pointTile, type TilePosition, type ZoneId } from './zones';
 
 export interface InventoryItem {
   item: string;
@@ -26,7 +26,7 @@ let current: GameState | null = null;
 export function createNewGameState(scene: Phaser.Scene): GameState {
   return {
     zone: NEW_GAME.zone,
-    position: findMapPoint(scene, NEW_GAME.zone, 'inicio'),
+    position: pointTile(findMapPoint(scene, NEW_GAME.zone, 'inicio')),
     day: NEW_GAME.day,
     minutes: NEW_GAME.minutes,
     money: NEW_GAME.money,

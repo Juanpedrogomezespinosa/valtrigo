@@ -10,7 +10,7 @@
  "tilewidth": 16,
  "tileheight": 16,
  "nextlayerid": 4,
- "nextobjectid": 2,
+ "nextobjectid": 12,
  "layers": [
   {
    "id": 1,
@@ -2459,6 +2459,216 @@
      "height": 0,
      "rotation": 0,
      "visible": true
+    },
+    {
+     "id": 2,
+     "name": "llegada-casa",
+     "type": "",
+     "point": true,
+     "x": 104,
+     "y": 184,
+     "width": 0,
+     "height": 0,
+     "rotation": 0,
+     "visible": true,
+     "properties": [
+      {
+       "name": "mirando",
+       "type": "string",
+       "value": "down"
+      }
+     ]
+    },
+    {
+     "id": 3,
+     "name": "llegada-torre",
+     "type": "",
+     "point": true,
+     "x": 312,
+     "y": 120,
+     "width": 0,
+     "height": 0,
+     "rotation": 0,
+     "visible": true,
+     "properties": [
+      {
+       "name": "mirando",
+       "type": "string",
+       "value": "down"
+      }
+     ]
+    },
+    {
+     "id": 4,
+     "name": "llegada-tienda",
+     "type": "",
+     "point": true,
+     "x": 504,
+     "y": 184,
+     "width": 0,
+     "height": 0,
+     "rotation": 0,
+     "visible": true,
+     "properties": [
+      {
+       "name": "mirando",
+       "type": "string",
+       "value": "down"
+      }
+     ]
+    },
+    {
+     "id": 5,
+     "name": "llegada-granja",
+     "type": "",
+     "point": true,
+     "x": 616,
+     "y": 232,
+     "width": 0,
+     "height": 0,
+     "rotation": 0,
+     "visible": true,
+     "properties": [
+      {
+       "name": "mirando",
+       "type": "string",
+       "value": "left"
+      }
+     ]
+    },
+    {
+     "id": 6,
+     "name": "llegada-lago",
+     "type": "",
+     "point": true,
+     "x": 328,
+     "y": 456,
+     "width": 0,
+     "height": 0,
+     "rotation": 0,
+     "visible": true,
+     "properties": [
+      {
+       "name": "mirando",
+       "type": "string",
+       "value": "up"
+      }
+     ]
+    },
+    {
+     "id": 7,
+     "name": "puerta",
+     "type": "",
+     "x": 96,
+     "y": 160,
+     "width": 16,
+     "height": 16,
+     "rotation": 0,
+     "visible": true,
+     "properties": [
+      {
+       "name": "zona",
+       "type": "string",
+       "value": "casa"
+      },
+      {
+       "name": "direccion",
+       "type": "string",
+       "value": "up"
+      }
+     ]
+    },
+    {
+     "id": 8,
+     "name": "puerta",
+     "type": "",
+     "x": 304,
+     "y": 96,
+     "width": 16,
+     "height": 16,
+     "rotation": 0,
+     "visible": true,
+     "properties": [
+      {
+       "name": "zona",
+       "type": "string",
+       "value": "torre"
+      },
+      {
+       "name": "direccion",
+       "type": "string",
+       "value": "up"
+      }
+     ]
+    },
+    {
+     "id": 9,
+     "name": "puerta",
+     "type": "",
+     "x": 496,
+     "y": 160,
+     "width": 16,
+     "height": 16,
+     "rotation": 0,
+     "visible": true,
+     "properties": [
+      {
+       "name": "zona",
+       "type": "string",
+       "value": "tienda"
+      },
+      {
+       "name": "direccion",
+       "type": "string",
+       "value": "up"
+      }
+     ]
+    },
+    {
+     "id": 10,
+     "name": "puerta",
+     "type": "",
+     "x": 624,
+     "y": 208,
+     "width": 16,
+     "height": 48,
+     "rotation": 0,
+     "visible": true,
+     "properties": [
+      {
+       "name": "zona",
+       "type": "string",
+       "value": "granja"
+      },
+      {
+       "name": "direccion",
+       "type": "string",
+       "value": "right"
+      }
+     ]
+    },
+    {
+     "id": 11,
+     "name": "puerta",
+     "type": "",
+     "x": 304,
+     "y": 464,
+     "width": 48,
+     "height": 16,
+     "rotation": 0,
+     "visible": true,
+     "properties": [
+      {
+       "name": "zona",
+       "type": "string",
+       "value": "lago"
+      },
+      {
+       "name": "direccion",
+       "type": "string",
+       "value": "down"
+      }
+     ]
     }
    ]
   }
@@ -2487,6 +2697,19 @@
    "tileheight": 16,
    "tilecount": 132,
    "columns": 12,
+   "margin": 0,
+   "spacing": 0
+  },
+  {
+   "firstgid": 265,
+   "name": "agua",
+   "image": "../tilesets/agua.png",
+   "imagewidth": 160,
+   "imageheight": 16,
+   "tilewidth": 16,
+   "tileheight": 16,
+   "tilecount": 10,
+   "columns": 10,
    "margin": 0,
    "spacing": 0
   }

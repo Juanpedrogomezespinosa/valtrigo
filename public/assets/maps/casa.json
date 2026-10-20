@@ -10,7 +10,7 @@
  "tilewidth": 16,
  "tileheight": 16,
  "nextlayerid": 4,
- "nextobjectid": 1,
+ "nextobjectid": 3,
  "layers": [
   {
    "id": 1,
@@ -263,7 +263,50 @@
    "visible": true,
    "x": 0,
    "y": 0,
-   "objects": []
+   "objects": [
+    {
+     "id": 1,
+     "name": "llegada-plaza",
+     "type": "",
+     "point": true,
+     "x": 104,
+     "y": 120,
+     "width": 0,
+     "height": 0,
+     "rotation": 0,
+     "visible": true,
+     "properties": [
+      {
+       "name": "mirando",
+       "type": "string",
+       "value": "up"
+      }
+     ]
+    },
+    {
+     "id": 2,
+     "name": "puerta",
+     "type": "",
+     "x": 96,
+     "y": 128,
+     "width": 16,
+     "height": 16,
+     "rotation": 0,
+     "visible": true,
+     "properties": [
+      {
+       "name": "zona",
+       "type": "string",
+       "value": "plaza"
+      },
+      {
+       "name": "direccion",
+       "type": "string",
+       "value": "down"
+      }
+     ]
+    }
+   ]
   }
  ],
  "tilesets": [
@@ -290,6 +333,19 @@
    "tileheight": 16,
    "tilecount": 132,
    "columns": 12,
+   "margin": 0,
+   "spacing": 0
+  },
+  {
+   "firstgid": 265,
+   "name": "agua",
+   "image": "../tilesets/agua.png",
+   "imagewidth": 160,
+   "imageheight": 16,
+   "tilewidth": 16,
+   "tileheight": 16,
+   "tilecount": 10,
+   "columns": 10,
    "margin": 0,
    "spacing": 0
   }

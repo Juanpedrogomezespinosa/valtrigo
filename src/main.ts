@@ -19,6 +19,9 @@ const game = new Phaser.Game({
     default: 'arcade',
     arcade: { debug: false },
   },
+  // Sin suavizado del paso de tiempo: si el equipo va lento, Phaser no "frena" su reloj,
+  // y las duraciones de las historias (fundidos, reloj del juego) siguen el tiempo real.
+  fps: { smoothStep: false },
   scale: {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,

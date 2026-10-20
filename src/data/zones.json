@@ -6,5 +6,21 @@
   "casa": {
     "name": "Casa del jugador",
     "map": "assets/maps/casa.json"
+  },
+  "tienda": {
+    "name": "Tienda",
+    "map": "assets/maps/tienda.json"
+  },
+  "torre": {
+    "name": "Torre del reloj",
+    "map": "assets/maps/torre.json"
+  },
+  "granja": {
+    "name": "Granja",
+    "map": "assets/maps/granja.json"
+  },
+  "lago": {
+    "name": "Lago",
+    "map": "assets/maps/lago.json"
   }
 }

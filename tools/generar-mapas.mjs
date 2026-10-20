@@ -8,10 +8,27 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 const OUTPUT_DIR = 'public/assets/maps';
 const TILE_SIZE = 16;
 
-// Los mapas usan dos hojas: Tiny Town (exteriores) y Tiny Dungeon (interiores).
-// En los mapas, las casillas de Tiny Dungeon van después de las 132 de Tiny Town.
+// Los mapas usan tres hojas: Tiny Town (exteriores), Tiny Dungeon (interiores) y agua (generada por
+// tools/generar-agua.mjs). En los mapas, las casillas de cada hoja van después de las de la anterior.
 const TOWN_TILE_COUNT = 132;
+const DUNGEON_TILE_COUNT = 132;
+const WATER_TILE_COUNT = 10;
 const dungeon = (index) => TOWN_TILE_COUNT + index;
+const water = (index) => TOWN_TILE_COUNT + DUNGEON_TILE_COUNT + index;
+
+// Casillas de agua: centro y orillas (ver tools/generar-agua.mjs).
+const WATER = {
+  center: water(0),
+  sparkle: water(1),
+  top: water(2),
+  bottom: water(3),
+  left: water(4),
+  right: water(5),
+  topLeft: water(6),
+  topRight: water(7),
+  bottomLeft: water(8),
+  bottomRight: water(9),
+};
 
 // Casillas de Tiny Town (índice en la hoja, empezando en 0).
 const TILE = {
@@ -35,6 +52,16 @@ const TILE = {
   bush: 5,
   well: 104,
   sign: 83,
+  // Cercado de piedra clara (granero): esquinas, bordes y suelo.
+  penTopLeft: 96,
+  penTop: 97,
+  penTopRight: 98,
+  penLeft: 108,
+  penFloor: 109,
+  penRight: 110,
+  penBottomLeft: 120,
+  penBottom: 121,
+  penBottomRight: 122,
 };
 
 // Casillas de Tiny Dungeon para interiores.
@@ -48,6 +75,10 @@ const INTERIOR = {
   table: dungeon(72),
   chair: dungeon(73),
   barrel: dungeon(82),
+  shopFloor: dungeon(0),
+  shelfWide: dungeon(75),
+  towerFloor: dungeon(42),
+  workbench: dungeon(74),
 };
 
 // Edificios: filas de casillas, de arriba abajo. La puerta forma parte de la fila inferior.
@@ -56,6 +87,12 @@ const BUILDINGS = {
     [52, 53, 53, 54],
     [64, 65, 65, 66],
     [84, 85, 73, 84],
+  ],
+  // Granero: no se puede entrar, así que no tiene puerta.
+  granero: [
+    [52, 53, 53, 53, 54],
+    [64, 65, 65, 65, 66],
+    [72, 73, 84, 73, 75],
   ],
   tienda: [
     [48, 49, 49, 49, 50],
@@ -85,8 +122,29 @@ function createMap(width, height) {
     ground: new Array(width * height).fill(-1),
     obstacles: new Array(width * height).fill(-1),
     dirt: new Set(),
+    water: new Set(),
+    // Puntos con nombre (inicio y llegadas) y puertas, en casillas.
     points: [],
+    doors: [],
   };
+}
+
+// Puerta o salida hacia otra zona (HU-08). Se cruza caminando hacia `direction` sobre ella.
+function addDoor(map, { x, y, width = 1, height = 1, zone, direction }) {
+  map.doors.push({ x, y, width, height, zone, direction });
+}
+
+// Punto donde aparece el personaje al llegar desde otra zona, mirando hacia `facing`.
+function addArrival(map, { from, x, y, facing }) {
+  map.points.push({ name: `llegada-${from}`, x, y, facing });
+}
+
+function addWater(map, x1, y1, x2, y2) {
+  for (let y = y1; y <= y2; y++) {
+    for (let x = x1; x <= x2; x++) {
+      if (inside(map, x, y)) map.water.add(key(x, y));
+    }
+  }
 }
 
 const key = (x, y) => `${x},${y}`;
@@ -130,9 +188,29 @@ function dirtTile(map, x, y) {
   return TILE.dirt;
 }
 
+// Elige la casilla de agua según qué vecinos son tierra firme, para dibujar la orilla.
+function waterTile(map, x, y) {
+  const isWater = (nx, ny) => map.water.has(key(nx, ny));
+  const top = !isWater(x, y - 1);
+  const bottom = !isWater(x, y + 1);
+  const left = !isWater(x - 1, y);
+  const right = !isWater(x + 1, y);
+  if (top && left) return WATER.topLeft;
+  if (top && right) return WATER.topRight;
+  if (bottom && left) return WATER.bottomLeft;
+  if (bottom && right) return WATER.bottomRight;
+  if (top) return WATER.top;
+  if (bottom) return WATER.bottom;
+  if (left) return WATER.left;
+  if (right) return WATER.right;
+  return hash(x, y) % 6 === 0 ? WATER.sparkle : WATER.center;
+}
+
 function paintGround(map) {
   for (let y = 0; y < map.height; y++) {
     for (let x = 0; x < map.width; x++) {
+      // El agua es un obstáculo (HU-07): va en la capa de obstáculos.
+      if (map.water.has(key(x, y))) setTile(map.obstacles, map, x, y, waterTile(map, x, y));
       if (map.dirt.has(key(x, y))) {
         setTile(map.ground, map, x, y, dirtTile(map, x, y));
         continue;
@@ -147,7 +225,7 @@ function paintGround(map) {
 function addTrees(map, x1, y1, x2, y2, density, reserved = new Set()) {
   for (let y = y1; y <= y2; y++) {
     for (let x = x1; x <= x2; x++) {
-      if (!inside(map, x, y) || map.dirt.has(key(x, y)) || reserved.has(key(x, y))) continue;
+      if (!inside(map, x, y) || map.dirt.has(key(x, y)) || map.water.has(key(x, y)) || reserved.has(key(x, y))) continue;
       if (getTile(map.obstacles, map, x, y) !== -1) continue;
       const h = hash(x + 101, y + 211) % 100;
       if (h < density) setTile(map.obstacles, map, x, y, [TILE.tree, TILE.tree, TILE.autumnTree, TILE.smallAutumnTree][h % 4]);
@@ -169,7 +247,7 @@ function toTiled(map) {
     tilewidth: TILE_SIZE,
     tileheight: TILE_SIZE,
     nextlayerid: 4,
-    nextobjectid: map.points.length + 1,
+    nextobjectid: map.points.length + map.doors.length + 1,
     layers: [
       { id: 1, name: 'suelo', type: 'tilelayer', ...layerBase(map), data: map.ground.map(gid) },
       { id: 2, name: 'obstaculos', type: 'tilelayer', ...layerBase(map), data: map.obstacles.map(gid) },
@@ -182,19 +260,35 @@ function toTiled(map) {
         visible: true,
         x: 0,
         y: 0,
-        objects: map.points.map((point, index) => ({
-          id: index + 1,
-          name: point.name,
-          type: '',
-          point: true,
-          // Centro de la casilla.
-          x: point.x * TILE_SIZE + TILE_SIZE / 2,
-          y: point.y * TILE_SIZE + TILE_SIZE / 2,
-          width: 0,
-          height: 0,
-          rotation: 0,
-          visible: true,
-        })),
+        objects: [
+          ...map.points.map((point) => ({
+            name: point.name,
+            type: '',
+            point: true,
+            // Centro de la casilla.
+            x: point.x * TILE_SIZE + TILE_SIZE / 2,
+            y: point.y * TILE_SIZE + TILE_SIZE / 2,
+            width: 0,
+            height: 0,
+            rotation: 0,
+            visible: true,
+            ...(point.facing && { properties: [{ name: 'mirando', type: 'string', value: point.facing }] }),
+          })),
+          ...map.doors.map((door) => ({
+            name: 'puerta',
+            type: '',
+            x: door.x * TILE_SIZE,
+            y: door.y * TILE_SIZE,
+            width: door.width * TILE_SIZE,
+            height: door.height * TILE_SIZE,
+            rotation: 0,
+            visible: true,
+            properties: [
+              { name: 'zona', type: 'string', value: door.zone },
+              { name: 'direccion', type: 'string', value: door.direction },
+            ],
+          })),
+        ].map((object, index) => ({ id: index + 1, ...object })),
       },
     ],
     tilesets: [
@@ -219,8 +313,21 @@ function toTiled(map) {
         imageheight: 176,
         tilewidth: TILE_SIZE,
         tileheight: TILE_SIZE,
-        tilecount: 132,
+        tilecount: DUNGEON_TILE_COUNT,
         columns: 12,
+        margin: 0,
+        spacing: 0,
+      },
+      {
+        firstgid: TOWN_TILE_COUNT + DUNGEON_TILE_COUNT + 1,
+        name: 'agua',
+        image: '../tilesets/agua.png',
+        imagewidth: WATER_TILE_COUNT * TILE_SIZE,
+        imageheight: TILE_SIZE,
+        tilewidth: TILE_SIZE,
+        tileheight: TILE_SIZE,
+        tilecount: WATER_TILE_COUNT,
+        columns: WATER_TILE_COUNT,
         margin: 0,
         spacing: 0,
       },
@@ -253,6 +360,18 @@ function plaza() {
 
   map.points.push({ name: 'inicio', x: 20, y: 17 });
 
+  // Puertas de los edificios (se cruzan caminando hacia arriba) y salidas por los caminos.
+  addDoor(map, { x: 6, y: 10, zone: 'casa', direction: 'up' });
+  addArrival(map, { from: 'casa', x: 6, y: 11, facing: 'down' });
+  addDoor(map, { x: 19, y: 6, zone: 'torre', direction: 'up' });
+  addArrival(map, { from: 'torre', x: 19, y: 7, facing: 'down' });
+  addDoor(map, { x: 31, y: 10, zone: 'tienda', direction: 'up' });
+  addArrival(map, { from: 'tienda', x: 31, y: 11, facing: 'down' });
+  addDoor(map, { x: 39, y: 13, height: 3, zone: 'granja', direction: 'right' });
+  addArrival(map, { from: 'granja', x: 38, y: 14, facing: 'left' });
+  addDoor(map, { x: 19, y: 29, width: 3, zone: 'lago', direction: 'down' });
+  addArrival(map, { from: 'lago', x: 20, y: 28, facing: 'up' });
+
   // Borde de árboles, con huecos para las salidas.
   const exits = new Set();
   for (let x = 36; x < 40; x++) for (let y = 13; y <= 15; y++) exits.add(key(x, y));
@@ -273,32 +392,127 @@ function plaza() {
   return map;
 }
 
-// Casa del jugador: interior más pequeño que la pantalla (HU-09).
-// Muros alrededor y la puerta de salida en el muro inferior.
-function casa() {
-  const map = createMap(12, 9);
+// Interior: muros alrededor y la puerta de salida a la plaza en el centro del muro inferior.
+// Los interiores son más pequeños que la pantalla (HU-09).
+function interior(width, height, floor, floorDetail) {
+  const map = createMap(width, height);
 
   for (let y = 0; y < map.height; y++) {
     for (let x = 0; x < map.width; x++) {
       const isWall = x === 0 || y === 0 || x === map.width - 1 || y === map.height - 1;
       if (y === 0) setTile(map.obstacles, map, x, y, INTERIOR.wallTop);
       else if (isWall || y === 1) setTile(map.obstacles, map, x, y, INTERIOR.wall);
-      setTile(map.ground, map, x, y, hash(x, y) % 5 === 0 ? INTERIOR.floorDetail : INTERIOR.floor);
+      setTile(map.ground, map, x, y, hash(x, y) % 5 === 0 ? floorDetail : floor);
     }
   }
 
-  setTile(map.obstacles, map, 6, 8, INTERIOR.door);
+  const doorX = Math.floor(width / 2);
+  setTile(map.obstacles, map, doorX, height - 1, INTERIOR.door);
+  addDoor(map, { x: doorX, y: height - 1, zone: 'plaza', direction: 'down' });
+  addArrival(map, { from: 'plaza', x: doorX, y: height - 2, facing: 'up' });
+
+  return map;
+}
+
+// Casa del jugador.
+function casa() {
+  const map = interior(12, 9, INTERIOR.floor, INTERIOR.floorDetail);
   setTile(map.obstacles, map, 2, 1, INTERIOR.shelf);
   setTile(map.obstacles, map, 3, 1, INTERIOR.shelf);
   setTile(map.obstacles, map, 8, 4, INTERIOR.table);
   setTile(map.obstacles, map, 8, 5, INTERIOR.chair);
   setTile(map.obstacles, map, 10, 2, INTERIOR.barrel);
+  return map;
+}
 
+// Tienda: estanterías en el muro del fondo y el mostrador en el centro.
+function tienda() {
+  const map = interior(12, 9, INTERIOR.shopFloor, INTERIOR.shopFloor);
+  for (let x = 2; x <= 9; x++) setTile(map.obstacles, map, x, 1, x % 2 === 0 ? INTERIOR.shelf : INTERIOR.shelfWide);
+  for (let x = 3; x <= 8; x++) setTile(map.obstacles, map, x, 4, INTERIOR.table);
+  setTile(map.obstacles, map, 1, 2, INTERIOR.barrel);
+  setTile(map.obstacles, map, 10, 2, INTERIOR.barrel);
+  return map;
+}
+
+// Torre del reloj: taller de la relojera.
+function torre() {
+  const map = interior(10, 12, INTERIOR.towerFloor, INTERIOR.floor);
+  setTile(map.obstacles, map, 2, 1, INTERIOR.shelf);
+  setTile(map.obstacles, map, 7, 1, INTERIOR.shelf);
+  setTile(map.obstacles, map, 3, 4, INTERIOR.workbench);
+  setTile(map.obstacles, map, 8, 2, INTERIOR.barrel);
+  return map;
+}
+
+// Granja: se llega por el camino del oeste desde la plaza.
+// Granero con un cercado delante, y campos de cultivo.
+function granja() {
+  const map = createMap(30, 22);
+
+  addDirt(map, 0, 10, 14, 12); // camino desde la plaza
+  addDirt(map, 5, 9, 7, 9); // entrada del cercado
+  addDirt(map, 17, 4, 22, 7); // campos
+  addDirt(map, 17, 14, 22, 17);
+  addDirt(map, 24, 4, 27, 17);
+
+  placeBuilding(map, BUILDINGS.granero, 4, 3);
+  // Cercado del granero (casillas 4 a 8, filas 6 a 9), con la entrada abajo en el centro.
+  const pen = [
+    [TILE.penTopLeft, TILE.penTop, TILE.penTop, TILE.penTop, TILE.penTopRight],
+    [TILE.penLeft, -1, -1, -1, TILE.penRight],
+    [TILE.penLeft, -1, -1, -1, TILE.penRight],
+    [TILE.penBottomLeft, TILE.penBottom, -1, TILE.penBottom, TILE.penBottomRight],
+  ];
+  placeBuilding(map, pen, 4, 6);
+
+  addDoor(map, { x: 0, y: 10, height: 3, zone: 'plaza', direction: 'left' });
+  addArrival(map, { from: 'plaza', x: 1, y: 11, facing: 'right' });
+
+  const exits = new Set();
+  for (let x = 0; x < 2; x++) for (let y = 10; y <= 12; y++) exits.add(key(x, y));
+  addTrees(map, 0, 0, 29, 1, 100, exits);
+  addTrees(map, 0, 20, 29, 21, 100, exits);
+  addTrees(map, 0, 0, 1, 21, 100, exits);
+  addTrees(map, 28, 0, 29, 21, 100, exits);
+  addTrees(map, 2, 14, 14, 19, 30);
+
+  paintGround(map);
+  // Suelo del cercado (por debajo de la capa de obstáculos, que queda vacía en su interior).
+  for (let y = 7; y <= 9; y++) for (let x = 5; x <= 7; x++) setTile(map.ground, map, x, y, TILE.penFloor);
+  return map;
+}
+
+// Lago: se llega por el camino del norte desde la plaza. Bosque alrededor y un claro al este.
+function lago() {
+  const map = createMap(30, 22);
+
+  addDirt(map, 14, 0, 16, 6); // camino desde la plaza
+  addWater(map, 6, 8, 23, 16);
+  for (const [x, y] of [[6, 8], [7, 8], [6, 9], [23, 8], [22, 8], [23, 9], [6, 16], [7, 16], [23, 16], [22, 16]]) {
+    map.water.delete(key(x, y));
+  }
+
+  addDoor(map, { x: 14, y: 0, width: 3, zone: 'plaza', direction: 'up' });
+  addArrival(map, { from: 'plaza', x: 15, y: 1, facing: 'down' });
+
+  // Sin árboles: el camino, una franja de una casilla alrededor del lago y el claro del este.
+  const reserved = new Set();
+  for (let y = 7; y <= 17; y++) for (let x = 5; x <= 24; x++) reserved.add(key(x, y));
+  for (let y = 9; y <= 14; y++) for (let x = 25; x <= 27; x++) reserved.add(key(x, y));
+  for (let x = 14; x <= 16; x++) for (let y = 0; y < 2; y++) reserved.add(key(x, y));
+  addTrees(map, 0, 0, 29, 1, 100, reserved);
+  addTrees(map, 0, 20, 29, 21, 100, reserved);
+  addTrees(map, 0, 0, 1, 21, 100, reserved);
+  addTrees(map, 28, 0, 29, 21, 100, reserved);
+  addTrees(map, 2, 2, 27, 19, 40, reserved);
+
+  paintGround(map);
   return map;
 }
 
 mkdirSync(OUTPUT_DIR, { recursive: true });
-for (const [name, build] of Object.entries({ plaza, casa })) {
+for (const [name, build] of Object.entries({ plaza, casa, tienda, torre, granja, lago })) {
   writeFileSync(`${OUTPUT_DIR}/${name}.json`, JSON.stringify(toTiled(build()), null, 1) + '\n');
   console.log(`${OUTPUT_DIR}/${name}.json`);
 }

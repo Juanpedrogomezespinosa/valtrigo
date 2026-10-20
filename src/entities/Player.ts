@@ -34,8 +34,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
   private keys: { key: Phaser.Input.Keyboard.Key; direction: Direction }[];
   private obstacles: Phaser.Tilemaps.TilemapLayer | null = null;
 
-  constructor(scene: Phaser.Scene, position: TilePosition) {
-    super(scene, position.x * TILE_SIZE + TILE_SIZE / 2, position.y * TILE_SIZE + TILE_SIZE / 2, 'jugador', 0);
+  constructor(scene: Phaser.Scene, position: TilePosition, facing: Direction = 'down') {
+    super(scene, position.x * TILE_SIZE + TILE_SIZE / 2, position.y * TILE_SIZE + TILE_SIZE / 2, 'jugador', DIRECTION_COLUMN[facing]);
+    this.facing = facing;
     scene.add.existing(this);
     scene.physics.add.existing(this);
     this.body.setSize(BODY_SIZE, BODY_SIZE);

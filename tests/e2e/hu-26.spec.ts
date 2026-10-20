@@ -9,6 +9,7 @@ import {
   openPause,
   sceneTexts,
   startNewGame,
+  measureTextVisible,
 } from './helpers';
 
 // HU-26. Abrir el menú de pausa
@@ -30,16 +31,12 @@ test('Escenario 2: Guardar desde la pausa', async ({ page }) => {
   await startNewGame(page);
   await openPause(page);
 
-  await choosePauseOption(page, 'Guardar partida');
-  const shownAt = Date.now();
-
-  expect(await sceneTexts(page, 'PauseScene')).toContain('Partida guardada');
-
-  // Sigue visible poco antes de los 2 segundos y desaparece poco después.
-  await page.waitForTimeout(1700 - (Date.now() - shownAt));
-  expect(await sceneTexts(page, 'PauseScene')).toContain('Partida guardada');
-  await page.waitForTimeout(2400 - (Date.now() - shownAt));
-  expect(await sceneTexts(page, 'PauseScene')).not.toContain('Partida guardada');
+  // "Partida guardada" se muestra durante 2 segundos.
+  const visibleFor = await measureTextVisible(page, 'PauseScene', 'Partida guardada', () =>
+    choosePauseOption(page, 'Guardar partida'),
+  );
+  expect(visibleFor).toBeGreaterThanOrEqual(1900);
+  expect(visibleFor).toBeLessThan(2400);
 });
 
 test('Escenario 3: Salir al menú principal sin guardar', async ({ page }) => {

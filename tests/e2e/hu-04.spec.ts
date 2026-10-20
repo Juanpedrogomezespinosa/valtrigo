@@ -13,6 +13,7 @@ import {
   setSavedGame,
   startNewGame,
   waitForScene,
+  measureTextVisible,
 } from './helpers';
 
 // HU-04. Guardar partida desde el menú principal
@@ -29,16 +30,13 @@ test('Escenario 1: Guardar una partida en curso', async ({ page }) => {
   await startNewGame(page);
   await openPause(page);
 
-  await choosePauseOption(page, 'Guardar partida');
-  const shownAt = Date.now();
-
-  expect(await sceneTexts(page, 'PauseScene')).toContain('Partida guardada');
+  // "Partida guardada" se muestra durante 2 segundos.
+  const visibleFor = await measureTextVisible(page, 'PauseScene', 'Partida guardada', () =>
+    choosePauseOption(page, 'Guardar partida'),
+  );
+  expect(visibleFor).toBeGreaterThanOrEqual(1900);
+  expect(visibleFor).toBeLessThan(2400);
   expect(await readSavedGame(page)).toEqual(await currentGameState(page));
-
-  await page.waitForTimeout(1700 - (Date.now() - shownAt));
-  expect(await sceneTexts(page, 'PauseScene')).toContain('Partida guardada');
-  await page.waitForTimeout(2400 - (Date.now() - shownAt));
-  expect(await sceneTexts(page, 'PauseScene')).not.toContain('Partida guardada');
 });
 
 test('Escenario 2: Guardar desactivado sin partida en curso', async ({ page }) => {

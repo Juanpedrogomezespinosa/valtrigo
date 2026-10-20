@@ -23,9 +23,22 @@ test('Escenario 1: Árbol', async ({ page }) => {
   expect(second.left).toBe(first.left);
 });
 
-// Pendiente: el lago es una zona propia que se crea con los cambios de zona (HU-08).
-test.fixme('Escenario 2: Agua', async () => {
-  // Colocar al personaje frente al lago, caminar hacia el agua y comprobar que se detiene en la orilla.
+test('Escenario 2: Agua', async ({ page }) => {
+  // En el lago, el agua empieza en la fila 8 bajo el camino que llega desde la plaza.
+  await startAt(page, 'lago', { x: 15, y: 5 });
+  const shore = 8 * TILE;
+
+  await page.keyboard.down('ArrowDown');
+  await page.waitForTimeout(1200);
+  const first = await playerBody(page);
+  await page.waitForTimeout(300);
+  const second = await playerBody(page);
+  await page.keyboard.up('ArrowDown');
+
+  // Se detiene en la orilla, sin entrar en el agua.
+  expect(second.bottom).toBeCloseTo(shore, 0);
+  expect(second.bottom).toBeLessThanOrEqual(shore);
+  expect(second.top).toBe(first.top);
 });
 
 test('Escenario 3: Dirección libre con otra bloqueada', async ({ page }) => {

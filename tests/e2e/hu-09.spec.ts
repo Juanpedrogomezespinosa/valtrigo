@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { cameraInfo, startAt, startNewGame } from './helpers';
+import { cameraInfo, isChangingZone, playerInfo, startAt, startNewGame, waitForZone } from './helpers';
 
 // HU-09. Cámara que sigue al personaje
 
@@ -65,7 +65,22 @@ test('Escenario 3: Zona más pequeña que la pantalla', async ({ page }) => {
   expect((after.view.top + after.view.bottom) / 2).toBeCloseTo(CASA.height / 2, 0);
 });
 
-// Pendiente: los cambios de zona por puertas se implementan en HU-08.
-test.fixme('Escenario 4: Cambio de zona', async () => {
-  // Cruzar una puerta y comprobar que, al terminar el fundido, la cámara ya está centrada en la nueva zona.
+test('Escenario 4: Cambio de zona', async ({ page }) => {
+  // Salir de la tienda a la plaza: se aparece en la casilla (31, 11), cerca del borde derecho del mapa.
+  await startAt(page, 'tienda', { x: 6, y: 6 });
+
+  await page.keyboard.down('ArrowDown');
+  await expect.poll(() => isChangingZone(page), { intervals: [25] }).toBe(true);
+  await page.keyboard.up('ArrowDown');
+  await waitForZone(page, 'plaza');
+
+  // Nada más terminar el fundido, la cámara ya sigue al personaje en la plaza, sin salirse del mapa.
+  const camera = await cameraInfo(page);
+  const player = await playerInfo(page);
+  const viewWidth = camera.view.right - camera.view.left;
+  const viewHeight = camera.view.bottom - camera.view.top;
+  const expectedLeft = Math.min(Math.max(player.x - viewWidth / 2, 0), PLAZA.width - viewWidth);
+  const expectedTop = Math.min(Math.max(player.y - viewHeight / 2, 0), PLAZA.height - viewHeight);
+  expect(camera.view.left).toBeCloseTo(expectedLeft, -1);
+  expect(camera.view.top).toBeCloseTo(expectedTop, -1);
 });
