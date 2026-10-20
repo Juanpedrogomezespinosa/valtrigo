@@ -2,4 +2,18 @@
 export const GAME_WIDTH = 960;
 export const GAME_HEIGHT = 540;
 
-export const BACKGROUND_COLOR = '#1d2b1f';
+// Colores de la interfaz. Todos cumplen un contraste de al menos 4,5:1 sobre el fondo (HU-36).
+export const COLORS = {
+  background: '#1d2b1f',
+  text: '#f2f2f2', // 13,2:1
+  selected: '#ffd75e', // 10,7:1
+  disabled: '#8c978e', // 4,9:1
+};
+
+export const FONT_FAMILY = 'sans-serif';
+
+// Volumen de la música mientras no existan las opciones de sonido (HU-28).
+export const DEFAULT_MUSIC_VOLUME = 0.6;
+
+// Volumen de los efectos mientras no existan las opciones de sonido (HU-29).
+export const DEFAULT_SFX_VOLUME = 0.5;

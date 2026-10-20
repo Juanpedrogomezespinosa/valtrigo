@@ -8,6 +8,8 @@ Criterios de aceptación:
 
 - Las acciones principales reproducen su efecto de sonido: andar, abrir menús, comprar, vender, abrir cofres y completar encargos.
 - Los efectos de sonido se escuchan con el volumen de efectos configurado.
+- Al moverse entre las opciones de un menú suena un efecto de navegación.
+- Al activar una opción de un menú suena un efecto de confirmación. Las opciones desactivadas no reproducen ningún efecto.
 Escenario 1: Andar
 
 - Dado que el personaje está en una zona sin obstáculos
@@ -28,4 +30,15 @@ Escenario 4: Completar un encargo
 - Dado que el jugador completa un encargo
 - Cuando aparece el mensaje “Encargo completado”
 - Entonces se reproduce el efecto de encargo completado
+Escenario 5: Navegar por un menú
+
+- Dado que el menú principal está abierto
+- Cuando el jugador pulsa la flecha abajo y la selección cambia de opción
+- Entonces se reproduce el efecto de navegación
+Escenario 6: Activar una opción
+
+- Dado que el menú principal está abierto con "Opciones" seleccionada
+- Cuando el jugador pulsa Enter
+- Entonces se reproduce el efecto de confirmación
+- Y si la opción seleccionada está desactivada, no se reproduce ningún efecto
 

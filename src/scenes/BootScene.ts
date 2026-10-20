@@ -1,18 +1,23 @@
 import Phaser from 'phaser';
+import { SFX } from '../systems/audio';
 
-// Escena de arranque. De momento solo comprueba que Phaser se inicia.
+// Escena de arranque: carga los recursos y abre el menú principal.
 export class BootScene extends Phaser.Scene {
   constructor() {
     super('BootScene');
   }
 
+  preload(): void {
+    // Solo se carga la música del menú. La de cada zona se cargará con su zona (HU-31),
+    // para no descargar todas las pistas al arrancar.
+    this.load.audio('music-menu', 'assets/audio/menu.mp3');
+
+    for (const { key, path } of Object.values(SFX)) {
+      this.load.audio(key, path);
+    }
+  }
+
   create(): void {
-    this.add
-      .text(this.scale.width / 2, this.scale.height / 2, 'Valtrigo', {
-        fontFamily: 'sans-serif',
-        fontSize: '32px',
-        color: '#ffffff',
-      })
-      .setOrigin(0.5);
+    this.scene.start('MenuScene');
   }
 }

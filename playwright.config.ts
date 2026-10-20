@@ -10,7 +10,16 @@ export default defineConfig({
     baseURL: 'http://localhost:5173',
     trace: 'retain-on-failure',
   },
-  projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
+  projects: [
+    {
+      name: 'chromium',
+      use: {
+        ...devices['Desktop Chrome'],
+        // Permite que la música suene sin una pulsación previa, para poder comprobarla (ver CLAUDE.md).
+        launchOptions: { args: ['--autoplay-policy=no-user-gesture-required'] },
+      },
+    },
+  ],
   webServer: {
     command: 'npm run dev',
     url: 'http://localhost:5173',
