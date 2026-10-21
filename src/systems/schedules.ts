@@ -15,6 +15,12 @@ interface ScheduleEntry {
 
 const SCHEDULES: Record<string, ScheduleEntry[]> = schedules;
 
+// Horario del NPC en una zona (HU-64), o null si no tiene.
+export function npcHoursIn(npc: string, zone: ZoneId): { from: string; to: string } | null {
+  const entry = SCHEDULES[npc]?.find((candidate) => candidate.zone === zone);
+  return entry ? { from: entry.from, to: entry.to } : null;
+}
+
 // Indica si el NPC está ahora en la zona. Los NPC sin horario están siempre en su zona.
 export function isNpcInZone(npc: string, zone: ZoneId, minutes = getGameState().minutes): boolean {
   const schedule = SCHEDULES[npc];

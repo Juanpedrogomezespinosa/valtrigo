@@ -1,0 +1,38 @@
+[
+  { "day": 1, "text": "Habla con el alcalde en la plaza", "done": { "event": "talk:alcalde" } },
+  { "day": 1, "text": "Acepta el encargo del alcalde", "done": { "questAccepted": "encargo-1" } },
+  {
+    "day": 1,
+    "text": "Recoge la carta en la tienda",
+    "done": { "anyOf": [{ "hasItem": "carta-del-alcalde" }, { "questCompleted": "encargo-1" }] }
+  },
+  { "day": 1, "text": "Entrega la carta al alcalde", "done": { "questCompleted": "encargo-1" } },
+  { "day": 1, "text": "Compra Semillas en la tienda", "done": { "event": "buy:semilla" } },
+
+  { "day": 2, "text": "Ve a la granja", "done": { "event": "visit:granja" } },
+  { "day": 2, "text": "Habla con el granjero", "done": { "event": "talk:granjero" } },
+  { "day": 2, "text": "Lleva 3 Semillas al granjero", "done": { "questCompleted": "encargo-2" } },
+  { "day": 2, "text": "Recoge la Pala junto al granero", "done": { "pickedUp": "pala-de-la-granja" } },
+  { "day": 2, "text": "Busca el cofre del granero", "done": { "chestOpened": "cofre-1" } },
+
+  { "day": 3, "text": "Ve al lago", "done": { "event": "visit:lago" } },
+  { "day": 3, "text": "Lee el cartel del lago", "done": { "event": "read:lago" } },
+  { "day": 3, "text": "Encuentra el cofre escondido del lago", "done": { "chestOpened": "cofre-3" } },
+
+  { "day": 4, "text": "Acepta el encargo «Día de mercado» de la vendedora", "done": { "questAccepted": "encargo-3" } },
+  {
+    "day": 4,
+    "text": "Vende 5 Semillas en la tienda",
+    "done": { "anyOf": [{ "questProgress": "encargo-3", "quantity": 5 }, { "questCompleted": "encargo-3" }] }
+  },
+  { "day": 4, "text": "Vuelve a hablar con la vendedora", "done": { "questCompleted": "encargo-3" } },
+
+  { "day": 5, "text": "Entra en la torre del reloj", "done": { "event": "visit:torre" } },
+  { "day": 5, "text": "Habla con la relojera", "done": { "event": "talk:relojera" } },
+  { "day": 5, "text": "Encuentra el cofre de la torre", "done": { "chestOpened": "cofre-2" } },
+
+  { "day": 6, "text": "Repara el reloj con las tres piezas", "done": { "questCompleted": "encargo-4" } },
+  { "day": 6, "text": "Lleva 2 Manzanas al granjero", "done": { "questCompleted": "encargo-5" } },
+
+  { "day": 7, "text": "Habla con el alcalde en la feria", "done": { "questCompleted": "encargo-6" } }
+]

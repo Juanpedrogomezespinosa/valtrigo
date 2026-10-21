@@ -33,6 +33,8 @@ test('Escenario 1: Continuar una partida guardada', async ({ page }) => {
     activeQuests: ['encargo-2'],
     openedChests: ['cofre-1'],
     dayStats: { moneyEarned: 40, harvests: 0, fish: 0 },
+    dayEvents: ['talk:granjero'],
+    visitedZones: ['granja'],
   });
   await setSavedGame(page, saved);
   await openGame(page);
@@ -47,7 +49,7 @@ test('Escenario 1: Continuar una partida guardada', async ({ page }) => {
   expect(state?.day).toBe(3);
   expectClockAt(state?.minutes, 14 * 60);
   expect(state?.money).toBe(250);
-  // El resto de datos guardados (energía, inventario, encargos, cofres y lo conseguido en el día) también se restaura.
+  // El resto de datos guardados (energía, inventario, encargos, cofres y lo conseguido y lo hecho en el día) también se restaura.
   expectSameGame(state, saved);
 });
 

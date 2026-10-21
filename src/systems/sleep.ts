@@ -6,7 +6,7 @@ import { findMapPoint, pointTile } from './zones';
 
 // Dormir y despertar (HU-22, HU-24 y HU-25).
 // Al empezar un nuevo día el personaje despierta en su casa, junto a la cama, a las 06:00 y con la
-// energía al máximo. Lo conseguido en el día (HU-39) vuelve a cero.
+// energía al máximo. Lo conseguido en el día (HU-39) y lo hecho para las tareas del día (HU-63) vuelven a cero.
 
 function wakeUp(scene: Phaser.Scene, base: GameState, day: number): GameState {
   return {
@@ -15,6 +15,7 @@ function wakeUp(scene: Phaser.Scene, base: GameState, day: number): GameState {
     minutes: WAKE_UP_MINUTES,
     energy: MAX_ENERGY,
     dayStats: emptyDayStats(),
+    dayEvents: [],
     zone: 'casa',
     position: pointTile(findMapPoint(scene, 'casa', 'despertar')),
   };

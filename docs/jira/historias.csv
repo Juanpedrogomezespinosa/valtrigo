@@ -574,7 +574,7 @@ Como jugador, quiero comprar objetos en la tienda del pueblo para mejorar mi equ
 Criterios de aceptación:
 
 - La tienda del pueblo abre de 07:00 a 19:00 y la atiende un único vendedor.
-- Fuera de ese horario, al caminar hacia la puerta de la tienda aparece un cuadro de diálogo con el texto “La tienda está cerrada” y no se entra. El cuadro se cierra con E.
+- Fuera de ese horario, al caminar hacia la puerta de la tienda aparece un cuadro de diálogo con el texto “La tienda está cerrada, vuelve a las 7” (la hora de apertura) y no se entra. El cuadro se cierra con E.
 - Si el jugador sigue dentro cuando la tienda cierra, al hablar con el vendedor aparece “La tienda está cerrada” y no se abre el menú de compra.
 - La tienda vende Semilla (10 monedas), Semilla de zanahoria (20), Semilla de calabaza (40), Pala (30), Hacha (40), Regadera (40) y Caña de pescar (50).
 - Cada objeto de la tienda muestra su icono, su nombre y su precio en monedas.
@@ -603,7 +603,7 @@ Escenario 4: Tienda cerrada
 
 - Dado que son las 20:00
 - Cuando el jugador camina hacia la puerta de la tienda
-- Entonces aparece el cuadro de diálogo “La tienda está cerrada”
+- Entonces aparece el cuadro de diálogo “La tienda está cerrada, vuelve a las 7”
 - Y el jugador sigue en la plaza
 Escenario 5: La tienda cierra con el jugador dentro
 
@@ -611,7 +611,7 @@ Escenario 5: La tienda cierra con el jugador dentro
 - Cuando habla con el vendedor
 - Entonces aparece el mensaje “La tienda está cerrada”
 - Y no se abre el menú de compra","- La tienda del pueblo abre de 07:00 a 19:00 y la atiende un único vendedor.
-- Fuera de ese horario, al caminar hacia la puerta de la tienda aparece un cuadro de diálogo con el texto “La tienda está cerrada” y no se entra. El cuadro se cierra con E.
+- Fuera de ese horario, al caminar hacia la puerta de la tienda aparece un cuadro de diálogo con el texto “La tienda está cerrada, vuelve a las 7” (la hora de apertura) y no se entra. El cuadro se cierra con E.
 - Si el jugador sigue dentro cuando la tienda cierra, al hablar con el vendedor aparece “La tienda está cerrada” y no se abre el menú de compra.
 - La tienda vende Semilla (10 monedas), Semilla de zanahoria (20), Semilla de calabaza (40), Pala (30), Hacha (40), Regadera (40) y Caña de pescar (50).
 - Cada objeto de la tienda muestra su icono, su nombre y su precio en monedas.
@@ -731,6 +731,7 @@ Criterios de aceptación:
 - La lista muestra primero el encargo principal y después los pedidos del tablón, que aparecen como encargados por el “Tablón de anuncios”.
 - Si no hay encargos ni pedidos activos, aparece el mensaje “No tienes encargos activos”.
 - La lista tiene también el apartado “Notas”, con las páginas del diario (HU-55).
+- La lista tiene también el apartado “Tareas de hoy”, con las tareas del día (HU-63).
 Escenario 1: Ver un encargo activo
 
 - Dado que el jugador tiene activo el encargo “Entregar la Carta del alcalde”
@@ -749,7 +750,8 @@ Escenario 3: Encargo completado
 - Cada encargo muestra su nombre, su descripción y el NPC que lo encargó.
 - La lista muestra primero el encargo principal y después los pedidos del tablón, que aparecen como encargados por el “Tablón de anuncios”.
 - Si no hay encargos ni pedidos activos, aparece el mensaje “No tienes encargos activos”.
-- La lista tiene también el apartado “Notas”, con las páginas del diario (HU-55)."
+- La lista tiene también el apartado “Notas”, con las páginas del diario (HU-55).
+- La lista tiene también el apartado “Tareas de hoy”, con las tareas del día (HU-63)."
 "HU-22","HU-22. Ver el día y la hora","# HU-22. Ver el día y la hora
 
 # HU-22. Ver el día y la hora
@@ -2133,3 +2135,109 @@ Escenario 4: Continuar sin introducción
 - Escape salta la introducción y empieza la partida directamente.
 - Mientras se muestra la introducción, el reloj del juego no avanza.
 - “Continuar” carga la partida guardada sin mostrar la introducción."
+"HU-63","HU-63. Tareas del día","# HU-63. Tareas del día
+
+# HU-63. Tareas del día
+
+Como jugador, quiero una lista de tareas para cada día para saber qué hacer a continuación y no quedarme atascado.
+
+Criterios de aceptación:
+
+- La lista de objetivos (O) tiene el apartado “Tareas de hoy (día N)” con las tareas del día. Cada tarea aparece marcada (☑) cuando está hecha y sin marcar (☐) cuando no.
+- Las tareas de cada día siguen la historia del juego. Día 1: hablar con el alcalde, aceptar su encargo, recoger la carta en la tienda, entregársela y comprar Semillas. Día 2: ir a la granja, hablar con el granjero, llevarle las Semillas, recoger la Pala y buscar el cofre del granero. Día 3: ir al lago, leer su cartel y encontrar el cofre del lago. Día 4: aceptar y completar “Día de mercado”. Día 5: entrar en la torre, hablar con la relojera y encontrar el cofre de la torre. Día 6: reparar el reloj y llevar las Manzanas al granjero. Día 7: hablar con el alcalde en la feria.
+- Las tareas que consisten en hacer algo ese día (hablar con alguien, ir a una zona, comprar o leer un cartel) solo aparecen en su día y se marcan al hacerlas ese día.
+- Las tareas de encargos, objetos y cofres que siguen pendientes de días anteriores también aparecen, hasta que se hacen.
+- Si no hay ninguna tarea para hoy, aparece “No hay tareas para hoy”.
+Escenario 1: Ver las tareas del día
+
+- Dado que es el día 1 y el jugador acaba de empezar
+- Cuando pulsa O
+- Entonces aparece “Tareas de hoy (día 1)”
+- Y aparece “☐ Habla con el alcalde en la plaza”
+Escenario 2: Tarea hecha
+
+- Dado que es el día 1
+- Cuando el jugador habla con el alcalde y pulsa O
+- Entonces aparece “☑ Habla con el alcalde en la plaza”
+Escenario 3: Tarea pendiente de un día anterior
+
+- Dado que es el día 3 y el encargo “Semillas para la cosecha” no está completado
+- Cuando el jugador pulsa O
+- Entonces aparece “☐ Lleva 3 Semillas al granjero”
+Escenario 4: Tareas que solo son de su día
+
+- Dado que es el día 2 y el día 1 el jugador no compró Semillas
+- Cuando pulsa O
+- Entonces no aparece la tarea “Compra Semillas en la tienda”
+Escenario 5: Sin tareas
+
+- Dado que es el día 8 y todas las tareas de días anteriores están hechas
+- Cuando el jugador pulsa O
+- Entonces aparece “No hay tareas para hoy”","- La lista de objetivos (O) tiene el apartado “Tareas de hoy (día N)” con las tareas del día. Cada tarea aparece marcada (☑) cuando está hecha y sin marcar (☐) cuando no.
+- Las tareas de cada día siguen la historia del juego. Día 1: hablar con el alcalde, aceptar su encargo, recoger la carta en la tienda, entregársela y comprar Semillas. Día 2: ir a la granja, hablar con el granjero, llevarle las Semillas, recoger la Pala y buscar el cofre del granero. Día 3: ir al lago, leer su cartel y encontrar el cofre del lago. Día 4: aceptar y completar “Día de mercado”. Día 5: entrar en la torre, hablar con la relojera y encontrar el cofre de la torre. Día 6: reparar el reloj y llevar las Manzanas al granjero. Día 7: hablar con el alcalde en la feria.
+- Las tareas que consisten en hacer algo ese día (hablar con alguien, ir a una zona, comprar o leer un cartel) solo aparecen en su día y se marcan al hacerlas ese día.
+- Las tareas de encargos, objetos y cofres que siguen pendientes de días anteriores también aparecen, hasta que se hacen.
+- Si no hay ninguna tarea para hoy, aparece “No hay tareas para hoy”."
+"HU-64","HU-64. Horario de la relojera","# HU-64. Horario de la relojera
+
+# HU-64. Horario de la relojera
+
+Como jugador, quiero saber cuándo está la relojera en la torre para no ir a buscarla a una hora en la que no está.
+
+Criterios de aceptación:
+
+- La primera vez que el jugador entra en la torre del reloj, aparece un cuadro de diálogo con el texto “La relojera viene a la torre de 9:00 a 22:00”, con las horas de su horario (HU-40).
+- El cuadro se cierra con E y entonces el jugador puede moverse.
+- Las siguientes veces que entra en la torre no aparece, tampoco después de guardar y continuar la partida.
+Escenario 1: Primera visita
+
+- Dado que es el día 5 y el jugador no ha entrado nunca en la torre
+- Cuando entra en la torre
+- Entonces aparece el cuadro de diálogo “La relojera viene a la torre de 9:00 a 22:00”
+Escenario 2: Cerrar el aviso
+
+- Dado que el aviso del horario de la relojera está visible
+- Cuando el jugador pulsa E
+- Entonces el cuadro se cierra y el jugador puede moverse
+Escenario 3: Visitas siguientes
+
+- Dado que el jugador ya ha entrado antes en la torre
+- Cuando vuelve a entrar
+- Entonces no aparece el aviso","- La primera vez que el jugador entra en la torre del reloj, aparece un cuadro de diálogo con el texto “La relojera viene a la torre de 9:00 a 22:00”, con las horas de su horario (HU-40).
+- El cuadro se cierra con E y entonces el jugador puede moverse.
+- Las siguientes veces que entra en la torre no aparece, tampoco después de guardar y continuar la partida."
+"HU-65","HU-65. Aviso al recibir un objeto","# HU-65. Aviso al recibir un objeto
+
+# HU-65. Aviso al recibir un objeto
+
+Como jugador, quiero un aviso cuando alguien me da un objeto para saber qué he recibido y de quién.
+
+Criterios de aceptación:
+
+- Cuando un NPC da un objeto al jugador (la Carta del alcalde o la recompensa de un encargo), aparece durante 2 segundos el mensaje “Recibiste [objeto] de parte de [NPC]”, por ejemplo “Recibiste Manzana de parte del alcalde”.
+- Si son varias unidades, el mensaje dice cuántas: “Recibiste 2 Manzanas de parte de la relojera”.
+- Los objetos de cofres, los del suelo y los comprados no muestran este mensaje.
+- Si a la vez aparece otro mensaje, como “Encargo completado”, se ven los dos, uno debajo del otro.
+Escenario 1: La carta
+
+- Dado que el jugador tiene activo el encargo “Entregar la Carta del alcalde”
+- Cuando habla con la vendedora y ella le da la carta
+- Entonces aparece el mensaje “Recibiste Carta del alcalde de parte de la vendedora”
+Escenario 2: Recompensa de un encargo
+
+- Dado que el jugador tiene la Carta del alcalde y el encargo “Entregar la Carta del alcalde” activo
+- Cuando habla con el alcalde y completa el encargo
+- Entonces aparecen los mensajes “Encargo completado” y “Recibiste Manzana de parte del alcalde”
+Escenario 3: Varias unidades
+
+- Dado que el jugador completa el encargo “Las piezas del reloj”
+- Cuando la relojera le da la recompensa
+- Entonces aparece el mensaje “Recibiste 2 Manzanas de parte de la relojera”
+Escenario 4: Objetos comprados
+
+- Dado que el jugador está en la tienda
+- Cuando compra una Pala
+- Entonces no aparece ningún mensaje “Recibiste”","- Cuando un NPC da un objeto al jugador (la Carta del alcalde o la recompensa de un encargo), aparece durante 2 segundos el mensaje “Recibiste [objeto] de parte de [NPC]”, por ejemplo “Recibiste Manzana de parte del alcalde”.
+- Si son varias unidades, el mensaje dice cuántas: “Recibiste 2 Manzanas de parte de la relojera”.
+- Los objetos de cofres, los del suelo y los comprados no muestran este mensaje.
+- Si a la vez aparece otro mensaje, como “Encargo completado”, se ven los dos, uno debajo del otro."

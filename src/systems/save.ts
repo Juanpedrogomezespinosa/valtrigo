@@ -40,6 +40,8 @@ export function readSave(): GameState | null {
         questProgress: state.questProgress ?? {},
         pickedUpItems: state.pickedUpItems ?? [],
         dayStats: state.dayStats ?? emptyDayStats(),
+        dayEvents: state.dayEvents ?? [],
+        visitedZones: state.visitedZones ?? [],
       }
     : null;
 }

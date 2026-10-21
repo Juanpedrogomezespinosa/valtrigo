@@ -19,15 +19,24 @@ import { Npc } from '../entities/Npc';
 import { Player, type Direction } from '../entities/Player';
 import { getGameState, startGame } from '../systems/gameState';
 import { addItem, type ItemId } from '../systems/inventory';
-import { closedDoorMessage } from '../systems/doors';
+import { closedDoorMessage, firstVisitNotice } from '../systems/doors';
 import { spendEnergy, type WorkAction } from '../systems/energy';
 import { isShopOpen } from '../systems/economy';
 import { writeSave } from '../systems/save';
 import { playEffect, playZoneMusic } from '../systems/audio';
 import { isNpcInZone } from '../systems/schedules';
+import { recordEvent } from '../systems/tasks';
 import { stateAfterMidnight, stateAfterSleeping } from '../systems/sleep';
 import { advanceTime } from '../systems/time';
-import { acceptQuest, canReceiveReward, completeQuest, conversationWith, LAST_QUEST, type NpcId } from '../systems/quests';
+import {
+  acceptQuest,
+  canReceiveReward,
+  completeQuest,
+  conversationWith,
+  LAST_QUEST,
+  receivedMessage,
+  type NpcId,
+} from '../systems/quests';
 import { findMapPoint, getProperty, mapKey, mapObjects, pointTile, ZONES, type MapObject, type ZoneId } from '../systems/zones';
 import { showConfirmDialog } from '../ui/confirmDialog';
 import { showMessage } from '../ui/message';
@@ -38,6 +47,8 @@ import type { OverlaySceneData } from './InventoryScene';
 export interface GameSceneData {
   // Hacia dónde mira el personaje al aparecer (al llegar por una puerta).
   facing?: Direction;
+  // Aviso que aparece al llegar, la primera vez que se entra en la zona (HU-64).
+  notice?: string;
 }
 
 interface Door {
@@ -63,6 +74,7 @@ export class GameScene extends Phaser.Scene {
   player!: Player;
 
   private facing?: Direction;
+  private notice?: string;
   private doors: Door[] = [];
   private interactables: Interactable[] = [];
   private chests: Chest[] = [];
@@ -88,6 +100,7 @@ export class GameScene extends Phaser.Scene {
 
   init(data: GameSceneData): void {
     this.facing = data.facing;
+    this.notice = data.notice;
   }
 
   create(): void {
@@ -155,6 +168,10 @@ export class GameScene extends Phaser.Scene {
       if (!this.scene.isActive(key)) {
         this.scene.launch(key);
       }
+    }
+
+    if (this.notice) {
+      this.openDialog({ speaker: 'aviso', title: ZONES[state.zone].name, lines: [this.notice], typewriter: false });
     }
   }
 
@@ -477,6 +494,7 @@ export class GameScene extends Phaser.Scene {
       return;
     }
 
+    recordEvent(`talk:${id}`); // HU-63
     const conversation = conversationWith(id);
     const afterClose = id === 'vendedora' ? () => this.openOverlay('ShopScene') : undefined;
     if (id === 'vendedora' && !['give-letter', 'offer', 'complete'].includes(conversation.kind)) {
@@ -519,6 +537,10 @@ export class GameScene extends Phaser.Scene {
         }
         completeQuest(conversation.quest);
         showMessage(this.scene.get('HudScene'), 'Encargo completado', MESSAGE_MS, 'top');
+        // HU-65: un mensaje por cada objeto de la recompensa, debajo de "Encargo completado".
+        for (const { item, quantity } of conversation.quest.reward.items) {
+          showMessage(this.scene.get('HudScene'), receivedMessage(id, item as ItemId, quantity), MESSAGE_MS, 'top');
+        }
         playEffect(this, 'questComplete');
         // HU-37: al completar el último encargo, cuando se cierra el diálogo aparece el mensaje de final.
         const afterThanks = conversation.quest.id === LAST_QUEST ? () => this.showEnding() : afterClose;
@@ -529,6 +551,7 @@ export class GameScene extends Phaser.Scene {
       case 'give-letter':
         // Decisión del autor: con el encargo 1 activo, la vendedora entrega la Carta del alcalde.
         if (this.pickUp('carta-del-alcalde', 1)) {
+          showMessage(this.scene.get('HudScene'), receivedMessage(id, 'carta-del-alcalde', 1), MESSAGE_MS, 'top'); // HU-65
           this.openDialog({ ...npcDialog, lines: conversation.lines }, afterClose);
         } else {
           afterClose?.();
@@ -571,7 +594,10 @@ export class GameScene extends Phaser.Scene {
       id,
       area: tileArea(object),
       isAvailable: () => true,
-      interact: () => this.openDialog({ speaker: 'cartel', title: 'Cartel', lines: [signs[id]], typewriter: false }),
+      interact: () => {
+        recordEvent(`read:${id}`); // HU-63
+        this.openDialog({ speaker: 'cartel', title: 'Cartel', lines: [signs[id]], typewriter: false });
+      },
     });
   }
 
@@ -684,9 +710,14 @@ export class GameScene extends Phaser.Scene {
     camera.fadeOut(ZONE_FADE_MS, 0, 0, 0);
     camera.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
       const arrival = findMapPoint(this, door.zone, `llegada-${state.zone}`);
+      const notice = firstVisitNotice(door.zone) ?? undefined;
       state.zone = door.zone;
       state.position = pointTile(arrival);
-      const data: GameSceneData = { facing: getProperty(arrival, 'mirando') as Direction };
+      recordEvent(`visit:${door.zone}`); // HU-63: entrar en una zona por su puerta
+      if (!state.visitedZones.includes(door.zone)) {
+        state.visitedZones.push(door.zone);
+      }
+      const data: GameSceneData = { facing: getProperty(arrival, 'mirando') as Direction, notice };
       this.scene.restart(data);
     });
   }

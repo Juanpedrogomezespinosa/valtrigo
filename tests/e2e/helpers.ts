@@ -101,6 +101,8 @@ export interface TestGameState {
   openedChests: string[];
   pickedUpItems: string[];
   dayStats: { moneyEarned: number; harvests: number; fish: number };
+  dayEvents: string[];
+  visitedZones: string[];
 }
 
 // Partida guardada de ejemplo, con el formato de src/systems/save.ts.
@@ -119,6 +121,8 @@ export function savedGame(overrides: Partial<TestGameState> = {}): TestGameState
     openedChests: [],
     pickedUpItems: [],
     dayStats: { moneyEarned: 0, harvests: 0, fish: 0 },
+    dayEvents: [],
+    visitedZones: [],
     ...overrides,
   };
 }

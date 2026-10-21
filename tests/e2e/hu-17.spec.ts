@@ -63,7 +63,7 @@ test('Escenario 4: Tienda cerrada', async ({ page }) => {
   await startAtWith(page, 'plaza', { x: 31, y: 12 }, { minutes: at(20), money: 100, inventory: [] });
 
   await page.keyboard.down('ArrowUp');
-  await expect.poll(async () => (await dialogState(page))?.fullText, { intervals: [25] }).toBe('La tienda está cerrada');
+  await expect.poll(async () => (await dialogState(page))?.fullText, { intervals: [25] }).toBe('La tienda está cerrada, vuelve a las 7');
   await page.keyboard.up('ArrowUp');
   await page.waitForTimeout(700); // más que el fundido de un cambio de zona
 

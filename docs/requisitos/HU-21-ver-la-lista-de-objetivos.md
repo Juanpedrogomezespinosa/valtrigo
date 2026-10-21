@@ -11,6 +11,7 @@ Criterios de aceptación:
 - La lista muestra primero el encargo principal y después los pedidos del tablón, que aparecen como encargados por el “Tablón de anuncios”.
 - Si no hay encargos ni pedidos activos, aparece el mensaje “No tienes encargos activos”.
 - La lista tiene también el apartado “Notas”, con las páginas del diario (HU-55).
+- La lista tiene también el apartado “Tareas de hoy”, con las tareas del día (HU-63).
 Escenario 1: Ver un encargo activo
 
 - Dado que el jugador tiene activo el encargo “Entregar la Carta del alcalde”

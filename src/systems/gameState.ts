@@ -38,6 +38,10 @@ export interface GameState {
   // Objetos sueltos del mundo que ya se han recogido (HU-12), como la Pala de la granja.
   pickedUpItems: string[];
   dayStats: DayStats;
+  // Lo que el jugador ha hecho hoy para las tareas del día (HU-63): "talk:<npc>", "visit:<zona>"...
+  dayEvents: string[];
+  // Zonas en las que se ha entrado alguna vez por su puerta (HU-64: aviso de la primera visita).
+  visitedZones: string[];
 }
 
 let current: GameState | null = null;
@@ -58,6 +62,8 @@ export function createNewGameState(scene: Phaser.Scene): GameState {
     openedChests: [],
     pickedUpItems: [],
     dayStats: emptyDayStats(),
+    dayEvents: [],
+    visitedZones: [],
   };
 }
 

@@ -43,5 +43,6 @@ test('Escenario 3: Desde el día 5', async ({ page }) => {
   await page.keyboard.up('ArrowUp');
 
   await waitForZone(page, 'torre');
-  expect(await dialogState(page)).toBeNull();
+  // Al entrar puede aparecer el aviso del horario de la relojera (HU-64), pero no el de la torre cerrada.
+  expect((await dialogState(page))?.fullText).not.toBe('La torre está cerrada');
 });

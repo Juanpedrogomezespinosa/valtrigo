@@ -13,14 +13,15 @@
     "name": "Tienda",
     "map": "assets/maps/tienda.json",
     "music": "assets/audio/tienda.mp3",
-    "closedMessage": "La tienda está cerrada"
+    "closedMessage": "La tienda está cerrada, vuelve a las {apertura}"
   },
   "torre": {
     "name": "Torre del reloj",
     "map": "assets/maps/torre.json",
     "music": "assets/audio/torre.mp3",
     "opensOnDay": 5,
-    "closedMessage": "La torre está cerrada"
+    "closedMessage": "La torre está cerrada",
+    "firstVisit": { "npc": "relojera", "text": "La relojera viene a la torre de {desde} a {hasta}" }
   },
   "granja": {
     "name": "Granja",

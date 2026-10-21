@@ -46,6 +46,12 @@ export function toMinutes(time: string): number {
   return hours * 60 + minutes;
 }
 
+// Hora de los datos tal como se dice en los textos: "09:00" es "9:00".
+export function spokenTime(time: string): string {
+  const [hours, minutes] = time.split(':');
+  return `${Number(hours)}:${minutes}`;
+}
+
 export function getDay(): number {
   return getGameState().day;
 }

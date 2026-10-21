@@ -3,6 +3,7 @@ import { getGameState } from './gameState';
 import { toMinutes } from './time';
 import { addItem, canAdd, getSlots, ITEMS, removeItem, type ItemId } from './inventory';
 import { recordSale } from './quests';
+import { recordEvent } from './tasks';
 
 // Tienda (HU-17 y HU-18). Todo cambio de dinero por compras y ventas pasa por aquí.
 // - Precios de compra en src/data/items.json (`price`). Al vender se recibe el 50 %.
@@ -38,6 +39,7 @@ export function buy(item: ItemId): BuyResult {
   }
   state.money -= buyPrice(item);
   addItem(item, 1);
+  recordEvent(`buy:${item}`); // HU-63
   return 'bought';
 }
 

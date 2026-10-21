@@ -1,7 +1,7 @@
 import dialogues from '../data/dialogues.json';
 import quests from '../data/quests.json';
 import { getGameState } from './gameState';
-import { addItem, canAdd, countItem, removeItem, type ItemId } from './inventory';
+import { addItem, canAdd, countItem, ITEMS, removeItem, type ItemId } from './inventory';
 
 // Encargos (HU-11, HU-19, HU-20 y HU-21). Todo cambio en los encargos pasa por aquí.
 // Decisiones del autor (ver CLAUDE.md):
@@ -152,4 +152,12 @@ export function recordSale(item: ItemId, quantity: number): void {
     const progress = getGameState().questProgress;
     progress[active.id] = (progress[active.id] ?? 0) + quantity;
   }
+}
+
+// HU-65: mensaje al recibir un objeto de un NPC: "Recibiste Manzana de parte del alcalde" o, con varias
+// unidades, "Recibiste 2 Manzanas de parte de la relojera".
+export function receivedMessage(npc: NpcId, item: ItemId, quantity: number): string {
+  const { name, plural } = ITEMS[item];
+  const itemText = quantity === 1 ? name : `${quantity} ${plural}`;
+  return dialogues.received.replace('{objeto}', itemText).replace('{de}', dialogues.npcs[npc].from);
 }
