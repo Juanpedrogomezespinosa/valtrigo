@@ -375,3 +375,11 @@ Es un proyecto público con un fin doble: servir de base para un curso de testin
   - Los premios suman a las monedas ganadas del día (HU-39).
 - **Tests:** en los escenarios 2 y 3 de HU-60 se adelanta el reloj (`setClock`) hasta la hora de fin. El escenario 4 espera los 90 segundos reales. `catchFish` espera a que desaparezca el mensaje del pez anterior.
 - **Tareas del día 7 (HU-63):** "Presenta una cosecha en el concurso de la feria" y "Participa en el concurso de pesca".
+
+### Retoques de la feria y de los encargos (tras jugar la fase 6)
+
+- **Cuenta atrás del concurso de pesca** (decisión del autor; criterio y escenario 6 añadidos a HU-60): HudScene muestra "Concurso de pesca: m:ss" debajo del día y la hora mientras dura el concurso, en tiempo real (`contestCountdown()` en fair.ts). Empieza en 1:30.
+- **Todas las especies en el concurso** (decisión del autor; criterio y escenario 7 añadidos a HU-60, y nota en HU-49): durante el concurso, el pez sale al azar entre las tres especies, sea la hora que sea. `catchAt(minutos, concurso)` usa un valor al azar más (la especie) entre la espera y el tamaño.
+- **Regalo del alcalde:** al terminar "La feria de Valtrigo" el alcalde dice "Esto es para ti", pero solo daba monedas. Decisión del autor: la recompensa incluye ahora la **Copa de Valtrigo** (objeto de encargo, que no se vende ni se come; icono GoldCup de Ninja Adventure). Se ha actualizado historia-valtrigo.md.
+- **Momento de los avisos** (decisión del autor; criterios de HU-20 y HU-65 actualizados): "Encargo completado" y "Recibiste…" ya no salen al empezar a hablar (desaparecían antes de que el NPC dijera "Esto es para ti"), sino cuando el NPC termina de hablar y entrega la recompensa. Lo mismo con la Carta de la vendedora. La recompensa se cobra al empezar el diálogo, como antes. `announceQuestCompleted()` en GameScene. En el mecanismo del reloj no hay diálogo, así que los avisos salen al colocar la última pieza. Los tests de HU-20, HU-32, HU-37, HU-58 y HU-65 recorren ahora el diálogo antes de comprobar los avisos.
+- El indicador "E" mirando al agua se dibuja dentro de la casilla de agua, porque encima tapaba la cara del personaje.

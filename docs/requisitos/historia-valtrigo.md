@@ -18,7 +18,7 @@ Encargos (se realizan en este orden)
 - Encargo 3, vendedora (día 4): vender 5 Semillas en la tienda. Recompensa: 20 monedas y 1 Manzana.
 - Encargo 4, relojera (día 6): colocar las tres piezas en el mecanismo del reloj, en el orden correcto, para repararlo. Recompensa: 100 monedas y 2 Manzanas.
 - Encargo 5, granjero (día 6): llevarle 2 Manzanas para la feria. Recompensa: 30 monedas.
-- Encargo 6, alcalde (día 7): hablar con él durante la feria o, si sigue activo, a partir del día 8 (HU-58, escenario 4). Recompensa: 80 monedas.
+- Encargo 6, alcalde (día 7): hablar con él durante la feria o, si sigue activo, a partir del día 8 (HU-58, escenario 4). Recompensa: 80 monedas y la Copa de Valtrigo, un recuerdo que no se vende.
 
 
 

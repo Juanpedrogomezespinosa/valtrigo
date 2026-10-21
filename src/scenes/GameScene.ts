@@ -81,6 +81,7 @@ import {
   mechanismOrder,
   receivedMessage,
   type NpcId,
+  type Quest,
 } from '../systems/quests';
 import { findMapPoint, getProperty, mapKey, mapObjects, pointTile, ZONES, type MapObject, type ZoneId } from '../systems/zones';
 import { showConfirmDialog } from '../ui/confirmDialog';
@@ -548,7 +549,9 @@ export class GameScene extends Phaser.Scene {
     const target = this.interactTarget();
     this.indicator.setVisible(target !== null);
     if (target) {
-      this.indicator.setPosition(target.area.centerX, target.area.top - 1);
+      // Sobre el agua, el indicador va dentro de la casilla: encima taparía la cara del personaje.
+      const y = target.kind === 'agua' ? target.area.centerY + 4 : target.area.top - 1;
+      this.indicator.setPosition(target.area.centerX, y);
     }
   }
 
@@ -599,6 +602,17 @@ export class GameScene extends Phaser.Scene {
       }
       npc.setPresent(present);
     }
+  }
+
+  // HU-20 y HU-65: "Encargo completado" y, debajo, un "Recibiste..." por cada objeto de la recompensa, que es de
+  // quien hizo el encargo. Suena el efecto de encargo completado (HU-32).
+  private announceQuestCompleted(quest: Quest): void {
+    const hud = this.scene.get('HudScene');
+    showMessage(hud, 'Encargo completado', MESSAGE_MS, 'top');
+    for (const { item, quantity } of quest.reward.items) {
+      showMessage(hud, receivedMessage(quest.npc as NpcId, item as ItemId, quantity), MESSAGE_MS, 'top');
+    }
+    playEffect(this, 'questComplete');
   }
 
   // HU-37: mensaje de final. Se cierra con E y se sigue jugando.
@@ -658,24 +672,26 @@ export class GameScene extends Phaser.Scene {
           afterClose?.();
           return;
         }
-        completeQuest(conversation.quest);
-        showMessage(this.scene.get('HudScene'), 'Encargo completado', MESSAGE_MS, 'top');
-        // HU-65: un mensaje por cada objeto de la recompensa, debajo de "Encargo completado".
-        for (const { item, quantity } of conversation.quest.reward.items) {
-          showMessage(this.scene.get('HudScene'), receivedMessage(id, item as ItemId, quantity), MESSAGE_MS, 'top');
-        }
-        playEffect(this, 'questComplete');
-        // HU-37: al completar el último encargo, cuando se cierra el diálogo aparece el mensaje de final.
-        const afterThanks = conversation.quest.id === LAST_QUEST ? () => this.showEnding() : afterClose;
-        this.openDialog({ ...npcDialog, lines: conversation.lines }, afterThanks);
+        // La recompensa ya está en el inventario, pero los avisos salen al terminar el diálogo, cuando el NPC
+        // la entrega ("Esto es para ti"). HU-37: al completar el último encargo aparece después el mensaje de final.
+        const { quest } = conversation;
+        completeQuest(quest);
+        this.openDialog({ ...npcDialog, lines: conversation.lines }, () => {
+          this.announceQuestCompleted(quest);
+          if (quest.id === LAST_QUEST) this.showEnding();
+          else afterClose?.();
+        });
         return;
       }
 
       case 'give-letter':
         // Decisión del autor: con el encargo 1 activo, la vendedora entrega la Carta del alcalde.
         if (this.pickUp('carta-del-alcalde', 1)) {
-          showMessage(this.scene.get('HudScene'), receivedMessage(id, 'carta-del-alcalde', 1), MESSAGE_MS, 'top'); // HU-65
-          this.openDialog({ ...npcDialog, lines: conversation.lines }, afterClose);
+          // HU-65: el aviso sale cuando la vendedora termina de hablar y entrega la carta.
+          this.openDialog({ ...npcDialog, lines: conversation.lines }, () => {
+            showMessage(this.scene.get('HudScene'), receivedMessage(id, 'carta-del-alcalde', 1), MESSAGE_MS, 'top');
+            afterClose?.();
+          });
         } else {
           afterClose?.();
         }
@@ -1011,12 +1027,7 @@ export class GameScene extends Phaser.Scene {
           showMessage(hud, 'Inventario lleno', MESSAGE_MS, 'top');
           return;
         }
-        // Como al completar un encargo hablando con el NPC (HU-20 y HU-65): la recompensa es de quien lo encargó.
-        showMessage(hud, 'Encargo completado', MESSAGE_MS, 'top');
-        for (const { item, quantity } of quest.reward.items) {
-          showMessage(hud, receivedMessage(quest.npc as NpcId, item as ItemId, quantity), MESSAGE_MS, 'top');
-        }
-        playEffect(this, 'questComplete');
+        this.announceQuestCompleted(quest);
       },
     };
     this.openOverlay('MechanismScene', data);
@@ -1214,7 +1225,7 @@ export class GameScene extends Phaser.Scene {
       showMessage(hud, 'Has tirado demasiado pronto', MESSAGE_MS, 'top');
       return;
     }
-    const fish = catchAt(getGameState().minutes);
+    const fish = catchAt(getGameState().minutes, isFishingContestRunning());
     if (!canAdd(fish.item, 1)) {
       showMessage(hud, 'Inventario lleno', MESSAGE_MS, 'top');
       return;

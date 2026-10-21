@@ -34,7 +34,8 @@ async function messageBounds(page: import('@playwright/test').Page, message: str
 test('Escenario 1: La carta', async ({ page }) => {
   await startNextTo(page, 'vendedora', { minutes: at(10), activeQuests: ['encargo-1'], inventory: [] });
 
-  await press(page, 'e');
+  // El aviso sale cuando la vendedora termina de hablar y entrega la carta.
+  await talkUntilChoiceOrEnd(page);
 
   expect(await sceneTexts(page, 'HudScene')).toContain('Recibiste Carta del alcalde de parte de la vendedora');
 });
@@ -46,7 +47,8 @@ test('Escenario 2: Recompensa de un encargo', async ({ page }) => {
     inventory: [{ item: 'carta-del-alcalde', quantity: 1 }],
   });
 
-  await press(page, 'e');
+  // Los avisos salen cuando el alcalde termina de hablar.
+  await talkUntilChoiceOrEnd(page);
 
   const texts = await sceneTexts(page, 'HudScene');
   expect(texts).toContain('Encargo completado');
@@ -55,7 +57,6 @@ test('Escenario 2: Recompensa de un encargo', async ({ page }) => {
   const completed = await messageBounds(page, 'Encargo completado');
   const received = await messageBounds(page, 'Recibiste Manzana de parte del alcalde');
   expect(received.top).toBeGreaterThanOrEqual(completed.bottom);
-  await talkUntilChoiceOrEnd(page);
 });
 
 test('Escenario 3: Varias unidades', async ({ page }) => {

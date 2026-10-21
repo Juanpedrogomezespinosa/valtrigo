@@ -10,7 +10,7 @@ test('Escenario 1: Completar el encargo', async ({ page }) => {
     inventory: [{ item: 'carta-del-alcalde', quantity: 1 }],
   });
 
-  await press(page, 'e');
+  await talkUntilChoiceOrEnd(page); // el mensaje sale cuando el alcalde termina de hablar
 
   expect(await sceneTexts(page, 'HudScene')).toContain('Encargo completado');
   const state = await currentGameState(page);

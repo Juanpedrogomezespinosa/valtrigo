@@ -1,5 +1,15 @@
 import { expect, test } from './fixtures';
-import { at, currentGameState, fairView, isChangingZone, press, sceneTexts, startAtWith, startNextTo, waitForZone } from './helpers';
+import {
+  at,
+  currentGameState,
+  fairView,
+  isChangingZone,
+  sceneTexts,
+  startAtWith,
+  startNextTo,
+  talkUntilChoiceOrEnd,
+  waitForZone,
+} from './helpers';
 
 // HU-58. La feria
 // Se entra en la plaza saliendo de la tienda (puerta en la casilla 6, 8, caminando hacia abajo).
@@ -38,7 +48,7 @@ test('Escenario 4: Encargo final después de la feria', async ({ page }) => {
     activeQuests: ['encargo-6'],
   });
 
-  await press(page, 'e');
+  await talkUntilChoiceOrEnd(page); // hasta que el alcalde termina de hablar
 
   expect(await sceneTexts(page, 'HudScene')).toContain('Encargo completado');
   const state = await currentGameState(page);

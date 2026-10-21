@@ -19,5 +19,6 @@
   "carta-del-alcalde": { "name": "Carta del alcalde", "plural": "Cartas del alcalde", "consumable": false, "price": 0, "questItem": true },
   "pieza-del-reloj-1": { "name": "Engranaje de cobre", "plural": "Engranajes de cobre", "consumable": false, "price": 0, "questItem": true },
   "pieza-del-reloj-2": { "name": "Muelle de plata", "plural": "Muelles de plata", "consumable": false, "price": 0, "questItem": true },
-  "pieza-del-reloj-3": { "name": "Péndulo de oro", "plural": "Péndulos de oro", "consumable": false, "price": 0, "questItem": true }
+  "pieza-del-reloj-3": { "name": "Péndulo de oro", "plural": "Péndulos de oro", "consumable": false, "price": 0, "questItem": true },
+  "copa-de-valtrigo": { "name": "Copa de Valtrigo", "plural": "Copas de Valtrigo", "consumable": false, "price": 0, "questItem": true }
 }

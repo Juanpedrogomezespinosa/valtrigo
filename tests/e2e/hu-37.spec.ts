@@ -1,5 +1,5 @@
 import { expect, test } from './fixtures';
-import { dialogState, playerInfo, press, startNextTo, talkUntilChoiceOrEnd } from './helpers';
+import { currentGameState, dialogState, playerInfo, press, sceneTexts, startNextTo, talkUntilChoiceOrEnd } from './helpers';
 
 // HU-37. Final del juego
 // El último encargo es "La feria de Valtrigo" (encargo-6), del alcalde: se completa al hablar con él.
@@ -14,6 +14,9 @@ test('Escenario 1: Ver el final', async ({ page }) => {
   // Al cerrarse el diálogo del alcalde aparece el mensaje de final.
   await expect.poll(async () => (await dialogState(page))?.speaker).toBe('fin');
   expect((await dialogState(page))?.fullText).toContain('Gracias por jugar');
+  // Y el alcalde ha entregado lo que dice: "Esto es para ti" (la Copa de Valtrigo).
+  expect(await sceneTexts(page, 'HudScene')).toContain('Recibiste Copa de Valtrigo de parte del alcalde');
+  expect((await currentGameState(page))?.inventory).toContainEqual({ item: 'copa-de-valtrigo', quantity: 1 });
 });
 
 test('Escenario 2: Seguir jugando', async ({ page }) => {

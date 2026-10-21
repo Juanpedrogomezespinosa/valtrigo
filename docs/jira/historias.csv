@@ -696,7 +696,7 @@ Como jugador, quiero completar encargos y recibir recompensas para avanzar en la
 Criterios de aceptación:
 
 - Un encargo se completa cuando se cumplen sus condiciones.
-- Al completarlo aparece el mensaje “Encargo completado” y se entregan las recompensas en monedas y en objetos.
+- Al completarlo se entregan las recompensas en monedas y en objetos y, cuando el NPC termina de hablar, aparece el mensaje “Encargo completado”.
 - Un encargo completado no se puede reclamar otra vez.
 Escenario 1: Completar el encargo
 
@@ -716,7 +716,7 @@ Escenario 3: Inventario lleno al completar
 - Cuando el jugador completa el encargo que da una Manzana
 - Entonces aparece el mensaje “Inventario lleno”
 - Y el encargo no se marca como completado","- Un encargo se completa cuando se cumplen sus condiciones.
-- Al completarlo aparece el mensaje “Encargo completado” y se entregan las recompensas en monedas y en objetos.
+- Al completarlo se entregan las recompensas en monedas y en objetos y, cuando el NPC termina de hablar, aparece el mensaje “Encargo completado”.
 - Un encargo completado no se puede reclamar otra vez."
 "HU-21","HU-21. Ver la lista de objetivos","# HU-21. Ver la lista de objetivos
 
@@ -1657,7 +1657,7 @@ Como jugador, quiero que el pez dependa de la hora para que merezca la pena pesc
 
 Criterios de aceptación:
 
-- El pez depende de la hora en la que aparece “¡Pica!”: Trucha de 06:00 a 10:00, Carpa de 10:00 a 20:00 y Siluro de 20:00 a 24:00.
+- El pez depende de la hora en la que aparece “¡Pica!”: Trucha de 06:00 a 10:00, Carpa de 10:00 a 20:00 y Siluro de 20:00 a 24:00. Durante el concurso de pesca pican las tres especies (HU-60).
 - Cada pez sale con un tamaño al azar dentro del rango de su especie: Carpa de 20 a 45 cm, Trucha de 25 a 50 cm y Siluro de 50 a 120 cm.
 - Al pescar aparece el mensaje “Has pescado una [especie] de [tamaño] cm” (“un Siluro” para el Siluro). El tamaño no se guarda en el inventario: los peces de la misma especie se apilan.
 - Precios de venta: Carpa 15 monedas, Trucha 20 y Siluro 50. Los peces no se pueden comer.
@@ -1681,7 +1681,7 @@ Escenario 4: Cambio de franja
 
 - Dado que son las 09:59 y el jugador ha lanzado la caña
 - Cuando “¡Pica!” aparece a las 10:00
-- Entonces el pez es una Carpa","- El pez depende de la hora en la que aparece “¡Pica!”: Trucha de 06:00 a 10:00, Carpa de 10:00 a 20:00 y Siluro de 20:00 a 24:00.
+- Entonces el pez es una Carpa","- El pez depende de la hora en la que aparece “¡Pica!”: Trucha de 06:00 a 10:00, Carpa de 10:00 a 20:00 y Siluro de 20:00 a 24:00. Durante el concurso de pesca pican las tres especies (HU-60).
 - Cada pez sale con un tamaño al azar dentro del rango de su especie: Carpa de 20 a 45 cm, Trucha de 25 a 50 cm y Siluro de 50 a 120 cm.
 - Al pescar aparece el mensaje “Has pescado una [especie] de [tamaño] cm” (“un Siluro” para el Siluro). El tamaño no se guarda en el inventario: los peces de la misma especie se apilan.
 - Precios de venta: Carpa 15 monedas, Trucha 20 y Siluro 50. Los peces no se pueden comer."
@@ -2034,6 +2034,8 @@ Criterios de aceptación:
 - Al inscribirse empieza el concurso, que dura 1 minuto y 30 segundos de tiempo real (90 minutos de juego). Cuenta el pez más grande pescado en el lago durante ese tiempo (HU-49).
 - Al terminar el concurso aparece “Concurso terminado: tu mejor pez mide N cm” y se cobra el premio: menos de 40 cm, 20 monedas; de 40 a 79 cm, 50; 80 cm o más, 100. Si no ha pescado nada, aparece “Concurso terminado: no has pescado nada” y no hay premio.
 - Durante el concurso, pescar no gasta energía.
+- Durante el concurso, la interfaz muestra la cuenta atrás del tiempo que queda, “Concurso de pesca: 1:30”, que baja segundo a segundo.
+- Durante el concurso pican las tres especies (Trucha, Carpa y Siluro) al azar, sea la hora que sea.
 - Los peces pescados durante el concurso se quedan en el inventario.
 - Solo se puede participar una vez por partida. Después, el puesto muestra “Ya has participado”.
 Escenario 1: Inscribirse
@@ -2063,10 +2065,23 @@ Escenario 5: Solo una vez
 
 - Dado que el jugador ya ha participado en el concurso de pesca
 - Cuando pulsa E junto al puesto
-- Entonces aparece el mensaje “Ya has participado”","- Al pulsar E junto al puesto de pesca aparece “¿Inscribirte en el concurso de pesca?” con “Sí” y “No”.
+- Entonces aparece el mensaje “Ya has participado”
+Escenario 6: Cuenta atrás
+
+- Dado que el jugador acaba de inscribirse en el concurso de pesca
+- Cuando mira la interfaz
+- Entonces aparece “Concurso de pesca: 1:30”
+- Y 10 segundos después aparece “Concurso de pesca: 1:20”
+Escenario 7: Todas las especies
+
+- Dado que el concurso de pesca está en marcha a las 15:00
+- Cuando el jugador pesca varios peces
+- Entonces pueden salir Truchas, Carpas y Siluros","- Al pulsar E junto al puesto de pesca aparece “¿Inscribirte en el concurso de pesca?” con “Sí” y “No”.
 - Al inscribirse empieza el concurso, que dura 1 minuto y 30 segundos de tiempo real (90 minutos de juego). Cuenta el pez más grande pescado en el lago durante ese tiempo (HU-49).
 - Al terminar el concurso aparece “Concurso terminado: tu mejor pez mide N cm” y se cobra el premio: menos de 40 cm, 20 monedas; de 40 a 79 cm, 50; 80 cm o más, 100. Si no ha pescado nada, aparece “Concurso terminado: no has pescado nada” y no hay premio.
 - Durante el concurso, pescar no gasta energía.
+- Durante el concurso, la interfaz muestra la cuenta atrás del tiempo que queda, “Concurso de pesca: 1:30”, que baja segundo a segundo.
+- Durante el concurso pican las tres especies (Trucha, Carpa y Siluro) al azar, sea la hora que sea.
 - Los peces pescados durante el concurso se quedan en el inventario.
 - Solo se puede participar una vez por partida. Después, el puesto muestra “Ya has participado”."
 "HU-61","HU-61. Partidas de práctica","# HU-61. Partidas de práctica
@@ -2222,7 +2237,7 @@ Como jugador, quiero un aviso cuando alguien me da un objeto para saber qué he 
 
 Criterios de aceptación:
 
-- Cuando un NPC da un objeto al jugador (la Carta del alcalde o la recompensa de un encargo), aparece durante 2 segundos el mensaje “Recibiste [objeto] de parte de [NPC]”, por ejemplo “Recibiste Manzana de parte del alcalde”.
+- Cuando un NPC da un objeto al jugador (la Carta del alcalde o la recompensa de un encargo), al terminar de hablar aparece durante 2 segundos el mensaje “Recibiste [objeto] de parte de [NPC]”, por ejemplo “Recibiste Manzana de parte del alcalde”.
 - Si son varias unidades, el mensaje dice cuántas: “Recibiste 2 Manzanas de parte de la relojera”.
 - Los objetos de cofres, los del suelo y los comprados no muestran este mensaje.
 - Si a la vez aparece otro mensaje, como “Encargo completado”, se ven los dos, uno debajo del otro.
@@ -2245,7 +2260,7 @@ Escenario 4: Objetos comprados
 
 - Dado que el jugador está en la tienda
 - Cuando compra una Pala
-- Entonces no aparece ningún mensaje “Recibiste”","- Cuando un NPC da un objeto al jugador (la Carta del alcalde o la recompensa de un encargo), aparece durante 2 segundos el mensaje “Recibiste [objeto] de parte de [NPC]”, por ejemplo “Recibiste Manzana de parte del alcalde”.
+- Entonces no aparece ningún mensaje “Recibiste”","- Cuando un NPC da un objeto al jugador (la Carta del alcalde o la recompensa de un encargo), al terminar de hablar aparece durante 2 segundos el mensaje “Recibiste [objeto] de parte de [NPC]”, por ejemplo “Recibiste Manzana de parte del alcalde”.
 - Si son varias unidades, el mensaje dice cuántas: “Recibiste 2 Manzanas de parte de la relojera”.
 - Los objetos de cofres, los del suelo y los comprados no muestran este mensaje.
 - Si a la vez aparece otro mensaje, como “Encargo completado”, se ven los dos, uno debajo del otro."

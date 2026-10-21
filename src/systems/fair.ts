@@ -1,4 +1,5 @@
 import fair from '../data/fair.json';
+import { GAME_MINUTES_PER_SECOND } from '../config';
 import { getGameState } from './gameState';
 import { countItem, removeItem, type ItemId } from './inventory';
 
@@ -44,6 +45,14 @@ export function startFishingContest(): void {
 
 export function isFishingContestRunning(): boolean {
   return getGameState().fishingContest !== null;
+}
+
+// Cuenta atrás del concurso (HU-60), en tiempo real: "1:30" al empezar. Null si no hay concurso.
+export function contestCountdown(): string | null {
+  const state = getGameState();
+  if (!state.fishingContest) return null;
+  const seconds = Math.max(0, Math.ceil((state.fishingContest.endsAt - state.minutes) / GAME_MINUTES_PER_SECOND));
+  return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
 }
 
 // Anota un pez pescado durante el concurso: cuenta el más grande.

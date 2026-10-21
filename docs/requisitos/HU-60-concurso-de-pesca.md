@@ -10,6 +10,8 @@ Criterios de aceptación:
 - Al inscribirse empieza el concurso, que dura 1 minuto y 30 segundos de tiempo real (90 minutos de juego). Cuenta el pez más grande pescado en el lago durante ese tiempo (HU-49).
 - Al terminar el concurso aparece “Concurso terminado: tu mejor pez mide N cm” y se cobra el premio: menos de 40 cm, 20 monedas; de 40 a 79 cm, 50; 80 cm o más, 100. Si no ha pescado nada, aparece “Concurso terminado: no has pescado nada” y no hay premio.
 - Durante el concurso, pescar no gasta energía.
+- Durante el concurso, la interfaz muestra la cuenta atrás del tiempo que queda, “Concurso de pesca: 1:30”, que baja segundo a segundo.
+- Durante el concurso pican las tres especies (Trucha, Carpa y Siluro) al azar, sea la hora que sea.
 - Los peces pescados durante el concurso se quedan en el inventario.
 - Solo se puede participar una vez por partida. Después, el puesto muestra “Ya has participado”.
 Escenario 1: Inscribirse
@@ -40,3 +42,14 @@ Escenario 5: Solo una vez
 - Dado que el jugador ya ha participado en el concurso de pesca
 - Cuando pulsa E junto al puesto
 - Entonces aparece el mensaje “Ya has participado”
+Escenario 6: Cuenta atrás
+
+- Dado que el jugador acaba de inscribirse en el concurso de pesca
+- Cuando mira la interfaz
+- Entonces aparece “Concurso de pesca: 1:30”
+- Y 10 segundos después aparece “Concurso de pesca: 1:20”
+Escenario 7: Todas las especies
+
+- Dado que el concurso de pesca está en marcha a las 15:00
+- Cuando el jugador pesca varios peces
+- Entonces pueden salir Truchas, Carpas y Siluros

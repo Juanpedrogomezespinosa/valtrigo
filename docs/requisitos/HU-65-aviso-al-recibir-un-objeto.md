@@ -6,7 +6,7 @@ Como jugador, quiero un aviso cuando alguien me da un objeto para saber qué he 
 
 Criterios de aceptación:
 
-- Cuando un NPC da un objeto al jugador (la Carta del alcalde o la recompensa de un encargo), aparece durante 2 segundos el mensaje “Recibiste [objeto] de parte de [NPC]”, por ejemplo “Recibiste Manzana de parte del alcalde”.
+- Cuando un NPC da un objeto al jugador (la Carta del alcalde o la recompensa de un encargo), al terminar de hablar aparece durante 2 segundos el mensaje “Recibiste [objeto] de parte de [NPC]”, por ejemplo “Recibiste Manzana de parte del alcalde”.
 - Si son varias unidades, el mensaje dice cuántas: “Recibiste 2 Manzanas de parte de la relojera”.
 - Los objetos de cofres, los del suelo y los comprados no muestran este mensaje.
 - Si a la vez aparece otro mensaje, como “Encargo completado”, se ven los dos, uno debajo del otro.

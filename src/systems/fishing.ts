@@ -12,8 +12,11 @@ export interface Catch {
 }
 
 // HU-49: el pez depende de la hora a la que pica. El tamaño sale al azar dentro del rango de su especie.
-export function catchAt(minutes: number): Catch {
-  const species = fish.species.find((entry) => minutes >= toMinutes(entry.from) && minutes < toMinutes(entry.to)) ?? fish.species[0];
+// HU-60: durante el concurso de pesca pican las tres especies, al azar, sea la hora que sea.
+export function catchAt(minutes: number, contest = false): Catch {
+  const species = contest
+    ? fish.species[randomInt(0, fish.species.length - 1)]
+    : (fish.species.find((entry) => minutes >= toMinutes(entry.from) && minutes < toMinutes(entry.to)) ?? fish.species[0]);
   return { item: species.item as ItemId, size: randomInt(species.minSize, species.maxSize) };
 }
 

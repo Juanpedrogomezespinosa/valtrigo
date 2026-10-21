@@ -7,7 +7,7 @@ Como jugador, quiero completar encargos y recibir recompensas para avanzar en la
 Criterios de aceptación:
 
 - Un encargo se completa cuando se cumplen sus condiciones.
-- Al completarlo aparece el mensaje “Encargo completado” y se entregan las recompensas en monedas y en objetos.
+- Al completarlo se entregan las recompensas en monedas y en objetos y, cuando el NPC termina de hablar, aparece el mensaje “Encargo completado”.
 - Un encargo completado no se puede reclamar otra vez.
 Escenario 1: Completar el encargo
 

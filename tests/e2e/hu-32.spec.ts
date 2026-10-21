@@ -10,6 +10,7 @@ import {
   startAtWith,
   startNewGame,
   startNextTo,
+  talkUntilChoiceOrEnd,
 } from './helpers';
 
 // HU-32. Efectos de sonido en las acciones
@@ -54,7 +55,7 @@ test('Escenario 4: Completar un encargo', async ({ page }) => {
   await startNextTo(page, 'alcalde', { activeQuests: ['encargo-1'], inventory: [{ item: 'carta-del-alcalde', quantity: 1 }] });
   await recordEffects(page);
 
-  await press(page, 'e');
+  await talkUntilChoiceOrEnd(page); // se completa al terminar de hablar con el alcalde
 
   expect(await sceneTexts(page, 'HudScene')).toContain('Encargo completado');
   expect(await playedEffects(page)).toContain('sfx-encargo-completado');

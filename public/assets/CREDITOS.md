@@ -40,6 +40,7 @@ Archivos de Ninja Adventure (https://pixel-boy.itch.io/ninja-adventure-asset-pac
 | sprites/objetos/pieza-del-reloj-1.png | Items/Resource/BarCopper.png |
 | sprites/objetos/pieza-del-reloj-2.png | Items/Resource/BarSilver.png |
 | sprites/objetos/pieza-del-reloj-3.png | Items/Resource/BarGold.png |
+| sprites/objetos/copa-de-valtrigo.png | Items/Treasure/GoldCup.png |
 | sprites/objetos/semilla-de-zanahoria.png | Items/Food/Seed3.png |
 | sprites/objetos/semilla-de-calabaza.png | Items/Food/Seed2.png |
 | sprites/objetos/hacha.png | Items/Tool/Axe.png |

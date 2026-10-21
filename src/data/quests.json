@@ -58,6 +58,6 @@
     "name": "La feria de Valtrigo",
     "description": "Habla con el alcalde durante la feria.",
     "requirement": { "type": "talk" },
-    "reward": { "money": 80, "items": [] }
+    "reward": { "money": 80, "items": [{ "item": "copa-de-valtrigo", "quantity": 1 }] }
   }
 ]
