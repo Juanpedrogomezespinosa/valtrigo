@@ -57,6 +57,10 @@ export interface GameState {
   applePickedDay: number | null;
   // Puntos de Setas y Moras y troncos del bosque recogidos o talados hoy (HU-50). Vuelven al empezar el día.
   foraged: string[];
+  // Pedidos del tablón (HU-52 a HU-54), identificados por el día en que se ofrecieron: los aceptados que aún
+  // no se han entregado y todos los días cuyo pedido se aceptó.
+  activeOrders: number[];
+  acceptedOrderDays: number[];
 }
 
 let current: GameState | null = null;
@@ -82,6 +86,8 @@ export function createNewGameState(scene: Phaser.Scene): GameState {
     plots: {},
     applePickedDay: null,
     foraged: [],
+    activeOrders: [],
+    acceptedOrderDays: [],
   };
 }
 

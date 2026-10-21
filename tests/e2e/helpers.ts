@@ -106,6 +106,8 @@ export interface TestGameState {
   plots: Record<string, { dug: boolean; seed: string | null; grown: number; watered: boolean }>;
   applePickedDay: number | null;
   foraged: string[];
+  activeOrders: number[];
+  acceptedOrderDays: number[];
 }
 
 // Partida guardada de ejemplo, con el formato de src/systems/save.ts.
@@ -129,6 +131,8 @@ export function savedGame(overrides: Partial<TestGameState> = {}): TestGameState
     plots: {},
     applePickedDay: null,
     foraged: [],
+    activeOrders: [],
+    acceptedOrderDays: [],
     ...overrides,
   };
 }
@@ -962,3 +966,8 @@ export async function isForageSpotOnMap(page: Page, id: string): Promise<boolean
     return (game.scene.getScene('GameScene') as unknown as { isForageSpotOnMap(id: string): boolean }).isForageSpotOnMap(id);
   }, id);
 }
+
+// --- Tablón de anuncios (HU-52 a HU-54) ---
+
+// El tablón está en la casilla (17, 11) de la plaza; justo debajo se puede pulsar E.
+export const NEXT_TO_BOARD = { x: 17, y: 12 };

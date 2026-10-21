@@ -1,0 +1,41 @@
+{
+  "board": "Tablón de anuncios",
+  "orders": [
+    {
+      "title": "Leña para el horno",
+      "description": "El horno del pueblo necesita 3 Leñas.",
+      "items": [{ "item": "lena", "quantity": 3 }],
+      "reward": { "money": 20, "items": [] }
+    },
+    {
+      "title": "Moras para la mermelada",
+      "description": "Se buscan 2 Moras para hacer mermelada.",
+      "items": [{ "item": "mora", "quantity": 2 }],
+      "reward": { "money": 15, "items": [] }
+    },
+    {
+      "title": "Trucha para la cena",
+      "description": "Alguien quiere cenar 1 Trucha del lago.",
+      "items": [{ "item": "trucha", "quantity": 1 }],
+      "reward": { "money": 30, "items": [] }
+    },
+    {
+      "title": "Nabos para el puchero",
+      "description": "Hacen falta 2 Nabos para el puchero.",
+      "items": [{ "item": "nabo", "quantity": 2 }],
+      "reward": { "money": 40, "items": [{ "item": "semilla-de-zanahoria", "quantity": 2 }] }
+    },
+    {
+      "title": "Setas para la sopa",
+      "description": "Se necesitan 3 Setas para una sopa.",
+      "items": [{ "item": "seta", "quantity": 3 }],
+      "reward": { "money": 30, "items": [] }
+    },
+    {
+      "title": "Carpa para el mercado",
+      "description": "El mercado busca 1 Carpa.",
+      "items": [{ "item": "carpa", "quantity": 1 }],
+      "reward": { "money": 25, "items": [] }
+    }
+  ]
+}

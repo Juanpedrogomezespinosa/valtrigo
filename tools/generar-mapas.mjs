@@ -52,6 +52,7 @@ const TILE = {
   bush: 5,
   well: 104,
   sign: 83,
+  noticeBoard: 57,
   // Cercado de piedra clara (granero): esquinas, bordes y suelo.
   penTopLeft: 96,
   penTop: 97,
@@ -249,6 +250,12 @@ function paintGround(map) {
   }
 }
 
+// Tablón de anuncios (HU-52): casilla sólida en la capa de obstáculos y punto "tablon".
+function addNoticeBoard(map, { x, y }) {
+  setTile(map.obstacles, map, x, y, TILE.noticeBoard);
+  map.points.push({ name: 'tablon', x, y });
+}
+
 // Coloca árboles en un rectángulo, sin tapar caminos, edificios ni las casillas reservadas.
 function addTrees(map, x1, y1, x2, y2, density, reserved = new Set()) {
   for (let y = y1; y <= y2; y++) {
@@ -388,6 +395,7 @@ function plaza() {
   setTile(map.obstacles, map, 17, 16, TILE.well);
   addSign(map, { id: 'plaza', x: 23, y: 11 });
   addSign(map, { id: 'camino-del-lago', x: 18, y: 22 });
+  addNoticeBoard(map, { x: 17, y: 11 });
 
   map.points.push({ name: 'inicio', x: 20, y: 17 });
 

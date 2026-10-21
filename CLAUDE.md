@@ -334,3 +334,12 @@ Es un proyecto público con un fin doble: servir de base para un curso de testin
   - Icono de las Moras: generado en tools/generar-cultivos.mjs.
   - Créditos: actualizados en credits.json y en CREDITOS.md.
 - **Tareas del día 3 (HU-63):** "Pesca un pez en el lago", "Ve al bosque, al oeste del lago" y "Recoge setas o moras en el bosque". Para no pasar de 6, se ha quitado "Lee el cartel del lago"; la tarea del cofre del lago sigue.
+
+### Fase 4 de la ampliación: pedidos del tablón (HU-52 a HU-54)
+
+- **Tablón:** casilla 57 de Tiny Town (un tablón con un papel), sólida, en la plaza (17, 11), con el punto `tablon` (`addNoticeBoard` en el generador de mapas). No mueve ningún árbol: solo cambia esa casilla.
+- **Pedidos:** src/data/orders.json tiene uno por día, del 1 al 6, que se repiten desde el día 7. Los títulos son decisión del autor, salvo "Leña para el horno", que da la historia: Moras para la mermelada, Trucha para la cena, Nabos para el puchero, Setas para la sopa y Carpa para el mercado. Cada pedido se identifica por el **día en que se ofreció**. `GameState.activeOrders` guarda los aceptados sin entregar y `acceptedOrderDays`, los días cuyo pedido se aceptó. Así el pedido del día 7 (que es el del día 1) es otro pedido distinto. La lógica está en src/systems/orders.ts.
+- **E junto al tablón:** primero entrega todos los pedidos activos que tengan sus objetos ("Pedido completado" y el efecto de encargo completado). Si la recompensa de alguno no cabe en el inventario tal y como está, ese pedido sigue activo y aparece "Inventario lleno". Si no hay nada que entregar, abre el cuadro "Tablón de anuncios" (texto completo) con el pedido del día ("[título]. [descripción] Recompensa: …") y las opciones "Aceptar" y "Rechazar". Si ya se aceptó el de hoy, muestra "Ya has aceptado el pedido de hoy"; con 3 pedidos activos, "Ya tienes 3 pedidos activos". Rechazar solo cierra el cuadro y se puede volver a leer.
+- Las recompensas de los pedidos suman a las monedas ganadas del día (HU-39). No muestran "Recibiste…" (HU-65), porque el tablón no es un NPC.
+- Los pedidos no tocan `activeQuests`, así que no impiden aceptar ni completar un encargo principal (HU-53).
+- **Lista de objetivos en dos columnas:** a la izquierda, "Encargos", con el encargo principal y después los pedidos ("Encargado por: Tablón de anuncios"); a la derecha, "Tareas de hoy (día N)". Con el encargo principal y 3 pedidos, la columna izquierda llega justo al borde inferior de la pantalla.

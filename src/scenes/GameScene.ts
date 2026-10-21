@@ -41,6 +41,15 @@ import {
 } from '../systems/farm';
 import { closedDoorMessage, firstVisitNotice } from '../systems/doors';
 import { catchAt, caughtMessage, type Catch } from '../systems/fishing';
+import {
+  acceptTodayOrder,
+  BOARD_NAME,
+  deliverableOrders,
+  deliverOrder,
+  orderForDay,
+  orderText,
+  todayOrderStatus,
+} from '../systems/orders';
 import { randomInt } from '../systems/random';
 import { spendEnergy, type WorkAction } from '../systems/energy';
 import { isShopOpen } from '../systems/economy';
@@ -83,7 +92,7 @@ interface Door {
 
 // Algo con lo que se interactúa pulsando E a menos de una casilla: NPC, cofres, carteles y objetos sueltos.
 interface Interactable {
-  kind: 'npc' | 'cofre' | 'cartel' | 'objeto' | 'cama' | 'manzano' | 'parcela' | 'agua' | 'recurso';
+  kind: 'npc' | 'cofre' | 'cartel' | 'objeto' | 'cama' | 'manzano' | 'parcela' | 'agua' | 'recurso' | 'tablon';
   id: string;
   // Lo que ocupa en el mundo.
   area: Phaser.Geom.Rectangle;
@@ -181,6 +190,7 @@ export class GameScene extends Phaser.Scene {
       if (object.name === 'huerto') this.addGarden(object);
       if (object.name === 'manzano') this.addAppleTree(object);
       if (object.name === 'recurso') this.addForageSpot(object);
+      if (object.name === 'tablon') this.addNoticeBoard(object);
     }
     this.updateNpcPresence();
 
@@ -834,6 +844,59 @@ export class GameScene extends Phaser.Scene {
         }
       },
     });
+  }
+
+  // --- Tablón de anuncios (HU-52 a HU-54) ---
+
+  // El tablón es una casilla sólida de la capa de obstáculos. E junto a él entrega los pedidos que se pueden
+  // entregar y, si no hay ninguno, muestra el pedido del día.
+  private addNoticeBoard(object: MapObject): void {
+    this.interactables.push({
+      kind: 'tablon',
+      id: 'tablon',
+      area: tileArea(object),
+      isAvailable: () => true,
+      interact: () => this.useNoticeBoard(),
+    });
+  }
+
+  private useNoticeBoard(): void {
+    const hud = this.scene.get('HudScene');
+    const deliverable = deliverableOrders();
+    if (deliverable.length > 0) {
+      // HU-54: se entregan todos los que se pueden. Uno cuya recompensa no cabe sigue activo.
+      const delivered = deliverable.filter((order) => deliverOrder(order));
+      if (delivered.length > 0) {
+        showMessage(hud, 'Pedido completado', MESSAGE_MS, 'top');
+        playEffect(this, 'questComplete');
+      }
+      if (delivered.length < deliverable.length) {
+        showMessage(hud, 'Inventario lleno', MESSAGE_MS, 'top');
+      }
+      return;
+    }
+
+    const board = { speaker: 'tablon', title: BOARD_NAME, typewriter: false };
+    switch (todayOrderStatus()) {
+      case 'accepted':
+        this.openDialog({ ...board, lines: ['Ya has aceptado el pedido de hoy'] });
+        return;
+      case 'full':
+        this.openDialog({ ...board, lines: ['Ya tienes 3 pedidos activos'] });
+        return;
+      default:
+        this.openDialog({
+          ...board,
+          lines: [orderText(orderForDay(getGameState().day))],
+          choice: {
+            options: ['Aceptar', 'Rechazar'],
+            onChoose: (index) => {
+              if (index === 0) acceptTodayOrder();
+              return null;
+            },
+          },
+        });
+    }
   }
 
   // --- Bosque (HU-50) ---
