@@ -828,7 +828,7 @@ Como jugador, quiero dormir en mi casa para terminar el día y empezar el siguie
 Criterios de aceptación:
 
 - Al pulsar E junto a la cama de la casa del jugador aparece el mensaje “¿Dormir?” con las opciones “Sí” y “No”.
-- Al dormir, se avanza al día siguiente a las 06:00 y la energía vuelve a 100.
+- Al dormir, se avanza al día siguiente a las 06:00 (a las 12:00 si es el día de la feria, HU-58) y la energía vuelve a 100.
 - Se puede dormir a cualquier hora del día.
 Escenario 1: Dormir por la noche
 
@@ -855,7 +855,7 @@ Escenario 4: Energía baja
 - Dado que la energía es 20
 - Cuando el jugador duerme en su cama
 - Entonces la energía es 100","- Al pulsar E junto a la cama de la casa del jugador aparece el mensaje “¿Dormir?” con las opciones “Sí” y “No”.
-- Al dormir, se avanza al día siguiente a las 06:00 y la energía vuelve a 100.
+- Al dormir, se avanza al día siguiente a las 06:00 (a las 12:00 si es el día de la feria, HU-58) y la energía vuelve a 100.
 - Se puede dormir a cualquier hora del día."
 "HU-25","HU-25. Guardado automático","# HU-25. Guardado automático
 
@@ -1214,7 +1214,7 @@ Como jugador, quiero ver un final al completar la historia para saber que he ter
 
 Criterios de aceptación:
 
-- Al completar el último encargo (“La feria de Valtrigo”), cuando se cierra el diálogo del alcalde aparece el mensaje de final.
+- Al completar el último encargo (“La feria de Valtrigo”), cuando se cierra el diálogo del alcalde (el discurso de la ceremonia, HU-66, o su diálogo si se completa después de la feria) aparece el mensaje de final.
 - El mensaje de final se cierra con E y el jugador puede seguir jugando en el pueblo.
 - El mensaje de final solo aparece una vez.
 Escenario 1: Ver el final
@@ -1231,7 +1231,7 @@ Escenario 3: Solo una vez
 
 - Dado que el jugador ya ha completado el último encargo
 - Cuando vuelve a hablar con el alcalde
-- Entonces no aparece el mensaje de final","- Al completar el último encargo (“La feria de Valtrigo”), cuando se cierra el diálogo del alcalde aparece el mensaje de final.
+- Entonces no aparece el mensaje de final","- Al completar el último encargo (“La feria de Valtrigo”), cuando se cierra el diálogo del alcalde (el discurso de la ceremonia, HU-66, o su diálogo si se completa después de la feria) aparece el mensaje de final.
 - El mensaje de final se cierra con E y el jugador puede seguir jugando en el pueblo.
 - El mensaje de final solo aparece una vez."
 "HU-38","HU-38. Encargos principales por día","# HU-38. Encargos principales por día
@@ -1277,7 +1277,7 @@ Criterios de aceptación:
 
 - Al dormir en la cama, después del fundido a negro, aparece la pantalla “Día N terminado”, con N el día que termina.
 - El resumen muestra las monedas ganadas ese día (ventas y recompensas), las cosechas recogidas y los peces pescados.
-- El resumen se cierra con E y entonces empieza el día siguiente a las 06:00.
+- El resumen se cierra con E y entonces empieza el día siguiente a las 06:00 (a las 12:00 si es el día de la feria, HU-58).
 - Al dormirse a medianoche no aparece el resumen, porque el progreso del día se pierde.
 Escenario 1: Ver el resumen
 
@@ -1301,7 +1301,7 @@ Escenario 4: Dormirse a medianoche
 - Cuando el reloj llega a las 00:00
 - Entonces no aparece el resumen del día","- Al dormir en la cama, después del fundido a negro, aparece la pantalla “Día N terminado”, con N el día que termina.
 - El resumen muestra las monedas ganadas ese día (ventas y recompensas), las cosechas recogidas y los peces pescados.
-- El resumen se cierra con E y entonces empieza el día siguiente a las 06:00.
+- El resumen se cierra con E y entonces empieza el día siguiente a las 06:00 (a las 12:00 si es el día de la feria, HU-58).
 - Al dormirse a medianoche no aparece el resumen, porque el progreso del día se pierde."
 "HU-40","HU-40. Horario de los NPC","# HU-40. Horario de los NPC
 
@@ -1965,33 +1965,52 @@ Como jugador, quiero que el pueblo celebre la feria para sentir que mi trabajo h
 
 Criterios de aceptación:
 
-- La feria se celebra en la plaza durante todo el día 7.
-- Durante la feria, la plaza tiene guirnaldas y dos puestos: el de la cosecha (HU-59) y el de pesca (HU-60).
-- Antes y después del día 7, la plaza tiene su aspecto normal y no hay puestos.
+- La feria se celebra en la plaza el día 7. Es festivo: ese día el jugador se despierta a las 12:00 y la feria ya está montada.
+- Durante la feria, la plaza tiene guirnaldas, dos puestos (el de la cosecha, HU-59, y el de pesca, HU-60), un escenario y un podio para la ceremonia (HU-66).
+- El día 7, a partir de las 12:00, hay cuatro visitantes en la plaza: Rosa, Lucía, Tomás y Pablo. Cada uno tiene un diálogo sencillo al pulsar E junto a él.
+- Los concursos admiten participantes de 12:00 a 17:00. A las 17:00 aparece el mensaje “Los concursos han terminado. Ceremonia a las 18:00 en la plaza”.
+- Antes y después del día 7, la plaza tiene su aspecto normal: no hay guirnaldas, puestos, escenario, podio ni visitantes.
 - Pasado el día 7, el encargo “La feria de Valtrigo” se puede seguir completando al hablar con el alcalde, aunque ya no haya feria.
 Escenario 1: Día de feria
 
 - Dado que es el día 7
 - Cuando el jugador entra en la plaza
-- Entonces la plaza tiene guirnaldas
-- Y están los puestos de la cosecha y de pesca
+- Entonces la plaza tiene guirnaldas, los puestos de la cosecha y de pesca, el escenario y el podio
+- Y están los cuatro visitantes
 Escenario 2: Antes de la feria
 
 - Dado que es el día 6
 - Cuando el jugador entra en la plaza
-- Entonces no hay guirnaldas ni puestos
+- Entonces no hay guirnaldas, puestos, escenario, podio ni visitantes
 Escenario 3: Después de la feria
 
 - Dado que es el día 8
 - Cuando el jugador entra en la plaza
-- Entonces no hay guirnaldas ni puestos
+- Entonces no hay guirnaldas, puestos, escenario, podio ni visitantes
 Escenario 4: Encargo final después de la feria
 
 - Dado que es el día 8 y el encargo “La feria de Valtrigo” está activo
 - Cuando el jugador habla con el alcalde
-- Entonces aparece el mensaje “Encargo completado”","- La feria se celebra en la plaza durante todo el día 7.
-- Durante la feria, la plaza tiene guirnaldas y dos puestos: el de la cosecha (HU-59) y el de pesca (HU-60).
-- Antes y después del día 7, la plaza tiene su aspecto normal y no hay puestos.
+- Entonces aparece el mensaje “Encargo completado”
+Escenario 5: Despertar el día de la feria
+
+- Dado que es el día 6 y el jugador está junto a la cama
+- Cuando duerme y cierra el resumen del día
+- Entonces el reloj marca el día 7 a las 12:00
+Escenario 6: Hablar con un visitante
+
+- Dado que es el día 7 y el jugador está junto a Rosa
+- Cuando pulsa E
+- Entonces Rosa dice su diálogo
+Escenario 7: Fin de los concursos
+
+- Dado que es el día 7 a las 16:59
+- Cuando el reloj llega a las 17:00
+- Entonces aparece el mensaje “Los concursos han terminado. Ceremonia a las 18:00 en la plaza”","- La feria se celebra en la plaza el día 7. Es festivo: ese día el jugador se despierta a las 12:00 y la feria ya está montada.
+- Durante la feria, la plaza tiene guirnaldas, dos puestos (el de la cosecha, HU-59, y el de pesca, HU-60), un escenario y un podio para la ceremonia (HU-66).
+- El día 7, a partir de las 12:00, hay cuatro visitantes en la plaza: Rosa, Lucía, Tomás y Pablo. Cada uno tiene un diálogo sencillo al pulsar E junto a él.
+- Los concursos admiten participantes de 12:00 a 17:00. A las 17:00 aparece el mensaje “Los concursos han terminado. Ceremonia a las 18:00 en la plaza”.
+- Antes y después del día 7, la plaza tiene su aspecto normal: no hay guirnaldas, puestos, escenario, podio ni visitantes.
 - Pasado el día 7, el encargo “La feria de Valtrigo” se puede seguir completando al hablar con el alcalde, aunque ya no haya feria."
 "HU-59","HU-59. Concurso de la cosecha","# HU-59. Concurso de la cosecha
 
@@ -2001,15 +2020,19 @@ Como jugador, quiero presentar mi mejor cosecha en la feria para ganar un premio
 
 Criterios de aceptación:
 
-- Al pulsar E junto al puesto de la cosecha aparece la lista de cosechas del inventario. Al elegir una, se entrega y se cobra el premio: Nabo 20 monedas, Zanahoria 50 y Calabaza 100.
+- De 12:00 a 17:00 del día 7, al pulsar E junto al puesto de la cosecha aparece la lista de cosechas del inventario. Al elegir una, se entrega y aparece el mensaje “Has presentado [cosecha] de [peso] kg. Resultados en la ceremonia de las 18:00”.
+- Cada cosecha presentada pesa un número de kilos al azar dentro de su rango: Nabo de 1 a 3, Zanahoria de 2 a 5 y Calabaza de 6 a 15.
+- Compiten también tres vecinos con resultados fijos: Lucía (Calabaza de 11 kg), Tomás (Zanahoria de 4 kg) y Pablo (Nabo de 2 kg). Gana la cosecha más pesada. En caso de empate, queda por delante el vecino.
+- Los tres primeros se anuncian en la ceremonia (HU-66). Premios para el jugador: 1.º 100 monedas, 2.º 50 y 3.º 20.
 - Solo se puede participar una vez por partida. Después, el puesto muestra “Ya has participado”.
 - Sin cosechas aparece el mensaje “Necesitas una cosecha para participar”.
+- Después de las 17:00, el puesto muestra “El concurso ya ha terminado”.
 Escenario 1: Participar
 
-- Dado que el jugador tiene una Calabaza
+- Dado que es el día 7 a las 13:00 y el jugador tiene una Calabaza
 - Cuando la presenta en el puesto de la cosecha
-- Entonces recibe 100 monedas
-- Y la Calabaza desaparece del inventario
+- Entonces la Calabaza desaparece del inventario
+- Y aparece el mensaje “Has presentado una Calabaza de [peso] kg. Resultados en la ceremonia de las 18:00”, con un peso entre 6 y 15
 Escenario 2: Solo una vez
 
 - Dado que el jugador ya ha participado en el concurso de la cosecha
@@ -2019,9 +2042,19 @@ Escenario 3: Sin cosechas
 
 - Dado que el jugador no tiene cosechas
 - Cuando pulsa E junto al puesto de la cosecha
-- Entonces aparece el mensaje “Necesitas una cosecha para participar”","- Al pulsar E junto al puesto de la cosecha aparece la lista de cosechas del inventario. Al elegir una, se entrega y se cobra el premio: Nabo 20 monedas, Zanahoria 50 y Calabaza 100.
+- Entonces aparece el mensaje “Necesitas una cosecha para participar”
+Escenario 4: Concurso terminado
+
+- Dado que es el día 7 a las 17:30 y el jugador tiene una Calabaza
+- Cuando pulsa E junto al puesto de la cosecha
+- Entonces aparece el mensaje “El concurso ya ha terminado”
+- Y la Calabaza sigue en el inventario","- De 12:00 a 17:00 del día 7, al pulsar E junto al puesto de la cosecha aparece la lista de cosechas del inventario. Al elegir una, se entrega y aparece el mensaje “Has presentado [cosecha] de [peso] kg. Resultados en la ceremonia de las 18:00”.
+- Cada cosecha presentada pesa un número de kilos al azar dentro de su rango: Nabo de 1 a 3, Zanahoria de 2 a 5 y Calabaza de 6 a 15.
+- Compiten también tres vecinos con resultados fijos: Lucía (Calabaza de 11 kg), Tomás (Zanahoria de 4 kg) y Pablo (Nabo de 2 kg). Gana la cosecha más pesada. En caso de empate, queda por delante el vecino.
+- Los tres primeros se anuncian en la ceremonia (HU-66). Premios para el jugador: 1.º 100 monedas, 2.º 50 y 3.º 20.
 - Solo se puede participar una vez por partida. Después, el puesto muestra “Ya has participado”.
-- Sin cosechas aparece el mensaje “Necesitas una cosecha para participar”."
+- Sin cosechas aparece el mensaje “Necesitas una cosecha para participar”.
+- Después de las 17:00, el puesto muestra “El concurso ya ha terminado”."
 "HU-60","HU-60. Concurso de pesca","# HU-60. Concurso de pesca
 
 # HU-60. Concurso de pesca
@@ -2030,60 +2063,70 @@ Como jugador, quiero participar en el concurso de pesca de la feria para ganar u
 
 Criterios de aceptación:
 
-- Al pulsar E junto al puesto de pesca aparece “¿Inscribirte en el concurso de pesca?” con “Sí” y “No”.
-- Al inscribirse empieza el concurso, que dura 1 minuto y 30 segundos de tiempo real (90 minutos de juego). Cuenta el pez más grande pescado en el lago durante ese tiempo (HU-49).
-- Al terminar el concurso aparece “Concurso terminado: tu mejor pez mide N cm” y se cobra el premio: menos de 40 cm, 20 monedas; de 40 a 79 cm, 50; 80 cm o más, 100. Si no ha pescado nada, aparece “Concurso terminado: no has pescado nada” y no hay premio.
-- Durante el concurso, pescar no gasta energía.
+- De 12:00 a 17:00 del día 7, al pulsar E junto al puesto de pesca aparece “¿Inscribirte en el concurso de pesca?” con “Sí” y “No”. Al elegir “Sí” aparece el cuadro de diálogo “Ve al lago y lanza la caña para empezar”.
+- El concurso empieza la primera vez que el jugador lanza la caña en el lago después de inscribirse. Dura 1 minuto y 30 segundos de tiempo real (90 minutos de juego), pero termina a las 17:00 como muy tarde. Cuenta el pez más grande pescado durante ese tiempo.
 - Durante el concurso, la interfaz muestra la cuenta atrás del tiempo que queda, “Concurso de pesca: 1:30”, que baja segundo a segundo.
 - Durante el concurso pican las tres especies (Trucha, Carpa y Siluro) al azar, sea la hora que sea.
-- Los peces pescados durante el concurso se quedan en el inventario.
-- Solo se puede participar una vez por partida. Después, el puesto muestra “Ya has participado”.
+- Durante el concurso, pescar no gasta energía. Los peces pescados se quedan en el inventario.
+- Al terminar aparece “Concurso terminado: tu mejor pez mide N cm” o, si no ha pescado nada, “Concurso terminado: no has pescado nada”.
+- Compiten también tres vecinos con resultados fijos: Rosa (62 cm), Tomás (48 cm) y Pablo (35 cm). Gana el pez más grande. En caso de empate, queda por delante el vecino.
+- Los tres primeros se anuncian en la ceremonia (HU-66). Premios para el jugador: 1.º 100 monedas, 2.º 50 y 3.º 20.
+- Solo se puede participar una vez por partida. Después, el puesto muestra “Ya has participado”. Después de las 17:00, el puesto muestra “El concurso ya ha terminado”.
 Escenario 1: Inscribirse
 
-- Dado que es el día 7
+- Dado que es el día 7 a las 13:00
 - Cuando el jugador pulsa E junto al puesto de pesca y elige “Sí”
-- Entonces empieza el concurso de pesca
-Escenario 2: Ganar un premio
+- Entonces aparece el cuadro de diálogo “Ve al lago y lanza la caña para empezar”
+- Y la cuenta atrás aún no ha empezado
+Escenario 2: Empezar en el lago
+
+- Dado que el jugador se ha inscrito en el concurso de pesca
+- Cuando lanza la caña en el lago
+- Entonces empieza el concurso y aparece “Concurso de pesca: 1:30”
+Escenario 3: Mejor pez
 
 - Dado que el concurso de pesca está en marcha
 - Y el jugador pesca una Carpa de 30 cm y una Trucha de 45 cm
 - Cuando termina el concurso
 - Entonces aparece “Concurso terminado: tu mejor pez mide 45 cm”
-- Y el jugador recibe 50 monedas
-Escenario 3: Sin peces
+Escenario 4: Sin peces
 
 - Dado que el concurso de pesca está en marcha y el jugador no pesca nada
 - Cuando termina el concurso
 - Entonces aparece “Concurso terminado: no has pescado nada”
-- Y el dinero no cambia
-Escenario 4: Duración
+Escenario 5: Duración
 
-- Dado que el jugador se inscribe en el concurso a las 10:00
+- Dado que el jugador empieza el concurso a las 13:00
 - Cuando pasan 1 minuto y 30 segundos de tiempo real
-- Entonces el concurso termina a las 11:30
-Escenario 5: Solo una vez
-
-- Dado que el jugador ya ha participado en el concurso de pesca
-- Cuando pulsa E junto al puesto
-- Entonces aparece el mensaje “Ya has participado”
+- Entonces el concurso termina a las 14:30
 Escenario 6: Cuenta atrás
 
-- Dado que el jugador acaba de inscribirse en el concurso de pesca
-- Cuando mira la interfaz
-- Entonces aparece “Concurso de pesca: 1:30”
-- Y 10 segundos después aparece “Concurso de pesca: 1:20”
+- Dado que el concurso de pesca acaba de empezar
+- Cuando pasan 10 segundos
+- Entonces aparece “Concurso de pesca: 1:20”
 Escenario 7: Todas las especies
 
 - Dado que el concurso de pesca está en marcha a las 15:00
 - Cuando el jugador pesca varios peces
-- Entonces pueden salir Truchas, Carpas y Siluros","- Al pulsar E junto al puesto de pesca aparece “¿Inscribirte en el concurso de pesca?” con “Sí” y “No”.
-- Al inscribirse empieza el concurso, que dura 1 minuto y 30 segundos de tiempo real (90 minutos de juego). Cuenta el pez más grande pescado en el lago durante ese tiempo (HU-49).
-- Al terminar el concurso aparece “Concurso terminado: tu mejor pez mide N cm” y se cobra el premio: menos de 40 cm, 20 monedas; de 40 a 79 cm, 50; 80 cm o más, 100. Si no ha pescado nada, aparece “Concurso terminado: no has pescado nada” y no hay premio.
-- Durante el concurso, pescar no gasta energía.
+- Entonces pueden salir Truchas, Carpas y Siluros
+Escenario 8: Fin a las 17:00
+
+- Dado que el concurso de pesca empezó a las 16:30
+- Cuando el reloj llega a las 17:00
+- Entonces el concurso termina
+Escenario 9: Solo una vez
+
+- Dado que el jugador ya ha participado en el concurso de pesca
+- Cuando pulsa E junto al puesto
+- Entonces aparece el mensaje “Ya has participado”","- De 12:00 a 17:00 del día 7, al pulsar E junto al puesto de pesca aparece “¿Inscribirte en el concurso de pesca?” con “Sí” y “No”. Al elegir “Sí” aparece el cuadro de diálogo “Ve al lago y lanza la caña para empezar”.
+- El concurso empieza la primera vez que el jugador lanza la caña en el lago después de inscribirse. Dura 1 minuto y 30 segundos de tiempo real (90 minutos de juego), pero termina a las 17:00 como muy tarde. Cuenta el pez más grande pescado durante ese tiempo.
 - Durante el concurso, la interfaz muestra la cuenta atrás del tiempo que queda, “Concurso de pesca: 1:30”, que baja segundo a segundo.
 - Durante el concurso pican las tres especies (Trucha, Carpa y Siluro) al azar, sea la hora que sea.
-- Los peces pescados durante el concurso se quedan en el inventario.
-- Solo se puede participar una vez por partida. Después, el puesto muestra “Ya has participado”."
+- Durante el concurso, pescar no gasta energía. Los peces pescados se quedan en el inventario.
+- Al terminar aparece “Concurso terminado: tu mejor pez mide N cm” o, si no ha pescado nada, “Concurso terminado: no has pescado nada”.
+- Compiten también tres vecinos con resultados fijos: Rosa (62 cm), Tomás (48 cm) y Pablo (35 cm). Gana el pez más grande. En caso de empate, queda por delante el vecino.
+- Los tres primeros se anuncian en la ceremonia (HU-66). Premios para el jugador: 1.º 100 monedas, 2.º 50 y 3.º 20.
+- Solo se puede participar una vez por partida. Después, el puesto muestra “Ya has participado”. Después de las 17:00, el puesto muestra “El concurso ya ha terminado”."
 "HU-61","HU-61. Partidas de práctica","# HU-61. Partidas de práctica
 
 # HU-61. Partidas de práctica
@@ -2167,7 +2210,7 @@ Como jugador, quiero una lista de tareas para cada día para saber qué hacer a 
 Criterios de aceptación:
 
 - La lista de objetivos (O) tiene el apartado “Tareas de hoy (día N)” con las tareas del día. Cada tarea aparece marcada (☑) cuando está hecha y sin marcar (☐) cuando no.
-- Las tareas de cada día siguen la historia del juego. Día 1: hablar con el alcalde, aceptar su encargo, recoger la carta en la tienda, entregársela y comprar Semillas y una Regadera. Día 2: ir a la granja, hablar con el granjero, llevarle las Semillas, recoger la Pala, buscar el cofre del granero y cavar, sembrar y regar una parcela del huerto. Día 3: ir al lago, encontrar el cofre del lago, regar los cultivos, pescar un pez, ir al bosque y recoger setas o moras. Día 4: aceptar y completar “Día de mercado” y recoger la primera cosecha. Día 5: entrar en la torre, hablar con la relojera, encontrar el cofre de la torre y una página del diario. Día 6: colocar las piezas en el mecanismo del reloj y llevar las Manzanas al granjero. Día 7: hablar con el alcalde en la feria y participar en los concursos de la cosecha y de pesca.
+- Las tareas de cada día siguen la historia del juego. Día 1: hablar con el alcalde, aceptar su encargo, recoger la carta en la tienda, entregársela y comprar Semillas y una Regadera. Día 2: ir a la granja, hablar con el granjero, llevarle las Semillas, recoger la Pala, buscar el cofre del granero y cavar, sembrar y regar una parcela del huerto. Día 3: ir al lago, encontrar el cofre del lago, regar los cultivos, pescar un pez, ir al bosque y recoger setas o moras. Día 4: aceptar y completar “Día de mercado” y recoger la primera cosecha. Día 5: entrar en la torre, hablar con la relojera, encontrar el cofre de la torre y una página del diario. Día 6: colocar las piezas en el mecanismo del reloj y llevar las Manzanas al granjero. Día 7: participar en los concursos de la cosecha y de pesca antes de las 17:00, ir a la ceremonia de las 18:00 y escuchar el discurso del alcalde.
 - Las tareas que consisten en hacer algo ese día (hablar con alguien, ir a una zona, comprar o leer un cartel) solo aparecen en su día y se marcan al hacerlas ese día.
 - Las tareas de encargos, objetos y cofres que siguen pendientes de días anteriores también aparecen, hasta que se hacen.
 - Si no hay ninguna tarea para hoy, aparece “No hay tareas para hoy”.
@@ -2197,7 +2240,7 @@ Escenario 5: Sin tareas
 - Dado que es el día 8 y todas las tareas de días anteriores están hechas
 - Cuando el jugador pulsa O
 - Entonces aparece “No hay tareas para hoy”","- La lista de objetivos (O) tiene el apartado “Tareas de hoy (día N)” con las tareas del día. Cada tarea aparece marcada (☑) cuando está hecha y sin marcar (☐) cuando no.
-- Las tareas de cada día siguen la historia del juego. Día 1: hablar con el alcalde, aceptar su encargo, recoger la carta en la tienda, entregársela y comprar Semillas y una Regadera. Día 2: ir a la granja, hablar con el granjero, llevarle las Semillas, recoger la Pala, buscar el cofre del granero y cavar, sembrar y regar una parcela del huerto. Día 3: ir al lago, encontrar el cofre del lago, regar los cultivos, pescar un pez, ir al bosque y recoger setas o moras. Día 4: aceptar y completar “Día de mercado” y recoger la primera cosecha. Día 5: entrar en la torre, hablar con la relojera, encontrar el cofre de la torre y una página del diario. Día 6: colocar las piezas en el mecanismo del reloj y llevar las Manzanas al granjero. Día 7: hablar con el alcalde en la feria y participar en los concursos de la cosecha y de pesca.
+- Las tareas de cada día siguen la historia del juego. Día 1: hablar con el alcalde, aceptar su encargo, recoger la carta en la tienda, entregársela y comprar Semillas y una Regadera. Día 2: ir a la granja, hablar con el granjero, llevarle las Semillas, recoger la Pala, buscar el cofre del granero y cavar, sembrar y regar una parcela del huerto. Día 3: ir al lago, encontrar el cofre del lago, regar los cultivos, pescar un pez, ir al bosque y recoger setas o moras. Día 4: aceptar y completar “Día de mercado” y recoger la primera cosecha. Día 5: entrar en la torre, hablar con la relojera, encontrar el cofre de la torre y una página del diario. Día 6: colocar las piezas en el mecanismo del reloj y llevar las Manzanas al granjero. Día 7: participar en los concursos de la cosecha y de pesca antes de las 17:00, ir a la ceremonia de las 18:00 y escuchar el discurso del alcalde.
 - Las tareas que consisten en hacer algo ese día (hablar con alguien, ir a una zona, comprar o leer un cartel) solo aparecen en su día y se marcan al hacerlas ese día.
 - Las tareas de encargos, objetos y cofres que siguen pendientes de días anteriores también aparecen, hasta que se hacen.
 - Si no hay ninguna tarea para hoy, aparece “No hay tareas para hoy”."
@@ -2264,3 +2307,51 @@ Escenario 4: Objetos comprados
 - Si son varias unidades, el mensaje dice cuántas: “Recibiste 2 Manzanas de parte de la relojera”.
 - Los objetos de cofres, los del suelo y los comprados no muestran este mensaje.
 - Si a la vez aparece otro mensaje, como “Encargo completado”, se ven los dos, uno debajo del otro."
+"HU-66","HU-66. Ceremonia de la feria","# HU-66. Ceremonia de la feria
+
+# HU-66. Ceremonia de la feria
+
+Como jugador, quiero una ceremonia al final de la feria para ver quién gana los concursos y escuchar al alcalde.
+
+Criterios de aceptación:
+
+- La ceremonia empieza a las 18:00 del día 7 si el jugador está en la plaza o, si no, en cuanto entra en la plaza ese día. Si el jugador no va antes de que acabe el día, se la pierde.
+- Al empezar, el alcalde sube al escenario y los visitantes se colocan delante, como público. El jugador no se puede mover hasta que termina.
+- El alcalde anuncia en un cuadro de diálogo los tres primeros del concurso de la cosecha (HU-59) y después los del concurso de pesca (HU-60). Mientras anuncia cada concurso, los tres primeros aparecen en el podio.
+- Si el jugador queda entre los tres primeros de un concurso, cobra su premio y aparece el mensaje “Premio: [cantidad] monedas”.
+- Después, si el encargo “La feria de Valtrigo” está activo o es el siguiente que toca, el alcalde da su discurso desde el escenario y el encargo se completa (HU-20). Al terminar, aparece el mensaje de final (HU-37).
+- La ceremonia solo se celebra una vez.
+Escenario 1: Empieza la ceremonia
+
+- Dado que es el día 7 a las 17:59 y el jugador está en la plaza
+- Cuando el reloj llega a las 18:00
+- Entonces el alcalde está en el escenario
+- Y aparece el diálogo de la ceremonia
+Escenario 2: Llegar tarde
+
+- Dado que son las 19:00 del día 7 y la ceremonia no se ha celebrado
+- Cuando el jugador entra en la plaza
+- Entonces empieza la ceremonia
+Escenario 3: Podio y premio
+
+- Dado que el jugador presentó una Calabaza de 12 kg al concurso de la cosecha
+- Cuando el alcalde anuncia el concurso de la cosecha
+- Entonces el jugador aparece en el primer puesto del podio, Lucía en el segundo y Tomás en el tercero
+- Y el jugador recibe 100 monedas
+Escenario 4: Fuera del podio
+
+- Dado que el mejor pez del jugador en el concurso de pesca mide 30 cm
+- Cuando el alcalde anuncia el concurso de pesca
+- Entonces el podio es Rosa, Tomás y Pablo
+- Y el jugador no recibe premio
+Escenario 5: Discurso final
+
+- Dado que el encargo “La feria de Valtrigo” está activo
+- Cuando termina el anuncio de los concursos
+- Entonces el alcalde da su discurso, aparece el mensaje “Encargo completado”
+- Y después aparece el mensaje de final","- La ceremonia empieza a las 18:00 del día 7 si el jugador está en la plaza o, si no, en cuanto entra en la plaza ese día. Si el jugador no va antes de que acabe el día, se la pierde.
+- Al empezar, el alcalde sube al escenario y los visitantes se colocan delante, como público. El jugador no se puede mover hasta que termina.
+- El alcalde anuncia en un cuadro de diálogo los tres primeros del concurso de la cosecha (HU-59) y después los del concurso de pesca (HU-60). Mientras anuncia cada concurso, los tres primeros aparecen en el podio.
+- Si el jugador queda entre los tres primeros de un concurso, cobra su premio y aparece el mensaje “Premio: [cantidad] monedas”.
+- Después, si el encargo “La feria de Valtrigo” está activo o es el siguiente que toca, el alcalde da su discurso desde el escenario y el encargo se completa (HU-20). Al terminar, aparece el mensaje de final (HU-37).
+- La ceremonia solo se celebra una vez."

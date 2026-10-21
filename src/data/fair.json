@@ -1,16 +1,31 @@
 {
   "day": 7,
+  "wakeUp": "12:00",
+  "contestsOpen": "12:00",
+  "contestsClose": "17:00",
+  "ceremony": "18:00",
+  "contestsClosed": "Los concursos han terminado. Ceremonia a las 18:00 en la plaza",
+  "prizes": [100, 50, 20],
   "harvest": {
     "title": "Concurso de la cosecha",
-    "prizes": { "nabo": 20, "zanahoria": 50, "calabaza": 100 }
+    "crops": {
+      "nabo": { "article": "un", "minWeight": 1, "maxWeight": 3 },
+      "zanahoria": { "article": "una", "minWeight": 2, "maxWeight": 5 },
+      "calabaza": { "article": "una", "minWeight": 6, "maxWeight": 15 }
+    },
+    "rivals": [
+      { "npc": "lucia", "item": "calabaza", "weight": 11 },
+      { "npc": "tomas", "item": "zanahoria", "weight": 4 },
+      { "npc": "pablo", "item": "nabo", "weight": 2 }
+    ]
   },
   "fishing": {
     "title": "Concurso de pesca",
     "minutes": 90,
-    "prizes": [
-      { "minSize": 80, "money": 100 },
-      { "minSize": 40, "money": 50 },
-      { "minSize": 0, "money": 20 }
+    "rivals": [
+      { "npc": "rosa", "size": 62 },
+      { "npc": "tomas", "size": 48 },
+      { "npc": "pablo", "size": 35 }
     ]
   }
 }

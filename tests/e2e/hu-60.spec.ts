@@ -6,6 +6,7 @@ import {
   currentGameState,
   dialogState,
   FISHING_SPOT,
+  isFishing,
   NEXT_TO_FISHING_STALL,
   press,
   ROD,
@@ -17,120 +18,102 @@ import {
 } from './helpers';
 
 // HU-60. Concurso de pesca
-// En los escenarios 2 y 3 se adelanta el reloj hasta la hora de fin del concurso, para no esperar 90 s reales;
-// el escenario 4 comprueba la duración en tiempo real.
+// En los escenarios 3, 4 y 8 se adelanta el reloj, para no esperar en tiempo real; el 5 y el 6 miden el tiempo real.
 // Durante el concurso, cada pez usa tres valores al azar: la espera hasta "¡Pica!" (0: 2 s), la especie
 // (menos de 1/3: Trucha; hasta 2/3: Carpa; el resto: Siluro) y el tamaño.
 
-async function signUp(page: import('@playwright/test').Page): Promise<void> {
+const SIGNED_UP = { day: 7, inventory: [ROD], fishingContestDone: true, fishingContest: { endsAt: null, best: 0 } };
+
+async function countdown(page: import('@playwright/test').Page): Promise<string | undefined> {
+  return (await sceneTexts(page, 'HudScene')).find((text) => text.startsWith('Concurso de pesca:'));
+}
+
+// Lanza la caña para empezar el concurso y la recoge enseguida.
+async function startContest(page: import('@playwright/test').Page): Promise<void> {
   await press(page, 'e');
-  expect(await sceneTexts(page, 'HudScene')).toContain('¿Inscribirte en el concurso de pesca?');
-  await clickText(page, 'HudScene', 'Sí');
+  await press(page, 'ArrowUp');
+  expect(await isFishing(page)).toBe(false);
 }
 
 test('Escenario 1: Inscribirse', async ({ page }) => {
-  await startAtWith(page, 'plaza', NEXT_TO_FISHING_STALL, { day: 7, minutes: at(10) });
+  await startAtWith(page, 'plaza', NEXT_TO_FISHING_STALL, { day: 7, minutes: at(13) });
 
-  await signUp(page);
+  await press(page, 'e');
+  expect(await sceneTexts(page, 'HudScene')).toContain('¿Inscribirte en el concurso de pesca?');
+  await clickText(page, 'HudScene', 'Sí');
 
-  const state = await currentGameState(page);
-  expect(state?.fishingContest).not.toBeNull();
-  expect(state?.fishingContestDone).toBe(true);
+  expect((await dialogState(page))?.fullText).toBe('Ve al lago y lanza la caña para empezar');
+  expect((await currentGameState(page))?.fishingContest).toEqual({ endsAt: null, best: 0 });
+  expect(await countdown(page)).toBeUndefined();
 });
 
-test('Escenario 2: Ganar un premio', async ({ page }) => {
-  // Concurso en marcha: primero pica una Carpa de 30 cm y después una Trucha de 45 cm.
-  await startAtWith(page, 'lago', FISHING_SPOT, {
-    day: 7,
-    minutes: at(10),
-    money: 100,
-    energy: 50,
-    inventory: [ROD],
-    fishingContestDone: true,
-    fishingContest: { endsAt: at(11, 30), best: 0 },
-  });
+test('Escenario 2: Empezar en el lago', async ({ page }) => {
+  await startAtWith(page, 'lago', FISHING_SPOT, { ...SIGNED_UP, minutes: at(13) });
+  expect(await countdown(page)).toBeUndefined();
+
+  await press(page, 'e'); // lanza la caña
+
+  expect(['Concurso de pesca: 1:30', 'Concurso de pesca: 1:29']).toContain(await countdown(page));
+  const state = await currentGameState(page);
+  expect(state?.fishingContest?.endsAt).toBe(state!.minutes + 90);
+});
+
+test('Escenario 3: Mejor pez', async ({ page }) => {
+  await startAtWith(page, 'lago', FISHING_SPOT, { ...SIGNED_UP, minutes: at(13), energy: 50 });
   await setRandom(page, [0, 0.5, 0.385, 0, 0.1, 0.77]);
 
   expect(await catchFish(page)).toBe('Has pescado una Carpa de 30 cm');
   expect(await catchFish(page)).toBe('Has pescado una Trucha de 45 cm');
+  await setClock(page, (await currentGameState(page))!.fishingContest!.endsAt!);
 
-  await setClock(page, at(11, 30));
   await waitForHudText(page, 'Concurso terminado: tu mejor pez mide 45 cm');
-
   const state = await currentGameState(page);
-  expect(state?.money).toBe(150);
+  expect(state?.fishingResult).toBe(45);
   expect(state?.energy).toBe(50); // pescar durante el concurso no gasta energía
   expect(state?.inventory).toEqual([ROD, { item: 'carpa', quantity: 1 }, { item: 'trucha', quantity: 1 }]);
-  expect(state?.fishingContest).toBeNull();
 });
 
-test('Escenario 3: Sin peces', async ({ page }) => {
-  await startAtWith(page, 'lago', FISHING_SPOT, {
-    day: 7,
-    minutes: at(10),
-    money: 100,
-    inventory: [ROD],
-    fishingContestDone: true,
-    fishingContest: { endsAt: at(11, 30), best: 0 },
-  });
+test('Escenario 4: Sin peces', async ({ page }) => {
+  await startAtWith(page, 'lago', FISHING_SPOT, { ...SIGNED_UP, minutes: at(13), fishingContest: { endsAt: at(14, 30), best: 0 } });
 
-  await setClock(page, at(11, 30));
+  await setClock(page, at(14, 30));
 
   await waitForHudText(page, 'Concurso terminado: no has pescado nada');
-  expect((await currentGameState(page))?.money).toBe(100);
+  expect((await currentGameState(page))?.fishingResult).toBe(0);
 });
 
-test('Escenario 4: Duración', async ({ page }) => {
+test('Escenario 5: Duración', async ({ page }) => {
   test.setTimeout(150_000);
-  await startAtWith(page, 'plaza', NEXT_TO_FISHING_STALL, { day: 7, minutes: at(10) });
+  await startAtWith(page, 'lago', FISHING_SPOT, { ...SIGNED_UP, minutes: at(13) });
 
-  await signUp(page);
+  await startContest(page);
   const start = (await currentGameState(page))!.minutes;
-  expect(start - at(10)).toBeLessThanOrEqual(1);
-  expect((await currentGameState(page))?.fishingContest?.endsAt).toBe(start + 90);
+  expect(start - at(13)).toBeLessThanOrEqual(1);
 
-  // Pasan 1 minuto y 30 segundos reales: el concurso termina 90 minutos de juego después (a las 11:30).
   await waitForHudText(page, 'Concurso terminado: no has pescado nada', 100_000);
   const end = (await currentGameState(page))!.minutes;
   expect(end - start).toBeGreaterThanOrEqual(90);
   expect(end - start).toBeLessThanOrEqual(91);
-  expect(end - at(11, 30)).toBeLessThanOrEqual(1);
-});
-
-test('Escenario 5: Solo una vez', async ({ page }) => {
-  await startAtWith(page, 'plaza', NEXT_TO_FISHING_STALL, { day: 7, minutes: at(10), fishingContestDone: true });
-
-  await press(page, 'e');
-
-  expect((await dialogState(page))?.fullText).toBe('Ya has participado');
-  expect(await sceneTexts(page, 'HudScene')).not.toContain('¿Inscribirte en el concurso de pesca?');
+  expect(end - at(14, 30)).toBeLessThanOrEqual(1);
 });
 
 test('Escenario 6: Cuenta atrás', async ({ page }) => {
-  await startAtWith(page, 'plaza', NEXT_TO_FISHING_STALL, { day: 7, minutes: at(10) });
-
-  await signUp(page);
-
-  const countdown = async () => (await sceneTexts(page, 'HudScene')).find((text) => text.startsWith('Concurso de pesca:'));
-  expect(['Concurso de pesca: 1:30', 'Concurso de pesca: 1:29']).toContain(await countdown());
+  await startAtWith(page, 'lago', FISHING_SPOT, { ...SIGNED_UP, minutes: at(13) });
+  await startContest(page);
   const start = (await currentGameState(page))!.minutes;
+  const endsAt = (await currentGameState(page))!.fishingContest!.endsAt!;
+
   // 10 segundos reales después.
   await expect.poll(async () => (await currentGameState(page))!.minutes, { timeout: 15_000, intervals: [50] }).toBe(start + 10);
-  const endsAt = (await currentGameState(page))!.fishingContest!.endsAt;
+
   const left = endsAt - (start + 10);
-  expect(await countdown()).toBe(`Concurso de pesca: ${Math.floor(left / 60)}:${String(left % 60).padStart(2, '0')}`);
-  expect([80, 79]).toContain(left); // 1:20 (o 1:19 si el reloj avanzó al inscribirse)
+  expect(left).toBe(80);
+  expect(await countdown(page)).toBe('Concurso de pesca: 1:20');
 });
 
 test('Escenario 7: Todas las especies', async ({ page }) => {
   // A las 15:00, fuera del concurso, solo picarían Carpas (HU-49).
-  await startAtWith(page, 'lago', FISHING_SPOT, {
-    day: 7,
-    minutes: at(15),
-    inventory: [ROD],
-    fishingContestDone: true,
-    fishingContest: { endsAt: at(16, 30), best: 0 },
-  });
+  await startAtWith(page, 'lago', FISHING_SPOT, { ...SIGNED_UP, minutes: at(15) });
   await setRandom(page, [0, 0.1, 0.5, 0, 0.5, 0.5, 0, 0.9, 0.5]);
 
   expect(await catchFish(page)).toMatch(/^Has pescado una Trucha/);
@@ -141,4 +124,24 @@ test('Escenario 7: Todas las especies', async ({ page }) => {
   expect(inventory).toContainEqual({ item: 'trucha', quantity: 1 });
   expect(inventory).toContainEqual({ item: 'carpa', quantity: 1 });
   expect(inventory).toContainEqual({ item: 'siluro', quantity: 1 });
+});
+
+test('Escenario 8: Fin a las 17:00', async ({ page }) => {
+  // Empezó a las 16:30: sin el cierre, terminaría a las 18:00.
+  await startAtWith(page, 'lago', FISHING_SPOT, { ...SIGNED_UP, minutes: at(16, 59), fishingContest: { endsAt: at(18), best: 0 } });
+
+  await waitForHudText(page, 'Concurso terminado: no has pescado nada', 5000);
+
+  const state = await currentGameState(page);
+  expect(state?.fishingContest).toBeNull();
+  expect(state?.minutes).toBeLessThanOrEqual(at(17, 1));
+});
+
+test('Escenario 9: Solo una vez', async ({ page }) => {
+  await startAtWith(page, 'plaza', NEXT_TO_FISHING_STALL, { day: 7, minutes: at(13), fishingContestDone: true });
+
+  await press(page, 'e');
+
+  expect((await dialogState(page))?.fullText).toBe('Ya has participado');
+  expect(await sceneTexts(page, 'HudScene')).not.toContain('¿Inscribirte en el concurso de pesca?');
 });

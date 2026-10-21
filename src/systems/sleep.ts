@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { MAX_ENERGY, WAKE_UP_MINUTES } from '../config';
+import { FAIR_WAKE_UP_MINUTES, isFairDay } from './fair';
 import { createNewGameState, emptyDayStats, getGameState, type GameState } from './gameState';
 import { growOvernight } from './farm';
 import { readSave } from './save';
@@ -14,7 +15,8 @@ function wakeUp(scene: Phaser.Scene, base: GameState, day: number): GameState {
   const morning: GameState = {
     ...structuredClone(base),
     day,
-    minutes: WAKE_UP_MINUTES,
+    // HU-58: el día de la feria es festivo y el jugador se despierta a las 12:00.
+    minutes: isFairDay(day) ? FAIR_WAKE_UP_MINUTES : WAKE_UP_MINUTES,
     energy: MAX_ENERGY,
     dayStats: emptyDayStats(),
     dayEvents: [],

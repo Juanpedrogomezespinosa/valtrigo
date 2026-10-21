@@ -31,6 +31,12 @@ export class Npc extends Phaser.Physics.Arcade.Sprite {
     return this.visible;
   }
 
+  // Lleva al NPC a otro sitio (la ceremonia de la feria, HU-66). Su cuerpo de colisión va con él.
+  moveTo(x: number, y: number): void {
+    this.setPosition(x, y);
+    this.body.updateFromGameObject();
+  }
+
   // Hueco en píxeles entre el cuerpo del NPC y otro cuerpo (0 si se tocan).
   gapTo(other: Phaser.Physics.Arcade.Body): number {
     const dx = Math.max(this.body.left - other.right, other.left - this.body.right, 0);

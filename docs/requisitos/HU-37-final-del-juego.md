@@ -6,7 +6,7 @@ Como jugador, quiero ver un final al completar la historia para saber que he ter
 
 Criterios de aceptación:
 
-- Al completar el último encargo (“La feria de Valtrigo”), cuando se cierra el diálogo del alcalde aparece el mensaje de final.
+- Al completar el último encargo (“La feria de Valtrigo”), cuando se cierra el diálogo del alcalde (el discurso de la ceremonia, HU-66, o su diálogo si se completa después de la feria) aparece el mensaje de final.
 - El mensaje de final se cierra con E y el jugador puede seguir jugando en el pueblo.
 - El mensaje de final solo aparece una vez.
 Escenario 1: Ver el final

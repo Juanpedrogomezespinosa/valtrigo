@@ -10,7 +10,7 @@
  "tilewidth": 16,
  "tileheight": 16,
  "nextlayerid": 4,
- "nextobjectid": 20,
+ "nextobjectid": 31,
  "layers": [
   {
    "id": 1,
@@ -2576,6 +2576,201 @@
     },
     {
      "id": 8,
+     "name": "escenario",
+     "type": "",
+     "point": true,
+     "x": 360,
+     "y": 152,
+     "width": 0,
+     "height": 0,
+     "rotation": 0,
+     "visible": true
+    },
+    {
+     "id": 9,
+     "name": "podio",
+     "type": "",
+     "point": true,
+     "x": 440,
+     "y": 152,
+     "width": 0,
+     "height": 0,
+     "rotation": 0,
+     "visible": true
+    },
+    {
+     "id": 10,
+     "name": "visitante",
+     "type": "",
+     "point": true,
+     "x": 344,
+     "y": 248,
+     "width": 0,
+     "height": 0,
+     "rotation": 0,
+     "visible": true,
+     "properties": [
+      {
+       "name": "personaje",
+       "type": "string",
+       "value": "rosa"
+      }
+     ]
+    },
+    {
+     "id": 11,
+     "name": "visitante",
+     "type": "",
+     "point": true,
+     "x": 216,
+     "y": 248,
+     "width": 0,
+     "height": 0,
+     "rotation": 0,
+     "visible": true,
+     "properties": [
+      {
+       "name": "personaje",
+       "type": "string",
+       "value": "lucia"
+      }
+     ]
+    },
+    {
+     "id": 12,
+     "name": "visitante",
+     "type": "",
+     "point": true,
+     "x": 184,
+     "y": 216,
+     "width": 0,
+     "height": 0,
+     "rotation": 0,
+     "visible": true,
+     "properties": [
+      {
+       "name": "personaje",
+       "type": "string",
+       "value": "tomas"
+      }
+     ]
+    },
+    {
+     "id": 13,
+     "name": "visitante",
+     "type": "",
+     "point": true,
+     "x": 424,
+     "y": 264,
+     "width": 0,
+     "height": 0,
+     "rotation": 0,
+     "visible": true,
+     "properties": [
+      {
+       "name": "personaje",
+       "type": "string",
+       "value": "pablo"
+      }
+     ]
+    },
+    {
+     "id": 14,
+     "name": "publico",
+     "type": "",
+     "point": true,
+     "x": 328,
+     "y": 184,
+     "width": 0,
+     "height": 0,
+     "rotation": 0,
+     "visible": true,
+     "properties": [
+      {
+       "name": "personaje",
+       "type": "string",
+       "value": "rosa"
+      }
+     ]
+    },
+    {
+     "id": 15,
+     "name": "publico",
+     "type": "",
+     "point": true,
+     "x": 344,
+     "y": 184,
+     "width": 0,
+     "height": 0,
+     "rotation": 0,
+     "visible": true,
+     "properties": [
+      {
+       "name": "personaje",
+       "type": "string",
+       "value": "lucia"
+      }
+     ]
+    },
+    {
+     "id": 16,
+     "name": "publico",
+     "type": "",
+     "point": true,
+     "x": 408,
+     "y": 184,
+     "width": 0,
+     "height": 0,
+     "rotation": 0,
+     "visible": true,
+     "properties": [
+      {
+       "name": "personaje",
+       "type": "string",
+       "value": "tomas"
+      }
+     ]
+    },
+    {
+     "id": 17,
+     "name": "publico",
+     "type": "",
+     "point": true,
+     "x": 424,
+     "y": 184,
+     "width": 0,
+     "height": 0,
+     "rotation": 0,
+     "visible": true,
+     "properties": [
+      {
+       "name": "personaje",
+       "type": "string",
+       "value": "pablo"
+      }
+     ]
+    },
+    {
+     "id": 18,
+     "name": "publico",
+     "type": "",
+     "point": true,
+     "x": 360,
+     "y": 184,
+     "width": 0,
+     "height": 0,
+     "rotation": 0,
+     "visible": true,
+     "properties": [
+      {
+       "name": "personaje",
+       "type": "string",
+       "value": "jugador"
+      }
+     ]
+    },
+    {
+     "id": 19,
      "name": "inicio",
      "type": "",
      "point": true,
@@ -2587,7 +2782,7 @@
      "visible": true
     },
     {
-     "id": 9,
+     "id": 20,
      "name": "llegada-casa",
      "type": "",
      "point": true,
@@ -2606,7 +2801,7 @@
      ]
     },
     {
-     "id": 10,
+     "id": 21,
      "name": "llegada-torre",
      "type": "",
      "point": true,
@@ -2625,7 +2820,7 @@
      ]
     },
     {
-     "id": 11,
+     "id": 22,
      "name": "llegada-tienda",
      "type": "",
      "point": true,
@@ -2644,7 +2839,7 @@
      ]
     },
     {
-     "id": 12,
+     "id": 23,
      "name": "llegada-granja",
      "type": "",
      "point": true,
@@ -2663,7 +2858,7 @@
      ]
     },
     {
-     "id": 13,
+     "id": 24,
      "name": "llegada-lago",
      "type": "",
      "point": true,
@@ -2682,7 +2877,7 @@
      ]
     },
     {
-     "id": 14,
+     "id": 25,
      "name": "npc",
      "type": "",
      "point": true,
@@ -2701,7 +2896,7 @@
      ]
     },
     {
-     "id": 15,
+     "id": 26,
      "name": "puerta",
      "type": "",
      "x": 96,
@@ -2724,7 +2919,7 @@
      ]
     },
     {
-     "id": 16,
+     "id": 27,
      "name": "puerta",
      "type": "",
      "x": 304,
@@ -2747,7 +2942,7 @@
      ]
     },
     {
-     "id": 17,
+     "id": 28,
      "name": "puerta",
      "type": "",
      "x": 496,
@@ -2770,7 +2965,7 @@
      ]
     },
     {
-     "id": 18,
+     "id": 29,
      "name": "puerta",
      "type": "",
      "x": 624,
@@ -2793,7 +2988,7 @@
      ]
     },
     {
-     "id": 19,
+     "id": 30,
      "name": "puerta",
      "type": "",
      "x": 304,

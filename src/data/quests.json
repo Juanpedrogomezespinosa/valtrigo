@@ -56,8 +56,8 @@
     "day": 7,
     "npc": "alcalde",
     "name": "La feria de Valtrigo",
-    "description": "Habla con el alcalde durante la feria.",
-    "requirement": { "type": "talk" },
+    "description": "Escucha el discurso del alcalde en la ceremonia de la feria, a las 18:00 en la plaza.",
+    "requirement": { "type": "talk", "ceremony": true },
     "reward": { "money": 80, "items": [{ "item": "copa-de-valtrigo", "quantity": 1 }] }
   }
 ]

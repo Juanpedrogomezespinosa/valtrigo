@@ -7,7 +7,7 @@ Como jugador, quiero dormir en mi casa para terminar el día y empezar el siguie
 Criterios de aceptación:
 
 - Al pulsar E junto a la cama de la casa del jugador aparece el mensaje “¿Dormir?” con las opciones “Sí” y “No”.
-- Al dormir, se avanza al día siguiente a las 06:00 y la energía vuelve a 100.
+- Al dormir, se avanza al día siguiente a las 06:00 (a las 12:00 si es el día de la feria, HU-58) y la energía vuelve a 100.
 - Se puede dormir a cualquier hora del día.
 Escenario 1: Dormir por la noche
 

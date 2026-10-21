@@ -41,7 +41,8 @@
   { "day": 6, "text": "Coloca las tres piezas en el mecanismo del reloj", "done": { "questCompleted": "encargo-4" } },
   { "day": 6, "text": "Lleva 2 Manzanas al granjero", "done": { "questCompleted": "encargo-5" } },
 
-  { "day": 7, "text": "Habla con el alcalde en la feria", "done": { "questCompleted": "encargo-6" } },
-  { "day": 7, "text": "Presenta una cosecha en el concurso de la feria", "done": { "event": "contest:cosecha" } },
-  { "day": 7, "text": "Participa en el concurso de pesca", "done": { "event": "contest:pesca" } }
+  { "day": 7, "text": "Presenta una cosecha al concurso antes de las 17:00", "done": { "event": "contest:cosecha" } },
+  { "day": 7, "text": "Inscríbete en el concurso de pesca antes de las 17:00", "done": { "event": "contest:pesca" } },
+  { "day": 7, "text": "Ve a la ceremonia de las 18:00 en la plaza", "done": { "event": "ceremony" } },
+  { "day": 7, "text": "Escucha el discurso del alcalde", "done": { "questCompleted": "encargo-6" } }
 ]

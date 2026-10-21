@@ -109,9 +109,11 @@ export interface TestGameState {
   activeOrders: number[];
   acceptedOrderDays: number[];
   diaryPages: string[];
-  harvestContestDone: boolean;
+  harvestEntry: { item: string; weight: number } | null;
   fishingContestDone: boolean;
-  fishingContest: { endsAt: number; best: number } | null;
+  fishingContest: { endsAt: number | null; best: number } | null;
+  fishingResult: number | null;
+  ceremonyDone: boolean;
 }
 
 // Partida guardada de ejemplo, con el formato de src/systems/save.ts.
@@ -138,9 +140,11 @@ export function savedGame(overrides: Partial<TestGameState> = {}): TestGameState
     activeOrders: [],
     acceptedOrderDays: [],
     diaryPages: [],
-    harvestContestDone: false,
+    harvestEntry: null,
     fishingContestDone: false,
     fishingContest: null,
+    fishingResult: null,
+    ceremonyDone: false,
     ...overrides,
   };
 }
@@ -1031,12 +1035,60 @@ export async function isDiaryPageOnMap(page: Page, id: string): Promise<boolean>
 export const NEXT_TO_HARVEST_STALL = { x: 15, y: 15 };
 export const NEXT_TO_FISHING_STALL = { x: 19, y: 15 };
 
-export async function fairView(page: Page): Promise<{ harvestStall: boolean; fishingStall: boolean; garland: boolean }> {
+export const VISITORS = ['rosa', 'lucia', 'tomas', 'pablo'];
+
+// Lo que hay de la feria en la plaza: puestos, guirnalda, escenario, podio y visitantes presentes.
+export async function fairView(
+  page: Page,
+): Promise<{ harvestStall: boolean; fishingStall: boolean; garland: boolean; stage: boolean; podium: boolean; visitors: string[] }> {
+  return page.evaluate((visitors) => {
+    const game = (window as unknown as GameWindow).game;
+    const scene = game.scene.getScene('GameScene') as unknown as {
+      isStallOnMap(kind: string): boolean;
+      isGarlandOnMap(): boolean;
+      isCeremonyPlatformOnMap(): { stage: boolean; podium: boolean };
+      isNpcPresent(id: string): boolean;
+    };
+    return {
+      harvestStall: scene.isStallOnMap('cosecha'),
+      fishingStall: scene.isStallOnMap('pesca'),
+      garland: scene.isGarlandOnMap(),
+      ...scene.isCeremonyPlatformOnMap(),
+      visitors: visitors.filter((id) => scene.isNpcPresent(id)),
+    };
+  }, VISITORS);
+}
+
+// --- Ceremonia (HU-66) ---
+
+export async function ceremonyView(
+  page: Page,
+): Promise<{ inCeremony: boolean; podium: string[]; mayor: { x: number; y: number } | null; stage: { x: number; y: number; width: number; height: number } | null }> {
   return page.evaluate(() => {
     const game = (window as unknown as GameWindow).game;
-    const scene = game.scene.getScene('GameScene') as unknown as { isStallOnMap(kind: string): boolean; isGarlandOnMap(): boolean };
-    return { harvestStall: scene.isStallOnMap('cosecha'), fishingStall: scene.isStallOnMap('pesca'), garland: scene.isGarlandOnMap() };
+    const scene = game.scene.getScene('GameScene') as unknown as {
+      isInCeremony(): boolean;
+      getPodium(): string[];
+      getNpcPosition(id: string): { x: number; y: number } | null;
+      getStageArea(): { x: number; y: number; width: number; height: number } | null;
+    };
+    return { inCeremony: scene.isInCeremony(), podium: scene.getPodium(), mayor: scene.getNpcPosition('alcalde'), stage: scene.getStageArea() };
   });
+}
+
+// Avanza el diálogo con E hasta que aparece una línea que empieza por `prefix` (y se termina de escribir).
+export async function advanceDialogUntil(page: Page, prefix: string, timeout = 30_000): Promise<void> {
+  const deadline = Date.now() + timeout;
+  while (Date.now() < deadline) {
+    const state = await dialogState(page);
+    if (state?.fullText.startsWith(prefix)) {
+      await expect.poll(async () => (await dialogState(page))?.typing, { intervals: [25] }).toBe(false);
+      return;
+    }
+    if (state && !state.typing) await press(page, 'e');
+    else await page.waitForTimeout(50);
+  }
+  throw new Error(`No ha aparecido la línea "${prefix}"`);
 }
 
 // Pone el reloj en una hora concreta, para no esperar en tiempo real (por ejemplo, al final de un concurso).

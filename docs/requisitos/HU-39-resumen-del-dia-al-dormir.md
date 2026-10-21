@@ -8,7 +8,7 @@ Criterios de aceptación:
 
 - Al dormir en la cama, después del fundido a negro, aparece la pantalla “Día N terminado”, con N el día que termina.
 - El resumen muestra las monedas ganadas ese día (ventas y recompensas), las cosechas recogidas y los peces pescados.
-- El resumen se cierra con E y entonces empieza el día siguiente a las 06:00.
+- El resumen se cierra con E y entonces empieza el día siguiente a las 06:00 (a las 12:00 si es el día de la feria, HU-58).
 - Al dormirse a medianoche no aparece el resumen, porque el progreso del día se pierde.
 Escenario 1: Ver el resumen
 

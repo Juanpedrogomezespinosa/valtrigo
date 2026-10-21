@@ -36,13 +36,14 @@
         "encargo-6": {
           "offer": [
             "¡El reloj vuelve a dar la hora y la feria ya ha empezado!",
-            "¿Me acompañas un momento? Hay algo que quiero decirte."
+            "A las seis daré un discurso en el escenario de la plaza. ¿Vendrás a escucharlo?"
           ],
           "active": [
-            "Cuando estés listo, vuelve a hablar conmigo."
+            "Te espero a las seis en el escenario de la plaza. ¡No llegues tarde!"
           ],
           "complete": [
-            "Valtrigo vuelve a tener hora gracias a ti.",
+            "Vecinos de Valtrigo: hace una semana el reloj se paró y nadie sabía qué hacer.",
+            "Alguien que acababa de llegar al pueblo encontró las piezas y lo volvió a poner en marcha.",
             "En nombre de todo el pueblo: ¡gracias! Esto es para ti."
           ],
           "thanks": [
@@ -158,6 +159,58 @@
           ]
         }
       }
+    },
+    "rosa": {
+      "name": "Rosa",
+      "from": "de Rosa",
+      "greeting": [
+        "¡Qué bonita está la plaza con las guirnaldas!",
+        "Este año pienso ganar el concurso de pesca. Mi trucha de la mañana medía más de sesenta centímetros."
+      ],
+      "clockRepaired": [
+        "¡Qué bonita está la plaza con las guirnaldas!",
+        "Este año pienso ganar el concurso de pesca. Mi trucha de la mañana medía más de sesenta centímetros."
+      ],
+      "quests": {}
+    },
+    "lucia": {
+      "name": "Lucía",
+      "from": "de Lucía",
+      "greeting": [
+        "He traído la calabaza más grande de mi huerto.",
+        "Si quieres ganarme en el concurso de la cosecha, vas a tener que esforzarte."
+      ],
+      "clockRepaired": [
+        "He traído la calabaza más grande de mi huerto.",
+        "Si quieres ganarme en el concurso de la cosecha, vas a tener que esforzarte."
+      ],
+      "quests": {}
+    },
+    "tomas": {
+      "name": "Tomás",
+      "from": "de Tomás",
+      "greeting": [
+        "Llevo cuarenta ferias en Valtrigo y ninguna empezó tan tarde.",
+        "Pero hoy es festivo: ¡a nadie le importa!"
+      ],
+      "clockRepaired": [
+        "Llevo cuarenta ferias en Valtrigo y ninguna empezó tan tarde.",
+        "Pero hoy es festivo: ¡a nadie le importa!"
+      ],
+      "quests": {}
+    },
+    "pablo": {
+      "name": "Pablo",
+      "from": "de Pablo",
+      "greeting": [
+        "¡Me he apuntado a los dos concursos!",
+        "Mi abuelo dice que el que no participa no gana. A las seis es la ceremonia, ¿vendrás?"
+      ],
+      "clockRepaired": [
+        "¡Me he apuntado a los dos concursos!",
+        "Mi abuelo dice que el que no participa no gana. A las seis es la ceremonia, ¿vendrás?"
+      ],
+      "quests": {}
     }
   },
   "ending": {
@@ -165,5 +218,19 @@
     "lines": [
       "¡El reloj de Valtrigo vuelve a dar la hora y la feria es todo un éxito! Gracias por jugar. Puedes seguir paseando por el pueblo o ver los créditos desde el menú principal."
     ]
+  },
+  "ceremony": {
+    "title": "Alcalde",
+    "intro": [
+      "¡Vecinos de Valtrigo, bienvenidos a la ceremonia de la feria!",
+      "Vamos con los ganadores de los concursos."
+    ],
+    "places": [
+      "Primer puesto",
+      "Segundo puesto",
+      "Tercer puesto"
+    ],
+    "you": "tú",
+    "prize": "Premio: {cantidad} monedas"
   }
 }

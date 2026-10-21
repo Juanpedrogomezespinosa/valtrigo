@@ -5,6 +5,7 @@
 // - El icono de las Moras del bosque (HU-50).
 // - El mecanismo del reloj de la torre (HU-56): public/assets/sprites/mecanismo.png.
 // - La feria (HU-58): guirnalda.png y los puestos de la cosecha y de pesca (16×32, el de abajo es el mostrador).
+// - La ceremonia (HU-66): escenario.png y podio.png (48×32).
 // Uso: node tools/generar-sprites.mjs
 //
 // cultivos.png: casillas de 16×16, de izquierda a derecha:
@@ -330,9 +331,61 @@ function stall(a) {
   ].map((row) => row.replaceAll('a', a));
 }
 
+// Escenario de la ceremonia (48×32): tarima de madera con faldón rojo. El alcalde se dibuja encima.
+function stage() {
+  const rows = [];
+  for (let y = 0; y < 32; y++) {
+    let row = '';
+    for (let x = 0; x < 48; x++) {
+      const edge = x === 0 || x === 47;
+      if (y < 12) row += '.';
+      else if (y === 12 || y === 31) row += 'o';
+      else if (y <= 15) row += edge ? 'o' : x % 8 === 0 ? 'B' : 'W'; // tablas de la tarima
+      else if (y === 16) row += 'o';
+      else row += edge ? 'o' : x % 6 === 0 ? 'o' : 'x'; // faldón con pliegues
+    }
+    rows.push(row);
+  }
+  return rows;
+}
+
+// Cifras de 3×5 para el podio.
+const DIGITS = {
+  1: ['.w.', 'ww.', '.w.', '.w.', 'www'],
+  2: ['ww.', '..w', '.w.', 'w..', 'www'],
+  3: ['ww.', '..w', '.w.', '..w', 'ww.'],
+};
+
+// Podio de la ceremonia (48×32): tres bloques de 16 de ancho. En medio el 1.º (el más alto), a la izquierda
+// el 2.º y a la derecha el 3.º. Los ganadores se dibujan encima de cada bloque (HU-66).
+const PODIUM_TOPS = { 2: 14, 1: 8, 3: 18 };
+function podium() {
+  const blocks = [
+    { place: 2, x0: 0 },
+    { place: 1, x0: 16 },
+    { place: 3, x0: 32 },
+  ];
+  const rows = Array.from({ length: 32 }, () => Array(48).fill('.'));
+  for (const { place, x0 } of blocks) {
+    const top = PODIUM_TOPS[place];
+    for (let y = top; y < 32; y++) {
+      for (let x = x0; x < x0 + 16; x++) {
+        const edge = y === top || y === 31 || x === x0 || x === x0 + 15;
+        rows[y][x] = edge ? 'o' : y < top + 3 ? 'y' : 'W';
+      }
+    }
+    DIGITS[place].forEach((line, dy) => {
+      [...line].forEach((char, dx) => {
+        if (char !== '.') rows[top + 5 + dy][x0 + 7 + dx - 1] = char;
+      });
+    });
+  }
+  return rows.map((row) => row.join(''));
+}
+
 function pixels(drawing) {
-  if (drawing.length % 16 !== 0 || drawing.some((row) => row.length !== 16)) {
-    throw new Error('Cada dibujo debe medir 16 de ancho y 16 o 32 de alto');
+  if (drawing.length % 16 !== 0 || drawing.some((row) => row.length % 16 !== 0 || row.length !== drawing[0].length)) {
+    throw new Error('Cada dibujo debe medir un múltiplo de 16 de ancho y de alto');
   }
   return drawing.map((row) => [...row].map((char) => (char === '.' ? [0, 0, 0, 0] : [...PALETTE[char], 255])));
 }
@@ -394,6 +447,8 @@ const files = {
   [`${SPRITES_DIR}/guirnalda.png`]: strip([GARLAND]),
   [`${SPRITES_DIR}/puesto-cosecha.png`]: strip([stall('x')]),
   [`${SPRITES_DIR}/puesto-pesca.png`]: strip([stall('u')]),
+  [`${SPRITES_DIR}/escenario.png`]: strip([stage()]),
+  [`${SPRITES_DIR}/podio.png`]: strip([podium()]),
 };
 for (const [path, rows] of Object.entries(files)) {
   writeFileSync(path, encodePng(rows));

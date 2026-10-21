@@ -1,5 +1,6 @@
 import dialogues from '../data/dialogues.json';
 import quests from '../data/quests.json';
+import { isFairDay } from './fair';
 import { getGameState } from './gameState';
 import { addItem, canAdd, countItem, ITEMS, removeItem, type ItemId } from './inventory';
 
@@ -9,7 +10,8 @@ import { addItem, canAdd, countItem, ITEMS, removeItem, type ItemId } from './in
 //   todos los anteriores están completados y ha llegado su día (`day`, HU-38).
 // - Mientras el encargo 1 está activo, la vendedora entrega la Carta del alcalde.
 // Tipos de condición: `deliver` (entregar objetos al NPC), `sell` (vender en la tienda), `talk` (hablar con
-// el NPC) y `mechanism` (colocar los objetos en el mecanismo del reloj, HU-56).
+// el NPC) y `mechanism` (colocar los objetos en el mecanismo del reloj, HU-56). Un encargo con `ceremony`
+// se completa con el discurso del alcalde en la ceremonia de la feria (HU-66) o, después de la feria, hablando con él.
 
 export type NpcId = keyof typeof dialogues.npcs;
 export type Quest = (typeof quests)[number];
@@ -74,7 +76,9 @@ export function conversationWith(npc: NpcId): Conversation {
   if (active?.npc === npc) {
     const lines = questDialogue(npc, active);
     // HU-56: el encargo de las piezas del reloj se completa en el mecanismo, no hablando con la relojera.
-    if (active.requirement.type === 'mechanism') {
+    // HU-66: el de la feria se completa con el discurso de la ceremonia, salvo después de la feria.
+    const waitsForCeremony = 'ceremony' in active.requirement && isFairDay() && !state.ceremonyDone;
+    if (active.requirement.type === 'mechanism' || waitsForCeremony) {
       return { kind: 'active', quest: active, lines: lines.active };
     }
     return isRequirementMet(active)
@@ -178,4 +182,16 @@ export function activeMechanismQuest(): Quest | null {
 
 export function mechanismOrder(quest: Quest): ItemId[] {
   return quest.requirement.items!.map(({ item }) => item as ItemId);
+}
+
+// HU-66: el encargo que se completa con el discurso de la ceremonia de la feria, si está activo o es el
+// siguiente que toca (ya ha llegado su día y no hay otro activo). Si no, null.
+export function ceremonyQuest(): Quest | null {
+  const state = getGameState();
+  const active = getActiveQuest();
+  if (active) {
+    return 'ceremony' in active.requirement ? active : null;
+  }
+  const next = nextQuest();
+  return next && 'ceremony' in next.requirement && state.day >= next.day ? next : null;
 }

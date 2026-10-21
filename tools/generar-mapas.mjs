@@ -407,6 +407,17 @@ function plaza() {
   map.points.push({ name: 'puesto', x: 15, y: 14, properties: { tipo: 'cosecha' } });
   map.points.push({ name: 'puesto', x: 19, y: 14, properties: { tipo: 'pesca' } });
   map.points.push({ name: 'guirnalda', x: 8, y: 12, properties: { casillas: '24' } });
+  // Ceremonia (HU-66): escenario y podio de 3×2 casillas (el punto es la casilla central de abajo). Los dos son
+  // obstáculos. El alcalde sube al escenario.
+  map.points.push({ name: 'escenario', x: 22, y: 9 });
+  map.points.push({ name: 'podio', x: 27, y: 9 });
+  // Visitantes de la feria (HU-58): dónde pasean durante el día y dónde se colocan como público en la ceremonia.
+  for (const [character, x, y] of [['rosa', 21, 15], ['lucia', 13, 15], ['tomas', 11, 13], ['pablo', 26, 16]]) {
+    map.points.push({ name: 'visitante', x, y, properties: { personaje: character } });
+  }
+  for (const [character, x, y] of [['rosa', 20, 11], ['lucia', 21, 11], ['tomas', 25, 11], ['pablo', 26, 11], ['jugador', 22, 11]]) {
+    map.points.push({ name: 'publico', x, y, properties: { personaje: character } });
+  }
 
   map.points.push({ name: 'inicio', x: 20, y: 17 });
 

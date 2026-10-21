@@ -42,15 +42,25 @@ import {
 } from '../systems/farm';
 import { closedDoorMessage, firstVisitNotice } from '../systems/doors';
 import {
+  areContestsOpen,
+  awardPrize,
+  CONTESTS_CLOSE_MINUTES,
+  CONTESTS_CLOSED_MESSAGE,
+  cropDetail,
   enterHarvestContest,
   finishFishingContestIfDue,
   FISHING_CONTEST,
+  fishingRanking,
   HARVEST_CONTEST,
+  harvestRanking,
+  isCeremonyDue,
   isFairDay,
   isFishingContestRunning,
   presentableCrops,
   recordContestCatch,
-  startFishingContest,
+  signUpForFishingContest,
+  startFishingContestIfSignedUp,
+  type Entry,
 } from '../systems/fair';
 import { catchAt, caughtMessage, type Catch } from '../systems/fishing';
 import {
@@ -78,6 +88,7 @@ import {
   conversationWith,
   LAST_QUEST,
   activeMechanismQuest,
+  ceremonyQuest,
   mechanismOrder,
   receivedMessage,
   type NpcId,
@@ -150,6 +161,16 @@ export class GameScene extends Phaser.Scene {
   private fishing: { timer: Phaser.Time.TimerEvent; biting: boolean; bobber: Phaser.GameObjects.Arc } | null = null;
   // Último pez pescado, con su tamaño.
   private lastCatch: Catch | null = null;
+  // Ceremonia de la feria (HU-66): escenario, podio, sitios del público, lo que se dibuja en el podio, si está
+  // en curso y la hora del fotograma anterior (para el aviso de las 17:00, HU-58).
+  private stage: Phaser.Geom.Rectangle | null = null;
+  private podium: Phaser.Geom.Rectangle | null = null;
+  private audience = new Map<string, { x: number; y: number }>();
+  private podiumFigures: Phaser.GameObjects.Image[] = [];
+  private inCeremony = false;
+  private previousMinutes = 0;
+  // Zona de cada NPC para interactuar con él: se mueve con él en la ceremonia.
+  private npcAreas = new Map<string, Phaser.Geom.Rectangle>();
   // Quién habla en el diálogo abierto (un NPC, "cartel"...), o null si no hay diálogo.
   private dialogSpeaker: string | null = null;
   private indicator!: Phaser.GameObjects.Text;
@@ -208,11 +229,18 @@ export class GameScene extends Phaser.Scene {
     this.interactables = [];
     this.chests = [];
     this.npcs = [];
+    this.npcAreas.clear();
+    this.stage = null;
+    this.podium = null;
+    this.audience.clear();
+    this.podiumFigures = [];
+    this.inCeremony = false;
+    this.previousMinutes = state.minutes;
     this.garden = null;
     this.plotViews.clear();
     this.apple = null;
     for (const object of objects) {
-      if (object.name === 'npc') this.addNpc(object);
+      if (object.name === 'npc' || object.name === 'visitante') this.addNpc(object);
       if (object.name === 'cofre') this.addChest(object);
       if (object.name === 'cartel') this.addSign(object);
       if (object.name === 'objeto') this.addWorldItem(object);
@@ -226,8 +254,15 @@ export class GameScene extends Phaser.Scene {
       // HU-58: los puestos y las guirnaldas de la feria solo están el día 7.
       if (object.name === 'puesto' && isFairDay()) this.addStall(object);
       if (object.name === 'guirnalda' && isFairDay()) this.addGarland(object);
+      if (object.name === 'escenario' && isFairDay()) this.stage = this.addCeremonyPlatform(object, 'escenario');
+      if (object.name === 'podio' && isFairDay()) this.podium = this.addCeremonyPlatform(object, 'podio');
+      if (object.name === 'publico') this.audience.set(getProperty(object, 'personaje') as string, pointTile(object));
     }
     this.updateNpcPresence();
+    // Después de la ceremonia, el alcalde sigue en el escenario y los visitantes delante (HU-66).
+    if (isFairDay() && state.ceremonyDone) {
+      this.arrangeCeremony(false);
+    }
 
     // Indicador "E" sobre aquello con lo que se puede interactuar (HU-10).
     this.indicator = this.add
@@ -267,11 +302,8 @@ export class GameScene extends Phaser.Scene {
     if (!this.sleeping && advanceTime(delta)) {
       this.fallAsleepAtMidnight();
     }
-    // HU-60: el concurso de pesca termina a su hora, esté donde esté el jugador.
-    const contestResult = this.sleeping ? null : finishFishingContestIfDue();
-    if (contestResult) {
-      showMessage(this.scene.get('HudScene'), contestResult, MESSAGE_MS, 'top');
-      playEffect(this, 'questComplete');
+    if (!this.sleeping) {
+      this.updateFair();
     }
     this.updateNpcPresence();
 
@@ -402,7 +434,13 @@ export class GameScene extends Phaser.Scene {
   // Hay algo en curso que impide moverse, abrir la pausa o interactuar.
   private isBusy(): boolean {
     return (
-      this.changingZone || this.sleeping || this.promptOpen || this.dialogOpen || this.overlayOpen || this.fishing !== null
+      this.changingZone ||
+      this.sleeping ||
+      this.promptOpen ||
+      this.dialogOpen ||
+      this.overlayOpen ||
+      this.fishing !== null ||
+      this.inCeremony
     );
   }
 
@@ -577,10 +615,12 @@ export class GameScene extends Phaser.Scene {
     const npc = new Npc(this, id, pointTile(object));
     this.physics.add.collider(this.player, npc);
     this.npcs.push(npc);
+    const area = bodyArea(npc.body);
+    this.npcAreas.set(id, area);
     this.interactables.push({
       kind: 'npc',
       id,
-      area: bodyArea(npc.body),
+      area,
       isAvailable: () => npc.isPresent(),
       interact: () => this.talkTo(id),
     });
@@ -590,6 +630,8 @@ export class GameScene extends Phaser.Scene {
   // Si el jugador está hablando con él, se queda hasta que se cierra el diálogo. Si el jugador está
   // en su sitio, el NPC espera a que se aparte para aparecer: así no lo deja encerrado.
   private updateNpcPresence(): void {
+    // Durante la ceremonia, el alcalde y los visitantes se quedan aunque acabe su horario.
+    if (this.inCeremony) return;
     const zone = getGameState().zone;
     const playerArea = bodyArea(this.player.body);
     for (const npc of this.npcs) {
@@ -935,11 +977,14 @@ export class GameScene extends Phaser.Scene {
     });
   }
 
-  // HU-59: se elige una cosecha del inventario, se entrega y se cobra el premio. Solo una vez por partida.
+  // HU-59: se elige una cosecha del inventario y se entrega. El resultado se anuncia en la ceremonia.
   private useHarvestStall(): void {
-    const state = getGameState();
-    if (state.harvestContestDone) {
-      this.openDialog({ speaker: 'puesto', title: HARVEST_CONTEST, lines: ['Ya has participado'], typewriter: false });
+    if (getGameState().harvestEntry) {
+      this.stallMessage(HARVEST_CONTEST, 'Ya has participado');
+      return;
+    }
+    if (!areContestsOpen()) {
+      this.stallMessage(HARVEST_CONTEST, 'El concurso ya ha terminado');
       return;
     }
     const crops = presentableCrops();
@@ -952,18 +997,25 @@ export class GameScene extends Phaser.Scene {
       action: 'presentar',
       items: crops,
       onChoose: (crop) => {
-        enterHarvestContest(crop);
+        const weight = enterHarvestContest(crop);
         recordEvent('contest:cosecha'); // HU-63
-        playEffect(this, 'questComplete');
+        playEffect(this, 'menuConfirm');
+        const text = `Has presentado ${cropDetail(crop, weight)}. Resultados en la ceremonia de las 18:00`;
+        showMessage(this.scene.get('HudScene'), text, MESSAGE_MS, 'top');
       },
     };
     this.openOverlay('ItemChoiceScene', data);
   }
 
-  // HU-60: "¿Inscribirte en el concurso de pesca?" con "Sí" y "No". Solo una vez por partida.
+  // HU-60: "¿Inscribirte en el concurso de pesca?" con "Sí" y "No". El concurso empieza al lanzar la caña en
+  // el lago. Solo una vez por partida.
   private useFishingStall(): void {
     if (getGameState().fishingContestDone) {
-      this.openDialog({ speaker: 'puesto', title: FISHING_CONTEST, lines: ['Ya has participado'], typewriter: false });
+      this.stallMessage(FISHING_CONTEST, 'Ya has participado');
+      return;
+    }
+    if (!areContestsOpen()) {
+      this.stallMessage(FISHING_CONTEST, 'El concurso ya ha terminado');
       return;
     }
     this.promptOpen = true;
@@ -972,14 +1024,194 @@ export class GameScene extends Phaser.Scene {
     showConfirmDialog(this.scene.get('HudScene'), '¿Inscribirte en el concurso de pesca?', (yes) => {
       this.promptOpen = false;
       if (yes) {
-        startFishingContest();
+        signUpForFishingContest();
         recordEvent('contest:pesca'); // HU-63
+        this.stallMessage(FISHING_CONTEST, 'Ve al lago y lanza la caña para empezar');
       }
     });
   }
 
+  // Cuadro de diálogo de un puesto de la feria, con el texto completo.
+  private stallMessage(title: string, text: string): void {
+    this.openDialog({ speaker: 'puesto', title, lines: [text], typewriter: false });
+  }
+
+  // HU-58 y HU-60: a las 17:00 se cierran los concursos; el de pesca termina a su hora o a las 17:00.
+  // HU-66: la ceremonia empieza a las 18:00 si el jugador está en la plaza, o en cuanto llega.
+  private updateFair(): void {
+    const state = getGameState();
+    const hud = this.scene.get('HudScene');
+    if (isFairDay() && this.previousMinutes < CONTESTS_CLOSE_MINUTES && state.minutes >= CONTESTS_CLOSE_MINUTES) {
+      showMessage(hud, CONTESTS_CLOSED_MESSAGE, MESSAGE_MS, 'top');
+    }
+    this.previousMinutes = state.minutes;
+
+    const contestResult = finishFishingContestIfDue();
+    if (contestResult) {
+      showMessage(hud, contestResult, MESSAGE_MS, 'top');
+      playEffect(this, 'questComplete');
+    }
+
+    if (state.zone === 'plaza' && isCeremonyDue() && !this.inCeremony && !this.isBusy()) {
+      this.startCeremony();
+    }
+  }
+
+  // --- Ceremonia (HU-66) ---
+
+  // Escenario o podio de la ceremonia (48×32): obstáculo de 3×2 casillas, con el punto en la casilla central de
+  // abajo. Devuelve lo que ocupa.
+  private addCeremonyPlatform(object: MapObject, texture: 'escenario' | 'podio'): Phaser.Geom.Rectangle {
+    const tile = tileArea(object);
+    const area = new Phaser.Geom.Rectangle(tile.x - TILE_SIZE, tile.y - TILE_SIZE, TILE_SIZE * 3, TILE_SIZE * 2);
+    this.add.image(area.centerX, area.bottom, texture).setOrigin(0.5, 1).setDepth(4);
+    const body = this.add.zone(area.centerX, area.centerY, area.width, area.height);
+    this.physics.add.existing(body, true);
+    this.physics.add.collider(this.player, body);
+    return area;
+  }
+
+  // Coloca al alcalde en el escenario y a los visitantes delante. Al empezar la ceremonia también al jugador.
+  private arrangeCeremony(withPlayer: boolean): void {
+    for (const npc of this.npcs) {
+      const seat = this.audience.get(npc.character);
+      if (npc.character === 'alcalde' && this.stage) {
+        // De pie sobre la tarima, en el centro.
+        this.moveNpc(npc, this.stage.centerX, this.stage.y + 5);
+      } else if (seat) {
+        this.moveNpc(npc, seat.x * TILE_SIZE + TILE_SIZE / 2, seat.y * TILE_SIZE + TILE_SIZE / 2);
+      }
+    }
+    const seat = this.audience.get('jugador');
+    if (withPlayer && seat) {
+      this.player.setPosition(seat.x * TILE_SIZE + TILE_SIZE / 2, seat.y * TILE_SIZE + TILE_SIZE / 2);
+      this.player.facing = 'up';
+      this.player.stand();
+      getGameState().position = seat;
+    }
+  }
+
+  private moveNpc(npc: Npc, x: number, y: number): void {
+    npc.moveTo(x, y);
+    npc.setDepth(6);
+    const area = this.npcAreas.get(npc.character);
+    if (area) Phaser.Geom.Rectangle.CopyFrom(bodyArea(npc.body), area);
+  }
+
+  private startCeremony(): void {
+    const state = getGameState();
+    state.ceremonyDone = true;
+    recordEvent('ceremony'); // HU-63
+    this.inCeremony = true;
+    this.player.stand();
+    this.indicator.setVisible(false);
+    for (const npc of this.npcs) {
+      if (npc.character === 'alcalde' || this.audience.has(npc.character)) npc.setPresent(true);
+    }
+    this.arrangeCeremony(true);
+
+    const mayor = { speaker: 'alcalde', title: dialogues.npcs.alcalde.name, portrait: 'retrato-alcalde', typewriter: true };
+    this.openDialog({ ...mayor, lines: dialogues.ceremony.intro }, () =>
+      this.announceContest(HARVEST_CONTEST, harvestRanking(), () =>
+        this.announceContest(FISHING_CONTEST, fishingRanking(), () => this.finalSpeech()),
+      ),
+    );
+  }
+
+  // El alcalde anuncia los tres primeros de un concurso, que aparecen en el podio. Al terminar, el jugador cobra
+  // su premio si está entre ellos.
+  private announceContest(title: string, ranking: Entry[], next: () => void): void {
+    this.showPodium(ranking);
+    const { places, you, prize } = dialogues.ceremony;
+    const name = (entry: Entry) => (entry.npc ? dialogues.npcs[entry.npc as NpcId].name : you);
+    const lines = ranking.map((entry, index) => `${index === 0 ? `${title}. ` : ''}${places[index]}: ${name(entry)}, con ${entry.detail}.`);
+    const mayor = { speaker: 'alcalde', title: dialogues.npcs.alcalde.name, portrait: 'retrato-alcalde', typewriter: true };
+    this.openDialog({ ...mayor, lines }, () => {
+      const amount = awardPrize(ranking);
+      if (amount > 0) {
+        showMessage(this.scene.get('HudScene'), prize.replace('{cantidad}', String(amount)), MESSAGE_MS, 'top');
+        playEffect(this, 'questComplete');
+      }
+      next();
+    });
+  }
+
+  // Los tres primeros de pie sobre el podio: en medio el 1.º, a la izquierda el 2.º y a la derecha el 3.º.
+  private showPodium(ranking: Entry[]): void {
+    for (const figure of this.podiumFigures) figure.destroy();
+    this.podiumFigures = [];
+    if (!this.podium) return;
+    // Altura de cada bloque desde arriba de la imagen del podio (ver tools/generar-sprites.mjs).
+    const spots = [
+      { x: this.podium.centerX, top: 8 },
+      { x: this.podium.centerX - TILE_SIZE, top: 14 },
+      { x: this.podium.centerX + TILE_SIZE, top: 18 },
+    ];
+    ranking.forEach((entry, index) => {
+      const texture = entry.npc ?? 'jugador';
+      const figure = this.add
+        .image(spots[index].x, this.podium!.y + spots[index].top + 1, texture, 0)
+        .setOrigin(0.5, 1)
+        .setDepth(6)
+        .setName(`podio-${index + 1}-${entry.npc ?? 'jugador'}`);
+      this.podiumFigures.push(figure);
+    });
+  }
+
+  // Si el encargo "La feria de Valtrigo" está activo o es el siguiente, el alcalde da su discurso desde el
+  // escenario y el encargo se completa (HU-20). Después, el mensaje de final (HU-37).
+  private finalSpeech(): void {
+    const quest = ceremonyQuest();
+    const end = () => {
+      this.inCeremony = false;
+    };
+    if (!quest) {
+      end();
+      return;
+    }
+    const state = getGameState();
+    if (!state.activeQuests.includes(quest.id)) {
+      state.activeQuests = [quest.id];
+    }
+    if (!canReceiveReward(quest)) {
+      showMessage(this.scene.get('HudScene'), 'Inventario lleno', MESSAGE_MS, 'top');
+      end();
+      return;
+    }
+    completeQuest(quest);
+    const mayor = { speaker: 'alcalde', title: dialogues.npcs.alcalde.name, portrait: 'retrato-alcalde', typewriter: true };
+    const lines = (dialogues.npcs.alcalde.quests as Record<string, { complete: string[] }>)[quest.id].complete;
+    this.openDialog({ ...mayor, lines }, () => {
+      end();
+      this.announceQuestCompleted(quest);
+      if (quest.id === LAST_QUEST) this.showEnding();
+    });
+  }
+
+  isInCeremony(): boolean {
+    return this.inCeremony;
+  }
+
+  // Quién está en el podio, para los tests: los ids de los tres primeros ("jugador" para el jugador), en orden.
+  getPodium(): string[] {
+    return this.podiumFigures.map((figure) => figure.name.split('-').slice(2).join('-'));
+  }
+
+  getNpcPosition(id: string): { x: number; y: number } | null {
+    const npc = this.npcs.find((candidate) => candidate.character === id);
+    return npc ? { x: npc.x, y: npc.y } : null;
+  }
+
+  getStageArea(): { x: number; y: number; width: number; height: number } | null {
+    return this.stage ? { x: this.stage.x, y: this.stage.y, width: this.stage.width, height: this.stage.height } : null;
+  }
+
   isStallOnMap(kind: string): boolean {
     return this.interactables.some((interactable) => interactable.id === `puesto-${kind}`);
+  }
+
+  isCeremonyPlatformOnMap(): { stage: boolean; podium: boolean } {
+    return { stage: this.stage !== null, podium: this.podium !== null };
   }
 
   isGarlandOnMap(): boolean {
@@ -1188,7 +1420,9 @@ export class GameScene extends Phaser.Scene {
       showMessage(this.scene.get('HudScene'), 'Necesitas una Caña de pescar', MESSAGE_MS, 'top');
       return;
     }
-    // HU-60: durante el concurso de pesca, lanzar la caña no gasta energía.
+    // HU-60: la primera vez que se lanza la caña después de inscribirse empieza el concurso. Durante el
+    // concurso, lanzar la caña no gasta energía.
+    startFishingContestIfSignedUp();
     if (!isFishingContestRunning() && !this.work('cast')) {
       return;
     }

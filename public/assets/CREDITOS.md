@@ -13,7 +13,7 @@
 | Ninja Adventure (efectos) | audio/sfx/pasos.wav, abrir-menu.wav, compra.wav, venta.wav, cofre.wav, encargo-completado.wav | Pixel-boy y AAA (pixel-boy.itch.io) | CC0 1.0 (dominio público) |
 | Música | audio/*.mp3 | Juanpe Gómez, generada con IA (Flow, de Google) | Propia |
 | Casillas de agua | tilesets/agua.png | Generadas por código (tools/generar-agua.mjs), con la paleta de Kenney | Propia |
-| Huerto, cosechas, moras, mecanismo del reloj y feria | sprites/cultivos.png, sprites/objetos/nabo.png, zanahoria.png, calabaza.png, mora.png, sprites/mecanismo.png, guirnalda.png, puesto-cosecha.png, puesto-pesca.png | Generados por código (tools/generar-sprites.mjs), con la paleta de Kenney | Propia |
+| Huerto, cosechas, moras, mecanismo del reloj y feria | sprites/cultivos.png, sprites/objetos/nabo.png, zanahoria.png, calabaza.png, mora.png, sprites/mecanismo.png, guirnalda.png, puesto-cosecha.png, puesto-pesca.png, escenario.png, podio.png | Generados por código (tools/generar-sprites.mjs), con la paleta de Kenney | Propia |
 | Efectos de sonido provisionales | audio/sfx/menu-navegar.wav, menu-confirmar.wav | Generados por código (tools/generar-efectos.mjs) | Propia |
 
 Las imágenes de Kenney son las hojas `Tilemap/tilemap_packed.png` de cada paquete, sin modificar:
@@ -29,10 +29,18 @@ Archivos de Ninja Adventure (https://pixel-boy.itch.io/ninja-adventure-asset-pac
 | sprites/personajes/alcalde.png | Actor/Character/Noble/SpriteSheet.png |
 | sprites/personajes/relojera.png | Actor/Character/OldWoman/SpriteSheet.png |
 | sprites/personajes/granjero.png | Actor/Character/OldMan/SpriteSheet.png |
+| sprites/personajes/rosa.png | Actor/Character/Villager4/SpriteSheet.png |
+| sprites/personajes/lucia.png | Actor/Character/Villager3/SpriteSheet.png |
+| sprites/personajes/tomas.png | Actor/Character/OldMan2/SpriteSheet.png |
+| sprites/personajes/pablo.png | Actor/Character/Child/SpriteSheet.png |
 | sprites/retratos/vendedora.png | Actor/Character/Woman/Faceset.png |
 | sprites/retratos/alcalde.png | Actor/Character/Noble/Faceset.png |
 | sprites/retratos/relojera.png | Actor/Character/OldWoman/Faceset.png |
 | sprites/retratos/granjero.png | Actor/Character/OldMan/Faceset.png |
+| sprites/retratos/rosa.png | Actor/Character/Villager4/Faceset.png |
+| sprites/retratos/lucia.png | Actor/Character/Villager3/Faceset.png |
+| sprites/retratos/tomas.png | Actor/Character/OldMan2/Faceset.png |
+| sprites/retratos/pablo.png | Actor/Character/Child/Faceset.png |
 | sprites/objetos/manzana.png | Items/Food/SeedBig3.png |
 | sprites/objetos/semilla.png | Items/Food/Seed1.png |
 | sprites/objetos/pala.png | Items/Tool/Shovel.png |
