@@ -15,7 +15,7 @@ function menu(page: Page): Promise<{ selected: string; continueEnabled: boolean 
 }
 
 async function chooseExit(page: Page): Promise<void> {
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 6; i++) {
     await press(page, 'ArrowDown');
   }
   expect((await menu(page)).selected).toBe('Salir');

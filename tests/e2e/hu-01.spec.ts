@@ -13,7 +13,7 @@ import {
 
 // HU-01. Ver el menú principal al abrir el juego
 
-const OPTIONS = ['Nueva partida', 'Continuar', 'Guardar partida', 'Opciones', 'Créditos', 'Salir'];
+const OPTIONS = ['Nueva partida', 'Continuar', 'Partidas de práctica', 'Guardar partida', 'Opciones', 'Créditos', 'Salir'];
 
 type MenuSceneApi = {
   getSelectedOption(): string;

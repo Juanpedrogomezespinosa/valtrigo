@@ -7,8 +7,8 @@ Como jugador, quiero empezar partidas preparadas en momentos concretos de la his
 Criterios de aceptación:
 
 - La opción “Partidas de práctica” del menú principal abre la lista de partidas preparadas. Escape o “Volver” regresan al menú con “Partidas de práctica” seleccionada.
-- Partidas: “Día 2: la granja” (con Pala, Regadera y 5 Semillas), “Día 3: el lago” (con Caña de pescar), “Día 4: día de mercado” (con 4 Nabos listos en el huerto), “Día 5: la torre” (con las piezas de la granja y del lago), “Día 6: la reparación” (con las tres piezas y el encargo 4 activo), “Día 7: la feria” e “Inventario lleno” (día 1 con las 20 casillas ocupadas).
-- Cada partida empieza a las 06:00 en la zona indicada, con los encargos anteriores completados.
+- Partidas: “Día 2: la granja” (en la granja, con Pala, Regadera y 5 Semillas), “Día 3: el lago” (en el lago, con Caña de pescar), “Día 4: día de mercado” (en la granja, con Pala, Regadera y 4 Nabos listos en el huerto), “Día 5: la torre” (en la plaza, con las piezas de la granja y del lago), “Día 6: la reparación” (en la torre, con las tres piezas y el encargo 4 activo), “Día 7: la feria” (en la plaza, con una Calabaza y una Caña de pescar para los concursos) e “Inventario lleno” (día 1 en la plaza, con las 20 casillas ocupadas).
+- Cada partida empieza a la hora a la que empieza su día en el juego (06:00; el día 1, a las 08:00, HU-62; el día 7, a las 12:00, HU-58), con los encargos anteriores completados y 150 monedas. El jugador se llama “Forastero”.
 - Empezar una partida de práctica no modifica la partida guardada. Se guarda igual que cualquier partida (al dormir o desde la pausa).
 Escenario 1: Abrir la lista
 

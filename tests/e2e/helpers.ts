@@ -817,7 +817,7 @@ export async function audioState(page: Page): Promise<AudioState> {
 // Abre Opciones desde el menú principal y selecciona una fila.
 export async function openOptionsAt(page: Page, row: 'Música' | 'Efectos' | 'Silenciar' | 'Volver'): Promise<void> {
   await openGame(page);
-  for (let i = 0; i < 3; i++) await press(page, 'ArrowDown'); // "Opciones"
+  for (let i = 0; i < 4; i++) await press(page, 'ArrowDown'); // "Opciones"
   await press(page, 'Enter');
   await waitForScene(page, 'OptionsScene');
   const rows = ['Música', 'Efectos', 'Silenciar', 'Volver'];
@@ -1115,4 +1115,24 @@ export async function setClock(page: Page, minutes: number): Promise<void> {
   await page.evaluate((minutes) => {
     (window as unknown as { gameState: () => TestGameState }).gameState().minutes = minutes;
   }, minutes);
+}
+
+// --- Partidas de práctica (HU-61) ---
+
+export async function practiceMenu(page: Page): Promise<{ options: string[]; selected: string } | null> {
+  return page.evaluate(() => {
+    const game = (window as unknown as GameWindow).game;
+    if (!game.scene.isActive('PracticeScene')) return null;
+    const scene = game.scene.getScene('PracticeScene') as unknown as { getOptions(): string[]; getSelectedOption(): string };
+    return { options: scene.getOptions(), selected: scene.getSelectedOption() };
+  });
+}
+
+// Abre la lista de partidas de práctica desde el menú principal (tercera opción).
+export async function openPracticeMenu(page: Page): Promise<void> {
+  await openGame(page);
+  await press(page, 'ArrowDown');
+  await press(page, 'ArrowDown');
+  await press(page, 'Enter');
+  await waitForScene(page, 'PracticeScene');
 }

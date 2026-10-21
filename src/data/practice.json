@@ -1,0 +1,114 @@
+{
+  "name": "Forastero",
+  "money": 150,
+  "games": [
+    {
+      "title": "Día 2: la granja",
+      "day": 2,
+      "zone": "granja",
+      "point": "llegada-plaza",
+      "completedQuests": ["encargo-1"],
+      "inventory": [
+        { "item": "pala", "quantity": 1 },
+        { "item": "regadera", "quantity": 1 },
+        { "item": "semilla", "quantity": 5 }
+      ],
+      "pickedUpItems": ["pala-de-la-granja"]
+    },
+    {
+      "title": "Día 3: el lago",
+      "day": 3,
+      "zone": "lago",
+      "point": "llegada-plaza",
+      "completedQuests": ["encargo-1", "encargo-2"],
+      "inventory": [{ "item": "cana-de-pescar", "quantity": 1 }]
+    },
+    {
+      "title": "Día 4: día de mercado",
+      "day": 4,
+      "zone": "granja",
+      "point": "llegada-plaza",
+      "completedQuests": ["encargo-1", "encargo-2"],
+      "inventory": [
+        { "item": "pala", "quantity": 1 },
+        { "item": "regadera", "quantity": 1 }
+      ],
+      "pickedUpItems": ["pala-de-la-granja"],
+      "plots": {
+        "17,4": { "dug": true, "seed": "semilla", "grown": 2, "watered": false },
+        "18,4": { "dug": true, "seed": "semilla", "grown": 2, "watered": false },
+        "19,4": { "dug": true, "seed": "semilla", "grown": 2, "watered": false },
+        "20,4": { "dug": true, "seed": "semilla", "grown": 2, "watered": false }
+      }
+    },
+    {
+      "title": "Día 5: la torre",
+      "day": 5,
+      "zone": "plaza",
+      "point": "inicio",
+      "completedQuests": ["encargo-1", "encargo-2", "encargo-3"],
+      "inventory": [
+        { "item": "pieza-del-reloj-1", "quantity": 1 },
+        { "item": "pieza-del-reloj-2", "quantity": 1 }
+      ],
+      "openedChests": ["cofre-1", "cofre-3"]
+    },
+    {
+      "title": "Día 6: la reparación",
+      "day": 6,
+      "zone": "torre",
+      "point": "llegada-plaza",
+      "completedQuests": ["encargo-1", "encargo-2", "encargo-3"],
+      "activeQuests": ["encargo-4"],
+      "inventory": [
+        { "item": "pieza-del-reloj-1", "quantity": 1 },
+        { "item": "pieza-del-reloj-2", "quantity": 1 },
+        { "item": "pieza-del-reloj-3", "quantity": 1 }
+      ],
+      "openedChests": ["cofre-1", "cofre-2", "cofre-3"],
+      "visitedZones": ["torre"]
+    },
+    {
+      "title": "Día 7: la feria",
+      "day": 7,
+      "zone": "plaza",
+      "point": "inicio",
+      "completedQuests": ["encargo-1", "encargo-2", "encargo-3", "encargo-4", "encargo-5"],
+      "inventory": [
+        { "item": "calabaza", "quantity": 1 },
+        { "item": "cana-de-pescar", "quantity": 1 }
+      ],
+      "openedChests": ["cofre-1", "cofre-2", "cofre-3"],
+      "visitedZones": ["torre"]
+    },
+    {
+      "title": "Inventario lleno",
+      "day": 1,
+      "zone": "plaza",
+      "point": "inicio",
+      "completedQuests": [],
+      "inventory": [
+        { "item": "manzana", "quantity": 99 },
+        { "item": "semilla", "quantity": 99 },
+        { "item": "semilla-de-zanahoria", "quantity": 99 },
+        { "item": "semilla-de-calabaza", "quantity": 99 },
+        { "item": "nabo", "quantity": 99 },
+        { "item": "zanahoria", "quantity": 99 },
+        { "item": "calabaza", "quantity": 99 },
+        { "item": "trucha", "quantity": 99 },
+        { "item": "carpa", "quantity": 99 },
+        { "item": "siluro", "quantity": 99 },
+        { "item": "seta", "quantity": 99 },
+        { "item": "mora", "quantity": 99 },
+        { "item": "lena", "quantity": 99 },
+        { "item": "manzana", "quantity": 99 },
+        { "item": "semilla", "quantity": 99 },
+        { "item": "nabo", "quantity": 99 },
+        { "item": "trucha", "quantity": 99 },
+        { "item": "seta", "quantity": 99 },
+        { "item": "mora", "quantity": 99 },
+        { "item": "lena", "quantity": 99 }
+      ]
+    }
+  ]
+}

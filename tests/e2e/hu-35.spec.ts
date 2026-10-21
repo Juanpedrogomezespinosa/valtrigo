@@ -5,7 +5,7 @@ import { openGame, press, sceneTexts, waitForScene } from './helpers';
 
 async function openCredits(page: import('@playwright/test').Page): Promise<void> {
   await openGame(page);
-  for (let i = 0; i < 4; i++) await press(page, 'ArrowDown'); // "Créditos"
+  for (let i = 0; i < 5; i++) await press(page, 'ArrowDown'); // "Créditos"
   await press(page, 'Enter');
   await waitForScene(page, 'CreditsScene');
 }

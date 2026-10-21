@@ -16,6 +16,7 @@ import { OptionsScene } from './scenes/OptionsScene';
 import { ShopScene } from './scenes/ShopScene';
 import { MechanismScene } from './scenes/MechanismScene';
 import { PauseScene } from './scenes/PauseScene';
+import { PracticeScene } from './scenes/PracticeScene';
 import { ItemChoiceScene } from './scenes/ItemChoiceScene';
 import { getAudioState } from './systems/audio';
 import { getGameState, isGameInProgress } from './systems/gameState';
@@ -47,6 +48,7 @@ const game = new Phaser.Game({
   scene: [
     BootScene,
     MenuScene,
+    PracticeScene,
     IntroScene,
     NameScene,
     GameScene,

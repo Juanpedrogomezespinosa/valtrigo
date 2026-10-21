@@ -84,8 +84,9 @@ test('Escenario 6: Activar una opción', async ({ page }) => {
   expect(await playedEffects(page)).toEqual([]);
 
   // "Opciones" está activa: Enter reproduce el efecto de confirmación.
-  await press(page, 'ArrowDown');
-  await press(page, 'ArrowDown');
+  await press(page, 'ArrowDown'); // "Partidas de práctica"
+  await press(page, 'ArrowDown'); // "Guardar partida"
+  await press(page, 'ArrowDown'); // "Opciones"
   await recordEffects(page);
   await press(page, 'Enter');
   expect(await playedEffects(page)).toEqual([CONFIRM]);

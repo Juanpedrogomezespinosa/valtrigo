@@ -7,7 +7,15 @@ import { MenuList } from '../ui/menuList';
 import { addTitle } from '../ui/title';
 import type { NewGameData } from './NameScene';
 
-export const MENU_OPTIONS = ['Nueva partida', 'Continuar', 'Guardar partida', 'Opciones', 'Créditos', 'Salir'] as const;
+export const MENU_OPTIONS = [
+  'Nueva partida',
+  'Continuar',
+  'Partidas de práctica',
+  'Guardar partida',
+  'Opciones',
+  'Créditos',
+  'Salir',
+] as const;
 
 export type MenuOption = (typeof MENU_OPTIONS)[number];
 
@@ -39,6 +47,7 @@ export class MenuScene extends Phaser.Scene {
     const enabled: Record<MenuOption, boolean> = {
       'Nueva partida': true,
       Continuar: hasSavedGame(),
+      'Partidas de práctica': true,
       'Guardar partida': isGameInProgress(),
       Opciones: true,
       Créditos: true,
@@ -50,7 +59,8 @@ export class MenuScene extends Phaser.Scene {
       MENU_OPTIONS.map((label) => ({ label, enabled: enabled[label] })),
       {
         x: this.scale.width / 2 - 100,
-        y: 200,
+        y: 180,
+        spacing: 46,
         selected: this.selected,
         onActivate: (label) => this.activate(label),
       },
@@ -72,6 +82,9 @@ export class MenuScene extends Phaser.Scene {
         break;
       case 'Continuar':
         this.continueGame();
+        break;
+      case 'Partidas de práctica':
+        this.scene.start('PracticeScene'); // HU-61
         break;
       case 'Opciones':
         this.scene.start('OptionsScene');
