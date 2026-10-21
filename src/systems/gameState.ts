@@ -20,6 +20,15 @@ export function emptyDayStats(): DayStats {
   return { moneyEarned: 0, harvests: 0, fish: 0 };
 }
 
+// Una parcela del huerto (HU-41 a HU-44): si está cavada, qué semilla tiene, cuántos días ha crecido
+// y si se ha regado hoy.
+export interface PlotState {
+  dug: boolean;
+  seed: string | null;
+  grown: number;
+  watered: boolean;
+}
+
 // Todo lo que forma parte de una partida y se guarda (HU-03).
 export interface GameState {
   zone: ZoneId;
@@ -42,6 +51,10 @@ export interface GameState {
   dayEvents: string[];
   // Zonas en las que se ha entrado alguna vez por su puerta (HU-64: aviso de la primera visita).
   visitedZones: string[];
+  // Parcelas del huerto que no están sin cavar, por su casilla en la granja ("x,y").
+  plots: Record<string, PlotState>;
+  // Día en que se recogió por última vez la Manzana del manzano, o null si no se ha recogido nunca (HU-45).
+  applePickedDay: number | null;
 }
 
 let current: GameState | null = null;
@@ -64,6 +77,8 @@ export function createNewGameState(scene: Phaser.Scene): GameState {
     dayStats: emptyDayStats(),
     dayEvents: [],
     visitedZones: [],
+    plots: {},
+    applePickedDay: null,
   };
 }
 

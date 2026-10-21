@@ -27,6 +27,9 @@ export class BootScene extends Phaser.Scene {
     }
     this.load.spritesheet('cofre', 'assets/sprites/cofre.png', { frameWidth: 16, frameHeight: 16 });
     this.load.image('cama', 'assets/sprites/cama.png');
+    // Huerto y manzano (HU-41 a HU-45).
+    this.load.spritesheet('cultivos', 'assets/sprites/cultivos.png', { frameWidth: 16, frameHeight: 16 });
+    this.load.image('manzano', 'assets/sprites/manzano.png');
     for (const item of Object.keys(ITEMS)) {
       this.load.image(`objeto-${item}`, `assets/sprites/objetos/${item}.png`);
     }

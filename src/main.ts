@@ -14,6 +14,7 @@ import { ObjectivesScene } from './scenes/ObjectivesScene';
 import { OptionsScene } from './scenes/OptionsScene';
 import { ShopScene } from './scenes/ShopScene';
 import { PauseScene } from './scenes/PauseScene';
+import { SeedScene } from './scenes/SeedScene';
 import { getAudioState } from './systems/audio';
 import { getGameState, isGameInProgress } from './systems/gameState';
 import type { ItemId } from './systems/inventory';
@@ -50,6 +51,7 @@ const game = new Phaser.Game({
     InventoryScene,
     ObjectivesScene,
     ShopScene,
+    SeedScene,
     PauseScene,
     HudScene,
     DaySummaryScene,

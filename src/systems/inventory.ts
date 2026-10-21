@@ -7,7 +7,19 @@ import { getGameState, type InventoryItem } from './gameState';
 
 export type ItemId = keyof typeof items;
 
-export const ITEMS = items;
+// Datos de un objeto (src/data/items.json). Los que se compran en la tienda tienen `price` (precio de compra);
+// los que no (cosechas, la Manzana...) tienen `sellPrice`, su precio de venta (HU-18).
+export interface ItemData {
+  name: string;
+  plural: string;
+  consumable: boolean;
+  energy?: number;
+  price?: number;
+  sellPrice?: number;
+  questItem: boolean;
+}
+
+export const ITEMS: Record<ItemId, ItemData> = items;
 
 export function getSlots(): InventoryItem[] {
   return getGameState().inventory;
@@ -96,7 +108,7 @@ export function useSlot(index: number): UseResult {
     return 'energy-full';
   }
 
-  state.energy = Math.min(MAX_ENERGY, state.energy + ('energy' in data ? data.energy : 0));
+  state.energy = Math.min(MAX_ENERGY, state.energy + (data.energy ?? 0));
   slot.quantity -= 1;
   if (slot.quantity === 0) {
     getSlots().splice(index, 1);

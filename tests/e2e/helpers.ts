@@ -103,6 +103,8 @@ export interface TestGameState {
   dayStats: { moneyEarned: number; harvests: number; fish: number };
   dayEvents: string[];
   visitedZones: string[];
+  plots: Record<string, { dug: boolean; seed: string | null; grown: number; watered: boolean }>;
+  applePickedDay: number | null;
 }
 
 // Partida guardada de ejemplo, con el formato de src/systems/save.ts.
@@ -123,6 +125,8 @@ export function savedGame(overrides: Partial<TestGameState> = {}): TestGameState
     dayStats: { moneyEarned: 0, harvests: 0, fish: 0 },
     dayEvents: [],
     visitedZones: [],
+    plots: {},
+    applePickedDay: null,
     ...overrides,
   };
 }
@@ -697,14 +701,18 @@ export async function closeDaySummary(page: Page): Promise<void> {
 }
 
 // Lleva al personaje a otra zona y casilla sin recorrer el camino, para preparar un escenario.
+// Espera a que la escena se haya creado de nuevo (el estado cambia antes de que termine de reiniciarse).
 export async function moveTo(page: Page, zone: string, position: { x: number; y: number }): Promise<void> {
   await page.evaluate(
-    ({ zone, position }) => {
-      const state = (window as unknown as { gameState: () => TestGameState }).gameState();
-      state.zone = zone;
-      state.position = position;
-      (window as unknown as GameWindow).game.scene.getScene('GameScene').scene.restart({ facing: 'down' });
-    },
+    ({ zone, position }) =>
+      new Promise<void>((resolve) => {
+        const state = (window as unknown as { gameState: () => TestGameState }).gameState();
+        state.zone = zone;
+        state.position = position;
+        const scene = (window as unknown as GameWindow).game.scene.getScene('GameScene');
+        scene.events.once('create', () => resolve());
+        scene.scene.restart({ facing: 'down' });
+      }),
     { zone, position },
   );
   await waitForZone(page, zone);
@@ -841,4 +849,62 @@ export async function textContrasts(page: Page, sceneKey: string): Promise<TextC
     }
     return results;
   }, sceneKey);
+}
+
+// --- Huerto y manzano (HU-41 a HU-45) ---
+
+// El huerto ocupa las casillas 17 a 22 y las filas 4 a 7 de la granja. Desde la casilla (17, 3), mirando
+// hacia abajo (como aparece el personaje al cargar la partida), se tiene delante la parcela (17, 4).
+export const FRONT_OF_PLOT = { x: 17, y: 3 };
+export const PLOT = '17,4';
+// Junto al manzano, cuyo tronco está en la casilla (12, 5).
+export const NEXT_TO_APPLE_TREE = { x: 12, y: 6 };
+
+export const DUG = { dug: true, seed: null, grown: 0, watered: false };
+
+export async function plotView(
+  page: Page,
+  key = PLOT,
+): Promise<{ soilVisible: boolean; watered: boolean; cropFrame: number | null } | null> {
+  const [x, y] = key.split(',').map(Number);
+  return page.evaluate(
+    ({ x, y }) => {
+      const game = (window as unknown as GameWindow).game;
+      const scene = game.scene.getScene('GameScene') as unknown as {
+        getPlotView(x: number, y: number): { soilVisible: boolean; watered: boolean; cropFrame: number | null } | null;
+      };
+      return scene.getPlotView(x, y);
+    },
+    { x, y },
+  );
+}
+
+// Estado guardado en la partida de una parcela (sin cavar si no aparece).
+export async function plotState(page: Page, key = PLOT) {
+  const state = await currentGameState(page);
+  return state?.plots[key] ?? { dug: false, seed: null, grown: 0, watered: false };
+}
+
+// Lista de semillas para sembrar (HU-42), o null si no está abierta.
+export async function seedMenu(page: Page): Promise<{ options: string[]; selected: number } | null> {
+  return page.evaluate(() => {
+    const game = (window as unknown as GameWindow).game;
+    if (!game.scene.isActive('SeedScene')) return null;
+    return (game.scene.getScene('SeedScene') as unknown as { getState(): { options: string[]; selected: number } }).getState();
+  });
+}
+
+export async function isAppleOnTree(page: Page): Promise<boolean> {
+  return page.evaluate(() => {
+    const game = (window as unknown as GameWindow).game;
+    return (game.scene.getScene('GameScene') as unknown as { isAppleOnTree(): boolean }).isAppleOnTree();
+  });
+}
+
+// Duerme en la cama (desde la casa, junto a ella), cierra el resumen del día y espera al día siguiente.
+export async function sleepUntil(page: Page, day: number): Promise<void> {
+  await moveTo(page, 'casa', NEXT_TO_BED);
+  await answerSleep(page, 'Sí');
+  await closeDaySummary(page);
+  await waitForMorning(page, day);
 }

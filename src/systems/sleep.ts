@@ -1,15 +1,17 @@
 import Phaser from 'phaser';
 import { MAX_ENERGY, WAKE_UP_MINUTES } from '../config';
 import { createNewGameState, emptyDayStats, getGameState, type GameState } from './gameState';
+import { growOvernight } from './farm';
 import { readSave } from './save';
 import { findMapPoint, pointTile } from './zones';
 
 // Dormir y despertar (HU-22, HU-24 y HU-25).
 // Al empezar un nuevo día el personaje despierta en su casa, junto a la cama, a las 06:00 y con la
-// energía al máximo. Lo conseguido en el día (HU-39) y lo hecho para las tareas del día (HU-63) vuelven a cero.
+// energía al máximo. Lo conseguido en el día (HU-39) y lo hecho para las tareas del día (HU-63) vuelven a cero,
+// y el huerto avanza un día (HU-44).
 
 function wakeUp(scene: Phaser.Scene, base: GameState, day: number): GameState {
-  return {
+  const morning: GameState = {
     ...structuredClone(base),
     day,
     minutes: WAKE_UP_MINUTES,
@@ -19,6 +21,9 @@ function wakeUp(scene: Phaser.Scene, base: GameState, day: number): GameState {
     zone: 'casa',
     position: pointTile(findMapPoint(scene, 'casa', 'despertar')),
   };
+  // HU-43 y HU-44: los cultivos regados crecen y las parcelas quedan sin regar.
+  growOvernight(morning);
+  return morning;
 }
 
 // HU-24: dormir en la cama. El día siguiente empieza con el estado actual.

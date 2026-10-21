@@ -65,5 +65,8 @@ export const SLEEP_FADE_MS = 500;
 export const NIGHT_COLOR = 0x0a1030;
 export const NIGHT_MAX_ALPHA = 0.65;
 
+// Huerto (HU-43): una parcela regada se ve más oscura hasta el día siguiente.
+export const WATERED_TINT = 0x9a8a8a;
+
 // Cada cuánto suena un paso mientras el personaje anda (HU-32): dos pasos por ciclo de la animación.
 export const STEP_SOUND_MS = 250;

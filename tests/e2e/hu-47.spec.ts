@@ -1,20 +1,45 @@
-import { test } from './fixtures';
+import { expect, test } from './fixtures';
+import { at, currentGameState, FRONT_OF_PLOT, plotState, press, sceneTexts, startAtWith } from './helpers';
 
 // HU-47. Agotamiento
-// Los tres escenarios necesitan una acción de trabajo; la primera que existirá es cavar (HU-41, fase de cultivo).
-// La lógica ya está en src/systems/energy.ts y GameScene.work(): hay que activarlos al implementar HU-41.
+// La acción de trabajo de estos escenarios es cavar una parcela del huerto (4 de energía, HU-41).
 
-test.fixme('Escenario 1: Energía insuficiente', async () => {
-  // Continuar en la granja con 3 de energía y una Pala, junto a una parcela sin cavar. Pulsar E:
-  // aparece "Estás demasiado cansado", la parcela sigue sin cavar y la energía sigue siendo 3.
+const PALA = { item: 'pala', quantity: 1 };
+
+test('Escenario 1: Energía insuficiente', async ({ page }) => {
+  await startAtWith(page, 'granja', FRONT_OF_PLOT, { minutes: at(10), energy: 3, inventory: [PALA] });
+
+  await press(page, 'e');
+
+  expect(await sceneTexts(page, 'HudScene')).toContain('Estás demasiado cansado');
+  expect((await plotState(page)).dug).toBe(false);
+  expect((await currentGameState(page))?.energy).toBe(3);
 });
 
-test.fixme('Escenario 2: Energía justa', async () => {
-  // Igual, con 4 de energía. Pulsar E: la parcela queda cavada y la energía es 0.
+test('Escenario 2: Energía justa', async ({ page }) => {
+  await startAtWith(page, 'granja', FRONT_OF_PLOT, { minutes: at(10), energy: 4, inventory: [PALA] });
+
+  await press(page, 'e');
+
+  expect((await plotState(page)).dug).toBe(true);
+  expect((await currentGameState(page))?.energy).toBe(0);
 });
 
-test.fixme('Escenario 3: Recuperarse comiendo', async () => {
-  // Continuar en la granja con 0 de energía, una Pala y una Manzana, junto a una parcela sin cavar.
-  // Abrir el inventario (I) y usar la Manzana (Enter): la energía sube (15).
-  // Cerrar el inventario y pulsar E junto a la parcela: queda cavada y la energía es 11.
+test('Escenario 3: Recuperarse comiendo', async ({ page }) => {
+  await startAtWith(page, 'granja', FRONT_OF_PLOT, {
+    minutes: at(10),
+    energy: 0,
+    inventory: [{ item: 'manzana', quantity: 1 }, PALA],
+  });
+
+  // Usa la Manzana desde el inventario (primera casilla).
+  await press(page, 'i');
+  await press(page, 'Enter');
+  await press(page, 'i');
+  expect((await currentGameState(page))?.energy).toBe(15);
+
+  // Y puede volver a trabajar.
+  await press(page, 'e');
+  expect((await plotState(page)).dug).toBe(true);
+  expect((await currentGameState(page))?.energy).toBe(11);
 });

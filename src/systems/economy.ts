@@ -6,7 +6,8 @@ import { recordSale } from './quests';
 import { recordEvent } from './tasks';
 
 // Tienda (HU-17 y HU-18). Todo cambio de dinero por compras y ventas pasa por aquí.
-// - Precios de compra en src/data/items.json (`price`). Al vender se recibe el 50 %.
+// - Precios de compra en src/data/items.json (`price`). Al vender se recibe el 50 %, salvo los objetos que
+//   tienen su propio precio de venta (`sellPrice`): cosechas, la Manzana, peces...  (HU-18).
 // - Catálogo y horario en src/data/shop.json. La tienda está abierta desde `opensAt` hasta antes de `closesAt`.
 
 export const SHOP_ITEMS = shop.items as ItemId[];
@@ -17,11 +18,12 @@ export function isShopOpen(): boolean {
 }
 
 export function buyPrice(item: ItemId): number {
-  return ITEMS[item].price;
+  return ITEMS[item].price ?? 0;
 }
 
 export function sellPrice(item: ItemId): number {
-  return Math.floor(ITEMS[item].price / 2);
+  const { price = 0, sellPrice } = ITEMS[item];
+  return sellPrice ?? Math.floor(price / 2);
 }
 
 export type BuyResult = 'bought' | 'shop-closed' | 'no-money' | 'inventory-full';

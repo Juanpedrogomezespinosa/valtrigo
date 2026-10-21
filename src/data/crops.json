@@ -1,0 +1,5 @@
+{
+  "semilla": { "crop": "nabo", "days": 2, "frame": 4 },
+  "semilla-de-zanahoria": { "crop": "zanahoria", "days": 3, "frame": 5 },
+  "semilla-de-calabaza": { "crop": "calabaza", "days": 4, "frame": 6 }
+}

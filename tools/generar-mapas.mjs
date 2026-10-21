@@ -495,7 +495,7 @@ function granja() {
 
   addDirt(map, 0, 10, 14, 12); // camino desde la plaza
   addDirt(map, 5, 9, 7, 9); // entrada del cercado
-  addDirt(map, 17, 4, 22, 7); // campos
+  addDirt(map, 17, 4, 22, 7); // huerto (HU-41): 6×4 parcelas
   addDirt(map, 17, 14, 22, 17);
   addDirt(map, 24, 4, 27, 17);
 
@@ -515,6 +515,10 @@ function granja() {
   addChest(map, { id: 'cofre-1', x: 7, y: 2 }); // detrás del granero, fuera del camino
   addWorldItem(map, { id: 'pala-de-la-granja', x: 10, y: 7 });
   addSign(map, { id: 'granja', x: 3, y: 9 });
+  // Huerto (HU-41): punto en su casilla de arriba a la izquierda, con su tamaño en parcelas.
+  map.points.push({ name: 'huerto', x: 17, y: 4, properties: { columnas: '6', filas: '4' } });
+  // Manzano (HU-45): el punto es la casilla del tronco, que es un obstáculo.
+  map.points.push({ name: 'manzano', x: 12, y: 5 });
 
   const exits = new Set();
   for (let x = 0; x < 2; x++) for (let y = 10; y <= 12; y++) exits.add(key(x, y));

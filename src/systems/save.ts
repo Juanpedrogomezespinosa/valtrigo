@@ -42,6 +42,8 @@ export function readSave(): GameState | null {
         dayStats: state.dayStats ?? emptyDayStats(),
         dayEvents: state.dayEvents ?? [],
         visitedZones: state.visitedZones ?? [],
+        plots: state.plots ?? {},
+        applePickedDay: state.applePickedDay ?? null,
       }
     : null;
 }

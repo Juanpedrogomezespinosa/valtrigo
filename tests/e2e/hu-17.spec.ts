@@ -22,6 +22,16 @@ test('Escenario 1: Compra correcta', async ({ page }) => {
 
   await press(page, 'e');
   const view = await shopView(page);
+  // Catálogo de la tienda, con sus precios.
+  expect(view?.rows.map(({ name, price }) => ({ name, price }))).toEqual([
+    { name: 'Semilla', price: 10 },
+    { name: 'Semilla de zanahoria', price: 20 },
+    { name: 'Semilla de calabaza', price: 40 },
+    { name: 'Pala', price: 30 },
+    { name: 'Hacha', price: 40 },
+    { name: 'Regadera', price: 40 },
+    { name: 'Caña de pescar', price: 50 },
+  ]);
   // Cada objeto muestra su icono, su nombre y su precio.
   expect(view?.rows).toContainEqual({ item: 'pala', name: 'Pala', price: 30, icon: 'objeto-pala' });
   await selectShopRow(page, 'pala');

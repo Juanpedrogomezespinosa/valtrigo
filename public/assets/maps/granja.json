@@ -10,7 +10,7 @@
  "tilewidth": 16,
  "tileheight": 16,
  "nextlayerid": 4,
- "nextobjectid": 7,
+ "nextobjectid": 9,
  "layers": [
   {
    "id": 1,
@@ -1465,6 +1465,42 @@
     },
     {
      "id": 6,
+     "name": "huerto",
+     "type": "",
+     "point": true,
+     "x": 280,
+     "y": 72,
+     "width": 0,
+     "height": 0,
+     "rotation": 0,
+     "visible": true,
+     "properties": [
+      {
+       "name": "columnas",
+       "type": "string",
+       "value": "6"
+      },
+      {
+       "name": "filas",
+       "type": "string",
+       "value": "4"
+      }
+     ]
+    },
+    {
+     "id": 7,
+     "name": "manzano",
+     "type": "",
+     "point": true,
+     "x": 200,
+     "y": 88,
+     "width": 0,
+     "height": 0,
+     "rotation": 0,
+     "visible": true
+    },
+    {
+     "id": 8,
      "name": "puerta",
      "type": "",
      "x": 0,

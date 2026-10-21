@@ -1,13 +1,29 @@
 import { expect, test } from './fixtures';
-import { at, currentGameState, hudEnergy, press, selectShopRow, shopView, startNextTo } from './helpers';
+import {
+  at,
+  currentGameState,
+  FRONT_OF_PLOT,
+  hudEnergy,
+  plotState,
+  press,
+  selectShopRow,
+  shopView,
+  startAtWith,
+  startNextTo,
+} from './helpers';
 
 // HU-46. Gasto de energía por acción
 // Los costes están en src/data/energy.json y se aplican con GameScene.work() (src/systems/energy.ts).
 
-test.fixme('Escenario 1: Gastar energía', async () => {
-  // Pendiente de HU-41 (cavar parcelas con la Pala).
-  // Continuar una partida en la granja con 50 de energía y una Pala, junto a una parcela sin cavar.
-  // Pulsar E: la parcela queda cavada, la energía es 46 y la interfaz muestra "Energía: 46/100" enseguida.
+test('Escenario 1: Gastar energía', async ({ page }) => {
+  await startAtWith(page, 'granja', FRONT_OF_PLOT, { minutes: at(10), energy: 50, inventory: [{ item: 'pala', quantity: 1 }] });
+
+  await press(page, 'e'); // cava la parcela
+
+  expect((await plotState(page)).dug).toBe(true);
+  expect((await currentGameState(page))?.energy).toBe(46);
+  // La energía en pantalla se actualiza en cuanto se gasta.
+  await expect.poll(() => hudEnergy(page), { intervals: [25] }).toBe('Energía: 46/100');
 });
 
 test('Escenario 2: Acciones gratuitas', async ({ page }) => {

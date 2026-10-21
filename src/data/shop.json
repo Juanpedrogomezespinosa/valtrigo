@@ -1,5 +1,5 @@
 {
-  "items": ["semilla", "pala"],
+  "items": ["semilla", "semilla-de-zanahoria", "semilla-de-calabaza", "pala", "hacha", "regadera", "cana-de-pescar"],
   "opensAt": "07:00",
   "closesAt": "19:00"
 }

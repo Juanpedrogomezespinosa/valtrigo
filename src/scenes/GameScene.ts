@@ -7,6 +7,7 @@ import {
   STEP_SOUND_MS,
   TALK_DISTANCE,
   TILE_SIZE,
+  WATERED_TINT,
   WORLD_ZOOM,
   ZONE_FADE_MS,
 } from '../config';
@@ -18,7 +19,22 @@ import { Chest } from '../entities/Chest';
 import { Npc } from '../entities/Npc';
 import { Player, type Direction } from '../entities/Player';
 import { getGameState, startGame } from '../systems/gameState';
-import { addItem, type ItemId } from '../systems/inventory';
+import { addItem, canAdd, countItem, removeItem, type ItemId } from '../systems/inventory';
+import {
+  clearPlot,
+  cropFrame,
+  cropOf,
+  dig,
+  FRAME,
+  getPlot,
+  hasApple,
+  isReady,
+  pickApple,
+  SEEDS,
+  sow,
+  water,
+  type SeedId,
+} from '../systems/farm';
 import { closedDoorMessage, firstVisitNotice } from '../systems/doors';
 import { spendEnergy, type WorkAction } from '../systems/energy';
 import { isShopOpen } from '../systems/economy';
@@ -43,6 +59,7 @@ import { showMessage } from '../ui/message';
 import type { DaySummarySceneData } from './DaySummaryScene';
 import type { DialogSceneData } from './DialogScene';
 import type { OverlaySceneData } from './InventoryScene';
+import type { SeedSceneData } from './SeedScene';
 
 export interface GameSceneData {
   // Hacia dónde mira el personaje al aparecer (al llegar por una puerta).
@@ -60,7 +77,7 @@ interface Door {
 
 // Algo con lo que se interactúa pulsando E a menos de una casilla: NPC, cofres, carteles y objetos sueltos.
 interface Interactable {
-  kind: 'npc' | 'cofre' | 'cartel' | 'objeto' | 'cama';
+  kind: 'npc' | 'cofre' | 'cartel' | 'objeto' | 'cama' | 'manzano' | 'parcela';
   id: string;
   // Lo que ocupa en el mundo.
   area: Phaser.Geom.Rectangle;
@@ -79,6 +96,10 @@ export class GameScene extends Phaser.Scene {
   private interactables: Interactable[] = [];
   private chests: Chest[] = [];
   private npcs: Npc[] = [];
+  // Huerto de la granja (HU-41): sus casillas y lo que se dibuja en cada parcela.
+  private garden: Phaser.Geom.Rectangle | null = null;
+  private plotViews = new Map<string, { soil: Phaser.GameObjects.Image; crop: Phaser.GameObjects.Image }>();
+  private apple: Phaser.GameObjects.Image | null = null;
   // Quién habla en el diálogo abierto (un NPC, "cartel"...), o null si no hay diálogo.
   private dialogSpeaker: string | null = null;
   private indicator!: Phaser.GameObjects.Text;
@@ -134,12 +155,17 @@ export class GameScene extends Phaser.Scene {
     this.interactables = [];
     this.chests = [];
     this.npcs = [];
+    this.garden = null;
+    this.plotViews.clear();
+    this.apple = null;
     for (const object of objects) {
       if (object.name === 'npc') this.addNpc(object);
       if (object.name === 'cofre') this.addChest(object);
       if (object.name === 'cartel') this.addSign(object);
       if (object.name === 'objeto') this.addWorldItem(object);
       if (object.name === 'cama') this.addBed(object);
+      if (object.name === 'huerto') this.addGarden(object);
+      if (object.name === 'manzano') this.addAppleTree(object);
     }
     this.updateNpcPresence();
 
@@ -361,7 +387,7 @@ export class GameScene extends Phaser.Scene {
     this.sleeping = true;
     this.player.stand();
     this.indicator.setVisible(false);
-    for (const key of ['DialogScene', 'InventoryScene', 'ObjectivesScene', 'ShopScene']) {
+    for (const key of ['DialogScene', 'InventoryScene', 'ObjectivesScene', 'ShopScene', 'SeedScene']) {
       this.scene.stop(key);
     }
     this.dialogOpen = false;
@@ -376,7 +402,7 @@ export class GameScene extends Phaser.Scene {
 
   // HU-13 (I) y HU-21 (O): inventario y lista de objetivos. Mientras están abiertos el personaje
   // no se mueve, pero el tiempo sigue (decisión del autor).
-  private openOverlay(sceneKey: 'InventoryScene' | 'ObjectivesScene' | 'ShopScene'): void {
+  private openOverlay(sceneKey: 'InventoryScene' | 'ObjectivesScene' | 'ShopScene' | 'SeedScene', extra: object = {}): void {
     if (this.isBusy()) {
       return;
     }
@@ -385,6 +411,7 @@ export class GameScene extends Phaser.Scene {
     this.indicator.setVisible(false);
     playEffect(this, 'openMenu');
     const data: OverlaySceneData = {
+      ...extra,
       onClose: () => {
         this.overlayOpen = false;
       },
@@ -394,8 +421,14 @@ export class GameScene extends Phaser.Scene {
 
   // --- Interacciones con E (HU-10 y HU-12) ---
 
-  // Lo más cercano a menos de una casilla del personaje con lo que se puede interactuar.
+  // Aquello con lo que se interactúa al pulsar E: lo más cercano a menos de una casilla y, si no hay nada,
+  // la parcela del huerto que el personaje tiene delante (HU-41).
   private interactTarget(): Interactable | null {
+    return this.nearestInteractable() ?? this.plotInFront();
+  }
+
+  // Lo más cercano a menos de una casilla del personaje con lo que se puede interactuar.
+  private nearestInteractable(): Interactable | null {
     const body = this.player.body;
     let nearest: Interactable | null = null;
     let nearestGap = Infinity;
@@ -639,6 +672,152 @@ export class GameScene extends Phaser.Scene {
       isAvailable: () => true,
       interact: () => this.askToSleep(),
     });
+  }
+
+  // --- Huerto y manzano (HU-41 a HU-45) ---
+
+  // El huerto es un punto en su casilla de arriba a la izquierda, con su tamaño en parcelas.
+  private addGarden(object: MapObject): void {
+    const { x, y } = pointTile(object);
+    const columns = Number(getProperty(object, 'columnas'));
+    const rows = Number(getProperty(object, 'filas'));
+    this.garden = new Phaser.Geom.Rectangle(x, y, columns, rows);
+    for (let row = y; row < y + rows; row++) {
+      for (let column = x; column < x + columns; column++) {
+        const centerX = column * TILE_SIZE + TILE_SIZE / 2;
+        const centerY = row * TILE_SIZE + TILE_SIZE / 2;
+        const soil = this.add.image(centerX, centerY, 'cultivos', FRAME.soil);
+        const crop = this.add.image(centerX, centerY, 'cultivos', FRAME.seeds);
+        // Se puede andar por el huerto: las parcelas se dibujan por debajo del personaje.
+        this.children.moveBelow(soil, this.player);
+        this.children.moveBelow(crop, this.player);
+        this.plotViews.set(`${column},${row}`, { soil, crop });
+        this.refreshPlot({ x: column, y: row });
+      }
+    }
+  }
+
+  // Dibuja una parcela según su estado: tierra cavada (más oscura si está regada, HU-43) y su cultivo.
+  private refreshPlot(tile: { x: number; y: number }): void {
+    const view = this.plotViews.get(`${tile.x},${tile.y}`);
+    if (!view) return;
+    const plot = getPlot(tile);
+    view.soil.setVisible(plot.dug);
+    if (plot.watered) view.soil.setTint(WATERED_TINT);
+    else view.soil.clearTint();
+    const frame = cropFrame(plot);
+    view.crop.setVisible(frame !== null);
+    if (frame !== null) view.crop.setFrame(frame);
+  }
+
+  // La parcela del huerto que el personaje tiene justo delante, si la hay.
+  private plotInFront(): Interactable | null {
+    if (!this.garden) return null;
+    const step = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] }[this.player.facing];
+    const center = this.player.body.center;
+    const tile = {
+      x: Math.floor((center.x + step[0] * TILE_SIZE * 0.75) / TILE_SIZE),
+      y: Math.floor((center.y + step[1] * TILE_SIZE * 0.75) / TILE_SIZE),
+    };
+    if (!this.garden.contains(tile.x + 0.5, tile.y + 0.5)) return null;
+    return {
+      kind: 'parcela',
+      id: `parcela-${tile.x},${tile.y}`,
+      area: new Phaser.Geom.Rectangle(tile.x * TILE_SIZE, tile.y * TILE_SIZE, TILE_SIZE, TILE_SIZE),
+      // Una parcela sembrada y ya regada hoy, que aún no está lista, no tiene nada que hacer.
+      isAvailable: () => {
+        const plot = getPlot(tile);
+        return !(plot.seed && plot.watered && !isReady(plot));
+      },
+      interact: () => this.workPlot(tile),
+    };
+  }
+
+  // E delante de una parcela: cavar (HU-41), sembrar (HU-42), regar (HU-43) o cosechar (HU-44), según su estado.
+  private workPlot(tile: { x: number; y: number }): void {
+    const plot = getPlot(tile);
+    const hud = this.scene.get('HudScene');
+
+    if (!plot.dug) {
+      if (countItem('pala') === 0) {
+        showMessage(hud, 'Necesitas una Pala', MESSAGE_MS, 'top');
+      } else if (this.work('dig')) {
+        dig(tile);
+      }
+    } else if (!plot.seed) {
+      const seeds = SEEDS.filter((seed) => countItem(seed) > 0);
+      if (seeds.length === 0) {
+        showMessage(hud, 'No tienes semillas', MESSAGE_MS, 'top');
+        return;
+      }
+      const data: Omit<SeedSceneData, 'onClose'> = {
+        seeds,
+        onChoose: (seed: SeedId) => {
+          if (this.work('sow')) {
+            removeItem(seed, 1);
+            sow(tile, seed);
+            this.refreshPlot(tile);
+          }
+        },
+      };
+      this.openOverlay('SeedScene', data);
+    } else if (isReady(plot)) {
+      const crop = cropOf(plot.seed as SeedId);
+      if (!canAdd(crop, 1)) {
+        showMessage(hud, 'Inventario lleno', MESSAGE_MS, 'top');
+      } else if (this.work('harvest')) {
+        addItem(crop, 1);
+        clearPlot(tile);
+        getGameState().dayStats.harvests += 1; // HU-39
+        recordEvent('harvest'); // HU-63
+      }
+    } else if (!plot.watered) {
+      if (countItem('regadera') === 0) {
+        showMessage(hud, 'Necesitas una Regadera', MESSAGE_MS, 'top');
+      } else if (this.work('water')) {
+        water(tile);
+        recordEvent('water'); // HU-63
+      }
+    }
+    this.refreshPlot(tile);
+  }
+
+  // HU-45: el manzano es un obstáculo (su tronco). Con fruta, E recoge la Manzana; sin fruta no hay indicador.
+  private addAppleTree(object: MapObject): void {
+    const tile = tileArea(object);
+    this.add.image(tile.centerX, tile.bottom, 'manzano').setOrigin(0.5, 1).setDepth(5);
+    this.apple = this.add.image(tile.centerX + 3, tile.top - 8, 'objeto-manzana').setDepth(6).setVisible(hasApple());
+    const trunk = this.add.zone(tile.centerX, tile.centerY, TILE_SIZE, TILE_SIZE);
+    this.physics.add.existing(trunk, true);
+    this.physics.add.collider(this.player, trunk);
+    this.interactables.push({
+      kind: 'manzano',
+      id: 'manzano',
+      area: tile,
+      isAvailable: () => hasApple(),
+      interact: () => {
+        if (this.pickUp('manzana', 1)) {
+          pickApple();
+          this.apple?.setVisible(false);
+        }
+      },
+    });
+  }
+
+  // --- Consultas del huerto para los tests ---
+
+  getPlotView(x: number, y: number): { soilVisible: boolean; watered: boolean; cropFrame: number | null } | null {
+    const view = this.plotViews.get(`${x},${y}`);
+    if (!view) return null;
+    return {
+      soilVisible: view.soil.visible,
+      watered: view.soil.isTinted,
+      cropFrame: view.crop.visible ? Number(view.crop.frame.name) : null,
+    };
+  }
+
+  isAppleOnTree(): boolean {
+    return this.apple?.visible ?? false;
   }
 
   // --- Cámara ---
