@@ -6,7 +6,7 @@ import { addItem, canAdd, countItem, removeItem, type ItemId } from './inventory
 // Encargos (HU-11, HU-19, HU-20 y HU-21). Todo cambio en los encargos pasa por aquí.
 // Decisiones del autor (ver CLAUDE.md):
 // - Los encargos se hacen en el orden de quests.json: un NPC solo ofrece su encargo cuando
-//   todos los anteriores están completados.
+//   todos los anteriores están completados y ha llegado su día (`day`, HU-38).
 // - Mientras el encargo 1 está activo, la vendedora entrega la Carta del alcalde.
 
 export type NpcId = keyof typeof dialogues.npcs;
@@ -86,8 +86,9 @@ export function conversationWith(npc: NpcId): Conversation {
     }
   }
 
+  // HU-38: el siguiente encargo solo se ofrece a partir de su día. Antes, el NPC habla como siempre.
   const next = nextQuest();
-  if (!active && next?.npc === npc) {
+  if (!active && next?.npc === npc && state.day >= next.day) {
     return { kind: 'offer', quest: next, lines: questDialogue(npc, next).offer };
   }
 
@@ -134,6 +135,7 @@ export function completeQuest(quest: Quest): boolean {
     }
   }
   state.money += quest.reward.money;
+  state.dayStats.moneyEarned += quest.reward.money; // HU-39
   for (const { item, quantity } of quest.reward.items) {
     addItem(item as ItemId, quantity);
   }

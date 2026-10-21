@@ -100,6 +100,7 @@ export interface TestGameState {
   questProgress: Record<string, number>;
   openedChests: string[];
   pickedUpItems: string[];
+  dayStats: { moneyEarned: number; harvests: number; fish: number };
 }
 
 // Partida guardada de ejemplo, con el formato de src/systems/save.ts.
@@ -117,6 +118,7 @@ export function savedGame(overrides: Partial<TestGameState> = {}): TestGameState
     questProgress: {},
     openedChests: [],
     pickedUpItems: [],
+    dayStats: { moneyEarned: 0, harvests: 0, fish: 0 },
     ...overrides,
   };
 }
@@ -157,10 +159,29 @@ export async function sceneTexts(page: Page, sceneKey: string): Promise<string[]
 
 // --- Partida en curso y menú de pausa ---
 
-// Abre el juego y empieza una partida nueva (sin partida guardada previa).
+// Abre el juego y empieza una partida nueva (sin partida guardada previa), pasando la introducción.
 export async function startNewGame(page: Page): Promise<void> {
   await openGame(page);
   await press(page, 'Enter'); // "Nueva partida"
+  await passIntro(page);
+}
+
+// Introducción de una partida nueva (HU-62): la pantalla que se muestra, o null si no está abierta.
+export async function introPage(page: Page): Promise<{ index: number; total: number; text: string } | null> {
+  return page.evaluate(() => {
+    const game = (window as unknown as GameWindow).game;
+    if (!game.scene.isActive('IntroScene')) return null;
+    return (game.scene.getScene('IntroScene') as unknown as { getPage(): { index: number; total: number; text: string } }).getPage();
+  });
+}
+
+// Pasa todas las pantallas de la introducción con E y espera a que empiece la partida.
+export async function passIntro(page: Page): Promise<void> {
+  await waitForScene(page, 'IntroScene');
+  const { total } = (await introPage(page))!;
+  for (let i = 0; i < total; i++) {
+    await press(page, 'e');
+  }
   await waitForScene(page, 'GameScene');
 }
 
@@ -499,6 +520,14 @@ export async function startAtWith(
   await startWith(page, { zone, position, ...overrides });
 }
 
+// HU-40: si un NPC está ahora en la zona del jugador.
+export async function isNpcPresent(page: Page, id: string): Promise<boolean> {
+  return page.evaluate((id) => {
+    const game = (window as unknown as GameWindow).game;
+    return (game.scene.getScene('GameScene') as unknown as { isNpcPresent(id: string): boolean }).isNpcPresent(id);
+  }, id);
+}
+
 // --- Encargos ---
 
 // Dónde ponerse para hablar con cada NPC.
@@ -649,6 +678,32 @@ export async function waitForMorning(page: Page, day: number): Promise<void> {
   await expect
     .poll(async () => (await currentGameState(page))?.day === day && !(await isSleeping(page)), { timeout: 5000, intervals: [25] })
     .toBe(true);
+}
+
+// Resumen del día (HU-39): los textos de la pantalla, o null si no está abierta.
+export async function daySummaryTexts(page: Page): Promise<string[] | null> {
+  const open = await page.evaluate(() => (window as unknown as GameWindow).game.scene.isActive('DaySummaryScene'));
+  return open ? sceneTexts(page, 'DaySummaryScene') : null;
+}
+
+// Espera a que aparezca el resumen del día y lo cierra con E.
+export async function closeDaySummary(page: Page): Promise<void> {
+  await expect.poll(() => daySummaryTexts(page), { timeout: 5000, intervals: [25] }).not.toBeNull();
+  await press(page, 'e');
+}
+
+// Lleva al personaje a otra zona y casilla sin recorrer el camino, para preparar un escenario.
+export async function moveTo(page: Page, zone: string, position: { x: number; y: number }): Promise<void> {
+  await page.evaluate(
+    ({ zone, position }) => {
+      const state = (window as unknown as { gameState: () => TestGameState }).gameState();
+      state.zone = zone;
+      state.position = position;
+      (window as unknown as GameWindow).game.scene.getScene('GameScene').scene.restart({ facing: 'down' });
+    },
+    { zone, position },
+  );
+  await waitForZone(page, zone);
 }
 
 // Pulsa E junto a la cama y responde a "¿Dormir?".

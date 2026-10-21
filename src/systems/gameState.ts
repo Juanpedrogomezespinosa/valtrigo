@@ -8,6 +8,18 @@ export interface InventoryItem {
   quantity: number;
 }
 
+// Lo conseguido en el día en curso, para el resumen al dormir (HU-39): monedas ganadas con ventas y
+// recompensas, cosechas recogidas y peces pescados. Se pone a cero al empezar cada día.
+export interface DayStats {
+  moneyEarned: number;
+  harvests: number;
+  fish: number;
+}
+
+export function emptyDayStats(): DayStats {
+  return { moneyEarned: 0, harvests: 0, fish: 0 };
+}
+
 // Todo lo que forma parte de una partida y se guarda (HU-03).
 export interface GameState {
   zone: ZoneId;
@@ -25,6 +37,7 @@ export interface GameState {
   openedChests: string[];
   // Objetos sueltos del mundo que ya se han recogido (HU-12), como la Pala de la granja.
   pickedUpItems: string[];
+  dayStats: DayStats;
 }
 
 let current: GameState | null = null;
@@ -44,6 +57,7 @@ export function createNewGameState(scene: Phaser.Scene): GameState {
     questProgress: {},
     openedChests: [],
     pickedUpItems: [],
+    dayStats: emptyDayStats(),
   };
 }
 

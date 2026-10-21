@@ -1,5 +1,16 @@
 import { expect, test } from './fixtures';
-import { at, currentGameState, press, sceneTexts, selectShopRow, shopView, startNextTo } from './helpers';
+import {
+  at,
+  currentGameState,
+  dialogState,
+  isChangingZone,
+  press,
+  sceneTexts,
+  selectShopRow,
+  shopView,
+  startAtWith,
+  startNextTo,
+} from './helpers';
 
 // HU-17. Comprar objetos en la tienda
 // En estas partidas no hay encargos en curso, así que hablar con la vendedora abre la tienda directamente.
@@ -48,7 +59,20 @@ test('Escenario 3: Inventario lleno', async ({ page }) => {
 });
 
 test('Escenario 4: Tienda cerrada', async ({ page }) => {
-  await startNextTo(page, 'vendedora', { minutes: at(20), money: 100, inventory: [] });
+  // Bajo la puerta de la tienda, que está en la casilla (31, 10) de la plaza.
+  await startAtWith(page, 'plaza', { x: 31, y: 12 }, { minutes: at(20), money: 100, inventory: [] });
+
+  await page.keyboard.down('ArrowUp');
+  await expect.poll(async () => (await dialogState(page))?.fullText, { intervals: [25] }).toBe('La tienda está cerrada');
+  await page.keyboard.up('ArrowUp');
+  await page.waitForTimeout(700); // más que el fundido de un cambio de zona
+
+  expect(await isChangingZone(page)).toBe(false);
+  expect((await currentGameState(page))?.zone).toBe('plaza');
+});
+
+test('Escenario 5: La tienda cierra con el jugador dentro', async ({ page }) => {
+  await startNextTo(page, 'vendedora', { minutes: at(19), money: 100, inventory: [] });
 
   await press(page, 'e');
 

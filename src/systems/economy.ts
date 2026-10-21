@@ -1,5 +1,6 @@
 import shop from '../data/shop.json';
 import { getGameState } from './gameState';
+import { toMinutes } from './time';
 import { addItem, canAdd, getSlots, ITEMS, removeItem, type ItemId } from './inventory';
 import { recordSale } from './quests';
 
@@ -8,11 +9,6 @@ import { recordSale } from './quests';
 // - Catálogo y horario en src/data/shop.json. La tienda está abierta desde `opensAt` hasta antes de `closesAt`.
 
 export const SHOP_ITEMS = shop.items as ItemId[];
-
-function toMinutes(time: string): number {
-  const [hours, minutes] = time.split(':').map(Number);
-  return hours * 60 + minutes;
-}
 
 export function isShopOpen(): boolean {
   const minutes = getGameState().minutes;
@@ -61,7 +57,9 @@ export function sellOne(slotIndex: number): SellResult {
     return 'quest-item';
   }
   removeItem(item, 1);
-  getGameState().money += sellPrice(item);
+  const state = getGameState();
+  state.money += sellPrice(item);
+  state.dayStats.moneyEarned += sellPrice(item); // HU-39
   recordSale(item, 1);
   return 'sold';
 }

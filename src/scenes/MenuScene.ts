@@ -101,13 +101,14 @@ export class MenuScene extends Phaser.Scene {
     });
   }
 
+  // La partida nueva empieza con la introducción (HU-62), que después abre GameScene.
   private startNewGame({ overwriteSave = false } = {}): void {
     const state = createNewGameState(this);
     if (overwriteSave) {
       writeSave(state);
     }
     startGame(state);
-    this.scene.start('GameScene');
+    this.scene.start('IntroScene');
   }
 
   // HU-05: pide confirmación y cierra el juego. "No" deja el menú con "Salir" seleccionada.

@@ -2,6 +2,7 @@ import { expect, test } from './fixtures';
 import {
   answerSleep,
   at,
+  closeDaySummary,
   currentGameState,
   expectSameGame,
   NEXT_TO_BED,
@@ -23,6 +24,7 @@ test('Escenario 1: Guardado al dormir', async ({ page }) => {
 
   expect(await sceneTexts(page, 'HudScene')).toContain('Partida guardada');
   expectSameGame(await readSavedGame(page), beforeSleeping);
+  await closeDaySummary(page);
   await waitForMorning(page, 4);
 });
 
@@ -46,5 +48,6 @@ test('Escenario 3: Sobrescritura', async ({ page }) => {
   await answerSleep(page, 'Sí');
 
   expect((await readSavedGame(page))?.day).toBe(4);
+  await closeDaySummary(page);
   await waitForMorning(page, 5);
 });

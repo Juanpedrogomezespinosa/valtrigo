@@ -6,6 +6,7 @@ import {
   currentGameState,
   expectSceneActive,
   openGame,
+  passIntro,
   openPause,
   press,
   readSavedGame,
@@ -47,7 +48,7 @@ test('Escenario 2: Guardar desactivado sin partida en curso', async ({ page }) =
 
   // Tampoco al volver al menú principal desde una partida: al salir, la partida se pierde (HU-26).
   await press(page, 'Enter'); // "Nueva partida"
-  await waitForScene(page, 'GameScene');
+  await passIntro(page); // HU-62
   await openPause(page);
   await choosePauseOption(page, 'Salir al menú principal');
   await clickText(page, 'PauseScene', 'Sí');

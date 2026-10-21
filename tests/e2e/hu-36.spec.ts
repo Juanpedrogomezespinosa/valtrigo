@@ -56,8 +56,8 @@ test('Escenario 3: Idioma', async ({ page }) => {
   await waitForScene(page, 'CreditsScene');
   screens.push(...(await sceneTexts(page, 'CreditsScene')).filter((text) => !/Kenney|Tiny|Ninja|Pixel-boy|Phaser|Flow|MIT|CC0/.test(text)));
 
-  // Textos de los datos del juego (diálogos, objetos, encargos, carteles).
-  const data = ['dialogues', 'items', 'quests', 'signs', 'zones'].map((name) =>
+  // Textos de los datos del juego (diálogos, objetos, encargos, carteles, introducción).
+  const data = ['dialogues', 'items', 'quests', 'signs', 'zones', 'intro'].map((name) =>
     readFileSync(new URL(`../../src/data/${name}.json`, import.meta.url), 'utf8'),
   );
   const dataTexts = data.flatMap((json) => [...json.matchAll(/"([^"]*[ ][^"]*)"/g)].map((match) => match[1]));

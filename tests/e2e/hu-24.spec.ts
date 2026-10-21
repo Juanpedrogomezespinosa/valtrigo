@@ -2,6 +2,8 @@ import { expect, test } from './fixtures';
 import {
   answerSleep,
   at,
+  closeDaySummary,
+  daySummaryTexts,
   currentGameState,
   expectClockAt,
   isSleeping,
@@ -32,7 +34,9 @@ test('Escenario 1: Dormir por la noche', async ({ page }) => {
   });
   expect(fade).toEqual({ running: true, towardsBlack: true });
 
-  // ...y empieza el día siguiente a las 06:00 con la energía a 100.
+  // ...aparece el resumen del día (HU-39) y, al pulsar E, empieza el día siguiente a las 06:00 con la energía a 100.
+  await expect.poll(() => daySummaryTexts(page), { timeout: 5000, intervals: [25] }).toContain('Día 3 terminado');
+  await press(page, 'e');
   await waitForMorning(page, 4);
   const state = await currentGameState(page);
   expectClockAt(state?.minutes, at(6));
@@ -78,6 +82,7 @@ test('Escenario 4: Energía baja', async ({ page }) => {
   await startAtWith(page, 'casa', NEXT_TO_BED, { day: 3, minutes: at(15), energy: 20 });
 
   await answerSleep(page, 'Sí');
+  await closeDaySummary(page);
 
   await waitForMorning(page, 4);
   expect((await currentGameState(page))?.energy).toBe(100);

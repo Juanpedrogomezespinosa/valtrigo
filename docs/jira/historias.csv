@@ -50,15 +50,15 @@ Como jugador, quiero empezar una partida nueva para jugar desde el principio.
 
 Criterios de aceptación:
 
-- Al pulsar “Nueva partida” se carga la zona inicial (exterior del pueblo) con el personaje en su posición de inicio.
+- Al pulsar “Nueva partida”, después de la introducción (HU-62), se carga la zona inicial (exterior del pueblo) con el personaje en su posición de inicio.
 - Si existe una partida guardada, se pide confirmación antes de sobrescribirla.
-- La partida nueva empieza con día 1 a las 06:00, 100 monedas, energía al máximo (100) e inventario vacío.
+- La partida nueva empieza con día 1 a las 08:00, 100 monedas, energía al máximo (100) e inventario vacío.
 Escenario 1: Nueva partida sin partida guardada
 
 - Dado que no existe ninguna partida guardada
 - Cuando el jugador pulsa “Nueva partida”
 - Entonces se carga la zona inicial con el personaje en su posición de inicio
-- Y el reloj marca día 1 a las 06:00
+- Y el reloj marca día 1 a las 08:00
 Escenario 2: Confirmación al sobrescribir
 
 - Dado que existe una partida guardada
@@ -70,15 +70,15 @@ Escenario 3: Confirmar la sobrescritura
 - Dado que existe una partida guardada del día 4
 - Cuando el jugador pulsa “Nueva partida” y después “Sí”
 - Entonces la partida anterior se reemplaza por la nueva
-- Y se carga la zona inicial en el día 1 a las 06:00
+- Y se carga la zona inicial en el día 1 a las 08:00
 Escenario 4: Datos iniciales
 
 - Dado que el jugador acaba de iniciar una partida nueva
 - Cuando consulta su dinero, su energía y su inventario
 - Entonces tiene 100 monedas y 100 puntos de energía
-- Y su inventario está vacío","- Al pulsar “Nueva partida” se carga la zona inicial (exterior del pueblo) con el personaje en su posición de inicio.
+- Y su inventario está vacío","- Al pulsar “Nueva partida”, después de la introducción (HU-62), se carga la zona inicial (exterior del pueblo) con el personaje en su posición de inicio.
 - Si existe una partida guardada, se pide confirmación antes de sobrescribirla.
-- La partida nueva empieza con día 1 a las 06:00, 100 monedas, energía al máximo (100) e inventario vacío."
+- La partida nueva empieza con día 1 a las 08:00, 100 monedas, energía al máximo (100) e inventario vacío."
 "HU-03","HU-03. Continuar una partida guardada","# HU-03. Continuar una partida guardada
 
 # HU-03. Continuar una partida guardada
@@ -765,7 +765,7 @@ Escenario 1: Hora inicial
 
 - Dado que el jugador empieza una partida nueva
 - Cuando mira la interfaz
-- Entonces aparece “Día 1” y “06:00”
+- Entonces aparece “Día 1” y “08:00”
 Escenario 2: Avance del tiempo
 
 - Dado que son las 06:00
@@ -1312,6 +1312,7 @@ Criterios de aceptación:
 - Horarios: el alcalde está en la plaza de 08:00 a 20:00. El granjero está en la granja de 06:00 a 17:00 y en el lago de 17:00 a 21:00. La relojera está en la torre de 09:00 a 22:00. La vendedora está en la tienda, que solo se puede visitar en su horario (HU-17).
 - Fuera de su horario, el NPC no está en ninguna zona.
 - El NPC aparece o desaparece al llegar la hora, aunque el jugador esté en la zona. Si el jugador está hablando con él, se queda hasta que se cierra el diálogo.
+- Un NPC que no está no bloquea el paso. Si al llegar su hora el jugador está en su sitio, el NPC aparece cuando el jugador se aparta, y el jugador puede moverse en todo momento.
 Escenario 1: Dentro del horario
 
 - Dado que son las 10:00
@@ -1338,9 +1339,21 @@ Escenario 5: Llega la hora durante un diálogo
 - Dado que son las 19:59 y el jugador está hablando con el alcalde
 - Cuando el reloj llega a las 20:00
 - Entonces el diálogo continúa
-- Y el alcalde desaparece al cerrarse el diálogo","- Horarios: el alcalde está en la plaza de 08:00 a 20:00. El granjero está en la granja de 06:00 a 17:00 y en el lago de 17:00 a 21:00. La relojera está en la torre de 09:00 a 22:00. La vendedora está en la tienda, que solo se puede visitar en su horario (HU-17).
+- Y el alcalde desaparece al cerrarse el diálogo
+Escenario 6: Un NPC ausente no bloquea el paso
+
+- Dado que son las 21:00 y el alcalde no está en la plaza
+- Cuando el jugador camina por el sitio del alcalde
+- Entonces lo atraviesa sin quedarse bloqueado
+Escenario 7: Llega la hora con el jugador en el sitio del NPC
+
+- Dado que son las 07:59 y el jugador está en el sitio del alcalde
+- Cuando el reloj llega a las 08:00
+- Entonces el alcalde no aparece hasta que el jugador se aparta
+- Y el jugador puede moverse y, después de hablar con el alcalde, sigue pudiendo moverse","- Horarios: el alcalde está en la plaza de 08:00 a 20:00. El granjero está en la granja de 06:00 a 17:00 y en el lago de 17:00 a 21:00. La relojera está en la torre de 09:00 a 22:00. La vendedora está en la tienda, que solo se puede visitar en su horario (HU-17).
 - Fuera de su horario, el NPC no está en ninguna zona.
-- El NPC aparece o desaparece al llegar la hora, aunque el jugador esté en la zona. Si el jugador está hablando con él, se queda hasta que se cierra el diálogo."
+- El NPC aparece o desaparece al llegar la hora, aunque el jugador esté en la zona. Si el jugador está hablando con él, se queda hasta que se cierra el diálogo.
+- Un NPC que no está no bloquea el paso. Si al llegar su hora el jugador está en su sitio, el NPC aparece cuando el jugador se aparta, y el jugador puede moverse en todo momento."
 "HU-41","HU-41. Cavar parcelas con la Pala","# HU-41. Cavar parcelas con la Pala
 
 # HU-41. Cavar parcelas con la Pala
@@ -2082,3 +2095,41 @@ Escenario 4: Volver
 - Partidas: “Día 2: la granja” (con Pala, Regadera y 5 Semillas), “Día 3: el lago” (con Caña de pescar), “Día 4: día de mercado” (con 4 Nabos listos en el huerto), “Día 5: la torre” (con las piezas de la granja y del lago), “Día 6: la reparación” (con las tres piezas y el encargo 4 activo), “Día 7: la feria” e “Inventario lleno” (día 1 con las 20 casillas ocupadas).
 - Cada partida empieza a las 06:00 en la zona indicada, con los encargos anteriores completados.
 - Empezar una partida de práctica no modifica la partida guardada. Se guarda igual que cualquier partida (al dormir o desde la pausa)."
+"HU-62","HU-62. Introducción al empezar","# HU-62. Introducción al empezar
+
+# HU-62. Introducción al empezar
+
+Como jugador, quiero una pequeña introducción al empezar una partida nueva para saber quién soy y qué hago en Valtrigo.
+
+Criterios de aceptación:
+
+- Al empezar una partida nueva, antes de cargar la zona inicial, aparece la introducción: varias pantallas de texto que cuentan quién es el jugador, por qué llega a Valtrigo y que la torre del reloj se ha parado.
+- Cada pantalla se pasa con E. Al pasar la última, empieza la partida.
+- Escape salta la introducción y empieza la partida directamente.
+- Mientras se muestra la introducción, el reloj del juego no avanza.
+- “Continuar” carga la partida guardada sin mostrar la introducción.
+Escenario 1: Ver la introducción
+
+- Dado que el jugador está en el menú principal
+- Cuando pulsa “Nueva partida”
+- Entonces aparece la primera pantalla de la introducción
+Escenario 2: Pasar las pantallas
+
+- Dado que la introducción está visible
+- Cuando el jugador pulsa E en cada pantalla
+- Entonces, al pasar la última, se carga la zona inicial
+- Y el reloj marca día 1 a las 08:00
+Escenario 3: Saltar la introducción
+
+- Dado que la introducción está visible
+- Cuando el jugador pulsa Escape
+- Entonces se carga la zona inicial en el día 1 a las 08:00
+Escenario 4: Continuar sin introducción
+
+- Dado que existe una partida guardada
+- Cuando el jugador pulsa “Continuar”
+- Entonces se carga la partida guardada sin mostrar la introducción","- Al empezar una partida nueva, antes de cargar la zona inicial, aparece la introducción: varias pantallas de texto que cuentan quién es el jugador, por qué llega a Valtrigo y que la torre del reloj se ha parado.
+- Cada pantalla se pasa con E. Al pasar la última, empieza la partida.
+- Escape salta la introducción y empieza la partida directamente.
+- Mientras se muestra la introducción, el reloj del juego no avanza.
+- “Continuar” carga la partida guardada sin mostrar la introducción."

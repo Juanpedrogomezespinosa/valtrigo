@@ -7,6 +7,7 @@ import {
   expectClockAt,
   expectSameGame,
   openGame,
+  passIntro,
   press,
   readSavedGame,
   savedGame,
@@ -41,13 +42,13 @@ test('Escenario 1: Nueva partida sin partida guardada', async ({ page }) => {
   await openGame(page);
 
   await press(page, 'Enter'); // "Nueva partida" está seleccionada al abrir el menú
-  await waitForScene(page, 'GameScene');
+  await passIntro(page); // HU-62
 
   const state = await currentGameState(page);
   expect(state?.zone).toBe('plaza');
   expect(await playerTile(page)).toEqual(await startPosition(page));
   expect(state?.day).toBe(1);
-  expectClockAt(state?.minutes, 6 * 60);
+  expectClockAt(state?.minutes, 8 * 60);
 });
 
 test('Escenario 2: Confirmación al sobrescribir', async ({ page }) => {
@@ -76,12 +77,12 @@ test('Escenario 3: Confirmar la sobrescritura', async ({ page }) => {
 
   await press(page, 'Enter');
   await clickText(page, 'MenuScene', 'Sí');
-  await waitForScene(page, 'GameScene');
+  await passIntro(page); // HU-62
 
   const state = await currentGameState(page);
   expect(state?.zone).toBe('plaza');
   expect(state?.day).toBe(1);
-  expectClockAt(state?.minutes, 6 * 60);
+  expectClockAt(state?.minutes, 8 * 60);
   expectSameGame(await readSavedGame(page), state);
 });
 
@@ -89,7 +90,7 @@ test('Escenario 4: Datos iniciales', async ({ page }) => {
   await openGame(page);
 
   await press(page, 'Enter');
-  await waitForScene(page, 'GameScene');
+  await passIntro(page); // HU-62
 
   const state = await currentGameState(page);
   expect(state?.money).toBe(100);

@@ -36,8 +36,8 @@ test('Escenario 3: Encargo completado', async ({ page }) => {
 });
 
 test('Escenario 4: Siguiente encargo del mismo NPC', async ({ page }) => {
-  // El granjero tiene los encargos 2 y 5. Con los anteriores completados, ofrece el 5.
-  await startNextTo(page, 'granjero', { completedQuests: ['encargo-1', 'encargo-2', 'encargo-3', 'encargo-4'] });
+  // El granjero tiene los encargos 2 y 5. Con los anteriores completados y en su día (el 6, HU-38), ofrece el 5.
+  await startNextTo(page, 'granjero', { day: 6, completedQuests: ['encargo-1', 'encargo-2', 'encargo-3', 'encargo-4'] });
 
   const lines = await talkUntilChoiceOrEnd(page);
 

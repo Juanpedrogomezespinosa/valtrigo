@@ -27,7 +27,7 @@ export const WORLD_ZOOM = 3;
 export const NEW_GAME = {
   zone: 'plaza',
   day: 1,
-  minutes: 6 * 60, // 06:00
+  minutes: 8 * 60, // 08:00: el día 1 empieza después de la introducción, con el alcalde ya en la plaza (HU-62)
   money: 100,
   energy: 100,
 } as const;

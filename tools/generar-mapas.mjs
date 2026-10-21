@@ -544,6 +544,8 @@ function lago() {
   addDoor(map, { x: 14, y: 0, width: 3, zone: 'plaza', direction: 'up' });
   addArrival(map, { from: 'plaza', x: 15, y: 1, facing: 'down' });
   addSign(map, { id: 'lago', x: 13, y: 3 });
+  // Por la tarde el granjero pesca en la orilla norte (HU-40). Se puede rodear por la fila de arriba.
+  addNpc(map, { character: 'granjero', x: 17, y: 7 });
 
   // Sendero escondido: sale de la orilla en (5, 17) hacia el suroeste y acaba en el cofre (2, 18).
   const hiddenPath = [[4, 17], [3, 17], [3, 18]];

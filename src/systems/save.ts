@@ -1,4 +1,4 @@
-import type { GameState } from './gameState';
+import { emptyDayStats, type GameState } from './gameState';
 
 // Sistema de guardado. Todo acceso a localStorage pasa por aquí.
 // Si el navegador no permite guardar datos, el juego sigue funcionando sin partida guardada.
@@ -30,7 +30,7 @@ export function hasSavedGame(): boolean {
 }
 
 // Devuelve la partida guardada, o null si no hay ninguna válida.
-// Las listas que no existían en partidas guardadas más antiguas se rellenan vacías.
+// Las listas que no existían en partidas guardadas más antiguas se rellenan vacías (y el resumen del día, a cero).
 export function readSave(): GameState | null {
   const state = readSaveData()?.state;
   return state
@@ -39,6 +39,7 @@ export function readSave(): GameState | null {
         completedQuests: state.completedQuests ?? [],
         questProgress: state.questProgress ?? {},
         pickedUpItems: state.pickedUpItems ?? [],
+        dayStats: state.dayStats ?? emptyDayStats(),
       }
     : null;
 }

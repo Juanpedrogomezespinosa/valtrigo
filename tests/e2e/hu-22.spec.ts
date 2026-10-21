@@ -9,7 +9,7 @@ test('Escenario 1: Hora inicial', async ({ page }) => {
 
   const clock = await hudClock(page);
   expect(clock?.day).toBe('Día 1');
-  expect(['06:00', '06:01']).toContain(clock?.time);
+  expect(['08:00', '08:01']).toContain(clock?.time);
   // Esquina superior izquierda.
   const position = await page.evaluate(() => {
     const game = (window as unknown as { game: import('phaser').Game }).game;
@@ -22,7 +22,7 @@ test('Escenario 1: Hora inicial', async ({ page }) => {
 
 test('Escenario 2: Avance del tiempo', async ({ page }) => {
   test.setTimeout(90_000);
-  await startNewGame(page);
+  await startWith(page, { day: 1, minutes: at(6) });
   const start = (await currentGameState(page))!.minutes;
   expect(start - at(6)).toBeLessThanOrEqual(1);
 

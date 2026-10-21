@@ -127,8 +127,11 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     const blockingTiles = this.obstacles?.getTilesWithinWorldXY(area.x, area.y, area.width, area.height, {
       isColliding: true,
     });
-    // Los NPC tienen cuerpos estáticos: también bloquean el paso.
-    const blockingBodies = this.scene.physics.overlapRect(area.x, area.y, area.width, area.height, false, true);
+    // Los NPC tienen cuerpos estáticos: también bloquean el paso, salvo los desactivados (un NPC fuera de su
+    // horario, HU-40), que siguen en el árbol de cuerpos estáticos de Phaser.
+    const blockingBodies = this.scene.physics
+      .overlapRect(area.x, area.y, area.width, area.height, false, true)
+      .filter((body) => body.enable);
     return !blockingTiles?.length && blockingBodies.length === 0;
   }
 }

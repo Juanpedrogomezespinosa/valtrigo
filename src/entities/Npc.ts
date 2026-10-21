@@ -21,6 +21,16 @@ export class Npc extends Phaser.Physics.Arcade.Sprite {
     this.body.setSize(BODY_SIZE, BODY_SIZE);
   }
 
+  // HU-40: fuera de su horario el NPC no está: no se ve y deja de ser un obstáculo.
+  setPresent(present: boolean): void {
+    this.setVisible(present);
+    this.body.enable = present;
+  }
+
+  isPresent(): boolean {
+    return this.visible;
+  }
+
   // Hueco en píxeles entre el cuerpo del NPC y otro cuerpo (0 si se tocan).
   gapTo(other: Phaser.Physics.Arcade.Body): number {
     const dx = Math.max(this.body.left - other.right, other.left - this.body.right, 0);

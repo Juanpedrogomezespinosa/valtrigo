@@ -1,6 +1,7 @@
 [
   {
     "id": "encargo-1",
+    "day": 1,
     "npc": "alcalde",
     "name": "Entregar la Carta del alcalde",
     "description": "La vendedora de la tienda tiene una carta para el alcalde. Recógela y llévasela.",
@@ -9,6 +10,7 @@
   },
   {
     "id": "encargo-2",
+    "day": 2,
     "npc": "granjero",
     "name": "Semillas para la cosecha",
     "description": "El granjero necesita 3 Semillas para su cosecha. Llévaselas a la granja.",
@@ -17,6 +19,7 @@
   },
   {
     "id": "encargo-3",
+    "day": 4,
     "npc": "vendedora",
     "name": "Día de mercado",
     "description": "Vende 5 Semillas en la tienda y vuelve a hablar con la vendedora.",
@@ -25,6 +28,7 @@
   },
   {
     "id": "encargo-4",
+    "day": 6,
     "npc": "relojera",
     "name": "Las piezas del reloj",
     "description": "Lleva a la relojera el Engranaje de cobre, el Muelle de plata y el Péndulo de oro para reparar el reloj.",
@@ -40,6 +44,7 @@
   },
   {
     "id": "encargo-5",
+    "day": 6,
     "npc": "granjero",
     "name": "Manzanas para la feria",
     "description": "El granjero quiere preparar una tarta para la feria. Llévale 2 Manzanas.",
@@ -48,6 +53,7 @@
   },
   {
     "id": "encargo-6",
+    "day": 7,
     "npc": "alcalde",
     "name": "La feria de Valtrigo",
     "description": "Habla con el alcalde durante la feria.",

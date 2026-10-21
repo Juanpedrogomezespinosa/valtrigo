@@ -2,9 +2,11 @@ import Phaser from 'phaser';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH } from './config';
 import { BootScene } from './scenes/BootScene';
 import { CreditsScene } from './scenes/CreditsScene';
+import { DaySummaryScene } from './scenes/DaySummaryScene';
 import { DialogScene } from './scenes/DialogScene';
 import { GameScene } from './scenes/GameScene';
 import { HudScene } from './scenes/HudScene';
+import { IntroScene } from './scenes/IntroScene';
 import { InventoryScene } from './scenes/InventoryScene';
 import { MenuScene } from './scenes/MenuScene';
 import { NightScene } from './scenes/NightScene';
@@ -36,10 +38,12 @@ const game = new Phaser.Game({
   },
   // El orden marca qué escena se dibuja encima: sobre la partida, la capa de noche, el diálogo, el inventario,
   // los objetivos, la tienda y la pausa;
-  // encima, la interfaz fija (el dinero sigue visible en la pausa, HU-16); y sobre todo, las opciones.
+  // encima, la interfaz fija (el dinero sigue visible en la pausa, HU-16) y el resumen del día (HU-39);
+  // y sobre todo, las opciones.
   scene: [
     BootScene,
     MenuScene,
+    IntroScene,
     GameScene,
     NightScene,
     DialogScene,
@@ -48,6 +52,7 @@ const game = new Phaser.Game({
     ShopScene,
     PauseScene,
     HudScene,
+    DaySummaryScene,
     OptionsScene,
     CreditsScene,
   ],

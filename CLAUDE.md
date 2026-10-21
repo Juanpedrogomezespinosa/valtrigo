@@ -151,7 +151,7 @@ Es un proyecto público con un fin doble: servir de base para un curso de testin
 
 ### NPC y diálogos (HU-10)
 
-- Los 4 NPC: alcalde en la plaza (24, 13), vendedora en la tienda (9, 4, junto al mostrador), relojera en la torre (5, 5) y granjero en la granja (16, 9). En Tiled son puntos llamados `npc` con la propiedad `personaje`.
+- Los 4 NPC: alcalde en la plaza (24, 13), vendedora en la tienda (9, 4, junto al mostrador), relojera en la torre (5, 5) y granjero en la granja (16, 9) y, por la tarde, en el lago (17, 7). Cuándo está cada uno lo marca su horario (HU-40). En Tiled son puntos llamados `npc` con la propiedad `personaje`.
 - Los NPC están quietos y miran hacia abajo. Tienen un cuerpo de 14×14, como el personaje, y son obstáculos.
 - "A menos de una casilla": el hueco entre el cuerpo del personaje y el del NPC es menor de 16 px (`TALK_DISTANCE`). Si hay varios NPC a tiro, se elige el más cercano. El indicador "E" se dibuja encima de ese NPC.
 - Retratos: los `Faceset.png` de Ninja Adventure (38×38) en public/assets/sprites/retratos/, ampliados ×3.
@@ -162,8 +162,7 @@ Es un proyecto público con un fin doble: servir de base para un curso de testin
 ### Encargos: decisiones del autor (para HU-11, HU-19 y HU-20)
 
 - **Encargo 1:** lo ofrece el alcalde ("la vendedora tiene una carta para mí, ¿me la traes?"). Mientras el encargo 1 está activo, la vendedora entrega la Carta del alcalde. Eso forma parte del encargo 1, no es ofrecer el suyo, así que en ese caso no dice "Termina tu encargo actual primero".
-- **Orden:** cada NPC ofrece su encargo solo cuando están completados todos los anteriores de la lista de la historia del juego. Si su encargo aún no toca, el NPC dice su saludo normal, sin ofrecer nada.
-- **Encargo 6 ("durante la feria"):** está disponible en cuanto se completa el encargo 5. No depende del día del reloj (HU-11).
+- **Orden:** cada NPC ofrece su encargo solo cuando están completados todos los anteriores de la lista de la historia del juego y ha llegado su día (`day` en quests.json, HU-38). El encargo 6 ya no está disponible nada más completar el 5: se ofrece a partir del día 7. Si su encargo aún no toca, el NPC dice su diálogo normal, sin ofrecer nada.
 
 ### Inventario y dinero (HU-13 a HU-16)
 
@@ -233,12 +232,12 @@ Es un proyecto público con un fin doble: servir de base para un curso de testin
 
 - NightScene: capa de color azul noche (`NIGHT_COLOR`) sobre la partida, por debajo de diálogos, menús e interfaz. Su opacidad sale de `darkness()` (src/systems/time.ts): sube de 0 a 1 entre las 20:00 y las 21:00, vale 1 hasta las 06:00 y baja de 1 a 0 entre las 06:00 y las 07:00.
 - **"Completamente oscura" es una opacidad del 65 %** (`NIGHT_MAX_ALPHA`), no negro total, para que de noche se pueda seguir jugando (confirmado por el autor).
-- Afecta a todas las zonas, también a los interiores. Una partida nueva empieza a las 06:00, así que empieza a oscuras y se va aclarando durante la primera hora, como dice la historia.
+- Afecta a todas las zonas, también a los interiores. Cada día empieza a las 06:00, a oscuras, y se va aclarando durante la primera hora. La partida nueva empieza a las 08:00 (HU-62), ya de día.
 
 ### Dormir y guardado automático (HU-24 y HU-25)
 
 - E junto a la cama abre "¿Dormir?" con "Sí" y "No" (el mismo cuadro de confirmación que el menú, dibujado en la capa de interfaz). Mientras está abierto el personaje no se mueve y Escape equivale a "No".
-- **Qué se guarda al dormir** (decisión del autor, lectura literal de HU-25 escenario 3): la partida tal como está al acostarse (si se duerme el día 4 a las 21:00, se guarda el día 4 a las 21:00, junto a la cama). Después aparece "Partida guardada" (2 s, arriba), la pantalla se funde a negro (0,5 s) y empieza el día siguiente a las 06:00 con la energía a 100, junto a la cama. Ese estado de la mañana no se guarda hasta el próximo guardado.
+- **Qué se guarda al dormir** (decisión del autor, lectura literal de HU-25 escenario 3): la partida tal como está al acostarse (si se duerme el día 4 a las 21:00, se guarda el día 4 a las 21:00, junto a la cama). Después aparece "Partida guardada" (2 s, arriba), la pantalla se funde a negro (0,5 s), aparece el resumen del día (HU-39) y, al cerrarlo con E, empieza el día siguiente a las 06:00 con la energía a 100, junto a la cama. Ese estado de la mañana no se guarda hasta el próximo guardado.
 - Dormir en la cama y dormirse a medianoche comparten el fundido y el despertar (`sleepUntilMorning` en GameScene, src/systems/sleep.ts). A medianoche no se guarda y se pierde lo no guardado.
 
 ### Opciones de sonido y controles (HU-28 a HU-30, HU-33 y HU-34)
@@ -267,3 +266,22 @@ Es un proyecto público con un fin doble: servir de base para un curso de testin
 
 - Detectado al jugar: tras reparar el reloj, el alcalde seguía diciendo "si alguien arreglara ese reloj". Decisión del autor: nuevo criterio y escenario 5 en HU-11. Con el encargo 4 completado, un NPC que no tiene nada de encargos que decir (ni ofrecer, ni seguimiento, ni completar, ni la carta, ni "Termina tu encargo actual primero") dice sus líneas `clockRepaired`. Tienen prioridad sobre el agradecimiento y el saludo.
 - **HU-37 (historia nueva, decisión del autor):** al completar el último encargo ("La feria de Valtrigo"), cuando se cierra el diálogo del alcalde aparece el mensaje de final (`ending` en dialogues.json, título "Fin", texto completo sin escritura letra a letra). Se cierra con E y se sigue jugando. Solo aparece una vez, porque el encargo solo se completa una vez.
+
+### Fase 1 de la ampliación: ritmo (HU-38, HU-57, HU-40, HU-46, HU-47 y HU-39)
+
+- **Encargos por día (HU-38):** cada encargo tiene su día en quests.json (`day`). `conversationWith()` solo lo ofrece si ha llegado ese día; si no, el NPC sigue con su diálogo normal (agradecimiento, reloj reparado o saludo).
+- **Puertas cerradas (HU-57 y HU-17):** en zones.json, `opensOnDay` (la torre abre el día 5) y `closedMessage`. La tienda está cerrada fuera de su horario (shop.json). La lógica está en src/systems/doors.ts. Al caminar hacia una puerta cerrada se abre el cuadro de diálogo, con el nombre de la zona como título y el texto completo. Se cierra con E y no se cambia de zona. El aviso no se repite hasta que el personaje deja de caminar hacia esa puerta, para que mantener la flecha pulsada no lo reabra sin parar. Salir de un edificio siempre está permitido. Dentro de la tienda, a partir de las 19:00, hablar con la vendedora sigue mostrando el mensaje "La tienda está cerrada".
+- **Horarios de los NPC (HU-40):** están en src/data/schedules.json y la lógica en src/systems/schedules.ts. Cada tramo va desde `from` hasta antes de `to`, así que a las 20:00 el alcalde ya no está. **La vendedora no tiene horario** (decisión tomada al implementar, pendiente de confirmar): está siempre en la tienda, porque la tienda ya solo se visita en su horario y HU-17 (escenario 5) necesita que esté dentro a las 19:00. Un NPC fuera de su horario no se ve, no es un obstáculo y no se puede hablar con él. GameScene revisa los horarios en cada fotograma. El NPC con el que se está hablando no cambia hasta que se cierra el diálogo.
+- **Energía (HU-46 y HU-47):** los costes están en src/data/energy.json (cavar, sembrar, regar, cosechar, lanzar la caña, talar y recoger setas o moras) y la lógica en src/systems/energy.ts. Cada acción de trabajo debe pasar por `GameScene.work(acción)`. Si la energía no alcanza, aparece "Estás demasiado cansado" (2 s, arriba), no se gasta nada y la acción no se hace, así que la energía nunca baja de 0. El concurso de pesca (HU-60) tendrá que saltarse el gasto de la caña.
+- **Tests pendientes:** HU-46 (escenario 1) y HU-47 (escenarios 1 a 3) están como `test.fixme` hasta HU-41, porque necesitan cavar. HU-39 (escenario 1) está como `test.fixme` hasta HU-44 y HU-48 (Nabos y Trucha).
+- **Resumen del día (HU-39):** `GameState.dayStats` guarda las monedas ganadas (ventas en sellOne y recompensas en completeQuest), las cosechas y los peces. Las compras no restan. Se pone a cero al despertar y se guarda con la partida (las partidas antiguas lo cargan a cero). DaySummaryScene aparece sobre la pantalla en negro con "Día N terminado", las tres cifras y "Pulsa E para continuar". Con E empieza el día siguiente. A medianoche no aparece.
+- **Catálogo nuevo de la tienda (HU-17):** se deja para la fase 2 (cultivo), junto con los objetos que vende.
+- En los tests, `moveTo()` (helpers.ts) lleva al personaje a otra zona sin recorrer el camino, para preparar un escenario (por ejemplo, comprar en la tienda y dormir en casa).
+- **Bug encontrado al jugar (HU-40, escenarios 6 y 7 añadidos por decisión del autor):** el alcalde ausente bloqueaba al personaje en su sitio. Phaser deja los cuerpos estáticos desactivados en su árbol de búsqueda y `overlapRect` los seguía devolviendo, así que la comprobación de bloqueo de Player los contaba aunque la física los ignorara. El personaje entraba en la casilla del NPC y ya no podía salir. Ahora `canMove` ignora los cuerpos desactivados. Además, si al llegar su hora el jugador ocupa el sitio del NPC, este no aparece hasta que el jugador se aparta.
+
+### Introducción y comienzo del día 1 (HU-62)
+
+- Decisión del autor para evitar las horas muertas del día 1 (de 06:00 a 08:00 no había nada que hacer): una historia nueva, HU-62, con una introducción, y la partida nueva empieza el día 1 a las **08:00**, con el alcalde ya en la plaza. Se han cambiado HU-02 y HU-22 (escenario 1). Los demás días siguen empezando a las 06:00. Se usa el número HU-62, que había quedado libre al descartar "amistad".
+- IntroScene muestra los textos de src/data/intro.json, una pantalla cada vez, con el contador "N / total". E pasa a la siguiente pantalla y Escape la salta. La partida ya está creada (y guardada, si se ha confirmado sobrescribir), pero el reloj no avanza hasta que se abre GameScene. Mientras tanto sigue sonando la música del menú. "Continuar" no muestra la introducción.
+- En los tests, `startNewGame()` y `passIntro()` (helpers.ts) pasan la introducción con E. El escenario 2 de HU-22 empieza ahora en una partida cargada a las 06:00, porque la partida nueva empieza a las 08:00.
+- docs/jira/historias.csv se ha actualizado con HU-02, HU-22, HU-40 y la nueva HU-62.

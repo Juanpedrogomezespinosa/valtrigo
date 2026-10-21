@@ -40,6 +40,12 @@ export function darkness(minutes = getGameState().minutes): number {
   return 0;
 }
 
+// Minutos desde las 00:00 de una hora escrita como HH:MM (en los datos de src/data/).
+export function toMinutes(time: string): number {
+  const [hours, minutes] = time.split(':').map(Number);
+  return hours * 60 + minutes;
+}
+
 export function getDay(): number {
   return getGameState().day;
 }

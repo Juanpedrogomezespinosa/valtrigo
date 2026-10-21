@@ -12,12 +12,15 @@
   "tienda": {
     "name": "Tienda",
     "map": "assets/maps/tienda.json",
-    "music": "assets/audio/tienda.mp3"
+    "music": "assets/audio/tienda.mp3",
+    "closedMessage": "La tienda está cerrada"
   },
   "torre": {
     "name": "Torre del reloj",
     "map": "assets/maps/torre.json",
-    "music": "assets/audio/torre.mp3"
+    "music": "assets/audio/torre.mp3",
+    "opensOnDay": 5,
+    "closedMessage": "La torre está cerrada"
   },
   "granja": {
     "name": "Granja",

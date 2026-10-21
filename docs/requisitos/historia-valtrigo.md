@@ -26,7 +26,7 @@ Encargos (se realizan en este orden)
 
 Estructura de los 7 días
 
-- Día 1, llegada: el jugador conoce el pueblo, la tienda y la plaza. La vendedora le da la carta para el alcalde y le vende Semillas. Encargo 1.
+- Día 1, llegada: una breve introducción cuenta quién es el jugador y por qué llega (HU-62). El día empieza a las 08:00 en la plaza, con el alcalde ya allí. El jugador conoce el pueblo, la tienda y la plaza. La vendedora le da la carta para el alcalde y le vende Semillas. Encargo 1.
 - Día 2, la granja: el granjero pide ayuda para la cosecha. Encargo 2. El jugador cava, siembra y riega su primer huerto y empieza a pescar. Después, en el granero, encuentra un cofre con la primera pieza del reloj.
 - Día 3, el lago: en el bosque junto al lago, el jugador encuentra la segunda pieza del reloj en un cofre y descubre el bosque, donde recoge setas, moras y leña.
 - Día 4, la tienda: la vendedora le pide que venda Semillas. Encargo 3. Es el día de la economía: el jugador vende sus primeras cosechas.

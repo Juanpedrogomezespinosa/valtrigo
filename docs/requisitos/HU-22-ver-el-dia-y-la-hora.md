@@ -13,7 +13,7 @@ Escenario 1: Hora inicial
 
 - Dado que el jugador empieza una partida nueva
 - Cuando mira la interfaz
-- Entonces aparece “Día 1” y “06:00”
+- Entonces aparece “Día 1” y “08:00”
 Escenario 2: Avance del tiempo
 
 - Dado que son las 06:00

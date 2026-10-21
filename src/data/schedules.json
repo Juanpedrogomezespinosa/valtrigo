@@ -1,0 +1,8 @@
+{
+  "alcalde": [{ "zone": "plaza", "from": "08:00", "to": "20:00" }],
+  "granjero": [
+    { "zone": "granja", "from": "06:00", "to": "17:00" },
+    { "zone": "lago", "from": "17:00", "to": "21:00" }
+  ],
+  "relojera": [{ "zone": "torre", "from": "09:00", "to": "22:00" }]
+}
