@@ -10,7 +10,7 @@
  "tilewidth": 16,
  "tileheight": 16,
  "nextlayerid": 4,
- "nextobjectid": 17,
+ "nextobjectid": 20,
  "layers": [
   {
    "id": 1,
@@ -2519,6 +2519,63 @@
     },
     {
      "id": 5,
+     "name": "puesto",
+     "type": "",
+     "point": true,
+     "x": 248,
+     "y": 232,
+     "width": 0,
+     "height": 0,
+     "rotation": 0,
+     "visible": true,
+     "properties": [
+      {
+       "name": "tipo",
+       "type": "string",
+       "value": "cosecha"
+      }
+     ]
+    },
+    {
+     "id": 6,
+     "name": "puesto",
+     "type": "",
+     "point": true,
+     "x": 312,
+     "y": 232,
+     "width": 0,
+     "height": 0,
+     "rotation": 0,
+     "visible": true,
+     "properties": [
+      {
+       "name": "tipo",
+       "type": "string",
+       "value": "pesca"
+      }
+     ]
+    },
+    {
+     "id": 7,
+     "name": "guirnalda",
+     "type": "",
+     "point": true,
+     "x": 136,
+     "y": 200,
+     "width": 0,
+     "height": 0,
+     "rotation": 0,
+     "visible": true,
+     "properties": [
+      {
+       "name": "casillas",
+       "type": "string",
+       "value": "24"
+      }
+     ]
+    },
+    {
+     "id": 8,
      "name": "inicio",
      "type": "",
      "point": true,
@@ -2530,7 +2587,7 @@
      "visible": true
     },
     {
-     "id": 6,
+     "id": 9,
      "name": "llegada-casa",
      "type": "",
      "point": true,
@@ -2549,7 +2606,7 @@
      ]
     },
     {
-     "id": 7,
+     "id": 10,
      "name": "llegada-torre",
      "type": "",
      "point": true,
@@ -2568,7 +2625,7 @@
      ]
     },
     {
-     "id": 8,
+     "id": 11,
      "name": "llegada-tienda",
      "type": "",
      "point": true,
@@ -2587,7 +2644,7 @@
      ]
     },
     {
-     "id": 9,
+     "id": 12,
      "name": "llegada-granja",
      "type": "",
      "point": true,
@@ -2606,7 +2663,7 @@
      ]
     },
     {
-     "id": 10,
+     "id": 13,
      "name": "llegada-lago",
      "type": "",
      "point": true,
@@ -2625,7 +2682,7 @@
      ]
     },
     {
-     "id": 11,
+     "id": 14,
      "name": "npc",
      "type": "",
      "point": true,
@@ -2644,7 +2701,7 @@
      ]
     },
     {
-     "id": 12,
+     "id": 15,
      "name": "puerta",
      "type": "",
      "x": 96,
@@ -2667,7 +2724,7 @@
      ]
     },
     {
-     "id": 13,
+     "id": 16,
      "name": "puerta",
      "type": "",
      "x": 304,
@@ -2690,7 +2747,7 @@
      ]
     },
     {
-     "id": 14,
+     "id": 17,
      "name": "puerta",
      "type": "",
      "x": 496,
@@ -2713,7 +2770,7 @@
      ]
     },
     {
-     "id": 15,
+     "id": 18,
      "name": "puerta",
      "type": "",
      "x": 624,
@@ -2736,7 +2793,7 @@
      ]
     },
     {
-     "id": 16,
+     "id": 19,
      "name": "puerta",
      "type": "",
      "x": 304,

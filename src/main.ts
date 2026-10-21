@@ -15,7 +15,7 @@ import { OptionsScene } from './scenes/OptionsScene';
 import { ShopScene } from './scenes/ShopScene';
 import { MechanismScene } from './scenes/MechanismScene';
 import { PauseScene } from './scenes/PauseScene';
-import { SeedScene } from './scenes/SeedScene';
+import { ItemChoiceScene } from './scenes/ItemChoiceScene';
 import { getAudioState } from './systems/audio';
 import { getGameState, isGameInProgress } from './systems/gameState';
 import { setRandomValues } from './systems/random';
@@ -53,7 +53,7 @@ const game = new Phaser.Game({
     InventoryScene,
     ObjectivesScene,
     ShopScene,
-    SeedScene,
+    ItemChoiceScene,
     MechanismScene,
     PauseScene,
     HudScene,

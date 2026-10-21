@@ -361,3 +361,17 @@ Es un proyecto público con un fin doble: servir de base para un curso de testin
   - Si es incorrecto, sale "El reloj no arranca" y las piezas siguen en el inventario.
   - Las líneas `complete` de la relojera para el encargo 4 ya no se usan.
 - **Tareas (HU-63):** "Encuentra una página del diario de la relojera" (día 5, evento "page") y "Coloca las tres piezas en el mecanismo del reloj" (día 6), que sustituye a "Repara el reloj con las tres piezas".
+
+### Fase 6 de la ampliación: la feria (HU-58 a HU-60)
+
+- **Horario:** la feria dura todo el día 7, tal como dice HU-58, y sus puestos funcionan a cualquier hora de ese día. Al empezar la fase no se decidió darle horario; si se quiere, habría que cambiar la historia.
+- **Plaza el día 7:** puntos `puesto` (con `tipo` cosecha o pesca) en (15, 14) y (19, 14) y un punto `guirnalda` en (8, 12) con `casillas` 24. Solo se crean si `isFairDay()` (src/systems/fair.ts, día en src/data/fair.json). Cada puesto mide 16×32: el mostrador es un obstáculo y el toldo se dibuja por encima del personaje. La guirnalda es decoración por encima de todo y no es un obstáculo. Los dibujos (toldo rojo para la cosecha, azul para la pesca y banderines) se generan en tools/generar-sprites.mjs, que ahora acepta dibujos de 16×32.
+- **Encargo 6 después de la feria:** ya funcionaba. Es de tipo `talk` y no depende del día.
+- **Concurso de la cosecha (HU-59):** con E se abre la lista de cosechas del inventario. Para esa lista, la lista de semillas se ha generalizado en ItemChoiceScene (con título, acción e objetos); en los tests, `seedMenu` es ahora un alias de `itemChoice`. Al elegir una cosecha se entrega y se cobra el premio de fair.json; no hay mensaje (la historia no pide ninguno), solo el efecto de encargo completado y el dinero que sube. Sin cosechas sale "Necesitas una cosecha para participar". Si ya se participó, el cuadro "Concurso de la cosecha" dice "Ya has participado".
+- **Concurso de pesca (HU-60):** el cuadro "¿Inscribirte en el concurso de pesca?" es el mismo de "Sí/No" que "¿Dormir?" (el indicador `sleepPromptOpen` de GameScene se llama ahora `promptOpen`). Al inscribirse, `GameState.fishingContest` guarda la hora de fin (ahora + 90 minutos de juego) y el mayor pez, y `fishingContestDone` queda a true.
+  - Mientras dura, lanzar la caña no gasta energía y cada pez que entra en el inventario cuenta para el mejor tamaño. Uno que se pierde por tener el inventario lleno no cuenta.
+  - GameScene comprueba en cada fotograma si ha llegado la hora de fin, esté el jugador donde esté. Entonces muestra "Concurso terminado: tu mejor pez mide N cm" con su premio, o "Concurso terminado: no has pescado nada".
+  - Un concurso que no ha terminado al dormir (en la cama o a medianoche) se pierde sin premio.
+  - Los premios suman a las monedas ganadas del día (HU-39).
+- **Tests:** en los escenarios 2 y 3 de HU-60 se adelanta el reloj (`setClock`) hasta la hora de fin. El escenario 4 espera los 90 segundos reales. `catchFish` espera a que desaparezca el mensaje del pez anterior.
+- **Tareas del día 7 (HU-63):** "Presenta una cosecha en el concurso de la feria" y "Participa en el concurso de pesca".

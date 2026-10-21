@@ -48,6 +48,9 @@ export function readSave(): GameState | null {
         activeOrders: state.activeOrders ?? [],
         acceptedOrderDays: state.acceptedOrderDays ?? [],
         diaryPages: state.diaryPages ?? [],
+        harvestContestDone: state.harvestContestDone ?? false,
+        fishingContestDone: state.fishingContestDone ?? false,
+        fishingContest: state.fishingContest ?? null,
       }
     : null;
 }

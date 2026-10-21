@@ -402,6 +402,11 @@ function plaza() {
   addSign(map, { id: 'camino-del-lago', x: 18, y: 22 });
   addNoticeBoard(map, { x: 17, y: 11 });
   addDiaryPage(map, { id: 'pagina-1', x: 2, y: 3 }); // en la esquina del noroeste, entre los árboles
+  // Feria del día 7 (HU-58): los dos puestos (la casilla es la del mostrador; el toldo queda encima) y una
+  // guirnalda a lo largo de la fila 12. Solo se ven y solo son obstáculos el día de la feria.
+  map.points.push({ name: 'puesto', x: 15, y: 14, properties: { tipo: 'cosecha' } });
+  map.points.push({ name: 'puesto', x: 19, y: 14, properties: { tipo: 'pesca' } });
+  map.points.push({ name: 'guirnalda', x: 8, y: 12, properties: { casillas: '24' } });
 
   map.points.push({ name: 'inicio', x: 20, y: 17 });
 

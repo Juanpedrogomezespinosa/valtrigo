@@ -1,0 +1,16 @@
+{
+  "day": 7,
+  "harvest": {
+    "title": "Concurso de la cosecha",
+    "prizes": { "nabo": 20, "zanahoria": 50, "calabaza": 100 }
+  },
+  "fishing": {
+    "title": "Concurso de pesca",
+    "minutes": 90,
+    "prizes": [
+      { "minSize": 80, "money": 100 },
+      { "minSize": 40, "money": 50 },
+      { "minSize": 0, "money": 20 }
+    ]
+  }
+}

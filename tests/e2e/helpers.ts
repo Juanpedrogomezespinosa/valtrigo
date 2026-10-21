@@ -109,6 +109,9 @@ export interface TestGameState {
   activeOrders: number[];
   acceptedOrderDays: number[];
   diaryPages: string[];
+  harvestContestDone: boolean;
+  fishingContestDone: boolean;
+  fishingContest: { endsAt: number; best: number } | null;
 }
 
 // Partida guardada de ejemplo, con el formato de src/systems/save.ts.
@@ -135,6 +138,9 @@ export function savedGame(overrides: Partial<TestGameState> = {}): TestGameState
     activeOrders: [],
     acceptedOrderDays: [],
     diaryPages: [],
+    harvestContestDone: false,
+    fishingContestDone: false,
+    fishingContest: null,
     ...overrides,
   };
 }
@@ -893,14 +899,17 @@ export async function plotState(page: Page, key = PLOT) {
   return state?.plots[key] ?? { dug: false, seed: null, grown: 0, watered: false };
 }
 
-// Lista de semillas para sembrar (HU-42), o null si no está abierta.
-export async function seedMenu(page: Page): Promise<{ options: string[]; selected: number } | null> {
+// Lista para elegir un objeto, o null si no está abierta: las semillas para sembrar (HU-42) o las cosechas
+// para el concurso de la feria (HU-59).
+export async function itemChoice(page: Page): Promise<{ options: string[]; selected: number } | null> {
   return page.evaluate(() => {
     const game = (window as unknown as GameWindow).game;
-    if (!game.scene.isActive('SeedScene')) return null;
-    return (game.scene.getScene('SeedScene') as unknown as { getState(): { options: string[]; selected: number } }).getState();
+    if (!game.scene.isActive('ItemChoiceScene')) return null;
+    return (game.scene.getScene('ItemChoiceScene') as unknown as { getState(): { options: string[]; selected: number } }).getState();
   });
 }
+
+export const seedMenu = itemChoice;
 
 export async function isAppleOnTree(page: Page): Promise<boolean> {
   return page.evaluate(() => {
@@ -943,7 +952,10 @@ export async function waitForHudText(page: Page, text: string, timeout = 7000): 
 }
 
 // Lanza la caña, espera a "¡Pica!" y saca el pez. Devuelve el mensaje "Has pescado...".
+// Si aún se ve el mensaje del pez anterior, espera a que desaparezca para no confundirlo con el nuevo.
 export async function catchFish(page: Page): Promise<string> {
+  const caughtVisible = async () => (await sceneTexts(page, 'HudScene')).some((text) => text.startsWith('Has pescado'));
+  await expect.poll(caughtVisible, { timeout: 5000, intervals: [50] }).toBe(false);
   await press(page, 'e');
   await waitForHudText(page, '¡Pica!');
   await press(page, 'e');
@@ -1011,4 +1023,25 @@ export async function isDiaryPageOnMap(page: Page, id: string): Promise<boolean>
     const game = (window as unknown as GameWindow).game;
     return (game.scene.getScene('GameScene') as unknown as { isDiaryPageOnMap(id: string): boolean }).isDiaryPageOnMap(id);
   }, id);
+}
+
+// --- Feria (HU-58 a HU-60) ---
+
+// Debajo de cada puesto de la plaza: el de la cosecha está en (15, 14) y el de pesca en (19, 14).
+export const NEXT_TO_HARVEST_STALL = { x: 15, y: 15 };
+export const NEXT_TO_FISHING_STALL = { x: 19, y: 15 };
+
+export async function fairView(page: Page): Promise<{ harvestStall: boolean; fishingStall: boolean; garland: boolean }> {
+  return page.evaluate(() => {
+    const game = (window as unknown as GameWindow).game;
+    const scene = game.scene.getScene('GameScene') as unknown as { isStallOnMap(kind: string): boolean; isGarlandOnMap(): boolean };
+    return { harvestStall: scene.isStallOnMap('cosecha'), fishingStall: scene.isStallOnMap('pesca'), garland: scene.isGarlandOnMap() };
+  });
+}
+
+// Pone el reloj en una hora concreta, para no esperar en tiempo real (por ejemplo, al final de un concurso).
+export async function setClock(page: Page, minutes: number): Promise<void> {
+  await page.evaluate((minutes) => {
+    (window as unknown as { gameState: () => TestGameState }).gameState().minutes = minutes;
+  }, minutes);
 }

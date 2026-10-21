@@ -4,6 +4,7 @@
 //   Calabaza en public/assets/sprites/objetos/.
 // - El icono de las Moras del bosque (HU-50).
 // - El mecanismo del reloj de la torre (HU-56): public/assets/sprites/mecanismo.png.
+// - La feria (HU-58): guirnalda.png y los puestos de la cosecha y de pesca (16×32, el de abajo es el mostrador).
 // Uso: node tools/generar-sprites.mjs
 //
 // cultivos.png: casillas de 16×16, de izquierda a derecha:
@@ -37,6 +38,8 @@ const PALETTE = {
   B: [98, 62, 40], // madera oscura
   y: [236, 190, 72], // latón
   Y: [184, 132, 44], // latón oscuro
+  x: [214, 72, 64], // toldo y banderín rojos
+  u: [72, 132, 214], // toldo y banderín azules
 };
 
 const SOIL = [
@@ -269,9 +272,67 @@ const MECHANISM = [
   'oooooooooooooooo',
 ];
 
+// Guirnalda de banderines para la feria (HU-58). Se repite casilla a casilla.
+const GARLAND = [
+  '................',
+  'oo..............',
+  '..oo..........oo',
+  '....oooooooooo..',
+  '....oxxo.ouuo...',
+  '.....oxo..ouo...',
+  '.....oo....oo...',
+  '......o.....o...',
+  '................',
+  '................',
+  '................',
+  '................',
+  '................',
+  '................',
+  '................',
+  '................',
+];
+
+// Puesto de la feria (16×32): toldo a rayas arriba y mostrador abajo. `a` es el color del toldo.
+function stall(a) {
+  return [
+    '................',
+    '................',
+    '..oooooooooooo..',
+    '.oaawwaawwaawwao',
+    'oaawwaawwaawwaao',
+    'oaawwaawwaawwaao',
+    'oooooooooooooooo',
+    '.oaoaoaoaoaoaoa.',
+    '..o.o.o.o.o.o...',
+    '..oB........Bo..',
+    '..oB........Bo..',
+    '..oB........Bo..',
+    '..oB........Bo..',
+    '..oB........Bo..',
+    '..oB........Bo..',
+    '..oB........Bo..',
+    'oooooooooooooooo',
+    'oWWWWWWWWWWWWWWo',
+    'oBBBBBBBBBBBBBBo',
+    'oWWWWWWWWWWWWWWo',
+    'oWBWWWWWWWWWWBWo',
+    'oWBWWWWWWWWWWBWo',
+    'oWBWWWWWWWWWWBWo',
+    'oWBWWWWWWWWWWBWo',
+    'oWBWWWWWWWWWWBWo',
+    'oWBWWWWWWWWWWBWo',
+    'oWBWWWWWWWWWWBWo',
+    'oWBWWWWWWWWWWBWo',
+    'oWBBBBBBBBBBBBWo',
+    'oWWWWWWWWWWWWWWo',
+    'oooooooooooooooo',
+    '................',
+  ].map((row) => row.replaceAll('a', a));
+}
+
 function pixels(drawing) {
-  if (drawing.length !== 16 || drawing.some((row) => row.length !== 16)) {
-    throw new Error('Cada dibujo debe medir 16×16');
+  if (drawing.length % 16 !== 0 || drawing.some((row) => row.length !== 16)) {
+    throw new Error('Cada dibujo debe medir 16 de ancho y 16 o 32 de alto');
   }
   return drawing.map((row) => [...row].map((char) => (char === '.' ? [0, 0, 0, 0] : [...PALETTE[char], 255])));
 }
@@ -279,7 +340,7 @@ function pixels(drawing) {
 // Une varios dibujos de 16×16 en una tira horizontal.
 function strip(drawings) {
   const all = drawings.map(pixels);
-  return Array.from({ length: 16 }, (_, y) => all.flatMap((sprite) => sprite[y]));
+  return Array.from({ length: all[0].length }, (_, y) => all.flatMap((sprite) => sprite[y]));
 }
 
 // --- PNG mínimo (RGBA, 8 bits) ---
@@ -330,6 +391,9 @@ const files = {
   [`${SPRITES_DIR}/objetos/calabaza.png`]: strip([PUMPKIN_ICON]),
   [`${SPRITES_DIR}/objetos/mora.png`]: strip([BERRIES_ICON]),
   [`${SPRITES_DIR}/mecanismo.png`]: strip([MECHANISM]),
+  [`${SPRITES_DIR}/guirnalda.png`]: strip([GARLAND]),
+  [`${SPRITES_DIR}/puesto-cosecha.png`]: strip([stall('x')]),
+  [`${SPRITES_DIR}/puesto-pesca.png`]: strip([stall('u')]),
 };
 for (const [path, rows] of Object.entries(files)) {
   writeFileSync(path, encodePng(rows));

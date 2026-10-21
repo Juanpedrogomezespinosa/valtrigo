@@ -6,7 +6,8 @@ import { countItem, type ItemId } from './inventory';
 // Condiciones:
 // - `event`: algo que se hace ese día ("talk:<npc>", "visit:<zona>", "buy:<objeto>", "read:<cartel>",
 //   "water" al regar, "harvest" al cosechar, "fish" al pescar, "forage" al recoger setas o moras y
-//   "chop" al talar y "page" al encontrar una página del diario).
+//   "chop" al talar, "page" al encontrar una página del diario y "contest:cosecha" o "contest:pesca" al
+//   participar en los concursos de la feria).
 //   Estas tareas solo aparecen en su día.
 // - `questAccepted`, `questCompleted`, `questProgress`, `hasItem`, `pickedUp` y `chestOpened`: el estado
 //   de la partida. Si quedan pendientes, siguen apareciendo los días siguientes hasta que se hacen.

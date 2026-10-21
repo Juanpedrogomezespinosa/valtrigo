@@ -41,6 +41,17 @@ import {
   type SeedId,
 } from '../systems/farm';
 import { closedDoorMessage, firstVisitNotice } from '../systems/doors';
+import {
+  enterHarvestContest,
+  finishFishingContestIfDue,
+  FISHING_CONTEST,
+  HARVEST_CONTEST,
+  isFairDay,
+  isFishingContestRunning,
+  presentableCrops,
+  recordContestCatch,
+  startFishingContest,
+} from '../systems/fair';
 import { catchAt, caughtMessage, type Catch } from '../systems/fishing';
 import {
   acceptTodayOrder,
@@ -78,7 +89,7 @@ import type { DaySummarySceneData } from './DaySummaryScene';
 import type { DialogSceneData } from './DialogScene';
 import type { OverlaySceneData } from './InventoryScene';
 import type { MechanismSceneData } from './MechanismScene';
-import type { SeedSceneData } from './SeedScene';
+import type { ItemChoiceSceneData } from './ItemChoiceScene';
 
 export interface GameSceneData {
   // Hacia dónde mira el personaje al aparecer (al llegar por una puerta).
@@ -96,7 +107,20 @@ interface Door {
 
 // Algo con lo que se interactúa pulsando E a menos de una casilla: NPC, cofres, carteles y objetos sueltos.
 interface Interactable {
-  kind: 'npc' | 'cofre' | 'cartel' | 'objeto' | 'cama' | 'manzano' | 'parcela' | 'agua' | 'recurso' | 'tablon' | 'mecanismo' | 'pagina';
+  kind:
+    | 'npc'
+    | 'cofre'
+    | 'cartel'
+    | 'objeto'
+    | 'cama'
+    | 'manzano'
+    | 'parcela'
+    | 'agua'
+    | 'recurso'
+    | 'tablon'
+    | 'mecanismo'
+    | 'pagina'
+    | 'puesto';
   id: string;
   // Lo que ocupa en el mundo.
   area: Phaser.Geom.Rectangle;
@@ -133,7 +157,8 @@ export class GameScene extends Phaser.Scene {
   // deja de caminar hacia ella.
   private warnedDoor: Door | null = null;
   private sleeping = false;
-  private sleepPromptOpen = false;
+  // Cuadro de "Sí" y "No" abierto en la capa de interfaz ("¿Dormir?", inscripción al concurso de pesca).
+  private promptOpen = false;
   private dialogOpen = false;
   // Tiempo andando desde el último paso que sonó (HU-32).
   private stepMs = 0;
@@ -154,7 +179,7 @@ export class GameScene extends Phaser.Scene {
     this.changingZone = false;
     this.warnedDoor = null;
     this.sleeping = false;
-    this.sleepPromptOpen = false;
+    this.promptOpen = false;
     this.dialogOpen = false;
     this.dialogSpeaker = null;
     this.overlayOpen = false;
@@ -197,6 +222,9 @@ export class GameScene extends Phaser.Scene {
       if (object.name === 'tablon') this.addNoticeBoard(object);
       if (object.name === 'mecanismo') this.addMechanism(object);
       if (object.name === 'pagina') this.addDiaryPage(object);
+      // HU-58: los puestos y las guirnaldas de la feria solo están el día 7.
+      if (object.name === 'puesto' && isFairDay()) this.addStall(object);
+      if (object.name === 'guirnalda' && isFairDay()) this.addGarland(object);
     }
     this.updateNpcPresence();
 
@@ -237,6 +265,12 @@ export class GameScene extends Phaser.Scene {
     // también con diálogos, inventario, objetivos o tienda abiertos.
     if (!this.sleeping && advanceTime(delta)) {
       this.fallAsleepAtMidnight();
+    }
+    // HU-60: el concurso de pesca termina a su hora, esté donde esté el jugador.
+    const contestResult = this.sleeping ? null : finishFishingContestIfDue();
+    if (contestResult) {
+      showMessage(this.scene.get('HudScene'), contestResult, MESSAGE_MS, 'top');
+      playEffect(this, 'questComplete');
     }
     this.updateNpcPresence();
 
@@ -343,8 +377,8 @@ export class GameScene extends Phaser.Scene {
     // Escape abre el menú de pausa y detiene la partida (HU-26), salvo durante un cambio de zona.
     // Con el inventario o los objetivos abiertos, Escape los cierra y no abre la pausa.
     keyboard.on('keydown-ESC', () => {
-      // Con "¿Dormir?" abierto, Escape equivale a "No" (lo gestiona el propio cuadro).
-      if (this.changingZone || this.sleeping || this.sleepPromptOpen || this.overlayOpen) {
+      // Con "¿Dormir?" u otro cuadro de "Sí" y "No" abierto, Escape equivale a "No" (lo gestiona el propio cuadro).
+      if (this.changingZone || this.sleeping || this.promptOpen || this.overlayOpen) {
         return;
       }
       this.player.stand();
@@ -367,17 +401,17 @@ export class GameScene extends Phaser.Scene {
   // Hay algo en curso que impide moverse, abrir la pausa o interactuar.
   private isBusy(): boolean {
     return (
-      this.changingZone || this.sleeping || this.sleepPromptOpen || this.dialogOpen || this.overlayOpen || this.fishing !== null
+      this.changingZone || this.sleeping || this.promptOpen || this.dialogOpen || this.overlayOpen || this.fishing !== null
     );
   }
 
   // HU-24: E junto a la cama pregunta "¿Dormir?". El cuadro se dibuja en la capa de interfaz.
   private askToSleep(): void {
-    this.sleepPromptOpen = true;
+    this.promptOpen = true;
     this.player.stand();
     this.indicator.setVisible(false);
     showConfirmDialog(this.scene.get('HudScene'), '¿Dormir?', (yes) => {
-      this.sleepPromptOpen = false;
+      this.promptOpen = false;
       if (yes) {
         this.goToBed();
       }
@@ -424,7 +458,7 @@ export class GameScene extends Phaser.Scene {
     this.sleeping = true;
     this.player.stand();
     this.indicator.setVisible(false);
-    for (const key of ['DialogScene', 'InventoryScene', 'ObjectivesScene', 'ShopScene', 'SeedScene', 'MechanismScene']) {
+    for (const key of ['DialogScene', 'InventoryScene', 'ObjectivesScene', 'ShopScene', 'ItemChoiceScene', 'MechanismScene']) {
       this.scene.stop(key);
     }
     this.stopFishing();
@@ -441,7 +475,7 @@ export class GameScene extends Phaser.Scene {
   // HU-13 (I) y HU-21 (O): inventario y lista de objetivos. Mientras están abiertos el personaje
   // no se mueve, pero el tiempo sigue (decisión del autor).
   private openOverlay(
-    sceneKey: 'InventoryScene' | 'ObjectivesScene' | 'ShopScene' | 'SeedScene' | 'MechanismScene',
+    sceneKey: 'InventoryScene' | 'ObjectivesScene' | 'ShopScene' | 'ItemChoiceScene' | 'MechanismScene',
     extra: object = {},
   ): void {
     if (this.isBusy()) {
@@ -801,17 +835,19 @@ export class GameScene extends Phaser.Scene {
         showMessage(hud, 'No tienes semillas', MESSAGE_MS, 'top');
         return;
       }
-      const data: Omit<SeedSceneData, 'onClose'> = {
-        seeds,
-        onChoose: (seed: SeedId) => {
+      const data: Omit<ItemChoiceSceneData, 'onClose'> = {
+        title: '¿Qué quieres sembrar?',
+        action: 'sembrar',
+        items: seeds,
+        onChoose: (seed) => {
           if (this.work('sow')) {
             removeItem(seed, 1);
-            sow(tile, seed);
+            sow(tile, seed as SeedId);
             this.refreshPlot(tile);
           }
         },
       };
-      this.openOverlay('SeedScene', data);
+      this.openOverlay('ItemChoiceScene', data);
     } else if (isReady(plot)) {
       const crop = cropOf(plot.seed as SeedId);
       if (!canAdd(crop, 1)) {
@@ -853,6 +889,85 @@ export class GameScene extends Phaser.Scene {
         }
       },
     });
+  }
+
+  // --- Feria (HU-58 a HU-60) ---
+
+  // Guirnalda de banderines: decoración por encima del personaje, a lo largo de varias casillas.
+  private addGarland(object: MapObject): void {
+    const area = tileArea(object);
+    const tiles = Number(getProperty(object, 'casillas'));
+    for (let index = 0; index < tiles; index++) {
+      this.add.image(area.centerX + index * TILE_SIZE, area.centerY, 'guirnalda').setDepth(7);
+    }
+  }
+
+  // Puesto de la feria (16×32): el mostrador, abajo, es un obstáculo; el toldo queda por encima del personaje.
+  private addStall(object: MapObject): void {
+    const kind = getProperty(object, 'tipo') as 'cosecha' | 'pesca';
+    const area = tileArea(object);
+    this.add.image(area.centerX, area.bottom, `puesto-${kind}`).setOrigin(0.5, 1).setDepth(5);
+    const counter = this.add.zone(area.centerX, area.centerY, TILE_SIZE, TILE_SIZE);
+    this.physics.add.existing(counter, true);
+    this.physics.add.collider(this.player, counter);
+    this.interactables.push({
+      kind: 'puesto',
+      id: `puesto-${kind}`,
+      area,
+      isAvailable: () => true,
+      interact: () => (kind === 'cosecha' ? this.useHarvestStall() : this.useFishingStall()),
+    });
+  }
+
+  // HU-59: se elige una cosecha del inventario, se entrega y se cobra el premio. Solo una vez por partida.
+  private useHarvestStall(): void {
+    const state = getGameState();
+    if (state.harvestContestDone) {
+      this.openDialog({ speaker: 'puesto', title: HARVEST_CONTEST, lines: ['Ya has participado'], typewriter: false });
+      return;
+    }
+    const crops = presentableCrops();
+    if (crops.length === 0) {
+      showMessage(this.scene.get('HudScene'), 'Necesitas una cosecha para participar', MESSAGE_MS, 'top');
+      return;
+    }
+    const data: Omit<ItemChoiceSceneData, 'onClose'> = {
+      title: '¿Qué cosecha presentas?',
+      action: 'presentar',
+      items: crops,
+      onChoose: (crop) => {
+        enterHarvestContest(crop);
+        recordEvent('contest:cosecha'); // HU-63
+        playEffect(this, 'questComplete');
+      },
+    };
+    this.openOverlay('ItemChoiceScene', data);
+  }
+
+  // HU-60: "¿Inscribirte en el concurso de pesca?" con "Sí" y "No". Solo una vez por partida.
+  private useFishingStall(): void {
+    if (getGameState().fishingContestDone) {
+      this.openDialog({ speaker: 'puesto', title: FISHING_CONTEST, lines: ['Ya has participado'], typewriter: false });
+      return;
+    }
+    this.promptOpen = true;
+    this.player.stand();
+    this.indicator.setVisible(false);
+    showConfirmDialog(this.scene.get('HudScene'), '¿Inscribirte en el concurso de pesca?', (yes) => {
+      this.promptOpen = false;
+      if (yes) {
+        startFishingContest();
+        recordEvent('contest:pesca'); // HU-63
+      }
+    });
+  }
+
+  isStallOnMap(kind: string): boolean {
+    return this.interactables.some((interactable) => interactable.id === `puesto-${kind}`);
+  }
+
+  isGarlandOnMap(): boolean {
+    return this.children.list.some((child) => child instanceof Phaser.GameObjects.Image && child.texture.key === 'guirnalda');
   }
 
   // --- Misterio del reloj (HU-55 y HU-56) ---
@@ -1062,7 +1177,8 @@ export class GameScene extends Phaser.Scene {
       showMessage(this.scene.get('HudScene'), 'Necesitas una Caña de pescar', MESSAGE_MS, 'top');
       return;
     }
-    if (!this.work('cast')) {
+    // HU-60: durante el concurso de pesca, lanzar la caña no gasta energía.
+    if (!isFishingContestRunning() && !this.work('cast')) {
       return;
     }
     this.player.stand();
@@ -1105,6 +1221,7 @@ export class GameScene extends Phaser.Scene {
     }
     addItem(fish.item, 1);
     this.lastCatch = fish;
+    recordContestCatch(fish.size); // HU-60, si hay concurso
     getGameState().dayStats.fish += 1; // HU-39
     recordEvent('fish'); // HU-63
     showMessage(hud, caughtMessage(fish), MESSAGE_MS, 'top');

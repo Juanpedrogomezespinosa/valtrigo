@@ -63,6 +63,11 @@ export interface GameState {
   acceptedOrderDays: number[];
   // Páginas del diario de la relojera encontradas (HU-55). No ocupan sitio en el inventario.
   diaryPages: string[];
+  // Feria (HU-59 y HU-60): si ya se ha participado en cada concurso y el concurso de pesca en marcha
+  // (hora de fin, en minutos del día, y el mayor pez pescado, en cm).
+  harvestContestDone: boolean;
+  fishingContestDone: boolean;
+  fishingContest: { endsAt: number; best: number } | null;
 }
 
 let current: GameState | null = null;
@@ -91,6 +96,9 @@ export function createNewGameState(scene: Phaser.Scene): GameState {
     activeOrders: [],
     acceptedOrderDays: [],
     diaryPages: [],
+    harvestContestDone: false,
+    fishingContestDone: false,
+    fishingContest: null,
   };
 }
 
