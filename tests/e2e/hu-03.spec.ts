@@ -38,6 +38,9 @@ test('Escenario 1: Continuar una partida guardada', async ({ page }) => {
     plots: { '17,4': { dug: true, seed: 'semilla', grown: 1, watered: true } },
     applePickedDay: 2,
     foraged: ['setas-1'],
+    activeOrders: [2],
+    acceptedOrderDays: [2],
+    diaryPages: ['pagina-1'],
   });
   await setSavedGame(page, saved);
   await openGame(page);

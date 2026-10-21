@@ -31,9 +31,9 @@
     "day": 6,
     "npc": "relojera",
     "name": "Las piezas del reloj",
-    "description": "Lleva a la relojera el Engranaje de cobre, el Muelle de plata y el Péndulo de oro para reparar el reloj.",
+    "description": "Busca el Engranaje de cobre, el Muelle de plata y el Péndulo de oro y colócalos en el mecanismo del reloj, en la torre.",
     "requirement": {
-      "type": "deliver",
+      "type": "mechanism",
       "items": [
         { "item": "pieza-del-reloj-1", "quantity": 1 },
         { "item": "pieza-del-reloj-2", "quantity": 1 },

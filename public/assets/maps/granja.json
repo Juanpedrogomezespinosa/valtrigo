@@ -10,7 +10,7 @@
  "tilewidth": 16,
  "tileheight": 16,
  "nextlayerid": 4,
- "nextobjectid": 9,
+ "nextobjectid": 10,
  "layers": [
   {
    "id": 1,
@@ -1501,6 +1501,25 @@
     },
     {
      "id": 8,
+     "name": "pagina",
+     "type": "",
+     "point": true,
+     "x": 424,
+     "y": 296,
+     "width": 0,
+     "height": 0,
+     "rotation": 0,
+     "visible": true,
+     "properties": [
+      {
+       "name": "id",
+       "type": "string",
+       "value": "pagina-2"
+      }
+     ]
+    },
+    {
+     "id": 9,
      "name": "puerta",
      "type": "",
      "x": 0,

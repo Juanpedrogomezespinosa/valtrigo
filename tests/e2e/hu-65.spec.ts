@@ -1,5 +1,15 @@
 import { expect, test } from './fixtures';
-import { at, press, sceneTexts, selectShopRow, startNextTo, talkUntilChoiceOrEnd } from './helpers';
+import {
+  at,
+  NEXT_TO_MECHANISM,
+  placePieces,
+  press,
+  sceneTexts,
+  selectShopRow,
+  startAtWith,
+  startNextTo,
+  talkUntilChoiceOrEnd,
+} from './helpers';
 
 // HU-65. Aviso al recibir un objeto
 // Los mensajes de la partida aparecen arriba, en la capa de interfaz (HudScene).
@@ -49,7 +59,8 @@ test('Escenario 2: Recompensa de un encargo', async ({ page }) => {
 });
 
 test('Escenario 3: Varias unidades', async ({ page }) => {
-  await startNextTo(page, 'relojera', {
+  // El encargo de la relojera se completa colocando las piezas en el mecanismo del reloj (HU-56).
+  await startAtWith(page, 'torre', NEXT_TO_MECHANISM, {
     day: 6,
     minutes: at(10),
     completedQuests: ['encargo-1', 'encargo-2', 'encargo-3'],
@@ -58,6 +69,7 @@ test('Escenario 3: Varias unidades', async ({ page }) => {
   });
 
   await press(page, 'e');
+  await placePieces(page, ['Engranaje de cobre', 'Muelle de plata', 'Péndulo de oro']);
 
   expect(await sceneTexts(page, 'HudScene')).toContain('Recibiste 2 Manzanas de parte de la relojera');
 });

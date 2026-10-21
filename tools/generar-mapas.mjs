@@ -250,6 +250,11 @@ function paintGround(map) {
   }
 }
 
+// Página del diario de la relojera (HU-55). `id` es su identificador en src/data/diary.json.
+function addDiaryPage(map, { id, x, y }) {
+  map.points.push({ name: 'pagina', x, y, properties: { id } });
+}
+
 // Tablón de anuncios (HU-52): casilla sólida en la capa de obstáculos y punto "tablon".
 function addNoticeBoard(map, { x, y }) {
   setTile(map.obstacles, map, x, y, TILE.noticeBoard);
@@ -396,6 +401,7 @@ function plaza() {
   addSign(map, { id: 'plaza', x: 23, y: 11 });
   addSign(map, { id: 'camino-del-lago', x: 18, y: 22 });
   addNoticeBoard(map, { x: 17, y: 11 });
+  addDiaryPage(map, { id: 'pagina-1', x: 2, y: 3 }); // en la esquina del noroeste, entre los árboles
 
   map.points.push({ name: 'inicio', x: 20, y: 17 });
 
@@ -493,6 +499,9 @@ function torre() {
   setTile(map.obstacles, map, 3, 10, INTERIOR.wall);
   setTile(map.obstacles, map, 1, 8, INTERIOR.barrel);
   addChest(map, { id: 'cofre-2', x: 1, y: 10 });
+  // Mecanismo del reloj (HU-56): obstáculo arriba, en el centro de la sala.
+  map.points.push({ name: 'mecanismo', x: 5, y: 2 });
+  addDiaryPage(map, { id: 'pagina-5', x: 8, y: 9 });
   return map;
 }
 
@@ -527,6 +536,7 @@ function granja() {
   map.points.push({ name: 'huerto', x: 17, y: 4, properties: { columnas: '6', filas: '4' } });
   // Manzano (HU-45): el punto es la casilla del tronco, que es un obstáculo.
   map.points.push({ name: 'manzano', x: 12, y: 5 });
+  addDiaryPage(map, { id: 'pagina-2', x: 26, y: 18 }); // en la esquina del sureste
 
   const exits = new Set();
   for (let x = 0; x < 2; x++) for (let y = 10; y <= 12; y++) exits.add(key(x, y));
@@ -566,6 +576,7 @@ function lago() {
   // Sendero escondido: sale de la orilla en (5, 17) hacia el suroeste y acaba en el cofre (2, 18).
   const hiddenPath = [[4, 17], [3, 17], [3, 18]];
   addChest(map, { id: 'cofre-3', x: 2, y: 18 });
+  addDiaryPage(map, { id: 'pagina-3', x: 27, y: 11 }); // en el claro del este, que ya no está vacío
 
   // Sin árboles: el camino, una franja de una casilla alrededor del lago y el claro del este.
   const reserved = new Set();
@@ -627,6 +638,7 @@ function bosque() {
     { id: 'tronco-4', tipo: 'tronco', x: 23, y: 5 },
     { id: 'tronco-5', tipo: 'tronco', x: 13, y: 12 },
   ];
+  addDiaryPage(map, { id: 'pagina-4', x: 13, y: 2 }); // al fondo del claro del norte
   for (const resource of resources) {
     map.points.push({ name: 'recurso', x: resource.x, y: resource.y, properties: { id: resource.id, tipo: resource.tipo } });
   }

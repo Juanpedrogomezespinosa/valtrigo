@@ -1,22 +1,29 @@
 import Phaser from 'phaser';
+import diary from '../data/diary.json';
 import dialogues from '../data/dialogues.json';
 import { COLORS, FONT_FAMILY } from '../config';
 import { getGameState } from '../systems/gameState';
 import { activeOrders, BOARD_NAME } from '../systems/orders';
 import { getActiveQuest } from '../systems/quests';
 import { todayTasks } from '../systems/tasks';
+import { playEffect } from '../systems/audio';
 import { addTitle } from '../ui/title';
 import type { OverlaySceneData } from './InventoryScene';
 
 // Dos columnas: a la izquierda los encargos y pedidos activos; a la derecha las tareas del día.
 const LEFT_X = 50;
-const LEFT_WIDTH = 430;
-const RIGHT_X = 520;
-const RIGHT_WIDTH = 400;
-const TOP = 120;
-const ENTRY_GAP = 18;
+const LEFT_WIDTH = 500;
+const RIGHT_X = 590;
+const RIGHT_WIDTH = 330;
+const TOP = 150;
+const ENTRY_GAP = 12;
 // Tareas del día que caben en la pantalla. Si hay más, se dejan fuera primero las ya hechas.
 const MAX_TASKS = 6;
+
+type Tab = 'Encargos' | 'Notas';
+const TABS: Tab[] = ['Encargos', 'Notas'];
+const TABS_Y = 115;
+const NOTE_LABEL_WIDTH = 130;
 
 interface Objective {
   name: string;
@@ -24,11 +31,17 @@ interface Objective {
   by: string;
 }
 
-// Lista de objetivos (HU-21): primero el encargo principal y después los pedidos del tablón (HU-53), cada uno con
-// su nombre, su descripción y quién lo encargó; y, en la otra columna, las tareas del día (HU-63).
+// Lista de objetivos (HU-21), con dos apartados que se cambian con ← → (HU-55):
+// - "Encargos": primero el encargo principal y después los pedidos del tablón (HU-53), cada uno con su nombre,
+//   su descripción y quién lo encargó; y, en la otra columna, las tareas del día (HU-63).
+// - "Notas": las páginas del diario de la relojera, en orden. Las que faltan, como "Página sin encontrar".
 // Se abre con O encima de la partida y se cierra con O o Escape. El tiempo sigue mientras está abierta.
 export class ObjectivesScene extends Phaser.Scene {
   private onClose!: () => void;
+  private tab: Tab = 'Encargos';
+  private tabTexts: Phaser.GameObjects.Text[] = [];
+  // Lo que se ve en el apartado actual. Se vuelve a crear al cambiar de apartado.
+  private content: Phaser.GameObjects.GameObject[] = [];
 
   constructor() {
     super('ObjectivesScene');
@@ -36,6 +49,7 @@ export class ObjectivesScene extends Phaser.Scene {
 
   init(data: OverlaySceneData): void {
     this.onClose = data.onClose;
+    this.tab = 'Encargos';
   }
 
   create(): void {
@@ -43,12 +57,63 @@ export class ObjectivesScene extends Phaser.Scene {
     this.add.rectangle(0, 0, width, this.scale.height, 0x000000, 0.75).setOrigin(0);
     addTitle(this, 'Objetivos', 60);
 
-    this.addObjectives();
-    this.addTasks();
+    this.tabTexts = TABS.map((tab, index) =>
+      this.add.text(width / 2 + (index === 0 ? -90 : 90), TABS_Y, tab, { fontFamily: FONT_FAMILY, fontSize: '24px' }).setOrigin(0.5),
+    );
+    this.showTab();
 
     const keyboard = this.input.keyboard!;
+    keyboard.on('keydown-LEFT', () => this.switchTab('Encargos'));
+    keyboard.on('keydown-RIGHT', () => this.switchTab('Notas'));
     keyboard.on('keydown-O', () => this.close());
     keyboard.on('keydown-ESC', () => this.close());
+  }
+
+  private switchTab(tab: Tab): void {
+    if (tab !== this.tab) {
+      this.tab = tab;
+      playEffect(this, 'menuNavigate');
+      this.showTab();
+    }
+  }
+
+  private showTab(): void {
+    this.tabTexts.forEach((text, index) => {
+      const active = TABS[index] === this.tab;
+      text.setColor(active ? COLORS.selected : COLORS.text);
+      text.setText(active ? `[ ${TABS[index]} ]` : TABS[index]);
+    });
+    for (const object of this.content) object.destroy();
+    this.content = [];
+    if (this.tab === 'Encargos') {
+      this.addObjectives();
+      this.addTasks();
+    } else {
+      this.addNotes();
+    }
+  }
+
+  // Añade un texto al apartado actual.
+  private text(x: number, y: number, text: string, style: Phaser.Types.GameObjects.Text.TextStyle): Phaser.GameObjects.Text {
+    const object = this.add.text(x, y, text, { fontFamily: FONT_FAMILY, ...style });
+    this.content.push(object);
+    return object;
+  }
+
+  // HU-55: las páginas del diario, en orden.
+  private addNotes(): void {
+    const found = getGameState().diaryPages;
+    let y = TOP;
+    Object.entries(diary.pages).forEach(([id, pageText], index) => {
+      this.text(LEFT_X, y, `Página ${index + 1}`, { fontSize: '20px', color: COLORS.selected });
+      const body = this.text(LEFT_X + NOTE_LABEL_WIDTH, y, found.includes(id) ? pageText : diary.missing, {
+        fontSize: '18px',
+        color: COLORS.text,
+        wordWrap: { width: this.scale.width - LEFT_X * 2 - NOTE_LABEL_WIDTH },
+        lineSpacing: 4,
+      });
+      y += Math.max(body.height, 24) + 16;
+    });
   }
 
   private addObjectives(): void {
@@ -62,55 +127,49 @@ export class ObjectivesScene extends Phaser.Scene {
       objectives.push({ name: order.title, description: order.description, by: BOARD_NAME });
     }
 
-    this.add.text(LEFT_X, TOP, 'Encargos', { fontFamily: FONT_FAMILY, fontSize: '24px', color: COLORS.selected });
+    this.text(LEFT_X, TOP, 'Encargos activos', { fontSize: '22px', color: COLORS.selected });
     if (objectives.length === 0) {
-      this.add.text(LEFT_X, TOP + 44, 'No tienes encargos activos', { fontFamily: FONT_FAMILY, fontSize: '20px', color: COLORS.text });
+      this.text(LEFT_X, TOP + 38, 'No tienes encargos activos', { fontSize: '20px', color: COLORS.text });
       return;
     }
 
-    let y = TOP + 44;
+    let y = TOP + 38;
     for (const { name, description, by } of objectives) {
-      const nameText = this.add.text(LEFT_X, y, name, { fontFamily: FONT_FAMILY, fontSize: '22px', color: COLORS.selected });
-      y += nameText.height + 4;
-      const descriptionText = this.add.text(LEFT_X, y, description, {
-        fontFamily: FONT_FAMILY,
-        fontSize: '18px',
+      const nameText = this.text(LEFT_X, y, name, { fontSize: '18px', color: COLORS.selected });
+      y += nameText.height + 2;
+      const descriptionText = this.text(LEFT_X, y, description, {
+        fontSize: '16px',
         color: COLORS.text,
         wordWrap: { width: LEFT_WIDTH },
-        lineSpacing: 4,
+        lineSpacing: 2,
       });
-      y += descriptionText.height + 4;
-      const byText = this.add.text(LEFT_X, y, `Encargado por: ${by}`, { fontFamily: FONT_FAMILY, fontSize: '18px', color: COLORS.text });
+      y += descriptionText.height + 2;
+      const byText = this.text(LEFT_X, y, `Encargado por: ${by}`, { fontSize: '16px', color: COLORS.text });
       y += byText.height + ENTRY_GAP;
     }
   }
 
   // HU-63: "Tareas de hoy (día N)", con ☑ las hechas y ☐ las pendientes.
   private addTasks(): void {
-    this.add.text(RIGHT_X, TOP, `Tareas de hoy (día ${getGameState().day})`, {
-      fontFamily: FONT_FAMILY,
-      fontSize: '24px',
-      color: COLORS.selected,
-    });
+    this.text(RIGHT_X, TOP, `Tareas de hoy (día ${getGameState().day})`, { fontSize: '22px', color: COLORS.selected });
 
     let tasks = todayTasks();
     if (tasks.length === 0) {
-      this.add.text(RIGHT_X, TOP + 44, 'No hay tareas para hoy', { fontFamily: FONT_FAMILY, fontSize: '20px', color: COLORS.text });
+      this.text(RIGHT_X, TOP + 38, 'No hay tareas para hoy', { fontSize: '20px', color: COLORS.text });
       return;
     }
     if (tasks.length > MAX_TASKS) {
       tasks = tasks.filter((task) => !task.done).slice(0, MAX_TASKS);
     }
-    let y = TOP + 44;
+    let y = TOP + 38;
     for (const task of tasks) {
       // Mismo color para hechas y pendientes: el gris no llega a 4,5:1 sobre algunos fondos (HU-36).
-      const text = this.add.text(RIGHT_X, y, `${task.done ? '☑' : '☐'} ${task.text}`, {
-        fontFamily: FONT_FAMILY,
-        fontSize: '20px',
+      const text = this.text(RIGHT_X, y, `${task.done ? '☑' : '☐'} ${task.text}`, {
+        fontSize: '18px',
         color: COLORS.text,
         wordWrap: { width: RIGHT_WIDTH },
       });
-      y += text.height + 8;
+      y += text.height + 6;
     }
   }
 

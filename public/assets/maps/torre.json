@@ -10,7 +10,7 @@
  "tilewidth": 16,
  "tileheight": 16,
  "nextlayerid": 4,
- "nextobjectid": 5,
+ "nextobjectid": 7,
  "layers": [
   {
    "id": 1,
@@ -347,6 +347,37 @@
     },
     {
      "id": 4,
+     "name": "mecanismo",
+     "type": "",
+     "point": true,
+     "x": 88,
+     "y": 40,
+     "width": 0,
+     "height": 0,
+     "rotation": 0,
+     "visible": true
+    },
+    {
+     "id": 5,
+     "name": "pagina",
+     "type": "",
+     "point": true,
+     "x": 136,
+     "y": 152,
+     "width": 0,
+     "height": 0,
+     "rotation": 0,
+     "visible": true,
+     "properties": [
+      {
+       "name": "id",
+       "type": "string",
+       "value": "pagina-5"
+      }
+     ]
+    },
+    {
+     "id": 6,
      "name": "puerta",
      "type": "",
      "x": 80,

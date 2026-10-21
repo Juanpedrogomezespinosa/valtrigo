@@ -108,6 +108,7 @@ export interface TestGameState {
   foraged: string[];
   activeOrders: number[];
   acceptedOrderDays: number[];
+  diaryPages: string[];
 }
 
 // Partida guardada de ejemplo, con el formato de src/systems/save.ts.
@@ -133,6 +134,7 @@ export function savedGame(overrides: Partial<TestGameState> = {}): TestGameState
     foraged: [],
     activeOrders: [],
     acceptedOrderDays: [],
+    diaryPages: [],
     ...overrides,
   };
 }
@@ -971,3 +973,42 @@ export async function isForageSpotOnMap(page: Page, id: string): Promise<boolean
 
 // El tablón está en la casilla (17, 11) de la plaza; justo debajo se puede pulsar E.
 export const NEXT_TO_BOARD = { x: 17, y: 12 };
+
+// --- Misterio del reloj (HU-55 y HU-56) ---
+
+// Junto al mecanismo del reloj, que está en la casilla (5, 2) de la torre.
+export const NEXT_TO_MECHANISM = { x: 5, y: 3 };
+export const CLOCK_PIECES = [
+  { item: 'pieza-del-reloj-1', quantity: 1 }, // Engranaje de cobre
+  { item: 'pieza-del-reloj-2', quantity: 1 }, // Muelle de plata
+  { item: 'pieza-del-reloj-3', quantity: 1 }, // Péndulo de oro
+];
+
+export async function mechanismState(page: Page): Promise<{ holes: (string | null)[]; options: string[]; selected: number } | null> {
+  return page.evaluate(() => {
+    const game = (window as unknown as GameWindow).game;
+    if (!game.scene.isActive('MechanismScene')) return null;
+    return (
+      game.scene.getScene('MechanismScene') as unknown as { getState(): { holes: (string | null)[]; options: string[]; selected: number } }
+    ).getState();
+  });
+}
+
+// Coloca las piezas en los huecos del mecanismo, en el orden indicado (de abajo arriba).
+export async function placePieces(page: Page, names: string[]): Promise<void> {
+  for (const name of names) {
+    const state = (await mechanismState(page))!;
+    const delta = state.options.indexOf(name) - state.selected;
+    for (let i = 0; i < Math.abs(delta); i++) {
+      await press(page, delta > 0 ? 'ArrowDown' : 'ArrowUp');
+    }
+    await press(page, 'Enter');
+  }
+}
+
+export async function isDiaryPageOnMap(page: Page, id: string): Promise<boolean> {
+  return page.evaluate((id) => {
+    const game = (window as unknown as GameWindow).game;
+    return (game.scene.getScene('GameScene') as unknown as { isDiaryPageOnMap(id: string): boolean }).isDiaryPageOnMap(id);
+  }, id);
+}

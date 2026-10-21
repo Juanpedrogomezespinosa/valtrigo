@@ -1,8 +1,10 @@
-// Genera los gráficos del huerto (HU-41 a HU-44): public/assets/sprites/cultivos.png y los iconos
-// del Nabo, la Zanahoria y la Calabaza en public/assets/sprites/objetos/. También el icono de las Moras
-// del bosque (HU-50), que tampoco está en los paquetes.
-// Uso: node tools/generar-cultivos.mjs
-// Ni Kenney ni Ninja Adventure tienen cultivos: estos dibujos siguen la paleta y el contorno oscuro de Kenney.
+// Genera los gráficos que no están en los paquetes de Kenney ni de Ninja Adventure. Siguen la paleta y el
+// contorno oscuro de Kenney:
+// - El huerto (HU-41 a HU-44): public/assets/sprites/cultivos.png y los iconos del Nabo, la Zanahoria y la
+//   Calabaza en public/assets/sprites/objetos/.
+// - El icono de las Moras del bosque (HU-50).
+// - El mecanismo del reloj de la torre (HU-56): public/assets/sprites/mecanismo.png.
+// Uso: node tools/generar-sprites.mjs
 //
 // cultivos.png: casillas de 16×16, de izquierda a derecha:
 // 0 tierra cavada · 1 recién sembrado · 2 brote · 3 creciendo · 4 nabo listo · 5 zanahoria lista · 6 calabaza lista
@@ -31,6 +33,10 @@ const PALETTE = {
   m: [92, 44, 110], // mora
   M: [58, 26, 74], // mora oscura
   l: [190, 140, 210], // brillo de la mora
+  W: [146, 96, 58], // madera
+  B: [98, 62, 40], // madera oscura
+  y: [236, 190, 72], // latón
+  Y: [184, 132, 44], // latón oscuro
 };
 
 const SOIL = [
@@ -243,6 +249,26 @@ const BERRIES_ICON = [
   '................',
 ];
 
+// Caja de madera con el engranaje del reloj a la vista.
+const MECHANISM = [
+  'oooooooooooooooo',
+  'oBWWWWWWWWWWWWBo',
+  'oWBBBBBBBBBBBBWo',
+  'oWBBBBoyyoBBBBWo',
+  'oWBBoooyyoooBBWo',
+  'oWBByyyYYyyyBBWo',
+  'oWBoyYYooYYyoBWo',
+  'oWoyyYoBBoYyyoWo',
+  'oWoyyYoBBoYyyoWo',
+  'oWBoyYYooYYyoBWo',
+  'oWBByyyYYyyyBBWo',
+  'oWBBoooyyoooBBWo',
+  'oWBBBBoyyoBBBBWo',
+  'oWBBBBBBBBBBBBWo',
+  'oBWWWWWWWWWWWWBo',
+  'oooooooooooooooo',
+];
+
 function pixels(drawing) {
   if (drawing.length !== 16 || drawing.some((row) => row.length !== 16)) {
     throw new Error('Cada dibujo debe medir 16×16');
@@ -303,6 +329,7 @@ const files = {
   [`${SPRITES_DIR}/objetos/zanahoria.png`]: strip([CARROT_ICON]),
   [`${SPRITES_DIR}/objetos/calabaza.png`]: strip([PUMPKIN_ICON]),
   [`${SPRITES_DIR}/objetos/mora.png`]: strip([BERRIES_ICON]),
+  [`${SPRITES_DIR}/mecanismo.png`]: strip([MECHANISM]),
 };
 for (const [path, rows] of Object.entries(files)) {
   writeFileSync(path, encodePng(rows));

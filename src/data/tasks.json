@@ -36,8 +36,9 @@
   { "day": 5, "text": "Entra en la torre del reloj", "done": { "event": "visit:torre" } },
   { "day": 5, "text": "Habla con la relojera", "done": { "event": "talk:relojera" } },
   { "day": 5, "text": "Encuentra el cofre de la torre", "done": { "chestOpened": "cofre-2" } },
+  { "day": 5, "text": "Encuentra una página del diario de la relojera", "done": { "event": "page" } },
 
-  { "day": 6, "text": "Repara el reloj con las tres piezas", "done": { "questCompleted": "encargo-4" } },
+  { "day": 6, "text": "Coloca las tres piezas en el mecanismo del reloj", "done": { "questCompleted": "encargo-4" } },
   { "day": 6, "text": "Lleva 2 Manzanas al granjero", "done": { "questCompleted": "encargo-5" } },
 
   { "day": 7, "text": "Habla con el alcalde en la feria", "done": { "questCompleted": "encargo-6" } }

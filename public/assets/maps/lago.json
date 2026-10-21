@@ -10,7 +10,7 @@
  "tilewidth": 16,
  "tileheight": 16,
  "nextlayerid": 4,
- "nextobjectid": 8,
+ "nextobjectid": 9,
  "layers": [
   {
    "id": 1,
@@ -1465,6 +1465,25 @@
     },
     {
      "id": 6,
+     "name": "pagina",
+     "type": "",
+     "point": true,
+     "x": 440,
+     "y": 184,
+     "width": 0,
+     "height": 0,
+     "rotation": 0,
+     "visible": true,
+     "properties": [
+      {
+       "name": "id",
+       "type": "string",
+       "value": "pagina-3"
+      }
+     ]
+    },
+    {
+     "id": 7,
      "name": "puerta",
      "type": "",
      "x": 224,
@@ -1487,7 +1506,7 @@
      ]
     },
     {
-     "id": 7,
+     "id": 8,
      "name": "puerta",
      "type": "",
      "x": 0,

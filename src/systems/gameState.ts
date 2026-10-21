@@ -61,6 +61,8 @@ export interface GameState {
   // no se han entregado y todos los días cuyo pedido se aceptó.
   activeOrders: number[];
   acceptedOrderDays: number[];
+  // Páginas del diario de la relojera encontradas (HU-55). No ocupan sitio en el inventario.
+  diaryPages: string[];
 }
 
 let current: GameState | null = null;
@@ -88,6 +90,7 @@ export function createNewGameState(scene: Phaser.Scene): GameState {
     foraged: [],
     activeOrders: [],
     acceptedOrderDays: [],
+    diaryPages: [],
   };
 }
 

@@ -98,10 +98,11 @@
         "encargo-4": {
           "offer": [
             "Así que quieres saber qué le pasó al reloj...",
-            "Le faltan tres piezas: un engranaje, un muelle y un péndulo. Si me las traes, lo reparo."
+            "Le faltan tres piezas: un engranaje, un muelle y un péndulo. Si las encuentras, colócalas en el mecanismo, aquí arriba."
           ],
           "active": [
-            "Necesito el Engranaje de cobre, el Muelle de plata y el Péndulo de oro."
+            "Busca el Engranaje de cobre, el Muelle de plata y el Péndulo de oro, y colócalos en el mecanismo.",
+            "Recuerda el orden, de abajo arriba: primero lo que gira, luego lo que empuja y arriba lo que marca el compás."
           ],
           "complete": [
             "¡Las tres piezas! Con esto el reloj volverá a dar la hora.",

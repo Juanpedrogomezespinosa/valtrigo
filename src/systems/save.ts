@@ -47,6 +47,7 @@ export function readSave(): GameState | null {
         foraged: state.foraged ?? [],
         activeOrders: state.activeOrders ?? [],
         acceptedOrderDays: state.acceptedOrderDays ?? [],
+        diaryPages: state.diaryPages ?? [],
       }
     : null;
 }

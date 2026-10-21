@@ -185,7 +185,7 @@ Es un proyecto público con un fin doble: servir de base para un curso de testin
   - cofre-1: detrás del granero (granja, casilla 7, 2), con el Engranaje de cobre.
   - cofre-2: en un almacén tabicado de la torre (1, 10), con el Péndulo de oro.
   - cofre-3: al final de un sendero entre los árboles, al suroeste del lago (2, 18), con el Muelle de plata.
-  Cada pieza sigue en el sitio que dice la historia del juego (Engranaje en el granero, Muelle en el lago, Péndulo en la torre). El claro del este del lago queda vacío, como pista falsa. Son obstáculos y se ven abiertos cuando su `id` está en `openedChests`.
+  Cada pieza sigue en el sitio que dice la historia del juego (Engranaje en el granero, Muelle en el lago, Péndulo en la torre). El claro del este del lago se dejó vacío como pista falsa; desde HU-55 tiene la página 3 del diario. Son obstáculos y se ven abiertos cuando su `id` está en `openedChests`.
 - Los pasillos de los escondites están pensados para que el personaje quede alineado al llegar (al subir hasta los árboles del borde en la granja, al bajar hasta los árboles de la fila 18 en el lago) y la entrada del almacén de la torre mide dos casillas.
 - **La Pala** (decisión del autor: se encuentra en la granja) está en el suelo junto al granero. Se recoge con E y desaparece del mapa. Queda anotada en `pickedUpItems`, un campo nuevo de `GameState`; las partidas guardadas que no lo tengan se cargan con la lista vacía. Criterio y escenario 5 añadidos a HU-12.
 - Carteles con pistas (decisión del autor): dos en la plaza (centro y camino del lago), uno a la entrada de la granja y otro a la entrada del lago. Dan pistas de los escondites de los cofres. Son casillas sólidas. Su texto aparece completo, sin escribirse letra a letra, porque HU-12 dice que la segunda E lo cierra.
@@ -195,7 +195,7 @@ Es un proyecto público con un fin doble: servir de base para un curso de testin
 ### Encargos (HU-11, HU-19, HU-20 y HU-21)
 
 - Los 6 encargos están en src/data/quests.json, en el orden de la historia del juego, con nombre, descripción, NPC, condición y recompensa. Tipos de condición: `deliver` (entregar objetos al NPC), `sell` (vender en la tienda; se cuenta desde que se acepta el encargo, en `questProgress`) y `talk` (hablar con el NPC con el encargo activo).
-- Todos se completan al hablar con el NPC que los encargó cuando se cumplen sus condiciones. El encargo 6 ("hablar con el alcalde durante la feria") se completa la siguiente vez que se habla con él después de aceptarlo.
+- Todos se completan al hablar con el NPC que los encargó cuando se cumplen sus condiciones, salvo el encargo 4, que desde HU-56 se completa en el mecanismo del reloj (tipo `mechanism`). El encargo 6 ("hablar con el alcalde durante la feria") se completa la siguiente vez que se habla con él después de aceptarlo.
 - `GameState` tiene dos campos nuevos: `completedQuests` y `questProgress`. Las partidas guardadas sin ellos se cargan con valores vacíos.
 - La lógica de lo que dice cada NPC está en `conversationWith()` (src/systems/quests.ts), en este orden:
   1. Si el encargo activo es suyo: agradece y completa (si se cumple la condición) o da el seguimiento (`active`).
@@ -312,7 +312,7 @@ Es un proyecto público con un fin doble: servir de base para un curso de testin
 - **E sobre una parcela** (GameScene.workPlot): sin cavar, cava (necesita Pala; si no, "Necesitas una Pala"). Cavada y vacía, abre la lista de semillas (si no hay ninguna, "No tienes semillas"). Sembrada y lista, cosecha (primero comprueba que cabe: "Inventario lleno"). Sembrada y sin regar, riega (necesita Regadera; si no, "Necesitas una Regadera"). Cada acción gasta su energía a través de `work()` (HU-46 y HU-47). Al cosechar se suma 1 a `dayStats.harvests` (HU-39).
 - **Lista de semillas (SeedScene):** pantalla encima de la partida, como el inventario. Muestra las semillas que se tienen, en el orden de crops.json, con su cantidad. ↑ ↓ eligen, Enter o E siembran y Escape cancela. La lista vertical se usa porque los nombres largos no caben en las opciones del cuadro de diálogo.
 - **Estado:** `GameState.plots` guarda solo las parcelas que no están sin cavar, por su casilla ("x,y"), con `dug`, `seed`, `grown` y `watered`. La lógica está en src/systems/farm.ts y los cultivos en src/data/crops.json (semilla, cultivo, días y fotograma). Al despertar (en la cama o a medianoche), `growOvernight` hace crecer un día los cultivos regados y deja todas las parcelas sin regar. A medianoche se parte de la partida guardada, como siempre, y se aplica un solo día de crecimiento.
-- **Aspecto:** public/assets/sprites/cultivos.png sale de `node tools/generar-cultivos.mjs` (dibujos en texto con la paleta de Kenney), porque ninguno de los dos paquetes tiene cultivos. Contiene la tierra cavada, lo recién sembrado, el brote, la planta creciendo y los tres cultivos listos, cada uno distinto. El mismo script genera los iconos del Nabo, la Zanahoria y la Calabaza. Una parcela regada se oscurece con `WATERED_TINT`. Las parcelas se dibujan por debajo del personaje.
+- **Aspecto:** public/assets/sprites/cultivos.png sale de `node tools/generar-sprites.mjs` (dibujos en texto con la paleta de Kenney), porque ninguno de los dos paquetes tiene cultivos. Contiene la tierra cavada, lo recién sembrado, el brote, la planta creciendo y los tres cultivos listos, cada uno distinto. El mismo script genera los iconos del Nabo, la Zanahoria y la Calabaza. Una parcela regada se oscurece con `WATERED_TINT`. Las parcelas se dibujan por debajo del personaje.
 - **Manzano (HU-45):** es el punto `manzano` de la granja, en la casilla del tronco (12, 5), que es un obstáculo. El dibujo es un recorte de 32×32 del árbol redondo de TilesetNature (Ninja Adventure) y, cuando tiene fruta, lleva encima el icono de la Manzana. `GameState.applePickedDay` guarda el día en que se recogió: tiene fruta si nunca se ha recogido o si han pasado 2 días. No gasta energía. Sin fruta no hay indicador.
 - **Tareas del día (HU-63):** se han añadido "Compra una Regadera" (día 1), "Cava, siembra y riega una parcela del huerto" (día 2), "Riega tus cultivos" (día 3) y "Recoge tu primera cosecha" (día 4), con los eventos "water" y "harvest".
 - **Créditos:** credits.json y CREDITOS.md incluyen el manzano, los iconos nuevos y los gráficos generados. En CREDITOS.md, la primera tabla tenía filas de la segunda mezcladas y se ha corregido.
@@ -331,7 +331,7 @@ Es un proyecto público con un fin doble: servir de base para un curso de testin
   - Setas: la casilla de las setas de Tiny Town.
   - Leña: Branch.
   - Peces: Trucha (pez blanco), Carpa (pez amarillo) y Siluro (Fish).
-  - Icono de las Moras: generado en tools/generar-cultivos.mjs.
+  - Icono de las Moras: generado en tools/generar-sprites.mjs.
   - Créditos: actualizados en credits.json y en CREDITOS.md.
 - **Tareas del día 3 (HU-63):** "Pesca un pez en el lago", "Ve al bosque, al oeste del lago" y "Recoge setas o moras en el bosque". Para no pasar de 6, se ha quitado "Lee el cartel del lago"; la tarea del cofre del lago sigue.
 
@@ -343,3 +343,21 @@ Es un proyecto público con un fin doble: servir de base para un curso de testin
 - Las recompensas de los pedidos suman a las monedas ganadas del día (HU-39). No muestran "Recibiste…" (HU-65), porque el tablón no es un NPC.
 - Los pedidos no tocan `activeQuests`, así que no impiden aceptar ni completar un encargo principal (HU-53).
 - **Lista de objetivos en dos columnas:** a la izquierda, "Encargos", con el encargo principal y después los pedidos ("Encargado por: Tablón de anuncios"); a la derecha, "Tareas de hoy (día N)". Con el encargo principal y 3 pedidos, la columna izquierda llega justo al borde inferior de la pantalla.
+
+### Fase 5 de la ampliación: misterio (HU-55 y HU-56)
+
+- **Páginas del diario (HU-55):** son puntos `pagina` con `id` (de pagina-1 a pagina-5). Los textos están en src/data/diary.json y cuentan que la relojera paró el reloj a propósito para que el pueblo descansara. Escondites (decisión del autor):
+  - Página 1: plaza (2, 3), en la esquina del noroeste.
+  - Página 2: granja (26, 18), en la esquina del sureste.
+  - Página 3: lago (27, 11), en el claro del este.
+  - Página 4: bosque (13, 2), al fondo del claro del norte.
+  - Página 5: torre (8, 9).
+
+  Se recogen con E, como la Pala (no son obstáculos), y aparece "Has encontrado una página del diario". Se guardan en `GameState.diaryPages` y no ocupan inventario. El gráfico es el pergamino Scroll de Ninja Adventure.
+- **Lista de objetivos con dos apartados:** "Encargos" (la columna de encargos y pedidos, ahora con el título "Encargos activos", y la de tareas de hoy) y "Notas" (las 5 páginas en orden: "Página N" y su texto, o "Página sin encontrar"). Se cambian con ← → y al abrir la lista se ve "Encargos". El contenido de cada apartado se vuelve a crear al cambiar, para que sus textos no se queden ocultos en la escena. Para que quepan el encargo principal y 3 pedidos, los textos de la columna de encargos son más pequeños (18 y 16 px) y la columna es más ancha.
+- **Puzle del reloj (HU-56):** el encargo 4 es ahora de tipo `mechanism`. Hablar con la relojera con el encargo activo solo da su diálogo `active`, con la pista "primero lo que gira, luego lo que empuja y arriba lo que marca el compás". El mecanismo es el punto `mecanismo` de la torre (5, 2), un obstáculo, y su dibujo se genera en tools/generar-sprites.mjs (antes generar-cultivos.mjs). Sin el encargo activo sale "Habla primero con la relojera", aunque se tengan las piezas. Lo decidió el autor tras encontrarse "Faltan piezas" el día 5 con las tres piezas en el inventario, porque el encargo no se ofrece hasta el día 6; se añadieron un criterio y el escenario 4 a HU-56. Con el encargo activo pero sin las tres piezas, sale "Faltan piezas". Con todo, se abre MechanismScene: tres huecos de abajo arriba; ↑ ↓ eligen la pieza, Enter o E la colocan en el siguiente hueco y Escape sale sin colocar nada.
+- **Cuándo se comprueba el orden** (decisión tomada al implementar): al llenar el tercer hueco, no pieza a pieza, para que el jugador no pueda adivinarlo probando hueco por hueco. El orden correcto es el de los objetos del encargo en quests.json (Engranaje, Muelle y Péndulo).
+  - Si el orden es correcto, se completa el encargo como siempre: "Encargo completado", la recompensa y "Recibiste 2 Manzanas de parte de la relojera" (HU-65), porque el encargo es suyo.
+  - Si es incorrecto, sale "El reloj no arranca" y las piezas siguen en el inventario.
+  - Las líneas `complete` de la relojera para el encargo 4 ya no se usan.
+- **Tareas (HU-63):** "Encuentra una página del diario de la relojera" (día 5, evento "page") y "Coloca las tres piezas en el mecanismo del reloj" (día 6), que sustituye a "Repara el reloj con las tres piezas".

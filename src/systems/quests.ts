@@ -8,6 +8,8 @@ import { addItem, canAdd, countItem, ITEMS, removeItem, type ItemId } from './in
 // - Los encargos se hacen en el orden de quests.json: un NPC solo ofrece su encargo cuando
 //   todos los anteriores están completados y ha llegado su día (`day`, HU-38).
 // - Mientras el encargo 1 está activo, la vendedora entrega la Carta del alcalde.
+// Tipos de condición: `deliver` (entregar objetos al NPC), `sell` (vender en la tienda), `talk` (hablar con
+// el NPC) y `mechanism` (colocar los objetos en el mecanismo del reloj, HU-56).
 
 export type NpcId = keyof typeof dialogues.npcs;
 export type Quest = (typeof quests)[number];
@@ -53,6 +55,7 @@ export function isRequirementMet(quest: Quest): boolean {
   const { requirement } = quest;
   switch (requirement.type) {
     case 'deliver':
+    case 'mechanism':
       return requirement.items!.every(({ item, quantity }) => countItem(item as ItemId) >= quantity);
     case 'sell':
       return (getGameState().questProgress[quest.id] ?? 0) >= requirement.quantity!;
@@ -70,6 +73,10 @@ export function conversationWith(npc: NpcId): Conversation {
 
   if (active?.npc === npc) {
     const lines = questDialogue(npc, active);
+    // HU-56: el encargo de las piezas del reloj se completa en el mecanismo, no hablando con la relojera.
+    if (active.requirement.type === 'mechanism') {
+      return { kind: 'active', quest: active, lines: lines.active };
+    }
     return isRequirementMet(active)
       ? { kind: 'complete', quest: active, lines: lines.complete }
       : { kind: 'active', quest: active, lines: lines.active };
@@ -129,7 +136,7 @@ export function completeQuest(quest: Quest): boolean {
     return false;
   }
 
-  if (quest.requirement.type === 'deliver') {
+  if (quest.requirement.type === 'deliver' || quest.requirement.type === 'mechanism') {
     for (const { item, quantity } of quest.requirement.items!) {
       removeItem(item as ItemId, quantity);
     }
@@ -160,4 +167,15 @@ export function receivedMessage(npc: NpcId, item: ItemId, quantity: number): str
   const { name, plural } = ITEMS[item];
   const itemText = quantity === 1 ? name : `${quantity} ${plural}`;
   return dialogues.received.replace('{objeto}', itemText).replace('{de}', dialogues.npcs[npc].from);
+}
+
+// HU-56: el encargo que se completa colocando sus objetos en el mecanismo del reloj, si es el activo.
+// El orden correcto de las piezas, de abajo arriba, es el de la lista de objetos del encargo.
+export function activeMechanismQuest(): Quest | null {
+  const active = getActiveQuest();
+  return active?.requirement.type === 'mechanism' ? active : null;
+}
+
+export function mechanismOrder(quest: Quest): ItemId[] {
+  return quest.requirement.items!.map(({ item }) => item as ItemId);
 }

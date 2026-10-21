@@ -8,12 +8,12 @@
 | Ninja Adventure (retratos) | sprites/retratos/*.png | Pixel-boy y AAA (pixel-boy.itch.io) | CC0 1.0 (dominio público) |
 | Ninja Adventure (objetos y cofre) | sprites/objetos/*.png, sprites/cofre.png | Pixel-boy y AAA (pixel-boy.itch.io) | CC0 1.0 (dominio público) |
 | Ninja Adventure (cama) | sprites/cama.png | Pixel-boy y AAA (pixel-boy.itch.io) | CC0 1.0 (dominio público) |
-| Ninja Adventure (manzano y bosque) | sprites/manzano.png, sprites/tocon.png, sprites/arbusto-moras.png | Pixel-boy y AAA (pixel-boy.itch.io) | CC0 1.0 (dominio público) |
+| Ninja Adventure (manzano, bosque y páginas) | sprites/manzano.png, sprites/tocon.png, sprites/arbusto-moras.png, sprites/pagina.png | Pixel-boy y AAA (pixel-boy.itch.io) | CC0 1.0 (dominio público) |
 | Tiny Town 1.1 (setas) | sprites/setas.png, sprites/objetos/seta.png | Kenney (www.kenney.nl) | CC0 1.0 (dominio público) |
 | Ninja Adventure (efectos) | audio/sfx/pasos.wav, abrir-menu.wav, compra.wav, venta.wav, cofre.wav, encargo-completado.wav | Pixel-boy y AAA (pixel-boy.itch.io) | CC0 1.0 (dominio público) |
 | Música | audio/*.mp3 | Juanpe Gómez, generada con IA (Flow, de Google) | Propia |
 | Casillas de agua | tilesets/agua.png | Generadas por código (tools/generar-agua.mjs), con la paleta de Kenney | Propia |
-| Huerto, cosechas y moras | sprites/cultivos.png, sprites/objetos/nabo.png, zanahoria.png, calabaza.png, mora.png | Generados por código (tools/generar-cultivos.mjs), con la paleta de Kenney | Propia |
+| Huerto, cosechas, moras y mecanismo del reloj | sprites/cultivos.png, sprites/objetos/nabo.png, zanahoria.png, calabaza.png, mora.png, sprites/mecanismo.png | Generados por código (tools/generar-sprites.mjs), con la paleta de Kenney | Propia |
 | Efectos de sonido provisionales | audio/sfx/menu-navegar.wav, menu-confirmar.wav | Generados por código (tools/generar-efectos.mjs) | Propia |
 
 Las imágenes de Kenney son las hojas `Tilemap/tilemap_packed.png` de cada paquete, sin modificar:
@@ -51,6 +51,7 @@ Archivos de Ninja Adventure (https://pixel-boy.itch.io/ninja-adventure-asset-pac
 | sprites/objetos/carpa.png | Actor/Animal/Fish/SpriteSheetYellow.png, primer fotograma (16×16) |
 | sprites/objetos/siluro.png | Items/Food/Fish.png |
 | sprites/manzano.png | Backgrounds/Tilesets/TilesetNature.png, recorte del árbol redondo (x 96, y 128, 32×32) |
+| sprites/pagina.png | Items/Scroll/Scroll.png |
 | sprites/tocon.png | Backgrounds/Tilesets/TilesetNature.png, recorte del tocón (x 64, y 128, 16×16) |
 | sprites/arbusto-moras.png | Backgrounds/Tilesets/TilesetNature.png, recorte del arbusto con bayas (x 80, y 256, 16×16) |
 | sprites/cama.png | Backgrounds/Tilesets/tileset_bed.png, recorte de la cama individual roja (x 80, y 48, 16×32) |

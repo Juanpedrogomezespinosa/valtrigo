@@ -17,6 +17,7 @@ import {
 import chests from '../data/chests.json';
 import dialogues from '../data/dialogues.json';
 import signs from '../data/signs.json';
+import diary from '../data/diary.json';
 import forage from '../data/forage.json';
 import worldItems from '../data/worldItems.json';
 import { Chest } from '../entities/Chest';
@@ -65,6 +66,8 @@ import {
   completeQuest,
   conversationWith,
   LAST_QUEST,
+  activeMechanismQuest,
+  mechanismOrder,
   receivedMessage,
   type NpcId,
 } from '../systems/quests';
@@ -74,6 +77,7 @@ import { showMessage } from '../ui/message';
 import type { DaySummarySceneData } from './DaySummaryScene';
 import type { DialogSceneData } from './DialogScene';
 import type { OverlaySceneData } from './InventoryScene';
+import type { MechanismSceneData } from './MechanismScene';
 import type { SeedSceneData } from './SeedScene';
 
 export interface GameSceneData {
@@ -92,7 +96,7 @@ interface Door {
 
 // Algo con lo que se interactúa pulsando E a menos de una casilla: NPC, cofres, carteles y objetos sueltos.
 interface Interactable {
-  kind: 'npc' | 'cofre' | 'cartel' | 'objeto' | 'cama' | 'manzano' | 'parcela' | 'agua' | 'recurso' | 'tablon';
+  kind: 'npc' | 'cofre' | 'cartel' | 'objeto' | 'cama' | 'manzano' | 'parcela' | 'agua' | 'recurso' | 'tablon' | 'mecanismo' | 'pagina';
   id: string;
   // Lo que ocupa en el mundo.
   area: Phaser.Geom.Rectangle;
@@ -191,6 +195,8 @@ export class GameScene extends Phaser.Scene {
       if (object.name === 'manzano') this.addAppleTree(object);
       if (object.name === 'recurso') this.addForageSpot(object);
       if (object.name === 'tablon') this.addNoticeBoard(object);
+      if (object.name === 'mecanismo') this.addMechanism(object);
+      if (object.name === 'pagina') this.addDiaryPage(object);
     }
     this.updateNpcPresence();
 
@@ -418,7 +424,7 @@ export class GameScene extends Phaser.Scene {
     this.sleeping = true;
     this.player.stand();
     this.indicator.setVisible(false);
-    for (const key of ['DialogScene', 'InventoryScene', 'ObjectivesScene', 'ShopScene', 'SeedScene']) {
+    for (const key of ['DialogScene', 'InventoryScene', 'ObjectivesScene', 'ShopScene', 'SeedScene', 'MechanismScene']) {
       this.scene.stop(key);
     }
     this.stopFishing();
@@ -434,7 +440,10 @@ export class GameScene extends Phaser.Scene {
 
   // HU-13 (I) y HU-21 (O): inventario y lista de objetivos. Mientras están abiertos el personaje
   // no se mueve, pero el tiempo sigue (decisión del autor).
-  private openOverlay(sceneKey: 'InventoryScene' | 'ObjectivesScene' | 'ShopScene' | 'SeedScene', extra: object = {}): void {
+  private openOverlay(
+    sceneKey: 'InventoryScene' | 'ObjectivesScene' | 'ShopScene' | 'SeedScene' | 'MechanismScene',
+    extra: object = {},
+  ): void {
     if (this.isBusy()) {
       return;
     }
@@ -844,6 +853,88 @@ export class GameScene extends Phaser.Scene {
         }
       },
     });
+  }
+
+  // --- Misterio del reloj (HU-55 y HU-56) ---
+
+  // HU-56: el mecanismo del reloj es un obstáculo de la torre. Con el encargo de las piezas activo y las tres
+  // piezas en el inventario, E abre el mecanismo. Sin el encargo, "Habla primero con la relojera"; con el
+  // encargo pero sin todas las piezas, "Faltan piezas".
+  private addMechanism(object: MapObject): void {
+    const area = tileArea(object);
+    const sprite = this.physics.add.staticImage(area.centerX, area.centerY, 'mecanismo');
+    this.physics.add.collider(this.player, sprite);
+    this.interactables.push({
+      kind: 'mecanismo',
+      id: 'mecanismo',
+      area,
+      isAvailable: () => true,
+      interact: () => this.useMechanism(),
+    });
+  }
+
+  private useMechanism(): void {
+    const hud = this.scene.get('HudScene');
+    const quest = activeMechanismQuest();
+    if (!quest) {
+      showMessage(hud, 'Habla primero con la relojera', MESSAGE_MS, 'top');
+      return;
+    }
+    const pieces = mechanismOrder(quest);
+    if (pieces.some((piece) => countItem(piece) === 0)) {
+      showMessage(hud, 'Faltan piezas', MESSAGE_MS, 'top');
+      return;
+    }
+    const data: Omit<MechanismSceneData, 'onClose'> = {
+      pieces,
+      onDone: (order) => {
+        if (order.some((piece, index) => piece !== pieces[index])) {
+          showMessage(hud, 'El reloj no arranca', MESSAGE_MS, 'top');
+          return;
+        }
+        if (!completeQuest(quest)) {
+          showMessage(hud, 'Inventario lleno', MESSAGE_MS, 'top');
+          return;
+        }
+        // Como al completar un encargo hablando con el NPC (HU-20 y HU-65): la recompensa es de quien lo encargó.
+        showMessage(hud, 'Encargo completado', MESSAGE_MS, 'top');
+        for (const { item, quantity } of quest.reward.items) {
+          showMessage(hud, receivedMessage(quest.npc as NpcId, item as ItemId, quantity), MESSAGE_MS, 'top');
+        }
+        playEffect(this, 'questComplete');
+      },
+    };
+    this.openOverlay('MechanismScene', data);
+  }
+
+  // HU-55: páginas del diario de la relojera, en el suelo. Al recogerlas desaparecen y no ocupan inventario.
+  private addDiaryPage(object: MapObject): void {
+    const id = getProperty(object, 'id') as string;
+    const state = getGameState();
+    if (state.diaryPages.includes(id)) {
+      return;
+    }
+    const area = tileArea(object);
+    const sprite = this.add.image(area.centerX, area.centerY, 'pagina');
+    this.children.moveBelow(sprite, this.player);
+    const interactable: Interactable = {
+      kind: 'pagina',
+      id,
+      area,
+      isAvailable: () => true,
+      interact: () => {
+        state.diaryPages.push(id);
+        recordEvent('page'); // HU-63
+        showMessage(this.scene.get('HudScene'), diary.found, MESSAGE_MS, 'top');
+        sprite.destroy();
+        this.interactables = this.interactables.filter((other) => other !== interactable);
+      },
+    };
+    this.interactables.push(interactable);
+  }
+
+  isDiaryPageOnMap(id: string): boolean {
+    return this.interactables.some((interactable) => interactable.kind === 'pagina' && interactable.id === id);
   }
 
   // --- Tablón de anuncios (HU-52 a HU-54) ---

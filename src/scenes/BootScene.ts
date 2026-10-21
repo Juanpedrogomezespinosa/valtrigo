@@ -30,8 +30,8 @@ export class BootScene extends Phaser.Scene {
     // Huerto y manzano (HU-41 a HU-45).
     this.load.spritesheet('cultivos', 'assets/sprites/cultivos.png', { frameWidth: 16, frameHeight: 16 });
     this.load.image('manzano', 'assets/sprites/manzano.png');
-    // Puntos del bosque (HU-50).
-    for (const sprite of ['setas', 'arbusto-moras', 'tocon']) {
+    // Puntos del bosque (HU-50), páginas del diario (HU-55) y mecanismo del reloj (HU-56).
+    for (const sprite of ['setas', 'arbusto-moras', 'tocon', 'pagina', 'mecanismo']) {
       this.load.image(sprite, `assets/sprites/${sprite}.png`);
     }
     for (const item of Object.keys(ITEMS)) {

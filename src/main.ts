@@ -13,6 +13,7 @@ import { NightScene } from './scenes/NightScene';
 import { ObjectivesScene } from './scenes/ObjectivesScene';
 import { OptionsScene } from './scenes/OptionsScene';
 import { ShopScene } from './scenes/ShopScene';
+import { MechanismScene } from './scenes/MechanismScene';
 import { PauseScene } from './scenes/PauseScene';
 import { SeedScene } from './scenes/SeedScene';
 import { getAudioState } from './systems/audio';
@@ -53,6 +54,7 @@ const game = new Phaser.Game({
     ObjectivesScene,
     ShopScene,
     SeedScene,
+    MechanismScene,
     PauseScene,
     HudScene,
     DaySummaryScene,
