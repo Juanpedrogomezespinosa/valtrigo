@@ -32,5 +32,10 @@
     "name": "Lago",
     "map": "assets/maps/lago.json",
     "music": "assets/audio/lago.mp3"
+  },
+  "bosque": {
+    "name": "Bosque",
+    "map": "assets/maps/bosque.json",
+    "music": "assets/audio/bosque.mp3"
   }
 }

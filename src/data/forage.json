@@ -1,0 +1,5 @@
+{
+  "setas": { "item": "seta", "sprite": "setas", "action": "forage" },
+  "moras": { "item": "mora", "sprite": "arbusto-moras", "action": "forage" },
+  "tronco": { "item": "lena", "sprite": "tocon", "action": "chop", "tool": "hacha", "noTool": "Necesitas un Hacha" }
+}

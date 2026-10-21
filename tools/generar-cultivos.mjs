@@ -1,5 +1,6 @@
 // Genera los gráficos del huerto (HU-41 a HU-44): public/assets/sprites/cultivos.png y los iconos
-// del Nabo, la Zanahoria y la Calabaza en public/assets/sprites/objetos/.
+// del Nabo, la Zanahoria y la Calabaza en public/assets/sprites/objetos/. También el icono de las Moras
+// del bosque (HU-50), que tampoco está en los paquetes.
 // Uso: node tools/generar-cultivos.mjs
 // Ni Kenney ni Ninja Adventure tienen cultivos: estos dibujos siguen la paleta y el contorno oscuro de Kenney.
 //
@@ -27,6 +28,9 @@ const PALETTE = {
   k: [244, 156, 52], // calabaza
   K: [198, 106, 36], // calabaza oscura
   b: [112, 72, 42], // tallo
+  m: [92, 44, 110], // mora
+  M: [58, 26, 74], // mora oscura
+  l: [190, 140, 210], // brillo de la mora
 };
 
 const SOIL = [
@@ -220,6 +224,25 @@ const PUMPKIN_ICON = [
   '................',
 ];
 
+const BERRIES_ICON = [
+  '................',
+  '.........oo.....',
+  '........oggo....',
+  '.......ogGGo....',
+  '.....oooGoo.....',
+  '....ommMoooo....',
+  '...omlmMommmo...',
+  '...ommmMomlmMo..',
+  '...oMmmoommmMo..',
+  '..oommmoMmmMo...',
+  '.omlmMMoooooo...',
+  '.ommmMo.omlmo...',
+  '.oMmmMo.ommMo...',
+  '..oMMo..oMMo....',
+  '...oo....oo.....',
+  '................',
+];
+
 function pixels(drawing) {
   if (drawing.length !== 16 || drawing.some((row) => row.length !== 16)) {
     throw new Error('Cada dibujo debe medir 16×16');
@@ -279,6 +302,7 @@ const files = {
   [`${SPRITES_DIR}/objetos/nabo.png`]: strip([TURNIP_ICON]),
   [`${SPRITES_DIR}/objetos/zanahoria.png`]: strip([CARROT_ICON]),
   [`${SPRITES_DIR}/objetos/calabaza.png`]: strip([PUMPKIN_ICON]),
+  [`${SPRITES_DIR}/objetos/mora.png`]: strip([BERRIES_ICON]),
 };
 for (const [path, rows] of Object.entries(files)) {
   writeFileSync(path, encodePng(rows));

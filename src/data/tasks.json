@@ -18,9 +18,11 @@
   { "day": 2, "text": "Cava, siembra y riega una parcela del huerto", "done": { "event": "water" } },
 
   { "day": 3, "text": "Ve al lago", "done": { "event": "visit:lago" } },
-  { "day": 3, "text": "Lee el cartel del lago", "done": { "event": "read:lago" } },
   { "day": 3, "text": "Encuentra el cofre escondido del lago", "done": { "chestOpened": "cofre-3" } },
   { "day": 3, "text": "Riega tus cultivos", "done": { "event": "water" } },
+  { "day": 3, "text": "Pesca un pez en el lago", "done": { "event": "fish" } },
+  { "day": 3, "text": "Ve al bosque, al oeste del lago", "done": { "event": "visit:bosque" } },
+  { "day": 3, "text": "Recoge setas o moras en el bosque", "done": { "event": "forage" } },
 
   { "day": 4, "text": "Acepta el encargo «Día de mercado» de la vendedora", "done": { "questAccepted": "encargo-3" } },
   {

@@ -17,6 +17,7 @@ import { PauseScene } from './scenes/PauseScene';
 import { SeedScene } from './scenes/SeedScene';
 import { getAudioState } from './systems/audio';
 import { getGameState, isGameInProgress } from './systems/gameState';
+import { setRandomValues } from './systems/random';
 import type { ItemId } from './systems/inventory';
 
 const game = new Phaser.Game({
@@ -70,5 +71,7 @@ if (import.meta.env.DEV) {
     pickUp: (item: ItemId, quantity: number) => (game.scene.getScene('GameScene') as GameScene).pickUp(item, quantity),
     // Volumen aplicado a la música, silencio y música que suena (HU-28 a HU-31).
     audioState: () => getAudioState(game),
+    // Fija los valores al azar (pesca, HU-48 y HU-49) para que los tests den siempre lo mismo.
+    setRandom: (values: number[]) => setRandomValues(values),
   });
 }

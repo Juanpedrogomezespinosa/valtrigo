@@ -8,15 +8,17 @@
 | Ninja Adventure (retratos) | sprites/retratos/*.png | Pixel-boy y AAA (pixel-boy.itch.io) | CC0 1.0 (dominio público) |
 | Ninja Adventure (objetos y cofre) | sprites/objetos/*.png, sprites/cofre.png | Pixel-boy y AAA (pixel-boy.itch.io) | CC0 1.0 (dominio público) |
 | Ninja Adventure (cama) | sprites/cama.png | Pixel-boy y AAA (pixel-boy.itch.io) | CC0 1.0 (dominio público) |
-| Ninja Adventure (manzano) | sprites/manzano.png | Pixel-boy y AAA (pixel-boy.itch.io) | CC0 1.0 (dominio público) |
+| Ninja Adventure (manzano y bosque) | sprites/manzano.png, sprites/tocon.png, sprites/arbusto-moras.png | Pixel-boy y AAA (pixel-boy.itch.io) | CC0 1.0 (dominio público) |
+| Tiny Town 1.1 (setas) | sprites/setas.png, sprites/objetos/seta.png | Kenney (www.kenney.nl) | CC0 1.0 (dominio público) |
 | Ninja Adventure (efectos) | audio/sfx/pasos.wav, abrir-menu.wav, compra.wav, venta.wav, cofre.wav, encargo-completado.wav | Pixel-boy y AAA (pixel-boy.itch.io) | CC0 1.0 (dominio público) |
 | Música | audio/*.mp3 | Juanpe Gómez, generada con IA (Flow, de Google) | Propia |
 | Casillas de agua | tilesets/agua.png | Generadas por código (tools/generar-agua.mjs), con la paleta de Kenney | Propia |
-| Huerto y cosechas | sprites/cultivos.png, sprites/objetos/nabo.png, zanahoria.png, calabaza.png | Generados por código (tools/generar-cultivos.mjs), con la paleta de Kenney | Propia |
+| Huerto, cosechas y moras | sprites/cultivos.png, sprites/objetos/nabo.png, zanahoria.png, calabaza.png, mora.png | Generados por código (tools/generar-cultivos.mjs), con la paleta de Kenney | Propia |
 | Efectos de sonido provisionales | audio/sfx/menu-navegar.wav, menu-confirmar.wav | Generados por código (tools/generar-efectos.mjs) | Propia |
 
 Las imágenes de Kenney son las hojas `Tilemap/tilemap_packed.png` de cada paquete, sin modificar:
 casillas de 16×16 px, 12 columnas y 11 filas, sin separación.
+sprites/setas.png y sprites/objetos/seta.png son la casilla de las setas de Tiny Town (x 80, y 32, 16×16).
 
 Archivos de Ninja Adventure (https://pixel-boy.itch.io/ninja-adventure-asset-pack) usados:
 
@@ -44,7 +46,13 @@ Archivos de Ninja Adventure (https://pixel-boy.itch.io/ninja-adventure-asset-pac
 | sprites/objetos/regadera.png | Items/Tool/WateringCan.png |
 | sprites/objetos/cana-de-pescar.png | Items/Weapons/Fishing Rod/Sprite.png |
 | sprites/cofre.png | Items/Treasure/LittleTreasureChest.png (cerrado y abierto, 16×16 cada uno) |
+| sprites/objetos/lena.png | Items/Resource/Branch.png |
+| sprites/objetos/trucha.png | Actor/Animal/Fish/SpriteSheetWhite.png, primer fotograma (16×16) |
+| sprites/objetos/carpa.png | Actor/Animal/Fish/SpriteSheetYellow.png, primer fotograma (16×16) |
+| sprites/objetos/siluro.png | Items/Food/Fish.png |
 | sprites/manzano.png | Backgrounds/Tilesets/TilesetNature.png, recorte del árbol redondo (x 96, y 128, 32×32) |
+| sprites/tocon.png | Backgrounds/Tilesets/TilesetNature.png, recorte del tocón (x 64, y 128, 16×16) |
+| sprites/arbusto-moras.png | Backgrounds/Tilesets/TilesetNature.png, recorte del arbusto con bayas (x 80, y 256, 16×16) |
 | sprites/cama.png | Backgrounds/Tilesets/tileset_bed.png, recorte de la cama individual roja (x 80, y 48, 16×32) |
 | audio/sfx/pasos.wav | Audio/Sounds/Elemental/Grass.wav |
 | audio/sfx/abrir-menu.wav | Audio/Sounds/Menu/Menu5.wav |

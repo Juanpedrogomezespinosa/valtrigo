@@ -2,6 +2,11 @@ import { expect, test } from './fixtures';
 import {
   answerSleep,
   at,
+  catchFish,
+  FISHING_SPOT,
+  NEXT_TO,
+  ROD,
+  setRandom,
   currentGameState,
   daySummaryTexts,
   expectClockAt,
@@ -22,10 +27,32 @@ async function waitForSummary(page: import('@playwright/test').Page): Promise<st
   return (await daySummaryTexts(page))!;
 }
 
-test.fixme('Escenario 1: Ver el resumen', async () => {
-  // Pendiente de HU-44 (cosechar Nabos) y HU-48 (pescar). Día 2: vender 2 Nabos en la tienda (30 monedas)
-  // y pescar 1 Trucha en el lago. Dormir en la cama: aparece "Día 2 terminado" con
-  // "Monedas ganadas: 30", "Cosechas: 0" y "Peces: 1".
+test('Escenario 1: Ver el resumen', async ({ page }) => {
+  // Día 2 por la mañana: pesca una Trucha en el lago y vende 2 Nabos en la tienda (15 monedas cada uno).
+  await startAtWith(page, 'lago', FISHING_SPOT, {
+    day: 2,
+    minutes: at(7),
+    inventory: [ROD, { item: 'nabo', quantity: 2 }],
+  });
+  await setRandom(page, [0]);
+  expect(await catchFish(page)).toMatch(/^Has pescado una Trucha/);
+
+  await moveTo(page, 'tienda', NEXT_TO.vendedora.position);
+  await press(page, 'e'); // la tienda se abre directamente
+  await press(page, 'ArrowRight'); // "Vender"
+  await selectShopRow(page, 'nabo');
+  await press(page, 'Enter');
+  await press(page, 'Enter');
+  await press(page, 'Escape');
+
+  await moveTo(page, 'casa', NEXT_TO_BED);
+  await answerSleep(page, 'Sí');
+
+  const summary = await waitForSummary(page);
+  expect(summary).toContain('Día 2 terminado');
+  expect(summary).toContain('Monedas ganadas: 30');
+  expect(summary).toContain('Cosechas: 0');
+  expect(summary).toContain('Peces: 1');
 });
 
 test('Escenario 2: Cerrar el resumen', async ({ page }) => {

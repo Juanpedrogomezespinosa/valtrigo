@@ -105,6 +105,7 @@ export interface TestGameState {
   visitedZones: string[];
   plots: Record<string, { dug: boolean; seed: string | null; grown: number; watered: boolean }>;
   applePickedDay: number | null;
+  foraged: string[];
 }
 
 // Partida guardada de ejemplo, con el formato de src/systems/save.ts.
@@ -127,6 +128,7 @@ export function savedGame(overrides: Partial<TestGameState> = {}): TestGameState
     visitedZones: [],
     plots: {},
     applePickedDay: null,
+    foraged: [],
     ...overrides,
   };
 }
@@ -907,4 +909,56 @@ export async function sleepUntil(page: Page, day: number): Promise<void> {
   await answerSleep(page, 'Sí');
   await closeDaySummary(page);
   await waitForMorning(page, day);
+}
+
+// --- Pesca (HU-48 y HU-49) ---
+
+// En el lago, desde la casilla (15, 7) y mirando hacia abajo (como aparece al cargar la partida),
+// se tiene delante el agua.
+export const FISHING_SPOT = { x: 15, y: 7 };
+export const ROD = { item: 'cana-de-pescar', quantity: 1 };
+
+// Fija los valores al azar del juego (window.setRandom, solo en desarrollo). Con 0, "¡Pica!" aparece
+// a los 2 segundos y el pez sale con el tamaño mínimo de su especie.
+export async function setRandom(page: Page, values: number[]): Promise<void> {
+  await page.evaluate((values) => (window as unknown as { setRandom(v: number[]): void }).setRandom(values), values);
+}
+
+export async function isFishing(page: Page): Promise<boolean> {
+  return page.evaluate(() => {
+    const game = (window as unknown as GameWindow).game;
+    return (game.scene.getScene('GameScene') as unknown as { isFishing(): boolean }).isFishing();
+  });
+}
+
+// Espera a que aparezca un texto en la capa de interfaz.
+export async function waitForHudText(page: Page, text: string, timeout = 7000): Promise<void> {
+  await expect.poll(async () => (await sceneTexts(page, 'HudScene')).includes(text), { timeout, intervals: [25] }).toBe(true);
+}
+
+// Lanza la caña, espera a "¡Pica!" y saca el pez. Devuelve el mensaje "Has pescado...".
+export async function catchFish(page: Page): Promise<string> {
+  await press(page, 'e');
+  await waitForHudText(page, '¡Pica!');
+  await press(page, 'e');
+  await expect
+    .poll(async () => (await sceneTexts(page, 'HudScene')).find((text) => text.startsWith('Has pescado')), { intervals: [25] })
+    .toBeTruthy();
+  return (await sceneTexts(page, 'HudScene')).find((text) => text.startsWith('Has pescado'))!;
+}
+
+// --- Bosque (HU-50) ---
+
+// Dónde ponerse para recoger algunos puntos del bosque.
+export const NEXT_TO_FORAGE = {
+  'setas-1': { x: 5, y: 4 }, // Setas en (5, 3)
+  'moras-3': { x: 4, y: 11 }, // Moras en (4, 12)
+  'tronco-5': { x: 13, y: 11 }, // tronco en (13, 12)
+};
+
+export async function isForageSpotOnMap(page: Page, id: string): Promise<boolean> {
+  return page.evaluate((id) => {
+    const game = (window as unknown as GameWindow).game;
+    return (game.scene.getScene('GameScene') as unknown as { isForageSpotOnMap(id: string): boolean }).isForageSpotOnMap(id);
+  }, id);
 }

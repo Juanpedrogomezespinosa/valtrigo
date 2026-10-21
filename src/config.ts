@@ -65,6 +65,11 @@ export const SLEEP_FADE_MS = 500;
 export const NIGHT_COLOR = 0x0a1030;
 export const NIGHT_MAX_ALPHA = 0.65;
 
+// Pesca (HU-48): "¡Pica!" aparece entre 2 y 5 segundos después de lanzar la caña y hay 1 segundo para sacar el pez.
+export const FISH_BITE_MIN_MS = 2000;
+export const FISH_BITE_MAX_MS = 5000;
+export const FISH_REACTION_MS = 1000;
+
 // Huerto (HU-43): una parcela regada se ve más oscura hasta el día siguiente.
 export const WATERED_TINT = 0x9a8a8a;
 

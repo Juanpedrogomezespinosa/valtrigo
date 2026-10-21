@@ -18,6 +18,7 @@ function wakeUp(scene: Phaser.Scene, base: GameState, day: number): GameState {
     energy: MAX_ENERGY,
     dayStats: emptyDayStats(),
     dayEvents: [],
+    foraged: [], // HU-50: los puntos del bosque vuelven a aparecer
     zone: 'casa',
     position: pointTile(findMapPoint(scene, 'casa', 'despertar')),
   };

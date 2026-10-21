@@ -1,6 +1,9 @@
 import Phaser from 'phaser';
 import {
   COLORS,
+  FISH_BITE_MAX_MS,
+  FISH_BITE_MIN_MS,
+  FISH_REACTION_MS,
   FONT_FAMILY,
   MESSAGE_MS,
   SLEEP_FADE_MS,
@@ -14,6 +17,7 @@ import {
 import chests from '../data/chests.json';
 import dialogues from '../data/dialogues.json';
 import signs from '../data/signs.json';
+import forage from '../data/forage.json';
 import worldItems from '../data/worldItems.json';
 import { Chest } from '../entities/Chest';
 import { Npc } from '../entities/Npc';
@@ -36,6 +40,8 @@ import {
   type SeedId,
 } from '../systems/farm';
 import { closedDoorMessage, firstVisitNotice } from '../systems/doors';
+import { catchAt, caughtMessage, type Catch } from '../systems/fishing';
+import { randomInt } from '../systems/random';
 import { spendEnergy, type WorkAction } from '../systems/energy';
 import { isShopOpen } from '../systems/economy';
 import { writeSave } from '../systems/save';
@@ -77,7 +83,7 @@ interface Door {
 
 // Algo con lo que se interactúa pulsando E a menos de una casilla: NPC, cofres, carteles y objetos sueltos.
 interface Interactable {
-  kind: 'npc' | 'cofre' | 'cartel' | 'objeto' | 'cama' | 'manzano' | 'parcela';
+  kind: 'npc' | 'cofre' | 'cartel' | 'objeto' | 'cama' | 'manzano' | 'parcela' | 'agua' | 'recurso';
   id: string;
   // Lo que ocupa en el mundo.
   area: Phaser.Geom.Rectangle;
@@ -100,6 +106,12 @@ export class GameScene extends Phaser.Scene {
   private garden: Phaser.Geom.Rectangle | null = null;
   private plotViews = new Map<string, { soil: Phaser.GameObjects.Image; crop: Phaser.GameObjects.Image }>();
   private apple: Phaser.GameObjects.Image | null = null;
+  private obstacles!: Phaser.Tilemaps.TilemapLayer;
+  // Pesca en curso (HU-48): el temporizador de lo que pasa después ("¡Pica!" o que se escape), si el pez
+  // ya ha picado y el corcho que se ve en el agua.
+  private fishing: { timer: Phaser.Time.TimerEvent; biting: boolean; bobber: Phaser.GameObjects.Arc } | null = null;
+  // Último pez pescado, con su tamaño.
+  private lastCatch: Catch | null = null;
   // Quién habla en el diálogo abierto (un NPC, "cartel"...), o null si no hay diálogo.
   private dialogSpeaker: string | null = null;
   private indicator!: Phaser.GameObjects.Text;
@@ -144,6 +156,8 @@ export class GameScene extends Phaser.Scene {
     // Todo lo que hay en la capa "obstaculos" es sólido (HU-07).
     const obstacles = map.createLayer('obstaculos', tiles)!;
     obstacles.setCollisionByExclusion([-1]);
+    this.obstacles = obstacles;
+    this.fishing = null;
     this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
 
     this.player = new Player(this, state.position, this.facing);
@@ -166,6 +180,7 @@ export class GameScene extends Phaser.Scene {
       if (object.name === 'cama') this.addBed(object);
       if (object.name === 'huerto') this.addGarden(object);
       if (object.name === 'manzano') this.addAppleTree(object);
+      if (object.name === 'recurso') this.addForageSpot(object);
     }
     this.updateNpcPresence();
 
@@ -302,6 +317,10 @@ export class GameScene extends Phaser.Scene {
   private setUpKeys(): void {
     const keyboard = this.input.keyboard!;
     keyboard.on('keydown-E', () => this.interact());
+    // HU-48: una flecha (o WASD) recoge la caña sin pescar nada.
+    for (const key of ['UP', 'DOWN', 'LEFT', 'RIGHT', 'W', 'A', 'S', 'D']) {
+      keyboard.on(`keydown-${key}`, () => this.fishing && this.stopFishing());
+    }
     keyboard.on('keydown-I', () => this.openOverlay('InventoryScene'));
     keyboard.on('keydown-O', () => this.openOverlay('ObjectivesScene'));
 
@@ -331,7 +350,9 @@ export class GameScene extends Phaser.Scene {
 
   // Hay algo en curso que impide moverse, abrir la pausa o interactuar.
   private isBusy(): boolean {
-    return this.changingZone || this.sleeping || this.sleepPromptOpen || this.dialogOpen || this.overlayOpen;
+    return (
+      this.changingZone || this.sleeping || this.sleepPromptOpen || this.dialogOpen || this.overlayOpen || this.fishing !== null
+    );
   }
 
   // HU-24: E junto a la cama pregunta "¿Dormir?". El cuadro se dibuja en la capa de interfaz.
@@ -390,6 +411,7 @@ export class GameScene extends Phaser.Scene {
     for (const key of ['DialogScene', 'InventoryScene', 'ObjectivesScene', 'ShopScene', 'SeedScene']) {
       this.scene.stop(key);
     }
+    this.stopFishing();
     this.dialogOpen = false;
     this.dialogSpeaker = null;
     this.overlayOpen = false;
@@ -424,7 +446,17 @@ export class GameScene extends Phaser.Scene {
   // Aquello con lo que se interactúa al pulsar E: lo más cercano a menos de una casilla y, si no hay nada,
   // la parcela del huerto que el personaje tiene delante (HU-41).
   private interactTarget(): Interactable | null {
-    return this.nearestInteractable() ?? this.plotInFront();
+    return this.nearestInteractable() ?? this.plotInFront() ?? this.waterInFront();
+  }
+
+  // Casilla que el personaje tiene justo delante, en la dirección en la que mira.
+  private tileInFront(): { x: number; y: number } {
+    const step = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] }[this.player.facing];
+    const center = this.player.body.center;
+    return {
+      x: Math.floor((center.x + step[0] * TILE_SIZE * 0.75) / TILE_SIZE),
+      y: Math.floor((center.y + step[1] * TILE_SIZE * 0.75) / TILE_SIZE),
+    };
   }
 
   // Lo más cercano a menos de una casilla del personaje con lo que se puede interactuar.
@@ -449,6 +481,11 @@ export class GameScene extends Phaser.Scene {
   }
 
   private interact(): void {
+    // HU-48: con la caña lanzada, E tira de ella.
+    if (this.fishing && !this.changingZone && !this.sleeping) {
+      this.reel();
+      return;
+    }
     if (!this.isBusy()) {
       this.interactTarget()?.interact();
     }
@@ -713,12 +750,7 @@ export class GameScene extends Phaser.Scene {
   // La parcela del huerto que el personaje tiene justo delante, si la hay.
   private plotInFront(): Interactable | null {
     if (!this.garden) return null;
-    const step = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] }[this.player.facing];
-    const center = this.player.body.center;
-    const tile = {
-      x: Math.floor((center.x + step[0] * TILE_SIZE * 0.75) / TILE_SIZE),
-      y: Math.floor((center.y + step[1] * TILE_SIZE * 0.75) / TILE_SIZE),
-    };
+    const tile = this.tileInFront();
     if (!this.garden.contains(tile.x + 0.5, tile.y + 0.5)) return null;
     return {
       kind: 'parcela',
@@ -802,6 +834,142 @@ export class GameScene extends Phaser.Scene {
         }
       },
     });
+  }
+
+  // --- Bosque (HU-50) ---
+
+  // Puntos de Setas y Moras y troncos (src/data/forage.json). Son obstáculos. Al recogerlos desaparecen
+  // hasta el día siguiente.
+  private addForageSpot(object: MapObject): void {
+    const id = getProperty(object, 'id') as string;
+    const spot = forage[getProperty(object, 'tipo') as keyof typeof forage];
+    const state = getGameState();
+    if (state.foraged.includes(id)) {
+      return;
+    }
+    const area = tileArea(object);
+    const sprite = this.physics.add.staticImage(area.centerX, area.centerY, spot.sprite);
+    sprite.body.setSize(TILE_SIZE - 2, TILE_SIZE - 2);
+    const collider = this.physics.add.collider(this.player, sprite);
+    const interactable: Interactable = {
+      kind: 'recurso',
+      id,
+      area,
+      isAvailable: () => true,
+      interact: () => {
+        const item = spot.item as ItemId;
+        const hud = this.scene.get('HudScene');
+        if ('tool' in spot && countItem(spot.tool as ItemId) === 0) {
+          showMessage(hud, spot.noTool, MESSAGE_MS, 'top');
+          return;
+        }
+        // Primero se comprueba que cabe: si no, el punto sigue ahí y no se gasta energía.
+        if (!canAdd(item, 1)) {
+          showMessage(hud, 'Inventario lleno', MESSAGE_MS, 'top');
+          return;
+        }
+        if (!this.work(spot.action as 'forage' | 'chop')) {
+          return;
+        }
+        addItem(item, 1);
+        state.foraged.push(id);
+        recordEvent(spot.action); // HU-63
+        collider.destroy();
+        sprite.destroy();
+        this.interactables = this.interactables.filter((other) => other !== interactable);
+      },
+    };
+    this.interactables.push(interactable);
+  }
+
+  isForageSpotOnMap(id: string): boolean {
+    return this.interactables.some((interactable) => interactable.kind === 'recurso' && interactable.id === id);
+  }
+
+  // --- Pesca (HU-48 y HU-49) ---
+
+  // El agua del lago que el personaje tiene justo delante, si la hay (las casillas de la hoja "agua").
+  private waterInFront(): Interactable | null {
+    const tile = this.tileInFront();
+    if (this.obstacles.getTileAt(tile.x, tile.y)?.tileset?.name !== 'agua') return null;
+    return {
+      kind: 'agua',
+      id: 'agua',
+      area: new Phaser.Geom.Rectangle(tile.x * TILE_SIZE, tile.y * TILE_SIZE, TILE_SIZE, TILE_SIZE),
+      isAvailable: () => true,
+      interact: () => this.castRod(tile),
+    };
+  }
+
+  // Lanza la caña (3 de energía). "¡Pica!" aparece entre 2 y 5 segundos después. Los temporizadores son
+  // del reloj de la escena: con la pausa abierta se detienen y la pesca sigue al reanudar.
+  private castRod(tile: { x: number; y: number }): void {
+    if (countItem('cana-de-pescar') === 0) {
+      showMessage(this.scene.get('HudScene'), 'Necesitas una Caña de pescar', MESSAGE_MS, 'top');
+      return;
+    }
+    if (!this.work('cast')) {
+      return;
+    }
+    this.player.stand();
+    this.indicator.setVisible(false);
+    const bobber = this.add
+      .circle(tile.x * TILE_SIZE + TILE_SIZE / 2, tile.y * TILE_SIZE + TILE_SIZE / 2, 2, 0xd83c3c)
+      .setStrokeStyle(1, 0xf2f2f2);
+    this.fishing = {
+      biting: false,
+      bobber,
+      timer: this.time.delayedCall(randomInt(FISH_BITE_MIN_MS, FISH_BITE_MAX_MS), () => this.bite()),
+    };
+  }
+
+  // "¡Pica!": hay 1 segundo para pulsar E. Si no, el pez se escapa.
+  private bite(): void {
+    if (!this.fishing) return;
+    this.fishing.biting = true;
+    this.fishing.bobber.setY(this.fishing.bobber.y + 2);
+    showMessage(this.scene.get('HudScene'), '¡Pica!', FISH_REACTION_MS, 'top');
+    this.fishing.timer = this.time.delayedCall(FISH_REACTION_MS, () => {
+      this.stopFishing();
+      showMessage(this.scene.get('HudScene'), 'Se ha escapado', MESSAGE_MS, 'top');
+    });
+  }
+
+  // E con la caña lanzada: demasiado pronto, o el pez (HU-49: según la hora a la que ha picado).
+  private reel(): void {
+    const hud = this.scene.get('HudScene');
+    const biting = this.fishing?.biting;
+    this.stopFishing();
+    if (!biting) {
+      showMessage(hud, 'Has tirado demasiado pronto', MESSAGE_MS, 'top');
+      return;
+    }
+    const fish = catchAt(getGameState().minutes);
+    if (!canAdd(fish.item, 1)) {
+      showMessage(hud, 'Inventario lleno', MESSAGE_MS, 'top');
+      return;
+    }
+    addItem(fish.item, 1);
+    this.lastCatch = fish;
+    getGameState().dayStats.fish += 1; // HU-39
+    recordEvent('fish'); // HU-63
+    showMessage(hud, caughtMessage(fish), MESSAGE_MS, 'top');
+  }
+
+  // Deja de pescar (también al recoger la caña con una flecha: la energía gastada no se devuelve).
+  private stopFishing(): void {
+    if (!this.fishing) return;
+    this.fishing.timer.remove();
+    this.fishing.bobber.destroy();
+    this.fishing = null;
+  }
+
+  isFishing(): boolean {
+    return this.fishing !== null;
+  }
+
+  getLastCatch(): Catch | null {
+    return this.lastCatch;
   }
 
   // --- Consultas del huerto para los tests ---

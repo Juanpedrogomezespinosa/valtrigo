@@ -35,6 +35,9 @@ test('Escenario 1: Continuar una partida guardada', async ({ page }) => {
     dayStats: { moneyEarned: 40, harvests: 0, fish: 0 },
     dayEvents: ['talk:granjero'],
     visitedZones: ['granja'],
+    plots: { '17,4': { dug: true, seed: 'semilla', grown: 1, watered: true } },
+    applePickedDay: 2,
+    foraged: ['setas-1'],
   });
   await setSavedGame(page, saved);
   await openGame(page);

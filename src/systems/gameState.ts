@@ -55,6 +55,8 @@ export interface GameState {
   plots: Record<string, PlotState>;
   // Día en que se recogió por última vez la Manzana del manzano, o null si no se ha recogido nunca (HU-45).
   applePickedDay: number | null;
+  // Puntos de Setas y Moras y troncos del bosque recogidos o talados hoy (HU-50). Vuelven al empezar el día.
+  foraged: string[];
 }
 
 let current: GameState | null = null;
@@ -79,6 +81,7 @@ export function createNewGameState(scene: Phaser.Scene): GameState {
     visitedZones: [],
     plots: {},
     applePickedDay: null,
+    foraged: [],
   };
 }
 

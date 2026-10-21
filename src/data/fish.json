@@ -1,0 +1,8 @@
+{
+  "caught": "Has pescado {articulo} {pez} de {tamaño} cm",
+  "species": [
+    { "item": "trucha", "article": "una", "from": "06:00", "to": "10:00", "minSize": 25, "maxSize": 50 },
+    { "item": "carpa", "article": "una", "from": "10:00", "to": "20:00", "minSize": 20, "maxSize": 45 },
+    { "item": "siluro", "article": "un", "from": "20:00", "to": "24:00", "minSize": 50, "maxSize": 120 }
+  ]
+}

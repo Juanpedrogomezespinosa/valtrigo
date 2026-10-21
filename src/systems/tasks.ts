@@ -5,7 +5,8 @@ import { countItem, type ItemId } from './inventory';
 // Tareas del día (HU-63). Datos en src/data/tasks.json: el día de cada tarea, su texto y cuándo está hecha.
 // Condiciones:
 // - `event`: algo que se hace ese día ("talk:<npc>", "visit:<zona>", "buy:<objeto>", "read:<cartel>",
-//   "water" al regar y "harvest" al cosechar).
+//   "water" al regar, "harvest" al cosechar, "fish" al pescar, "forage" al recoger setas o moras y
+//   "chop" al talar).
 //   Estas tareas solo aparecen en su día.
 // - `questAccepted`, `questCompleted`, `questProgress`, `hasItem`, `pickedUp` y `chestOpened`: el estado
 //   de la partida. Si quedan pendientes, siguen apareciendo los días siguientes hasta que se hacen.

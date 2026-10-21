@@ -547,6 +547,10 @@ function lago() {
 
   addDoor(map, { x: 14, y: 0, width: 3, zone: 'plaza', direction: 'up' });
   addArrival(map, { from: 'plaza', x: 15, y: 1, facing: 'down' });
+  // Camino del oeste hacia el bosque (HU-51), desde la orilla hasta el borde del mapa.
+  addDirt(map, 0, 11, 4, 12);
+  addDoor(map, { x: 0, y: 11, height: 2, zone: 'bosque', direction: 'left' });
+  addArrival(map, { from: 'bosque', x: 1, y: 11, facing: 'right' });
   addSign(map, { id: 'lago', x: 13, y: 3 });
   // Por la tarde el granjero pesca en la orilla norte (HU-40). Se puede rodear por la fila de arriba.
   addNpc(map, { character: 'granjero', x: 17, y: 7 });
@@ -575,8 +579,62 @@ function lago() {
   return map;
 }
 
+// Bosque (HU-50 y HU-51): se llega desde el lago por el camino del este. Un camino principal de este a oeste,
+// un ramal al norte que lleva a un claro y otro al sur que lleva a otro claro, y un claro pequeño al noreste.
+// En los claros y junto a los caminos están los puntos de Setas y Moras y los troncos que se pueden talar.
+function bosque() {
+  const map = createMap(30, 22);
+
+  addDirt(map, 2, 10, 29, 11); // camino principal
+  addDirt(map, 8, 5, 9, 9); // ramal norte
+  addDirt(map, 19, 12, 20, 15); // ramal sur
+  addDirt(map, 24, 7, 25, 9); // ramal noreste
+
+  addDoor(map, { x: 29, y: 10, height: 2, zone: 'lago', direction: 'right' });
+  addArrival(map, { from: 'lago', x: 28, y: 10, facing: 'left' });
+
+  // Claros sin árboles.
+  const reserved = new Set();
+  const clear = (x1, y1, x2, y2) => {
+    for (let y = y1; y <= y2; y++) for (let x = x1; x <= x2; x++) reserved.add(key(x, y));
+  };
+  clear(4, 2, 13, 4); // claro del norte
+  clear(14, 16, 25, 18); // claro del sur
+  clear(22, 4, 27, 6); // claro del noreste
+  clear(3, 12, 5, 13); // junto al camino, al oeste
+  clear(12, 12, 14, 12); // junto al camino, al centro
+  clear(28, 9, 29, 12); // entrada
+
+  const resources = [
+    { id: 'setas-1', tipo: 'setas', x: 5, y: 3 },
+    { id: 'setas-2', tipo: 'setas', x: 12, y: 4 },
+    { id: 'setas-3', tipo: 'setas', x: 16, y: 17 },
+    { id: 'setas-4', tipo: 'setas', x: 26, y: 5 },
+    { id: 'moras-1', tipo: 'moras', x: 7, y: 2 },
+    { id: 'moras-2', tipo: 'moras', x: 23, y: 17 },
+    { id: 'moras-3', tipo: 'moras', x: 4, y: 12 },
+    { id: 'tronco-1', tipo: 'tronco', x: 11, y: 2 },
+    { id: 'tronco-2', tipo: 'tronco', x: 15, y: 16 },
+    { id: 'tronco-3', tipo: 'tronco', x: 22, y: 16 },
+    { id: 'tronco-4', tipo: 'tronco', x: 23, y: 5 },
+    { id: 'tronco-5', tipo: 'tronco', x: 13, y: 12 },
+  ];
+  for (const resource of resources) {
+    map.points.push({ name: 'recurso', x: resource.x, y: resource.y, properties: { id: resource.id, tipo: resource.tipo } });
+  }
+
+  addTrees(map, 0, 0, 29, 1, 100, reserved);
+  addTrees(map, 0, 20, 29, 21, 100, reserved);
+  addTrees(map, 0, 0, 1, 21, 100, reserved);
+  addTrees(map, 28, 0, 29, 21, 100, reserved);
+  addTrees(map, 2, 2, 27, 19, 55, reserved);
+
+  paintGround(map);
+  return map;
+}
+
 mkdirSync(OUTPUT_DIR, { recursive: true });
-for (const [name, build] of Object.entries({ plaza, casa, tienda, torre, granja, lago })) {
+for (const [name, build] of Object.entries({ plaza, casa, tienda, torre, granja, lago, bosque })) {
   writeFileSync(`${OUTPUT_DIR}/${name}.json`, JSON.stringify(toTiled(build()), null, 1) + '\n');
   console.log(`${OUTPUT_DIR}/${name}.json`);
 }
