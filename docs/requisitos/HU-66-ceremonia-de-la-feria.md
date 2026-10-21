@@ -8,7 +8,7 @@ Criterios de aceptación:
 
 - La ceremonia empieza a las 18:00 del día 7 si el jugador está en la plaza o, si no, en cuanto entra en la plaza ese día. Si el jugador no va antes de que acabe el día, se la pierde.
 - Al empezar, el alcalde sube al escenario y los visitantes se colocan delante, como público. El jugador no se puede mover hasta que termina.
-- El alcalde anuncia en un cuadro de diálogo los tres primeros del concurso de la cosecha (HU-59) y después los del concurso de pesca (HU-60). Mientras anuncia cada concurso, los tres primeros aparecen en el podio.
+- El alcalde anuncia en un cuadro de diálogo los tres primeros del concurso de la cosecha (HU-59) y después los del concurso de pesca (HU-60), llamando al jugador por su nombre (HU-67). Mientras anuncia cada concurso, los tres primeros aparecen en el podio.
 - Si el jugador queda entre los tres primeros de un concurso, cobra su premio y aparece el mensaje “Premio: [cantidad] monedas”.
 - Después, si el encargo “La feria de Valtrigo” está activo o es el siguiente que toca, el alcalde da su discurso desde el escenario y el encargo se completa (HU-20). Al terminar, aparece el mensaje de final (HU-37).
 - La ceremonia solo se celebra una vez.

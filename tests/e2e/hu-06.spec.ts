@@ -9,11 +9,28 @@ test('Escenario 1: Movimiento con las flechas', async ({ page }) => {
   const start = await playerInfo(page);
 
   await page.keyboard.down('ArrowRight');
-  const samples = [];
-  for (let i = 0; i < 4; i++) {
-    await page.waitForTimeout(250);
-    samples.push(await playerInfo(page));
-  }
+  // Muestras tomadas dentro del navegador cada ~250 ms, con la hora real de cada una. Desde Playwright las
+  // esperas se alargan si el equipo va cargado y el tramo parecería más largo de lo que es.
+  const samples = await page.evaluate(
+    () =>
+      new Promise<{ t: number; x: number; y: number; vx: number; facing: string }[]>((resolve) => {
+        const game = (window as unknown as { game: import('phaser').Game }).game;
+        const player = (game.scene.getScene('GameScene') as unknown as {
+          player: { x: number; y: number; facing: string; body: { velocity: { x: number } } };
+        }).player;
+        const result: { t: number; x: number; y: number; vx: number; facing: string }[] = [];
+        let next = performance.now() + 250;
+        const sample = (now: number) => {
+          if (now >= next) {
+            result.push({ t: now, x: player.x, y: player.y, vx: player.body.velocity.x, facing: player.facing });
+            next += 250;
+          }
+          if (result.length < 4) requestAnimationFrame(sample);
+          else resolve(result);
+        };
+        requestAnimationFrame(sample);
+      }),
+  );
   await page.keyboard.up('ArrowRight');
 
   const end = samples[samples.length - 1];
@@ -21,14 +38,14 @@ test('Escenario 1: Movimiento con las flechas', async ({ page }) => {
   expect(end.y).toBe(start.y);
   expect(end.facing).toBe('right');
 
-  // Velocidad constante: la misma en todas las muestras, y el desplazamiento crece de forma pareja.
-  const speeds = samples.map((sample) => sample.velocity.x);
+  // Velocidad constante: la misma en todas las muestras, y lo que avanza por segundo es parejo entre tramos.
+  const speeds = samples.map((sample) => sample.vx);
   expect(new Set(speeds).size).toBe(1);
   expect(speeds[0]).toBeGreaterThan(0);
-  const steps = samples.slice(1).map((sample, i) => sample.x - samples[i].x);
-  for (const step of steps) {
-    expect(step).toBeGreaterThan(steps[0] * 0.6);
-    expect(step).toBeLessThan(steps[0] * 1.4);
+  const rates = samples.slice(1).map((sample, i) => (sample.x - samples[i].x) / ((sample.t - samples[i].t) / 1000));
+  for (const rate of rates) {
+    expect(rate).toBeGreaterThan(rates[0] * 0.6);
+    expect(rate).toBeLessThan(rates[0] * 1.4);
   }
 });
 

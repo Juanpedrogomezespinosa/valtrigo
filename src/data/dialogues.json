@@ -43,8 +43,8 @@
           ],
           "complete": [
             "Vecinos de Valtrigo: hace una semana el reloj se paró y nadie sabía qué hacer.",
-            "Alguien que acababa de llegar al pueblo encontró las piezas y lo volvió a poner en marcha.",
-            "En nombre de todo el pueblo: ¡gracias! Esto es para ti."
+            "{nombre}, que acababa de llegar al pueblo, encontró las piezas y lo volvió a poner en marcha.",
+            "En nombre de todo el pueblo: ¡gracias, {nombre}! Esto es para ti."
           ],
           "thanks": [
             "¡Disfruta de la feria! Valtrigo ya es tu casa."
@@ -211,6 +211,28 @@
         "Mi abuelo dice que el que no participa no gana. A las seis es la ceremonia, ¿vendrás?"
       ],
       "quests": {}
+    },
+    "fran": {
+      "name": "Fran",
+      "from": "de Fran",
+      "greeting": [
+        "He venido por el networking, pero bueno... el futuro es ansiedad."
+      ],
+      "clockRepaired": [
+        "He venido por el networking, pero bueno... el futuro es ansiedad."
+      ],
+      "quests": {}
+    },
+    "elena": {
+      "name": "Elena",
+      "from": "de Elena",
+      "greeting": [
+        "He venido porque me han prometido que después pondrán margarita frozen."
+      ],
+      "clockRepaired": [
+        "He venido porque me han prometido que después pondrán margarita frozen."
+      ],
+      "quests": {}
     }
   },
   "ending": {
@@ -230,7 +252,6 @@
       "Segundo puesto",
       "Tercer puesto"
     ],
-    "you": "tú",
     "prize": "Premio: {cantidad} monedas"
   }
 }

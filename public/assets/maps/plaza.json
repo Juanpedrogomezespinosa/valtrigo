@@ -10,7 +10,7 @@
  "tilewidth": 16,
  "tileheight": 16,
  "nextlayerid": 4,
- "nextobjectid": 31,
+ "nextobjectid": 35,
  "layers": [
   {
    "id": 1,
@@ -2676,6 +2676,44 @@
     },
     {
      "id": 14,
+     "name": "visitante",
+     "type": "",
+     "point": true,
+     "x": 152,
+     "y": 248,
+     "width": 0,
+     "height": 0,
+     "rotation": 0,
+     "visible": true,
+     "properties": [
+      {
+       "name": "personaje",
+       "type": "string",
+       "value": "fran"
+      }
+     ]
+    },
+    {
+     "id": 15,
+     "name": "visitante",
+     "type": "",
+     "point": true,
+     "x": 392,
+     "y": 264,
+     "width": 0,
+     "height": 0,
+     "rotation": 0,
+     "visible": true,
+     "properties": [
+      {
+       "name": "personaje",
+       "type": "string",
+       "value": "elena"
+      }
+     ]
+    },
+    {
+     "id": 16,
      "name": "publico",
      "type": "",
      "point": true,
@@ -2694,7 +2732,7 @@
      ]
     },
     {
-     "id": 15,
+     "id": 17,
      "name": "publico",
      "type": "",
      "point": true,
@@ -2713,7 +2751,7 @@
      ]
     },
     {
-     "id": 16,
+     "id": 18,
      "name": "publico",
      "type": "",
      "point": true,
@@ -2732,7 +2770,7 @@
      ]
     },
     {
-     "id": 17,
+     "id": 19,
      "name": "publico",
      "type": "",
      "point": true,
@@ -2751,7 +2789,45 @@
      ]
     },
     {
-     "id": 18,
+     "id": 20,
+     "name": "publico",
+     "type": "",
+     "point": true,
+     "x": 312,
+     "y": 184,
+     "width": 0,
+     "height": 0,
+     "rotation": 0,
+     "visible": true,
+     "properties": [
+      {
+       "name": "personaje",
+       "type": "string",
+       "value": "fran"
+      }
+     ]
+    },
+    {
+     "id": 21,
+     "name": "publico",
+     "type": "",
+     "point": true,
+     "x": 440,
+     "y": 184,
+     "width": 0,
+     "height": 0,
+     "rotation": 0,
+     "visible": true,
+     "properties": [
+      {
+       "name": "personaje",
+       "type": "string",
+       "value": "elena"
+      }
+     ]
+    },
+    {
+     "id": 22,
      "name": "publico",
      "type": "",
      "point": true,
@@ -2770,7 +2846,7 @@
      ]
     },
     {
-     "id": 19,
+     "id": 23,
      "name": "inicio",
      "type": "",
      "point": true,
@@ -2782,7 +2858,7 @@
      "visible": true
     },
     {
-     "id": 20,
+     "id": 24,
      "name": "llegada-casa",
      "type": "",
      "point": true,
@@ -2801,7 +2877,7 @@
      ]
     },
     {
-     "id": 21,
+     "id": 25,
      "name": "llegada-torre",
      "type": "",
      "point": true,
@@ -2820,7 +2896,7 @@
      ]
     },
     {
-     "id": 22,
+     "id": 26,
      "name": "llegada-tienda",
      "type": "",
      "point": true,
@@ -2839,7 +2915,7 @@
      ]
     },
     {
-     "id": 23,
+     "id": 27,
      "name": "llegada-granja",
      "type": "",
      "point": true,
@@ -2858,7 +2934,7 @@
      ]
     },
     {
-     "id": 24,
+     "id": 28,
      "name": "llegada-lago",
      "type": "",
      "point": true,
@@ -2877,7 +2953,7 @@
      ]
     },
     {
-     "id": 25,
+     "id": 29,
      "name": "npc",
      "type": "",
      "point": true,
@@ -2896,7 +2972,7 @@
      ]
     },
     {
-     "id": 26,
+     "id": 30,
      "name": "puerta",
      "type": "",
      "x": 96,
@@ -2919,7 +2995,7 @@
      ]
     },
     {
-     "id": 27,
+     "id": 31,
      "name": "puerta",
      "type": "",
      "x": 304,
@@ -2942,7 +3018,7 @@
      ]
     },
     {
-     "id": 28,
+     "id": 32,
      "name": "puerta",
      "type": "",
      "x": 496,
@@ -2965,7 +3041,7 @@
      ]
     },
     {
-     "id": 29,
+     "id": 33,
      "name": "puerta",
      "type": "",
      "x": 624,
@@ -2988,7 +3064,7 @@
      ]
     },
     {
-     "id": 30,
+     "id": 34,
      "name": "puerta",
      "type": "",
      "x": 304,

@@ -33,6 +33,8 @@ Archivos de Ninja Adventure (https://pixel-boy.itch.io/ninja-adventure-asset-pac
 | sprites/personajes/lucia.png | Actor/Character/Villager3/SpriteSheet.png |
 | sprites/personajes/tomas.png | Actor/Character/OldMan2/SpriteSheet.png |
 | sprites/personajes/pablo.png | Actor/Character/Child/SpriteSheet.png |
+| sprites/personajes/fran.png | Actor/Character/Villager2/SpriteSheet.png, con la piel aclarada (#d14b34 → #ef914f, #8f3e56 → #cf736d) |
+| sprites/personajes/elena.png | Actor/Character/Cavegirl/SpriteSheet.png, con el pelo rubio (#56864c → #f1c471, #345a52 → #d78b4a) |
 | sprites/retratos/vendedora.png | Actor/Character/Woman/Faceset.png |
 | sprites/retratos/alcalde.png | Actor/Character/Noble/Faceset.png |
 | sprites/retratos/relojera.png | Actor/Character/OldWoman/Faceset.png |
@@ -41,6 +43,8 @@ Archivos de Ninja Adventure (https://pixel-boy.itch.io/ninja-adventure-asset-pac
 | sprites/retratos/lucia.png | Actor/Character/Villager3/Faceset.png |
 | sprites/retratos/tomas.png | Actor/Character/OldMan2/Faceset.png |
 | sprites/retratos/pablo.png | Actor/Character/Child/Faceset.png |
+| sprites/retratos/fran.png | Actor/Character/Villager2/Faceset.png, con los mismos cambios de color que su hoja |
+| sprites/retratos/elena.png | Actor/Character/Cavegirl/Faceset.png, con los mismos cambios de color que su hoja |
 | sprites/objetos/manzana.png | Items/Food/SeedBig3.png |
 | sprites/objetos/semilla.png | Items/Food/Seed1.png |
 | sprites/objetos/pala.png | Items/Tool/Shovel.png |

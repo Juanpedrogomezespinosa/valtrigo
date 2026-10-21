@@ -38,11 +38,13 @@ test('Escenario 3: Por la noche', async ({ page }) => {
 });
 
 test('Escenario 4: Cambio de franja', async ({ page }) => {
-  await startAtWith(page, 'lago', FISHING_SPOT, { minutes: at(9, 59), inventory: [ROD] });
-  await setRandom(page, [0]);
+  // Empieza a las 09:58 y "¡Pica!" sale unos 3 segundos después de lanzar: la caña se lanza antes de las 10:00
+  // aunque el equipo vaya cargado, y el pez pica ya en la franja de la Carpa.
+  await startAtWith(page, 'lago', FISHING_SPOT, { minutes: at(9, 58), inventory: [ROD] });
+  await setRandom(page, [0.34]);
 
   await press(page, 'e');
-  expect((await currentGameState(page))?.minutes).toBe(at(9, 59)); // lanza a las 09:59
+  expect((await currentGameState(page))?.minutes).toBeLessThanOrEqual(at(9, 59)); // lanza antes de las 10:00
   await waitForHudText(page, '¡Pica!');
   expect((await currentGameState(page))?.minutes).toBeGreaterThanOrEqual(at(10)); // pica a partir de las 10:00
   await press(page, 'e');

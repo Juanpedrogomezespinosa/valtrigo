@@ -2,19 +2,25 @@ import Phaser from 'phaser';
 import intro from '../data/intro.json';
 import { COLORS, FONT_FAMILY } from '../config';
 import { playEffect } from '../systems/audio';
+import type { NewGameData } from './NameScene';
 
 const TEXT_WIDTH = 720;
 
 // Introducción al empezar una partida nueva (HU-62). Textos en src/data/intro.json.
-// Cada pantalla se pasa con E; al pasar la última, o con Escape, empieza la partida.
+// Cada pantalla se pasa con E; al pasar la última, o con Escape, se elige el nombre (HU-67) y empieza la partida.
 // La partida ya está creada, pero el reloj no avanza hasta que se abre GameScene.
 export class IntroScene extends Phaser.Scene {
   private page = 0;
   private text!: Phaser.GameObjects.Text;
   private counter!: Phaser.GameObjects.Text;
+  private newGame: NewGameData = { overwriteSave: false };
 
   constructor() {
     super('IntroScene');
+  }
+
+  init(data: NewGameData): void {
+    this.newGame = data;
   }
 
   create(): void {
@@ -67,6 +73,6 @@ export class IntroScene extends Phaser.Scene {
 
   private startGame(): void {
     playEffect(this, 'menuConfirm');
-    this.scene.start('GameScene');
+    this.scene.start('NameScene', this.newGame);
   }
 }

@@ -88,6 +88,7 @@ export async function playedEffects(page: Page): Promise<string[]> {
 const SAVE_KEY = 'valtrigo.partida';
 
 export interface TestGameState {
+  playerName: string;
   zone: string;
   position: { x: number; y: number };
   day: number;
@@ -119,6 +120,7 @@ export interface TestGameState {
 // Partida guardada de ejemplo, con el formato de src/systems/save.ts.
 export function savedGame(overrides: Partial<TestGameState> = {}): TestGameState {
   return {
+    playerName: 'Juan',
     zone: 'plaza',
     position: { x: 10, y: 14 },
     day: 4,
@@ -201,13 +203,30 @@ export async function introPage(page: Page): Promise<{ index: number; total: num
   });
 }
 
-// Pasa todas las pantallas de la introducción con E y espera a que empiece la partida.
-export async function passIntro(page: Page): Promise<void> {
+// Pasa todas las pantallas de la introducción con E, escribe el nombre (HU-67) y espera a que empiece la partida.
+export async function passIntro(page: Page, name = 'Juan'): Promise<void> {
   await waitForScene(page, 'IntroScene');
   const { total } = (await introPage(page))!;
   for (let i = 0; i < total; i++) {
     await press(page, 'e');
   }
+  await enterName(page, name);
+}
+
+// Nombre escrito en la pantalla del nombre (HU-67), o null si no está abierta.
+export async function nameInput(page: Page): Promise<string | null> {
+  return page.evaluate(() => {
+    const game = (window as unknown as GameWindow).game;
+    if (!game.scene.isActive('NameScene')) return null;
+    return (game.scene.getScene('NameScene') as unknown as { getName(): string }).getName();
+  });
+}
+
+// Escribe el nombre en la pantalla del nombre, lo confirma con Enter y espera a que empiece la partida.
+export async function enterName(page: Page, name: string): Promise<void> {
+  await waitForScene(page, 'NameScene');
+  await page.keyboard.type(name);
+  await press(page, 'Enter');
   await waitForScene(page, 'GameScene');
 }
 
@@ -1035,7 +1054,7 @@ export async function isDiaryPageOnMap(page: Page, id: string): Promise<boolean>
 export const NEXT_TO_HARVEST_STALL = { x: 15, y: 15 };
 export const NEXT_TO_FISHING_STALL = { x: 19, y: 15 };
 
-export const VISITORS = ['rosa', 'lucia', 'tomas', 'pablo'];
+export const VISITORS = ['rosa', 'lucia', 'tomas', 'pablo', 'fran', 'elena'];
 
 // Lo que hay de la feria en la plaza: puestos, guirnalda, escenario, podio y visitantes presentes.
 export async function fairView(

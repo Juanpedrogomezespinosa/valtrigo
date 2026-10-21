@@ -36,6 +36,8 @@ export function readSave(): GameState | null {
   return state
     ? {
         ...state,
+        // Las partidas guardadas antes de HU-67 no tienen nombre.
+        playerName: state.playerName ?? 'Forastero',
         completedQuests: state.completedQuests ?? [],
         questProgress: state.questProgress ?? {},
         pickedUpItems: state.pickedUpItems ?? [],

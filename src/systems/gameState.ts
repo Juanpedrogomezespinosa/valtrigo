@@ -31,6 +31,8 @@ export interface PlotState {
 
 // Todo lo que forma parte de una partida y se guarda (HU-03).
 export interface GameState {
+  // Nombre del jugador (HU-67). Se elige al empezar una partida nueva.
+  playerName: string;
   zone: ZoneId;
   position: TilePosition;
   day: number;
@@ -82,6 +84,7 @@ let current: GameState | null = null;
 // Estado de una partida nueva: zona inicial, posición de inicio del mapa y valores de config.ts.
 export function createNewGameState(scene: Phaser.Scene): GameState {
   return {
+    playerName: '',
     zone: NEW_GAME.zone,
     position: pointTile(findMapPoint(scene, NEW_GAME.zone, 'inicio')),
     day: NEW_GAME.day,

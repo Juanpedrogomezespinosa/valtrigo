@@ -57,7 +57,7 @@ test('Escenario 3: Podio y premio', async ({ page }) => {
   await advanceDialogUntil(page, 'Concurso de la cosecha');
 
   expect((await ceremonyView(page)).podium).toEqual(['jugador', 'lucia', 'tomas']);
-  expect((await dialogState(page))?.fullText).toBe('Concurso de la cosecha. Primer puesto: tú, con una Calabaza de 12 kg.');
+  expect((await dialogState(page))?.fullText).toBe('Concurso de la cosecha. Primer puesto: Juan, con una Calabaza de 12 kg.');
   // Al terminar el anuncio de la cosecha cobra su premio.
   await advanceDialogUntil(page, 'Concurso de pesca');
   expect(await sceneTexts(page, 'HudScene')).toContain('Premio: 100 monedas');

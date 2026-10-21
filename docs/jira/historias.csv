@@ -50,7 +50,7 @@ Como jugador, quiero empezar una partida nueva para jugar desde el principio.
 
 Criterios de aceptación:
 
-- Al pulsar “Nueva partida”, después de la introducción (HU-62), se carga la zona inicial (exterior del pueblo) con el personaje en su posición de inicio.
+- Al pulsar “Nueva partida”, después de la introducción (HU-62) y de elegir el nombre (HU-67), se carga la zona inicial (exterior del pueblo) con el personaje en su posición de inicio.
 - Si existe una partida guardada, se pide confirmación antes de sobrescribirla.
 - La partida nueva empieza con día 1 a las 08:00, 100 monedas, energía al máximo (100) e inventario vacío.
 Escenario 1: Nueva partida sin partida guardada
@@ -76,7 +76,7 @@ Escenario 4: Datos iniciales
 - Dado que el jugador acaba de iniciar una partida nueva
 - Cuando consulta su dinero, su energía y su inventario
 - Entonces tiene 100 monedas y 100 puntos de energía
-- Y su inventario está vacío","- Al pulsar “Nueva partida”, después de la introducción (HU-62), se carga la zona inicial (exterior del pueblo) con el personaje en su posición de inicio.
+- Y su inventario está vacío","- Al pulsar “Nueva partida”, después de la introducción (HU-62) y de elegir el nombre (HU-67), se carga la zona inicial (exterior del pueblo) con el personaje en su posición de inicio.
 - Si existe una partida guardada, se pide confirmación antes de sobrescribirla.
 - La partida nueva empieza con día 1 a las 08:00, 100 monedas, energía al máximo (100) e inventario vacío."
 "HU-03","HU-03. Continuar una partida guardada","# HU-03. Continuar una partida guardada
@@ -1967,7 +1967,7 @@ Criterios de aceptación:
 
 - La feria se celebra en la plaza el día 7. Es festivo: ese día el jugador se despierta a las 12:00 y la feria ya está montada.
 - Durante la feria, la plaza tiene guirnaldas, dos puestos (el de la cosecha, HU-59, y el de pesca, HU-60), un escenario y un podio para la ceremonia (HU-66).
-- El día 7, a partir de las 12:00, hay cuatro visitantes en la plaza: Rosa, Lucía, Tomás y Pablo. Cada uno tiene un diálogo sencillo al pulsar E junto a él.
+- El día 7, a partir de las 12:00, hay seis visitantes en la plaza: Rosa, Lucía, Tomás, Pablo, Fran y Elena. Cada uno tiene un diálogo sencillo al pulsar E junto a él. Fran dice “He venido por el networking, pero bueno... el futuro es ansiedad.” y Elena “He venido porque me han prometido que después pondrán margarita frozen.”.
 - Los concursos admiten participantes de 12:00 a 17:00. A las 17:00 aparece el mensaje “Los concursos han terminado. Ceremonia a las 18:00 en la plaza”.
 - Antes y después del día 7, la plaza tiene su aspecto normal: no hay guirnaldas, puestos, escenario, podio ni visitantes.
 - Pasado el día 7, el encargo “La feria de Valtrigo” se puede seguir completando al hablar con el alcalde, aunque ya no haya feria.
@@ -1976,7 +1976,7 @@ Escenario 1: Día de feria
 - Dado que es el día 7
 - Cuando el jugador entra en la plaza
 - Entonces la plaza tiene guirnaldas, los puestos de la cosecha y de pesca, el escenario y el podio
-- Y están los cuatro visitantes
+- Y están los seis visitantes
 Escenario 2: Antes de la feria
 
 - Dado que es el día 6
@@ -2008,7 +2008,7 @@ Escenario 7: Fin de los concursos
 - Cuando el reloj llega a las 17:00
 - Entonces aparece el mensaje “Los concursos han terminado. Ceremonia a las 18:00 en la plaza”","- La feria se celebra en la plaza el día 7. Es festivo: ese día el jugador se despierta a las 12:00 y la feria ya está montada.
 - Durante la feria, la plaza tiene guirnaldas, dos puestos (el de la cosecha, HU-59, y el de pesca, HU-60), un escenario y un podio para la ceremonia (HU-66).
-- El día 7, a partir de las 12:00, hay cuatro visitantes en la plaza: Rosa, Lucía, Tomás y Pablo. Cada uno tiene un diálogo sencillo al pulsar E junto a él.
+- El día 7, a partir de las 12:00, hay seis visitantes en la plaza: Rosa, Lucía, Tomás, Pablo, Fran y Elena. Cada uno tiene un diálogo sencillo al pulsar E junto a él. Fran dice “He venido por el networking, pero bueno... el futuro es ansiedad.” y Elena “He venido porque me han prometido que después pondrán margarita frozen.”.
 - Los concursos admiten participantes de 12:00 a 17:00. A las 17:00 aparece el mensaje “Los concursos han terminado. Ceremonia a las 18:00 en la plaza”.
 - Antes y después del día 7, la plaza tiene su aspecto normal: no hay guirnaldas, puestos, escenario, podio ni visitantes.
 - Pasado el día 7, el encargo “La feria de Valtrigo” se puede seguir completando al hablar con el alcalde, aunque ya no haya feria."
@@ -2172,8 +2172,8 @@ Como jugador, quiero una pequeña introducción al empezar una partida nueva par
 Criterios de aceptación:
 
 - Al empezar una partida nueva, antes de cargar la zona inicial, aparece la introducción: varias pantallas de texto que cuentan quién es el jugador, por qué llega a Valtrigo y que la torre del reloj se ha parado.
-- Cada pantalla se pasa con E. Al pasar la última, empieza la partida.
-- Escape salta la introducción y empieza la partida directamente.
+- Cada pantalla se pasa con E. Al pasar la última, se elige el nombre del jugador (HU-67) y empieza la partida.
+- Escape salta la introducción y pasa directamente a elegir el nombre (HU-67).
 - Mientras se muestra la introducción, el reloj del juego no avanza.
 - “Continuar” carga la partida guardada sin mostrar la introducción.
 Escenario 1: Ver la introducción
@@ -2184,21 +2184,22 @@ Escenario 1: Ver la introducción
 Escenario 2: Pasar las pantallas
 
 - Dado que la introducción está visible
-- Cuando el jugador pulsa E en cada pantalla
-- Entonces, al pasar la última, se carga la zona inicial
+- Cuando el jugador pulsa E en cada pantalla y, después, escribe su nombre
+- Entonces se carga la zona inicial
 - Y el reloj marca día 1 a las 08:00
 Escenario 3: Saltar la introducción
 
 - Dado que la introducción está visible
 - Cuando el jugador pulsa Escape
-- Entonces se carga la zona inicial en el día 1 a las 08:00
+- Entonces aparece la pantalla del nombre (HU-67)
+- Y, al escribir su nombre, se carga la zona inicial en el día 1 a las 08:00
 Escenario 4: Continuar sin introducción
 
 - Dado que existe una partida guardada
 - Cuando el jugador pulsa “Continuar”
 - Entonces se carga la partida guardada sin mostrar la introducción","- Al empezar una partida nueva, antes de cargar la zona inicial, aparece la introducción: varias pantallas de texto que cuentan quién es el jugador, por qué llega a Valtrigo y que la torre del reloj se ha parado.
-- Cada pantalla se pasa con E. Al pasar la última, empieza la partida.
-- Escape salta la introducción y empieza la partida directamente.
+- Cada pantalla se pasa con E. Al pasar la última, se elige el nombre del jugador (HU-67) y empieza la partida.
+- Escape salta la introducción y pasa directamente a elegir el nombre (HU-67).
 - Mientras se muestra la introducción, el reloj del juego no avanza.
 - “Continuar” carga la partida guardada sin mostrar la introducción."
 "HU-63","HU-63. Tareas del día","# HU-63. Tareas del día
@@ -2317,7 +2318,7 @@ Criterios de aceptación:
 
 - La ceremonia empieza a las 18:00 del día 7 si el jugador está en la plaza o, si no, en cuanto entra en la plaza ese día. Si el jugador no va antes de que acabe el día, se la pierde.
 - Al empezar, el alcalde sube al escenario y los visitantes se colocan delante, como público. El jugador no se puede mover hasta que termina.
-- El alcalde anuncia en un cuadro de diálogo los tres primeros del concurso de la cosecha (HU-59) y después los del concurso de pesca (HU-60). Mientras anuncia cada concurso, los tres primeros aparecen en el podio.
+- El alcalde anuncia en un cuadro de diálogo los tres primeros del concurso de la cosecha (HU-59) y después los del concurso de pesca (HU-60), llamando al jugador por su nombre (HU-67). Mientras anuncia cada concurso, los tres primeros aparecen en el podio.
 - Si el jugador queda entre los tres primeros de un concurso, cobra su premio y aparece el mensaje “Premio: [cantidad] monedas”.
 - Después, si el encargo “La feria de Valtrigo” está activo o es el siguiente que toca, el alcalde da su discurso desde el escenario y el encargo se completa (HU-20). Al terminar, aparece el mensaje de final (HU-37).
 - La ceremonia solo se celebra una vez.
@@ -2351,7 +2352,45 @@ Escenario 5: Discurso final
 - Entonces el alcalde da su discurso, aparece el mensaje “Encargo completado”
 - Y después aparece el mensaje de final","- La ceremonia empieza a las 18:00 del día 7 si el jugador está en la plaza o, si no, en cuanto entra en la plaza ese día. Si el jugador no va antes de que acabe el día, se la pierde.
 - Al empezar, el alcalde sube al escenario y los visitantes se colocan delante, como público. El jugador no se puede mover hasta que termina.
-- El alcalde anuncia en un cuadro de diálogo los tres primeros del concurso de la cosecha (HU-59) y después los del concurso de pesca (HU-60). Mientras anuncia cada concurso, los tres primeros aparecen en el podio.
+- El alcalde anuncia en un cuadro de diálogo los tres primeros del concurso de la cosecha (HU-59) y después los del concurso de pesca (HU-60), llamando al jugador por su nombre (HU-67). Mientras anuncia cada concurso, los tres primeros aparecen en el podio.
 - Si el jugador queda entre los tres primeros de un concurso, cobra su premio y aparece el mensaje “Premio: [cantidad] monedas”.
 - Después, si el encargo “La feria de Valtrigo” está activo o es el siguiente que toca, el alcalde da su discurso desde el escenario y el encargo se completa (HU-20). Al terminar, aparece el mensaje de final (HU-37).
 - La ceremonia solo se celebra una vez."
+"HU-67","HU-67. Nombre del jugador","# HU-67. Nombre del jugador
+
+# HU-67. Nombre del jugador
+
+Como jugador, quiero elegir el nombre de mi personaje para que el pueblo me llame por mi nombre.
+
+Criterios de aceptación:
+
+- Al empezar una partida nueva, después de la introducción (HU-62), aparece la pantalla “¿Cómo te llamas?”, con un cuadro en el que se escribe el nombre con el teclado.
+- El nombre admite letras (también con tilde, ñ y ü) y espacios, hasta 12 caracteres. Retroceso borra el último carácter y Enter lo confirma.
+- Con el nombre vacío, Enter no hace nada.
+- Al confirmar el nombre empieza la partida. El nombre se guarda con la partida.
+- El nombre aparece en el podio de la ceremonia (HU-66) y en el discurso del alcalde.
+Escenario 1: Elegir el nombre
+
+- Dado que el jugador acaba de pasar la introducción
+- Cuando escribe “Juan” y pulsa Enter
+- Entonces empieza la partida
+- Y el nombre del jugador es “Juan”
+Escenario 2: Nombre demasiado largo
+
+- Dado que la pantalla del nombre está abierta
+- Cuando el jugador escribe “Maximilianoooo”
+- Entonces el nombre queda en “Maximilianoo”, con 12 caracteres
+Escenario 3: Nombre vacío
+
+- Dado que la pantalla del nombre está abierta y el nombre está vacío
+- Cuando el jugador pulsa Enter
+- Entonces sigue en la pantalla del nombre
+Escenario 4: Nombre en el podio
+
+- Dado que el jugador se llama “Juan” y presentó una Calabaza de 12 kg al concurso de la cosecha
+- Cuando el alcalde anuncia el concurso de la cosecha
+- Entonces dice “Concurso de la cosecha. Primer puesto: Juan, con una Calabaza de 12 kg.”","- Al empezar una partida nueva, después de la introducción (HU-62), aparece la pantalla “¿Cómo te llamas?”, con un cuadro en el que se escribe el nombre con el teclado.
+- El nombre admite letras (también con tilde, ñ y ü) y espacios, hasta 12 caracteres. Retroceso borra el último carácter y Enter lo confirma.
+- Con el nombre vacío, Enter no hace nada.
+- Al confirmar el nombre empieza la partida. El nombre se guarda con la partida.
+- El nombre aparece en el podio de la ceremonia (HU-66) y en el discurso del alcalde."

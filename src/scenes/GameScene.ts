@@ -594,7 +594,9 @@ export class GameScene extends Phaser.Scene {
   }
 
   // Abre un diálogo. `afterClose` se ejecuta al cerrarlo (por ejemplo, abrir la tienda).
+  // `{nombre}` en las líneas se sustituye por el nombre del jugador (HU-67).
   private openDialog(data: Omit<DialogSceneData, 'onClose'>, afterClose?: () => void): void {
+    data = { ...data, lines: data.lines.map((line) => line.replaceAll('{nombre}', getGameState().playerName)) };
     this.dialogOpen = true;
     this.dialogSpeaker = data.speaker;
     this.player.stand();
@@ -1122,8 +1124,8 @@ export class GameScene extends Phaser.Scene {
   // su premio si está entre ellos.
   private announceContest(title: string, ranking: Entry[], next: () => void): void {
     this.showPodium(ranking);
-    const { places, you, prize } = dialogues.ceremony;
-    const name = (entry: Entry) => (entry.npc ? dialogues.npcs[entry.npc as NpcId].name : you);
+    const { places, prize } = dialogues.ceremony;
+    const name = (entry: Entry) => (entry.npc ? dialogues.npcs[entry.npc as NpcId].name : getGameState().playerName);
     const lines = ranking.map((entry, index) => `${index === 0 ? `${title}. ` : ''}${places[index]}: ${name(entry)}, con ${entry.detail}.`);
     const mayor = { speaker: 'alcalde', title: dialogues.npcs.alcalde.name, portrait: 'retrato-alcalde', typewriter: true };
     this.openDialog({ ...mayor, lines }, () => {

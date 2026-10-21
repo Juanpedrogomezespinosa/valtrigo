@@ -54,8 +54,10 @@ test('Escenario 2: Empezar en el lago', async ({ page }) => {
   await press(page, 'e'); // lanza la caña
 
   expect(['Concurso de pesca: 1:30', 'Concurso de pesca: 1:29']).toContain(await countdown(page));
-  const state = await currentGameState(page);
-  expect(state?.fishingContest?.endsAt).toBe(state!.minutes + 90);
+  // Empezó al lanzar (13:00, o 13:01 si el reloj avanzó al cargar) y dura 90 minutos de juego.
+  const start = (await currentGameState(page))!.fishingContest!.endsAt! - 90;
+  expect(start).toBeGreaterThanOrEqual(at(13));
+  expect(start).toBeLessThanOrEqual(at(13, 1));
 });
 
 test('Escenario 3: Mejor pez', async ({ page }) => {
@@ -87,7 +89,8 @@ test('Escenario 5: Duración', async ({ page }) => {
   await startAtWith(page, 'lago', FISHING_SPOT, { ...SIGNED_UP, minutes: at(13) });
 
   await startContest(page);
-  const start = (await currentGameState(page))!.minutes;
+  // Hora a la que empezó: la de fin menos 90 (el reloj puede haber avanzado al leerla).
+  const start = (await currentGameState(page))!.fishingContest!.endsAt! - 90;
   expect(start - at(13)).toBeLessThanOrEqual(1);
 
   await waitForHudText(page, 'Concurso terminado: no has pescado nada', 100_000);
@@ -100,15 +103,21 @@ test('Escenario 5: Duración', async ({ page }) => {
 test('Escenario 6: Cuenta atrás', async ({ page }) => {
   await startAtWith(page, 'lago', FISHING_SPOT, { ...SIGNED_UP, minutes: at(13) });
   await startContest(page);
-  const start = (await currentGameState(page))!.minutes;
-  const endsAt = (await currentGameState(page))!.fishingContest!.endsAt!;
+  const start = (await currentGameState(page))!.fishingContest!.endsAt! - 90;
 
-  // 10 segundos reales después.
-  await expect.poll(async () => (await currentGameState(page))!.minutes, { timeout: 15_000, intervals: [50] }).toBe(start + 10);
-
-  const left = endsAt - (start + 10);
-  expect(left).toBe(80);
-  expect(await countdown(page)).toBe('Concurso de pesca: 1:20');
+  // 10 segundos reales después de empezar: la hora y la cuenta atrás se leen a la vez, en el mismo fotograma.
+  await expect
+    .poll(
+      () =>
+        page.evaluate((target) => {
+          const state = (window as unknown as { gameState: () => { minutes: number } }).gameState();
+          if (state.minutes !== target) return null;
+          const game = (window as unknown as { game: import('phaser').Game }).game;
+          return (game.scene.getScene('HudScene').children.getByName('concurso') as import('phaser').GameObjects.Text).text;
+        }, start + 10),
+      { timeout: 15_000, intervals: [20] },
+    )
+    .toBe('Concurso de pesca: 1:20');
 });
 
 test('Escenario 7: Todas las especies', async ({ page }) => {

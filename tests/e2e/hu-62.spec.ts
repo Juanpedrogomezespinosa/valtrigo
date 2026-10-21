@@ -11,6 +11,7 @@ import {
   savedGame,
   setSavedGame,
   waitForScene,
+  enterName,
 } from './helpers';
 
 // HU-62. Introducción al empezar
@@ -39,7 +40,8 @@ test('Escenario 2: Pasar las pantallas', async ({ page }) => {
     await press(page, 'e');
   }
 
-  await waitForScene(page, 'GameScene');
+  // Después de la última pantalla se elige el nombre (HU-67).
+  await enterName(page, 'Juan');
   const state = await currentGameState(page);
   expect(state?.zone).toBe('plaza');
   expect(state?.day).toBe(1);
@@ -53,8 +55,10 @@ test('Escenario 3: Saltar la introducción', async ({ page }) => {
 
   await press(page, 'Escape');
 
-  await waitForScene(page, 'GameScene');
+  // Pasa directamente a elegir el nombre (HU-67).
+  await waitForScene(page, 'NameScene');
   expect(await introPage(page)).toBeNull();
+  await enterName(page, 'Juan');
   const state = await currentGameState(page);
   expect(state?.zone).toBe('plaza');
   expect(state?.day).toBe(1);

@@ -1,10 +1,11 @@
 import Phaser from 'phaser';
 import { playMusic, stopMusic } from '../systems/audio';
 import { createNewGameState, isGameInProgress, startGame } from '../systems/gameState';
-import { hasSavedGame, readSave, writeSave } from '../systems/save';
+import { hasSavedGame, readSave } from '../systems/save';
 import { showConfirmDialog } from '../ui/confirmDialog';
 import { MenuList } from '../ui/menuList';
 import { addTitle } from '../ui/title';
+import type { NewGameData } from './NameScene';
 
 export const MENU_OPTIONS = ['Nueva partida', 'Continuar', 'Guardar partida', 'Opciones', 'Créditos', 'Salir'] as const;
 
@@ -101,14 +102,12 @@ export class MenuScene extends Phaser.Scene {
     });
   }
 
-  // La partida nueva empieza con la introducción (HU-62), que después abre GameScene.
+  // La partida nueva empieza con la introducción (HU-62) y la elección del nombre (HU-67), que después abre
+  // GameScene. Si sustituye a una partida guardada, se guarda al confirmar el nombre, ya completa.
   private startNewGame({ overwriteSave = false } = {}): void {
-    const state = createNewGameState(this);
-    if (overwriteSave) {
-      writeSave(state);
-    }
-    startGame(state);
-    this.scene.start('IntroScene');
+    startGame(createNewGameState(this));
+    const data: NewGameData = { overwriteSave };
+    this.scene.start('IntroScene', data);
   }
 
   // HU-05: pide confirmación y cierra el juego. "No" deja el menú con "Salir" seleccionada.
