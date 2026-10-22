@@ -213,6 +213,7 @@ Criterios de aceptación:
 - Árboles, casas, muros, mobiliario, agua y NPC son obstáculos.
 - El personaje se detiene junto al obstáculo y nunca se superpone con él.
 - Si una dirección está bloqueada y otra libre, el personaje se mueve en la libre.
+- Si el personaje choca por muy poco (6 píxeles o menos) con la esquina de un hueco, se desliza de lado hasta quedar alineado con él y pasa. Así se entra por huecos de una casilla sin tener que llegar perfectamente alineado.
 Escenario 1: Árbol
 
 - Dado que hay un árbol a la derecha del personaje
@@ -232,9 +233,16 @@ Escenario 4: NPC en el camino
 
 - Dado que un NPC está en el camino del personaje
 - Cuando el jugador camina hacia el NPC
-- Entonces el personaje se detiene junto al NPC","- Árboles, casas, muros, mobiliario, agua y NPC son obstáculos.
+- Entonces el personaje se detiene junto al NPC
+Escenario 5: Hueco estrecho
+
+- Dado que el personaje está delante de la entrada del cercado del granero, que mide una casilla, desviado 5 píxeles hacia un lado
+- Cuando el jugador camina hacia la entrada
+- Entonces el personaje se desliza hasta alinearse con la entrada
+- Y entra en el cercado","- Árboles, casas, muros, mobiliario, agua y NPC son obstáculos.
 - El personaje se detiene junto al obstáculo y nunca se superpone con él.
-- Si una dirección está bloqueada y otra libre, el personaje se mueve en la libre."
+- Si una dirección está bloqueada y otra libre, el personaje se mueve en la libre.
+- Si el personaje choca por muy poco (6 píxeles o menos) con la esquina de un hueco, se desliza de lado hasta quedar alineado con él y pasa. Así se entra por huecos de una casilla sin tener que llegar perfectamente alineado."
 "HU-08","HU-08. Cambiar de zona","# HU-08. Cambiar de zona
 
 # HU-08. Cambiar de zona
@@ -1966,9 +1974,10 @@ Como jugador, quiero que el pueblo celebre la feria para sentir que mi trabajo h
 Criterios de aceptación:
 
 - La feria se celebra en la plaza el día 7. Es festivo: ese día el jugador se despierta a las 12:00 y la feria ya está montada.
-- Durante la feria, la plaza tiene guirnaldas, dos puestos (el de la cosecha, HU-59, y el de pesca, HU-60), un escenario y un podio para la ceremonia (HU-66).
+- Durante la feria, la plaza tiene guirnaldas, sujetas por un poste de madera en cada extremo, dos puestos (el de la cosecha, HU-59, y el de pesca, HU-60), un escenario y un podio para la ceremonia (HU-66).
 - El día 7, a partir de las 12:00, hay seis visitantes en la plaza: Rosa, Lucía, Tomás, Pablo, Fran y Elena. Cada uno tiene un diálogo sencillo al pulsar E junto a él. Fran dice “He venido por el networking, pero bueno... el futuro es ansiedad.” y Elena “He venido porque me han prometido que después pondrán margarita frozen.”.
 - Los concursos admiten participantes de 12:00 a 17:00. A las 17:00 aparece el mensaje “Los concursos han terminado. Ceremonia a las 18:00 en la plaza”.
+- Los postes de las guirnaldas, los puestos, el escenario y el podio son obstáculos.
 - Antes y después del día 7, la plaza tiene su aspecto normal: no hay guirnaldas, puestos, escenario, podio ni visitantes.
 - Pasado el día 7, el encargo “La feria de Valtrigo” se puede seguir completando al hablar con el alcalde, aunque ya no haya feria.
 Escenario 1: Día de feria
@@ -2006,10 +2015,17 @@ Escenario 7: Fin de los concursos
 
 - Dado que es el día 7 a las 16:59
 - Cuando el reloj llega a las 17:00
-- Entonces aparece el mensaje “Los concursos han terminado. Ceremonia a las 18:00 en la plaza”","- La feria se celebra en la plaza el día 7. Es festivo: ese día el jugador se despierta a las 12:00 y la feria ya está montada.
-- Durante la feria, la plaza tiene guirnaldas, dos puestos (el de la cosecha, HU-59, y el de pesca, HU-60), un escenario y un podio para la ceremonia (HU-66).
+- Entonces aparece el mensaje “Los concursos han terminado. Ceremonia a las 18:00 en la plaza”
+Escenario 8: Postes de la guirnalda
+
+- Dado que es el día 7 y el jugador está en la plaza
+- Cuando camina hacia uno de los postes de la guirnalda
+- Entonces el personaje se detiene junto al poste
+- Y hay un poste en cada extremo de la guirnalda","- La feria se celebra en la plaza el día 7. Es festivo: ese día el jugador se despierta a las 12:00 y la feria ya está montada.
+- Durante la feria, la plaza tiene guirnaldas, sujetas por un poste de madera en cada extremo, dos puestos (el de la cosecha, HU-59, y el de pesca, HU-60), un escenario y un podio para la ceremonia (HU-66).
 - El día 7, a partir de las 12:00, hay seis visitantes en la plaza: Rosa, Lucía, Tomás, Pablo, Fran y Elena. Cada uno tiene un diálogo sencillo al pulsar E junto a él. Fran dice “He venido por el networking, pero bueno... el futuro es ansiedad.” y Elena “He venido porque me han prometido que después pondrán margarita frozen.”.
 - Los concursos admiten participantes de 12:00 a 17:00. A las 17:00 aparece el mensaje “Los concursos han terminado. Ceremonia a las 18:00 en la plaza”.
+- Los postes de las guirnaldas, los puestos, el escenario y el podio son obstáculos.
 - Antes y después del día 7, la plaza tiene su aspecto normal: no hay guirnaldas, puestos, escenario, podio ni visitantes.
 - Pasado el día 7, el encargo “La feria de Valtrigo” se puede seguir completando al hablar con el alcalde, aunque ya no haya feria."
 "HU-59","HU-59. Concurso de la cosecha","# HU-59. Concurso de la cosecha
@@ -2443,3 +2459,31 @@ Escenario 5: Textos según el género
 - El personaje tiene el aspecto elegido en todas las zonas y en el podio de la ceremonia (HU-66).
 - Los textos que se dirigen al jugador concuerdan con su género. Por ejemplo, la vendedora dice “¡Bienvenida a la tienda!” y, sin energía, aparece “Estás demasiado cansada” (HU-47).
 - Las partidas guardadas antes de esta historia y las partidas de práctica (HU-61) tienen el aspecto inicial: Hombre, piel Media y pelo Pelirrojo."
+"HU-69","HU-69. Árboles completos","# HU-69. Árboles completos
+
+# HU-69. Árboles completos
+
+Como jugador, quiero que los árboles se vean completos para que el mundo tenga un aspecto cuidado.
+
+Criterios de aceptación:
+
+- En las zonas exteriores (plaza, granja, lago y bosque) hay árboles altos, de dos casillas, y árboles pequeños, de una. Unos son verdes y otros otoñales.
+- Un árbol alto tiene la copa en la casilla de arriba y el tronco en la de abajo, y las dos partes son del mismo árbol: ningún árbol aparece cortado ni mezcla un árbol verde con uno otoñal.
+- Todas las casillas de un árbol, alto o pequeño, son obstáculos (HU-07).
+Escenario 1: Árboles altos completos
+
+- Dado que el jugador está en una zona exterior
+- Cuando hay un árbol alto en pantalla
+- Entonces se ven su copa y su tronco, uno debajo del otro y del mismo color
+Escenario 2: Ningún árbol cortado
+
+- Dado que el jugador está en una zona exterior
+- Cuando recorre la zona
+- Entonces no hay ninguna copa sin tronco ni ningún tronco sin copa
+Escenario 3: Árboles sólidos
+
+- Dado que hay un árbol alto encima del personaje
+- Cuando el jugador camina hacia él
+- Entonces el personaje se detiene junto al tronco","- En las zonas exteriores (plaza, granja, lago y bosque) hay árboles altos, de dos casillas, y árboles pequeños, de una. Unos son verdes y otros otoñales.
+- Un árbol alto tiene la copa en la casilla de arriba y el tronco en la de abajo, y las dos partes son del mismo árbol: ningún árbol aparece cortado ni mezcla un árbol verde con uno otoñal.
+- Todas las casillas de un árbol, alto o pequeño, son obstáculos (HU-07)."

@@ -1,5 +1,5 @@
 import { expect, test } from './fixtures';
-import { playerBody, playerInfo, startAt } from './helpers';
+import { playerBody, playerInfo, playerTile, startAt } from './helpers';
 
 // HU-07. Colisiones con obstáculos
 
@@ -80,3 +80,26 @@ test('Escenario 4: NPC en el camino', async ({ page }) => {
   expect(second.right).toBeLessThanOrEqual(npcLeft);
   expect(second.left).toBe(first.left);
 });
+
+test('Escenario 5: Hueco estrecho', async ({ page }) => {
+  // En la granja, la entrada del cercado del granero es la casilla (6, 9), entre dos muros de piedra. El
+  // personaje empieza debajo, en (6, 10), desviado 5 px a la izquierda: su cuerpo pisa el muro de la izquierda.
+  await startAt(page, 'granja', { x: 6, y: 10 });
+  await page.evaluate(() => {
+    const player = (window as unknown as { game: import('phaser').Game }).game.scene.getScene('GameScene') as unknown as {
+      player: { x: number; y: number; body: { reset(x: number, y: number): void } };
+    };
+    player.player.body.reset(player.player.x - 5, player.player.y);
+  });
+
+  await page.keyboard.down('ArrowUp');
+  await page.waitForTimeout(1200);
+  await page.keyboard.up('ArrowUp');
+
+  // Se ha alineado con la entrada (el cuerpo cabe entero en la casilla 6) y está dentro del cercado.
+  const body = await playerBody(page);
+  expect(body.left).toBeGreaterThanOrEqual(6 * TILE);
+  expect(body.right).toBeLessThanOrEqual(7 * TILE);
+  expect((await playerTile(page)).y).toBeLessThanOrEqual(8);
+});
+

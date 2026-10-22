@@ -7,9 +7,10 @@ Como jugador, quiero que el pueblo celebre la feria para sentir que mi trabajo h
 Criterios de aceptación:
 
 - La feria se celebra en la plaza el día 7. Es festivo: ese día el jugador se despierta a las 12:00 y la feria ya está montada.
-- Durante la feria, la plaza tiene guirnaldas, dos puestos (el de la cosecha, HU-59, y el de pesca, HU-60), un escenario y un podio para la ceremonia (HU-66).
+- Durante la feria, la plaza tiene guirnaldas, sujetas por un poste de madera en cada extremo, dos puestos (el de la cosecha, HU-59, y el de pesca, HU-60), un escenario y un podio para la ceremonia (HU-66).
 - El día 7, a partir de las 12:00, hay seis visitantes en la plaza: Rosa, Lucía, Tomás, Pablo, Fran y Elena. Cada uno tiene un diálogo sencillo al pulsar E junto a él. Fran dice “He venido por el networking, pero bueno... el futuro es ansiedad.” y Elena “He venido porque me han prometido que después pondrán margarita frozen.”.
 - Los concursos admiten participantes de 12:00 a 17:00. A las 17:00 aparece el mensaje “Los concursos han terminado. Ceremonia a las 18:00 en la plaza”.
+- Los postes de las guirnaldas, los puestos, el escenario y el podio son obstáculos.
 - Antes y después del día 7, la plaza tiene su aspecto normal: no hay guirnaldas, puestos, escenario, podio ni visitantes.
 - Pasado el día 7, el encargo “La feria de Valtrigo” se puede seguir completando al hablar con el alcalde, aunque ya no haya feria.
 Escenario 1: Día de feria
@@ -48,3 +49,9 @@ Escenario 7: Fin de los concursos
 - Dado que es el día 7 a las 16:59
 - Cuando el reloj llega a las 17:00
 - Entonces aparece el mensaje “Los concursos han terminado. Ceremonia a las 18:00 en la plaza”
+Escenario 8: Postes de la guirnalda
+
+- Dado que es el día 7 y el jugador está en la plaza
+- Cuando camina hacia uno de los postes de la guirnalda
+- Entonces el personaje se detiene junto al poste
+- Y hay un poste en cada extremo de la guirnalda

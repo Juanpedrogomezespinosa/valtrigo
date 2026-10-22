@@ -1231,6 +1231,20 @@ export class GameScene extends Phaser.Scene {
     return this.children.list.some((child) => child instanceof Phaser.GameObjects.Image && child.texture.key === 'guirnalda');
   }
 
+  // Casillas de la guirnalda y de sus postes (HU-58), para los tests.
+  getGarland(): { tiles: { x: number; y: number }[]; posts: { x: number; y: number }[] } {
+    const tilesOf = (key: string) =>
+      this.children.list
+        .filter((child): child is Phaser.GameObjects.Image => child instanceof Phaser.GameObjects.Image && child.texture.key === key)
+        .map((image) => ({ x: Math.floor(image.x / TILE_SIZE), y: Math.floor((image.getBottomCenter().y! - 1) / TILE_SIZE) }));
+    return { tiles: tilesOf('guirnalda'), posts: tilesOf('poste-guirnalda') };
+  }
+
+  // Casillas de la capa de obstáculos (índice de la casilla, o -1 si está vacía), para los tests de HU-69.
+  getObstacleGrid(): number[][] {
+    return this.obstacles.layer.data.map((row) => row.map((tile) => tile.index));
+  }
+
   // --- Misterio del reloj (HU-55 y HU-56) ---
 
   // HU-56: el mecanismo del reloj es un obstáculo de la torre. Con el encargo de las piezas activo y las tres

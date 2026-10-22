@@ -7,6 +7,8 @@ import {
   currentGameState,
   expectClockAt,
   fairView,
+  garlandView,
+  playerBody,
   isChangingZone,
   NEXT_TO_BED,
   sceneTexts,
@@ -98,3 +100,23 @@ test('Escenario 7: Fin de los concursos', async ({ page }) => {
   await waitForHudText(page, 'Los concursos han terminado. Ceremonia a las 18:00 en la plaza', 5000);
   expectClockAt((await currentGameState(page))?.minutes, at(17));
 });
+
+test('Escenario 8: Postes de la guirnalda', async ({ page }) => {
+  // La guirnalda va por la fila 12, de la casilla 8 a la 29. El personaje empieza debajo del poste izquierdo.
+  await startAtWith(page, 'plaza', { x: 8, y: 14 }, { day: 7, minutes: at(13) });
+
+  await page.keyboard.down('ArrowUp');
+  await page.waitForTimeout(800);
+  await page.keyboard.up('ArrowUp');
+
+  // Se detiene junto al poste, sin superponerse.
+  expect((await playerBody(page)).top).toBeCloseTo(13 * 16, 0);
+  // Hay un poste en cada extremo de la guirnalda.
+  const { tiles, posts } = await garlandView(page);
+  const columns = tiles.map(({ x }) => x);
+  expect(posts).toEqual([
+    { x: Math.min(...columns), y: 12 },
+    { x: Math.max(...columns), y: 12 },
+  ]);
+});
+

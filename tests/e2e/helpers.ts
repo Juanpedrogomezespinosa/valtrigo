@@ -1098,6 +1098,20 @@ export const NEXT_TO_FISHING_STALL = { x: 19, y: 15 };
 
 export const VISITORS = ['rosa', 'lucia', 'tomas', 'pablo', 'fran', 'elena'];
 
+// Casillas de la guirnalda de la feria y de sus postes (HU-58).
+export async function garlandView(page: Page): Promise<{ tiles: { x: number; y: number }[]; posts: { x: number; y: number }[] }> {
+  return page.evaluate(() =>
+    ((window as unknown as GameWindow).game.scene.getScene('GameScene') as unknown as { getGarland(): never }).getGarland(),
+  );
+}
+
+// Casillas de la capa de obstáculos de la zona (índice de la casilla, o -1 si está vacía), para HU-69.
+export async function obstacleGrid(page: Page): Promise<number[][]> {
+  return page.evaluate(() =>
+    ((window as unknown as GameWindow).game.scene.getScene('GameScene') as unknown as { getObstacleGrid(): number[][] }).getObstacleGrid(),
+  );
+}
+
 // Lo que hay de la feria en la plaza: puestos, guirnalda, escenario, podio y visitantes presentes.
 export async function fairView(
   page: Page,
