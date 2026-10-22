@@ -5,7 +5,7 @@ import {
   ceremonyView,
   currentGameState,
   dialogState,
-  enterName,
+  appearanceView,
   nameInput,
   openGame,
   press,
@@ -26,8 +26,12 @@ async function openNameScreen(page: import('@playwright/test').Page): Promise<vo
 test('Escenario 1: Elegir el nombre', async ({ page }) => {
   await openNameScreen(page);
 
-  await enterName(page, 'Juan');
+  await page.keyboard.type('Juan');
+  await press(page, 'Enter');
 
+  // Pasa a elegir el aspecto (HU-68).
+  await waitForScene(page, 'AppearanceScene');
+  expect(await appearanceView(page)).not.toBeNull();
   expect((await currentGameState(page))?.playerName).toBe('Juan');
 });
 

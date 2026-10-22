@@ -56,7 +56,7 @@
       "name": "Vendedora",
       "from": "de la vendedora",
       "greeting": [
-        "¡Bienvenido a la tienda! Si no lo tengo, es que no lo necesitas.",
+        "¡Bienvenid{o|a} a la tienda! Si no lo tengo, es que no lo necesitas.",
         "Sin reloj, abro cuando me despierto. Hoy he madrugado: ¡qué suerte la tuya!"
       ],
       "clockRepaired": [

@@ -23,9 +23,10 @@ export class BootScene extends Phaser.Scene {
     this.load.image('tiles-town', 'assets/tilesets/kenney-tiny-town.png');
     this.load.image('tiles-dungeon', 'assets/sprites/kenney-tiny-dungeon.png');
     this.load.image('tiles-agua', 'assets/tilesets/agua.png');
-    // El jugador y todos los NPC de src/data/dialogues.json (también los visitantes de la feria, HU-58).
+    // Las hojas base del jugador y de la jugadora (HU-68) y todos los NPC de src/data/dialogues.json (también
+    // los visitantes de la feria, HU-58).
     const npcs = Object.keys(dialogues.npcs);
-    for (const character of ['jugador', ...npcs]) {
+    for (const character of ['jugador', 'jugadora', ...npcs]) {
       this.load.spritesheet(character, `assets/sprites/personajes/${character}.png`, { frameWidth: 16, frameHeight: 16 });
     }
     this.load.spritesheet('cofre', 'assets/sprites/cofre.png', { frameWidth: 16, frameHeight: 16 });
@@ -34,7 +35,7 @@ export class BootScene extends Phaser.Scene {
     this.load.spritesheet('cultivos', 'assets/sprites/cultivos.png', { frameWidth: 16, frameHeight: 16 });
     this.load.image('manzano', 'assets/sprites/manzano.png');
     // Puntos del bosque (HU-50), páginas del diario (HU-55), mecanismo del reloj (HU-56) y feria (HU-58).
-    for (const sprite of ['setas', 'arbusto-moras', 'tocon', 'pagina', 'mecanismo', 'guirnalda', 'puesto-cosecha', 'puesto-pesca', 'escenario', 'podio']) {
+    for (const sprite of ['setas', 'arbusto-moras', 'tocon', 'pagina', 'mecanismo', 'guirnalda', 'poste-guirnalda', 'puesto-cosecha', 'puesto-pesca', 'escenario', 'podio']) {
       this.load.image(sprite, `assets/sprites/${sprite}.png`);
     }
     for (const item of Object.keys(ITEMS)) {

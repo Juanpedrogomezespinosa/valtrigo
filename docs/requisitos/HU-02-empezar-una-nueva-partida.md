@@ -6,7 +6,7 @@ Como jugador, quiero empezar una partida nueva para jugar desde el principio.
 
 Criterios de aceptación:
 
-- Al pulsar “Nueva partida”, después de la introducción (HU-62) y de elegir el nombre (HU-67), se carga la zona inicial (exterior del pueblo) con el personaje en su posición de inicio.
+- Al pulsar “Nueva partida”, después de la introducción (HU-62) de elegir el nombre (HU-67) y de elegir el aspecto (HU-68), se carga la zona inicial (exterior del pueblo) con el personaje en su posición de inicio.
 - Si existe una partida guardada, se pide confirmación antes de sobrescribirla.
 - La partida nueva empieza con día 1 a las 08:00, 100 monedas, energía al máximo (100) e inventario vacío.
 Escenario 1: Nueva partida sin partida guardada

@@ -1,4 +1,5 @@
 import { emptyDayStats, type GameState } from './gameState';
+import { defaultAppearance } from './appearance';
 
 // Sistema de guardado. Todo acceso a localStorage pasa por aquí.
 // Si el navegador no permite guardar datos, el juego sigue funcionando sin partida guardada.
@@ -38,6 +39,8 @@ export function readSave(): GameState | null {
         ...state,
         // Las partidas guardadas antes de HU-67 no tienen nombre.
         playerName: state.playerName ?? 'Forastero',
+        // Las partidas guardadas antes de HU-68 tienen el aspecto inicial.
+        appearance: state.appearance ?? defaultAppearance(),
         completedQuests: state.completedQuests ?? [],
         questProgress: state.questProgress ?? {},
         pickedUpItems: state.pickedUpItems ?? [],

@@ -89,6 +89,7 @@ const SAVE_KEY = 'valtrigo.partida';
 
 export interface TestGameState {
   playerName: string;
+  appearance?: { gender: string; skin: string; hair: string };
   zone: string;
   position: { x: number; y: number };
   day: number;
@@ -222,12 +223,53 @@ export async function nameInput(page: Page): Promise<string | null> {
   });
 }
 
-// Escribe el nombre en la pantalla del nombre, lo confirma con Enter y espera a que empiece la partida.
-export async function enterName(page: Page, name: string): Promise<void> {
+// Escribe el nombre en la pantalla del nombre y lo confirma con Enter: se pasa a elegir el aspecto (HU-68).
+export async function typeName(page: Page, name: string): Promise<void> {
   await waitForScene(page, 'NameScene');
   await page.keyboard.type(name);
   await press(page, 'Enter');
+  await waitForScene(page, 'AppearanceScene');
+}
+
+// Escribe el nombre, confirma el aspecto inicial (HU-68) y espera a que empiece la partida.
+export async function enterName(page: Page, name: string): Promise<void> {
+  await typeName(page, name);
+  await press(page, 'Enter');
   await waitForScene(page, 'GameScene');
+}
+
+// Pantalla del aspecto (HU-68): opción elegida, aspecto y hoja de la vista previa, o null si no está abierta.
+export async function appearanceView(
+  page: Page,
+): Promise<{ selected: string; appearance: { gender: string; skin: string; hair: string }; previewTexture: string } | null> {
+  return page.evaluate(() => {
+    const game = (window as unknown as GameWindow).game;
+    if (!game.scene.isActive('AppearanceScene')) return null;
+    return (game.scene.getScene('AppearanceScene') as unknown as { getState(): never }).getState();
+  });
+}
+
+// Colores (#rrggbb) del primer fotograma de una hoja de personaje, para comprobar la piel y el pelo (HU-68).
+// Sin `texture`, la hoja del personaje en la partida.
+export async function spriteColors(page: Page, texture?: string): Promise<{ texture: string; colors: string[] }> {
+  return page.evaluate((key) => {
+    const game = (window as unknown as GameWindow).game;
+    const scene = game.scene.getScene('GameScene') as unknown as { player: { texture: { key: string } } };
+    const sheet = key ?? scene.player.texture.key;
+    const source = game.textures.get(sheet).getSourceImage() as CanvasImageSource;
+    const canvas = document.createElement('canvas');
+    canvas.width = 16;
+    canvas.height = 16;
+    const context = canvas.getContext('2d')!;
+    context.drawImage(source, 0, 0, 16, 16, 0, 0, 16, 16);
+    const data = context.getImageData(0, 0, 16, 16).data;
+    const colors = new Set<string>();
+    for (let index = 0; index < data.length; index += 4) {
+      if (data[index + 3] === 0) continue;
+      colors.add('#' + [data[index], data[index + 1], data[index + 2]].map((value) => value.toString(16).padStart(2, '0')).join(''));
+    }
+    return { texture: sheet, colors: [...colors] };
+  }, texture);
 }
 
 export async function openPause(page: Page): Promise<void> {

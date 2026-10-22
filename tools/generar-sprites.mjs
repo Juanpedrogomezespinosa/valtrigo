@@ -4,7 +4,7 @@
 //   Calabaza en public/assets/sprites/objetos/.
 // - El icono de las Moras del bosque (HU-50).
 // - El mecanismo del reloj de la torre (HU-56): public/assets/sprites/mecanismo.png.
-// - La feria (HU-58): guirnalda.png y los puestos de la cosecha y de pesca (16×32, el de abajo es el mostrador).
+// - La feria (HU-58): guirnalda.png, poste-guirnalda.png (16×32, los postes de los extremos) y los puestos de la cosecha y de pesca (16×32, el de abajo es el mostrador).
 // - La ceremonia (HU-66): escenario.png y podio.png (48×32).
 // Uso: node tools/generar-sprites.mjs
 //
@@ -293,6 +293,43 @@ const GARLAND = [
   '................',
 ];
 
+// Poste de madera de la guirnalda (16×32). La casilla de abajo es la del poste; la cuerda de la guirnalda
+// (filas 1 a 3 de su casilla) se ata en la parte de arriba, a la altura de la fila 17 del dibujo.
+const POST = [
+  '................',
+  '................',
+  '................',
+  '................',
+  '................',
+  '................',
+  '................',
+  '................',
+  '................',
+  '................',
+  '................',
+  '................',
+  '......oooo......',
+  '.....oWWWWo.....',
+  '.....oWWWBo.....',
+  '......oooo......',
+  '......oWBo......',
+  '......oWBo......',
+  '......oWBo......',
+  '......oWBo......',
+  '......oWBo......',
+  '......oWBo......',
+  '......oWBo......',
+  '......oWBo......',
+  '......oWBo......',
+  '......oWBo......',
+  '......oWBo......',
+  '......oWBo......',
+  '.....ooWBoo.....',
+  '....oWWWWBBo....',
+  '....oooooooo....',
+  '................',
+];
+
 // Puesto de la feria (16×32): toldo a rayas arriba y mostrador abajo. `a` es el color del toldo.
 function stall(a) {
   return [
@@ -445,6 +482,7 @@ const files = {
   [`${SPRITES_DIR}/objetos/mora.png`]: strip([BERRIES_ICON]),
   [`${SPRITES_DIR}/mecanismo.png`]: strip([MECHANISM]),
   [`${SPRITES_DIR}/guirnalda.png`]: strip([GARLAND]),
+  [`${SPRITES_DIR}/poste-guirnalda.png`]: strip([POST]),
   [`${SPRITES_DIR}/puesto-cosecha.png`]: strip([stall('x')]),
   [`${SPRITES_DIR}/puesto-pesca.png`]: strip([stall('u')]),
   [`${SPRITES_DIR}/escenario.png`]: strip([stage()]),

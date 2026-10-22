@@ -2,7 +2,6 @@ import Phaser from 'phaser';
 import { COLORS, FONT_FAMILY } from '../config';
 import { playEffect } from '../systems/audio';
 import { getGameState } from '../systems/gameState';
-import { writeSave } from '../systems/save';
 import { addTitle } from '../ui/title';
 
 // HU-67: letras (con tilde, ñ y ü) y espacios, hasta 12 caracteres.
@@ -16,7 +15,7 @@ export interface NewGameData {
 }
 
 // Nombre del jugador (HU-67), después de la introducción de una partida nueva. Se escribe con el teclado;
-// Retroceso borra y Enter confirma (con el nombre vacío no hace nada). Al confirmar empieza la partida.
+// Retroceso borra y Enter confirma (con el nombre vacío no hace nada). Al confirmar se elige el aspecto (HU-68).
 export class NameScene extends Phaser.Scene {
   private typed = '';
   private text!: Phaser.GameObjects.Text;
@@ -73,13 +72,8 @@ export class NameScene extends Phaser.Scene {
     const name = this.typed.trim();
     if (!name) return;
     playEffect(this, 'menuConfirm');
-    const state = getGameState();
-    state.playerName = name;
-    // HU-02: la partida nueva sustituye a la guardada, ya con el nombre elegido.
-    if (this.newGame.overwriteSave) {
-      writeSave(state);
-    }
-    this.scene.start('GameScene');
+    getGameState().playerName = name;
+    this.scene.start('AppearanceScene', this.newGame);
   }
 
   private refresh(): void {

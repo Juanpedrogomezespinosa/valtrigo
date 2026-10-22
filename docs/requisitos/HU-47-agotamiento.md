@@ -7,7 +7,7 @@ Como jugador, quiero que la energía tenga un límite para que comer y dormir te
 Criterios de aceptación:
 
 - La energía no baja de 0.
-- Si la energía no alcanza para una acción, aparece el mensaje “Estás demasiado cansado” y la acción no se hace.
+- Si la energía no alcanza para una acción, aparece el mensaje “Estás demasiado cansado” (o “Estás demasiado cansada”, si el personaje es una mujer, HU-68) y la acción no se hace.
 - Sin energía se puede seguir andando, hablando, comprando, vendiendo, comiendo y durmiendo.
 Escenario 1: Energía insuficiente
 

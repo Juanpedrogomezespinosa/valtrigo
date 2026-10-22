@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { NEW_GAME } from '../config';
+import { defaultAppearance, type Appearance } from './appearance';
 import { resetClock } from './time';
 import { findMapPoint, pointTile, type TilePosition, type ZoneId } from './zones';
 
@@ -33,6 +34,8 @@ export interface PlotState {
 export interface GameState {
   // Nombre del jugador (HU-67). Se elige al empezar una partida nueva.
   playerName: string;
+  // Aspecto del personaje (HU-68). Se elige después del nombre.
+  appearance: Appearance;
   zone: ZoneId;
   position: TilePosition;
   day: number;
@@ -85,6 +88,7 @@ let current: GameState | null = null;
 export function createNewGameState(scene: Phaser.Scene): GameState {
   return {
     playerName: '',
+    appearance: defaultAppearance(),
     zone: NEW_GAME.zone,
     position: pointTile(findMapPoint(scene, NEW_GAME.zone, 'inicio')),
     day: NEW_GAME.day,

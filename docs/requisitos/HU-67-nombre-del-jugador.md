@@ -9,13 +9,13 @@ Criterios de aceptación:
 - Al empezar una partida nueva, después de la introducción (HU-62), aparece la pantalla “¿Cómo te llamas?”, con un cuadro en el que se escribe el nombre con el teclado.
 - El nombre admite letras (también con tilde, ñ y ü) y espacios, hasta 12 caracteres. Retroceso borra el último carácter y Enter lo confirma.
 - Con el nombre vacío, Enter no hace nada.
-- Al confirmar el nombre empieza la partida. El nombre se guarda con la partida.
+- Al confirmar el nombre se pasa a elegir el aspecto del personaje (HU-68). El nombre se guarda con la partida.
 - El nombre aparece en el podio de la ceremonia (HU-66) y en el discurso del alcalde.
 Escenario 1: Elegir el nombre
 
 - Dado que el jugador acaba de pasar la introducción
 - Cuando escribe “Juan” y pulsa Enter
-- Entonces empieza la partida
+- Entonces aparece la pantalla del aspecto (HU-68)
 - Y el nombre del jugador es “Juan”
 Escenario 2: Nombre demasiado largo
 

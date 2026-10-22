@@ -14,6 +14,7 @@ import {
   WORLD_ZOOM,
   ZONE_FADE_MS,
 } from '../config';
+import { byGender, genderText, playerTexture } from '../systems/appearance';
 import chests from '../data/chests.json';
 import dialogues from '../data/dialogues.json';
 import signs from '../data/signs.json';
@@ -220,7 +221,7 @@ export class GameScene extends Phaser.Scene {
     this.fishing = null;
     this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
 
-    this.player = new Player(this, state.position, this.facing);
+    this.player = new Player(this, state.position, this.facing, playerTexture(this, state.appearance));
     this.player.setObstacles(obstacles);
     this.physics.add.collider(this.player, obstacles);
 
@@ -341,7 +342,7 @@ export class GameScene extends Phaser.Scene {
     if (spendEnergy(action)) {
       return true;
     }
-    showMessage(this.scene.get('HudScene'), 'Estás demasiado cansado', MESSAGE_MS, 'top');
+    showMessage(this.scene.get('HudScene'), byGender(getGameState().appearance, 'Estás demasiado cansado', 'Estás demasiado cansada'), MESSAGE_MS, 'top');
     return false;
   }
 
@@ -594,9 +595,11 @@ export class GameScene extends Phaser.Scene {
   }
 
   // Abre un diálogo. `afterClose` se ejecuta al cerrarlo (por ejemplo, abrir la tienda).
-  // `{nombre}` en las líneas se sustituye por el nombre del jugador (HU-67).
+  // `{nombre}` en las líneas se sustituye por el nombre del jugador (HU-67) y `{masculino|femenino}`, por la forma
+  // que corresponde a su género (HU-68).
   private openDialog(data: Omit<DialogSceneData, 'onClose'>, afterClose?: () => void): void {
-    data = { ...data, lines: data.lines.map((line) => line.replaceAll('{nombre}', getGameState().playerName)) };
+    const { playerName, appearance } = getGameState();
+    data = { ...data, lines: data.lines.map((line) => genderText(appearance, line.replaceAll('{nombre}', playerName))) };
     this.dialogOpen = true;
     this.dialogSpeaker = data.speaker;
     this.player.stand();
@@ -953,10 +956,18 @@ export class GameScene extends Phaser.Scene {
 
   // --- Feria (HU-58 a HU-60) ---
 
-  // Guirnalda de banderines: decoración por encima del personaje, a lo largo de varias casillas.
+  // Guirnalda de banderines: decoración por encima del personaje, a lo largo de varias casillas, sujeta por un
+  // poste de madera en la primera y en la última. Los postes son obstáculos.
   private addGarland(object: MapObject): void {
     const area = tileArea(object);
     const tiles = Number(getProperty(object, 'casillas'));
+    for (const index of [0, tiles - 1]) {
+      const x = area.centerX + index * TILE_SIZE;
+      this.add.image(x, area.bottom, 'poste-guirnalda').setOrigin(0.5, 1).setDepth(7);
+      const post = this.add.zone(x, area.centerY, TILE_SIZE, TILE_SIZE);
+      this.physics.add.existing(post, true);
+      this.physics.add.collider(this.player, post);
+    }
     for (let index = 0; index < tiles; index++) {
       this.add.image(area.centerX + index * TILE_SIZE, area.centerY, 'guirnalda').setDepth(7);
     }
@@ -1150,7 +1161,7 @@ export class GameScene extends Phaser.Scene {
       { x: this.podium.centerX + TILE_SIZE, top: 18 },
     ];
     ranking.forEach((entry, index) => {
-      const texture = entry.npc ?? 'jugador';
+      const texture = entry.npc ?? this.player.texture.key;
       const figure = this.add
         .image(spots[index].x, this.podium!.y + spots[index].top + 1, texture, 0)
         .setOrigin(0.5, 1)

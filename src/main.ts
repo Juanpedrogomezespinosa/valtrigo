@@ -8,6 +8,7 @@ import { GameScene } from './scenes/GameScene';
 import { HudScene } from './scenes/HudScene';
 import { IntroScene } from './scenes/IntroScene';
 import { NameScene } from './scenes/NameScene';
+import { AppearanceScene } from './scenes/AppearanceScene';
 import { InventoryScene } from './scenes/InventoryScene';
 import { MenuScene } from './scenes/MenuScene';
 import { NightScene } from './scenes/NightScene';
@@ -51,6 +52,7 @@ const game = new Phaser.Game({
     PracticeScene,
     IntroScene,
     NameScene,
+    AppearanceScene,
     GameScene,
     NightScene,
     DialogScene,

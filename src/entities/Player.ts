@@ -14,6 +14,11 @@ const WALK_FRAME_RATE = 8;
 // Cuerpo de colisión: 14×14 centrado en la casilla de 16×16 del personaje (HU-07).
 const BODY_SIZE = 14;
 
+// Ayuda en las esquinas: si la dirección está bloqueada pero quedaría libre desplazándose de lado como mucho
+// estos píxeles, el personaje se desliza de lado hasta alinearse con el hueco (por ejemplo, una entrada de
+// una casilla). Sin ella, el cuerpo de 14 px solo cabe en un hueco de 16 px llegando casi perfectamente alineado.
+const CORNER_ASSIST = 6;
+
 const VELOCITY: Record<Direction, { x: number; y: number }> = {
   down: { x: 0, y: 1 },
   up: { x: 0, y: -1 },
@@ -27,6 +32,7 @@ const VELOCITY: Record<Direction, { x: number; y: number }> = {
 // - Mira hacia la dirección en la que se mueve, y la mantiene al pararse.
 // - No atraviesa obstáculos. Si la dirección que manda está bloqueada y otra de las pulsadas
 //   está libre, se mueve en la libre (HU-07).
+// - Si choca por poco con la esquina de un hueco, se desliza de lado hasta entrar en él (CORNER_ASSIST).
 export class Player extends Phaser.Physics.Arcade.Sprite {
   declare body: Phaser.Physics.Arcade.Body;
   facing: Direction = 'down';
@@ -34,8 +40,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
   private keys: { key: Phaser.Input.Keyboard.Key; direction: Direction }[];
   private obstacles: Phaser.Tilemaps.TilemapLayer | null = null;
 
-  constructor(scene: Phaser.Scene, position: TilePosition, facing: Direction = 'down') {
-    super(scene, position.x * TILE_SIZE + TILE_SIZE / 2, position.y * TILE_SIZE + TILE_SIZE / 2, 'jugador', DIRECTION_COLUMN[facing]);
+  // `texture` es la hoja con el aspecto elegido (HU-68).
+  constructor(scene: Phaser.Scene, position: TilePosition, facing: Direction = 'down', texture = 'jugador') {
+    super(scene, position.x * TILE_SIZE + TILE_SIZE / 2, position.y * TILE_SIZE + TILE_SIZE / 2, texture, DIRECTION_COLUMN[facing]);
     this.facing = facing;
     scene.add.existing(this);
     scene.physics.add.existing(this);
@@ -56,7 +63,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     ];
     this.keys = bindings.map(([code, direction]) => ({ key: keyboard.addKey(code), direction }));
 
-    createWalkAnimations(scene);
+    createWalkAnimations(scene, texture);
   }
 
   // Capa de obstáculos del mapa, para saber de antemano si una dirección está bloqueada.
@@ -72,6 +79,14 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       return;
     }
 
+    const slide = this.canMove(pressed[0]) ? null : this.cornerSlide(pressed[0]);
+    if (slide) {
+      this.facing = pressed[0];
+      this.setVelocity(slide.x, slide.y);
+      this.anims.play(`${this.texture.key}-andar-${pressed[0]}`, true);
+      return;
+    }
+
     const direction = pressed.find((candidate) => this.canMove(candidate));
     if (!direction) {
       // Todas las direcciones pulsadas están bloqueadas: mira hacia la que manda, sin andar.
@@ -83,7 +98,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.facing = direction;
     const { x, y } = VELOCITY[direction];
     this.setVelocity(x * PLAYER_SPEED, y * PLAYER_SPEED);
-    this.anims.play(`jugador-andar-${direction}`, true);
+    this.anims.play(`${this.texture.key}-andar-${direction}`, true);
   }
 
   // Detiene al personaje mirando hacia donde miraba.
@@ -103,18 +118,36 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     return [...new Set(held.map(({ direction }) => direction))];
   }
 
+  // Velocidad para deslizarse de lado hacia el hueco más cercano por el que se podría avanzar en esa dirección,
+  // o null si no hay ninguno a CORNER_ASSIST píxeles o menos. Al final del deslizamiento la velocidad se ajusta
+  // para quedar alineado justo en este fotograma, sin pasarse.
+  private cornerSlide(direction: Direction): { x: number; y: number } | null {
+    const horizontal = VELOCITY[direction].x !== 0;
+    for (let distance = 1; distance <= CORNER_ASSIST; distance++) {
+      for (const sign of [-1, 1]) {
+        const shift = horizontal ? { x: 0, y: sign * distance } : { x: sign * distance, y: 0 };
+        const side: Direction = horizontal ? (sign < 0 ? 'up' : 'down') : sign < 0 ? 'left' : 'right';
+        if (!this.canMove(direction, shift) || !this.canMove(side)) continue;
+        const frameSeconds = this.scene.game.loop.delta / 1000;
+        const speed = frameSeconds > 0 ? Math.min(PLAYER_SPEED, distance / frameSeconds) : PLAYER_SPEED;
+        return { x: shift.x === 0 ? 0 : sign * speed, y: shift.y === 0 ? 0 : sign * speed };
+      }
+    }
+    return null;
+  }
+
   // Comprueba si el cuerpo, desplazado una fracción de píxel en esa dirección, chocaría con un obstáculo
   // o con el borde del mapa. Solo cuenta como bloqueada si ya está tocando el obstáculo: hasta entonces
-  // el personaje avanza y la física lo detiene justo al lado.
-  private canMove(direction: Direction): boolean {
+  // el personaje avanza y la física lo detiene justo al lado. `shift` mueve antes el cuerpo (ayuda en las esquinas).
+  private canMove(direction: Direction, shift = { x: 0, y: 0 }): boolean {
     const probe = 0.05;
     const dx = VELOCITY[direction].x * probe;
     const dy = VELOCITY[direction].y * probe;
     // En el eje perpendicular se encoge un poco, para no contar como bloqueo un obstáculo que solo roza el lateral.
     const margin = 0.1;
     const area = new Phaser.Geom.Rectangle(
-      this.body.x + dx + (dx === 0 ? margin : 0),
-      this.body.y + dy + (dy === 0 ? margin : 0),
+      this.body.x + shift.x + dx + (dx === 0 ? margin : 0),
+      this.body.y + shift.y + dy + (dy === 0 ? margin : 0),
       this.body.width - (dx === 0 ? margin * 2 : 0),
       this.body.height - (dy === 0 ? margin * 2 : 0),
     );
@@ -136,16 +169,16 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
   }
 }
 
-function createWalkAnimations(scene: Phaser.Scene): void {
+function createWalkAnimations(scene: Phaser.Scene, texture: string): void {
   for (const [direction, column] of Object.entries(DIRECTION_COLUMN)) {
-    const key = `jugador-andar-${direction}`;
+    const key = `${texture}-andar-${direction}`;
     if (scene.anims.exists(key)) {
       continue;
     }
     const frames = Array.from({ length: WALK_FRAMES }, (_, row) => row * SHEET_COLUMNS + column);
     scene.anims.create({
       key,
-      frames: scene.anims.generateFrameNumbers('jugador', { frames }),
+      frames: scene.anims.generateFrameNumbers(texture, { frames }),
       frameRate: WALK_FRAME_RATE,
       repeat: -1,
     });

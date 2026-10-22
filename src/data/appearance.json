@@ -1,0 +1,30 @@
+{
+  "default": { "gender": "hombre", "skin": "media", "hair": "pelirrojo" },
+  "genders": [
+    {
+      "id": "hombre",
+      "name": "Hombre",
+      "sheet": "jugador",
+      "skinColors": ["#ef914f"],
+      "hairColors": ["#d14b34", "#965340"]
+    },
+    {
+      "id": "mujer",
+      "name": "Mujer",
+      "sheet": "jugadora",
+      "skinColors": ["#a3754e", "#965340"],
+      "hairColors": ["#4e484a", "#3b3643"]
+    }
+  ],
+  "skins": [
+    { "id": "clara", "name": "Clara", "colors": ["#f8c08c", "#d68c64"] },
+    { "id": "media", "name": "Media", "colors": ["#ef914f", "#c4683e"] },
+    { "id": "oscura", "name": "Oscura", "colors": ["#a3754e", "#965340"] }
+  ],
+  "hairs": [
+    { "id": "castano", "name": "Castaño", "colors": ["#965c3a", "#643a28"] },
+    { "id": "negro", "name": "Negro", "colors": ["#4e484a", "#3b3643"] },
+    { "id": "pelirrojo", "name": "Pelirrojo", "colors": ["#d14b34", "#965340"] },
+    { "id": "rubio", "name": "Rubio", "colors": ["#f0c460", "#c48c3e"] }
+  ]
+}

@@ -45,9 +45,12 @@ const TILE = {
   dirtTopRight: 14,
   dirtBottomLeft: 36,
   dirtBottomRight: 38,
-  // Los pinos claros (4, 28) se confunden con el césped; se usan el árbol oscuro y los otoñales.
-  tree: 16,
-  autumnTree: 3,
+  // Árboles. Los altos ocupan dos casillas: la copa arriba y el resto de la copa con el tronco abajo.
+  tallTreeTop: 4,
+  tallTreeBottom: 16,
+  tallAutumnTreeTop: 3,
+  tallAutumnTreeBottom: 15,
+  smallTree: 28,
   smallAutumnTree: 27,
   bush: 5,
   well: 104,
@@ -124,6 +127,8 @@ function createMap(width, height) {
     obstacles: new Array(width * height).fill(-1),
     dirt: new Set(),
     water: new Set(),
+    // Casillas con árbol. Cuáles son altos y cuáles pequeños se decide al final (shapeTrees).
+    trees: new Set(),
     // Puntos con nombre (inicio y llegadas) y puertas, en casillas.
     points: [],
     doors: [],
@@ -268,9 +273,31 @@ function addTrees(map, x1, y1, x2, y2, density, reserved = new Set()) {
       if (!inside(map, x, y) || map.dirt.has(key(x, y)) || map.water.has(key(x, y)) || reserved.has(key(x, y))) continue;
       if (getTile(map.obstacles, map, x, y) !== -1) continue;
       const h = hash(x + 101, y + 211) % 100;
-      if (h < density) setTile(map.obstacles, map, x, y, [TILE.tree, TILE.tree, TILE.autumnTree, TILE.smallAutumnTree][h % 4]);
+      if (h < density) {
+        setTile(map.obstacles, map, x, y, TILE.smallTree);
+        map.trees.add(key(x, y));
+      }
     }
   }
+}
+
+// Dibuja los árboles: dos casillas de árbol una encima de otra forman un árbol alto (verde u otoñal) y una
+// casilla suelta, un árbol pequeño. Solo cambia el dibujo: las casillas con árbol son las mismas.
+function shapeTrees(map) {
+  for (let x = 0; x < map.width; x++) {
+    for (let y = 0; y < map.height; y++) {
+      if (!map.trees.has(key(x, y))) continue;
+      const autumn = hash(x + 7, y + 13) % 3 === 0;
+      if (map.trees.has(key(x, y + 1))) {
+        setTile(map.obstacles, map, x, y, autumn ? TILE.tallAutumnTreeTop : TILE.tallTreeTop);
+        setTile(map.obstacles, map, x, y + 1, autumn ? TILE.tallAutumnTreeBottom : TILE.tallTreeBottom);
+        y++;
+      } else {
+        setTile(map.obstacles, map, x, y, autumn ? TILE.smallAutumnTree : TILE.smallTree);
+      }
+    }
+  }
+  return map;
 }
 
 function toTiled(map) {
@@ -403,10 +430,11 @@ function plaza() {
   addNoticeBoard(map, { x: 17, y: 11 });
   addDiaryPage(map, { id: 'pagina-1', x: 2, y: 3 }); // en la esquina del noroeste, entre los árboles
   // Feria del día 7 (HU-58): los dos puestos (la casilla es la del mostrador; el toldo queda encima) y una
-  // guirnalda a lo largo de la fila 12. Solo se ven y solo son obstáculos el día de la feria.
+  // guirnalda a lo largo de la fila 12, sujeta por un poste en cada extremo (casillas 8 y 29; la 29 deja libre
+  // la entrada de la tienda). Solo se ven y solo son obstáculos el día de la feria.
   map.points.push({ name: 'puesto', x: 15, y: 14, properties: { tipo: 'cosecha' } });
   map.points.push({ name: 'puesto', x: 19, y: 14, properties: { tipo: 'pesca' } });
-  map.points.push({ name: 'guirnalda', x: 8, y: 12, properties: { casillas: '24' } });
+  map.points.push({ name: 'guirnalda', x: 8, y: 12, properties: { casillas: '22' } });
   // Ceremonia (HU-66): escenario y podio de 3×2 casillas (el punto es la casilla central de abajo). Los dos son
   // obstáculos. El alcalde sube al escenario.
   map.points.push({ name: 'escenario', x: 22, y: 9 });
@@ -673,6 +701,6 @@ function bosque() {
 
 mkdirSync(OUTPUT_DIR, { recursive: true });
 for (const [name, build] of Object.entries({ plaza, casa, tienda, torre, granja, lago, bosque })) {
-  writeFileSync(`${OUTPUT_DIR}/${name}.json`, JSON.stringify(toTiled(build()), null, 1) + '\n');
+  writeFileSync(`${OUTPUT_DIR}/${name}.json`, JSON.stringify(toTiled(shapeTrees(build())), null, 1) + '\n');
   console.log(`${OUTPUT_DIR}/${name}.json`);
 }

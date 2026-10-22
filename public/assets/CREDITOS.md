@@ -25,6 +25,7 @@ Archivos de Ninja Adventure (https://pixel-boy.itch.io/ninja-adventure-asset-pac
 | Archivo en el juego | Archivo original del paquete |
 |---|---|
 | sprites/personajes/jugador.png | Actor/Character/Boy/SpriteSheet.png |
+| sprites/personajes/jugadora.png | Actor/Character/Princess/SpriteSheet.png (la piel y el pelo del jugador y la jugadora se recolorean en el juego según el aspecto elegido, HU-68) |
 | sprites/personajes/vendedora.png | Actor/Character/Woman/SpriteSheet.png |
 | sprites/personajes/alcalde.png | Actor/Character/Noble/SpriteSheet.png |
 | sprites/personajes/relojera.png | Actor/Character/OldWoman/SpriteSheet.png |
