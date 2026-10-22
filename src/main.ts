@@ -24,6 +24,12 @@ import { getGameState, isGameInProgress } from './systems/gameState';
 import { setRandomValues } from './systems/random';
 import type { ItemId } from './systems/inventory';
 
+// HU-30: Tab no es un control del juego. Por defecto el navegador mueve el foco a su barra; el juego lo pierde,
+// Phaser suspende todo el sonido y el teclado deja de llegar al juego hasta hacer clic en él.
+window.addEventListener('keydown', (event) => {
+  if (event.key === 'Tab') event.preventDefault();
+});
+
 const game = new Phaser.Game({
   type: Phaser.AUTO,
   parent: 'game',

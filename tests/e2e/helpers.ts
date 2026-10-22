@@ -850,6 +850,7 @@ export interface AudioState {
   muted: boolean;
   music: string | null;
   musicStarts: number;
+  running: boolean;
 }
 
 export async function audioState(page: Page): Promise<AudioState> {

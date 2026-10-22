@@ -9,6 +9,7 @@ Criterios de aceptación:
 - El botón “Silenciar” está separado de los controles de volumen.
 - Con “Silenciar” activo no se escucha ni música ni efectos.
 - Los controles de volumen conservan sus valores mientras el sonido está silenciado.
+- El sonido solo se silencia con “Silenciar”. Pulsar una tecla que no es un control del juego, como Tab, no silencia el juego ni hace que deje de responder al teclado.
 Escenario 1: Silenciar
 
 - Dado que el volumen de música está en 7 barras y el de efectos en 6 barras
@@ -25,4 +26,9 @@ Escenario 3: Recuperar el sonido
 - Dado que el sonido está silenciado con 7 y 6 barras
 - Cuando el jugador desactiva “Silenciar”
 - Entonces la música vuelve a sonar a 7 barras y los efectos a 6 barras
+Escenario 4: Tecla Tab
 
+- Dado que el jugador está en la partida y se oye la música
+- Cuando pulsa Tab
+- Entonces la música sigue sonando
+- Y el juego sigue respondiendo al teclado

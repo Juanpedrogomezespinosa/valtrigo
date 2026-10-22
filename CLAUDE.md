@@ -248,6 +248,7 @@ Es un proyecto público con un fin doble: servir de base para un curso de testin
 - Efecto de prueba (HU-29): al soltar ← o → (o el clic) en "Efectos", si el valor ha cambiado, suena el efecto de confirmación con el nuevo volumen.
 - Tabla de controles (HU-33) a la derecha, de solo lectura: pulsar sobre una tecla no hace nada.
 - Las opciones se abren desde el menú principal y desde la pausa, y se aplican igual en los dos casos.
+- **Tecla Tab (HU-30, criterio y escenario 4 añadidos):** bug encontrado al jugar. Tab movía el foco a la barra del navegador; la página perdía el foco, Phaser suspendía el AudioContext (`pauseOnBlur`) y el teclado dejaba de llegar al juego hasta hacer clic. main.ts anula la acción por defecto de Tab. `window.audioState()` incluye `running` (si el AudioContext está en marcha). Por decisión del autor, este fallo es también el B-16 del catálogo de bugs (docs/bugs.md): para sembrarlo basta con quitar esa línea.
 
 ### Música por zona (HU-31)
 

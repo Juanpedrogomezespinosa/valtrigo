@@ -89,6 +89,11 @@ B-15 · Día 6, casa del jugador · HU-24
 - Fallo: al dormir con la energía a 20, la energía sube a 50, no a 100.
 - Condición: dormir en la cama con la energía a 20.
 - Severidad: media.
+B-16 · Cualquier día y zona · HU-30
+
+- Fallo: al pulsar Tab, el juego se queda sin música ni efectos y deja de responder al teclado hasta que se hace clic en él.
+- Condición: pulsar la tecla Tab durante la partida o en un menú.
+- Severidad: media.
 Trampas: no son bugs
 
 - La cámara no se mueve dentro de la casa del jugador, porque la zona es más pequeña que la pantalla (HU-09).

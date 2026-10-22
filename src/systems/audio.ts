@@ -90,8 +90,17 @@ export function getAudioState(game: Phaser.Game): {
   muted: boolean;
   music: string | null;
   musicStarts: number;
+  // Si la salida de sonido del juego está en marcha: Phaser la suspende cuando la página pierde el foco.
+  running: boolean;
 } {
-  return { musicGain: musicVolume?.gain.value ?? null, muted: game.sound.mute, music: currentMusic?.key ?? null, musicStarts };
+  const context = (game.sound as Phaser.Sound.WebAudioSoundManager).context;
+  return {
+    musicGain: musicVolume?.gain.value ?? null,
+    muted: game.sound.mute,
+    music: currentMusic?.key ?? null,
+    musicStarts,
+    running: context?.state === 'running',
+  };
 }
 
 // HU-31: reproduce la música de una zona. Las pistas pesan varios MB, así que cada una se descarga

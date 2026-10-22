@@ -3,6 +3,7 @@ import {
   audioState,
   openOptionsAt,
   openPause,
+  playerInfo,
   optionsView,
   playedEffectVolumes,
   press,
@@ -53,3 +54,26 @@ test('Escenario 3: Recuperar el sonido', async ({ page }) => {
   await press(page, 'ArrowUp');
   expect(await playedEffectVolumes(page)).toEqual([{ key: 'sfx-menu-navegar', volume: 0.6 }]);
 });
+
+test('Escenario 4: Tecla Tab', async ({ page }) => {
+  await startNewGame(page);
+  await expect.poll(async () => (await audioState(page)).music).toBe('music-plaza');
+  expect((await audioState(page)).running).toBe(true);
+
+  await press(page, 'Tab');
+  await page.waitForTimeout(300);
+
+  // La música sigue sonando: el juego no ha perdido el foco ni se ha suspendido el sonido.
+  const audio = await audioState(page);
+  expect(audio.running).toBe(true);
+  expect(audio.muted).toBe(false);
+  expect(audio.music).toBe('music-plaza');
+  expect(await page.evaluate(() => document.hasFocus())).toBe(true);
+  // Y sigue respondiendo al teclado.
+  const before = await playerInfo(page);
+  await page.keyboard.down('ArrowLeft');
+  await page.waitForTimeout(300);
+  await page.keyboard.up('ArrowLeft');
+  expect((await playerInfo(page)).x).toBeLessThan(before.x);
+});
+
