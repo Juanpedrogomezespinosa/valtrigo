@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { COLORS, FONT_FAMILY, VOLUME_BARS } from '../config';
 import { changeSoundSettings, playEffect } from '../systems/audio';
+import { toggleFullscreen } from '../systems/fullscreen';
 import { getSettings } from '../systems/settings';
 import { addTitle } from '../ui/title';
 import type { MenuSceneData } from './MenuScene';
@@ -11,8 +12,8 @@ export interface OptionsSceneData {
   returnTo?: 'MenuScene' | 'PauseScene';
 }
 
-type Row = 'Música' | 'Efectos' | 'Silenciar' | 'Volver';
-const ROWS: Row[] = ['Música', 'Efectos', 'Silenciar', 'Volver'];
+type Row = 'Música' | 'Efectos' | 'Silenciar' | 'Pantalla completa' | 'Volver';
+const ROWS: Row[] = ['Música', 'Efectos', 'Silenciar', 'Pantalla completa', 'Volver'];
 
 // HU-33: tabla de controles, de solo lectura.
 const CONTROLS: [string, string][] = [
@@ -23,10 +24,11 @@ const CONTROLS: [string, string][] = [
   ['Objetivos', 'O'],
   ['Pausa', 'Escape'],
   ['Usar objeto', 'E o Enter'],
+  ['Pantalla completa', 'F'],
 ];
 
 const LEFT = 90;
-const ROW_Y = [170, 230, 310, 480];
+const ROW_Y = [170, 230, 310, 370, 480];
 const BAR_LEFT = 230;
 const BAR_WIDTH = 18;
 const BAR_GAP = 4;
@@ -38,6 +40,7 @@ const TABLE_LEFT = 560;
 //   volumen y el cambio se aplica al instante. Al soltar la tecla (o el clic) en "Efectos" suena un
 //   efecto de prueba con el nuevo volumen.
 // - HU-30: "Silenciar", separado de los volúmenes. Enter o un clic lo activan y lo desactivan.
+// - HU-83: "Pantalla completa" (Sí o No). Enter o un clic la activan y la desactivan.
 // - HU-33: tabla de controles, de solo lectura.
 // - "Volver" (Enter o clic) y Escape vuelven a la pantalla anterior.
 export class OptionsScene extends Phaser.Scene {
@@ -47,6 +50,7 @@ export class OptionsScene extends Phaser.Scene {
   private bars: Record<'Música' | 'Efectos', Phaser.GameObjects.Rectangle[]> = { Música: [], Efectos: [] };
   private barValues: Record<'Música' | 'Efectos', Phaser.GameObjects.Text> = {} as never;
   private muteValue!: Phaser.GameObjects.Text;
+  private fullscreenValue!: Phaser.GameObjects.Text;
   private cursor!: Phaser.GameObjects.Text;
   // Barras de efectos al empezar a cambiarlas, para saber si al soltar hay que sonar el efecto de prueba.
   private effectBarsAtPress: number | null = null;
@@ -75,6 +79,7 @@ export class OptionsScene extends Phaser.Scene {
         .on('pointerdown', () => {
           this.select(index);
           if (row === 'Silenciar') this.toggleMute();
+          if (row === 'Pantalla completa') this.toggleFullscreen();
           if (row === 'Volver') this.back();
         }),
     );
@@ -102,6 +107,23 @@ export class OptionsScene extends Phaser.Scene {
       .text(BAR_LEFT, ROW_Y[ROWS.indexOf('Silenciar')], '', { fontFamily: FONT_FAMILY, fontSize: '24px', color: COLORS.text })
       .setOrigin(0, 0.5)
       .setName('silenciar');
+    const fullscreenLabel = this.labels[ROWS.indexOf('Pantalla completa')];
+    this.fullscreenValue = this.add
+      .text(Math.max(BAR_LEFT, fullscreenLabel.getBounds().right + 24), fullscreenLabel.y, '', {
+        fontFamily: FONT_FAMILY,
+        fontSize: '24px',
+        color: COLORS.text,
+      })
+      .setOrigin(0, 0.5)
+      .setName('pantalla-completa');
+    // Escape (o F) también cambian la pantalla completa: el valor se actualiza en cuanto cambia.
+    const onFullscreenChange = () => this.refresh();
+    this.scale.on(Phaser.Scale.Events.ENTER_FULLSCREEN, onFullscreenChange);
+    this.scale.on(Phaser.Scale.Events.LEAVE_FULLSCREEN, onFullscreenChange);
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      this.scale.off(Phaser.Scale.Events.ENTER_FULLSCREEN, onFullscreenChange);
+      this.scale.off(Phaser.Scale.Events.LEAVE_FULLSCREEN, onFullscreenChange);
+    });
 
     this.addControlsTable();
 
@@ -123,19 +145,31 @@ export class OptionsScene extends Phaser.Scene {
   }
 
   // Estado de la pantalla, para los tests.
-  getState(): { selected: Row; musicBars: number; effectBars: number; muted: boolean; controls: [string, string][] } {
+  getState(): {
+    selected: Row;
+    musicBars: number;
+    effectBars: number;
+    muted: boolean;
+    fullscreen: boolean;
+    controls: [string, string][];
+  } {
     const settings = getSettings();
-    return { selected: ROWS[this.selected], ...settings, controls: CONTROLS };
+    return { selected: ROWS[this.selected], ...settings, fullscreen: this.scale.isFullscreen, controls: CONTROLS };
   }
 
   private addControlsTable(): void {
     this.add.text(TABLE_LEFT, 140, 'Controles', { fontFamily: FONT_FAMILY, fontSize: '26px', color: COLORS.selected });
-    CONTROLS.forEach(([action, key], index) => {
-      const y = 190 + index * 40;
-      this.add.text(TABLE_LEFT, y, action, { fontFamily: FONT_FAMILY, fontSize: '22px', color: COLORS.text }).setName(`accion-${index}`);
+    const actions = CONTROLS.map(([action], index) =>
+      this.add
+        .text(TABLE_LEFT, 190 + index * 40, action, { fontFamily: FONT_FAMILY, fontSize: '22px', color: COLORS.text })
+        .setName(`accion-${index}`),
+    );
+    // La columna de las teclas empieza después de la acción más larga ("Pantalla completa").
+    const keysLeft = TABLE_LEFT + Math.max(...actions.map((action) => action.width)) + 24;
+    CONTROLS.forEach(([, key], index) => {
       // Las teclas no se pueden cambiar: pulsar sobre ellas no hace nada.
       this.add
-        .text(TABLE_LEFT + 160, y, key, { fontFamily: FONT_FAMILY, fontSize: '22px', color: COLORS.text })
+        .text(keysLeft, actions[index].y, key, { fontFamily: FONT_FAMILY, fontSize: '22px', color: COLORS.text })
         .setName(`tecla-${index}`);
     });
   }
@@ -188,7 +222,13 @@ export class OptionsScene extends Phaser.Scene {
   private activate(): void {
     const row = ROWS[this.selected];
     if (row === 'Silenciar') this.toggleMute();
+    if (row === 'Pantalla completa') this.toggleFullscreen();
     if (row === 'Volver') this.back();
+  }
+
+  private toggleFullscreen(): void {
+    toggleFullscreen(this.game);
+    playEffect(this, 'menuConfirm');
   }
 
   private toggleMute(): void {
@@ -215,6 +255,7 @@ export class OptionsScene extends Phaser.Scene {
       this.barValues[row].setText(String(value));
     }
     this.muteValue.setText(settings.muted ? 'Activado' : 'Desactivado');
+    this.fullscreenValue.setText(this.scale.isFullscreen ? 'Sí' : 'No');
 
     this.labels.forEach((label, index) => label.setColor(index === this.selected ? COLORS.selected : COLORS.text));
     const label = this.labels[this.selected];

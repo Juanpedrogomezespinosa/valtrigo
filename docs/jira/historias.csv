@@ -1121,7 +1121,7 @@ Como jugador, quiero ver la lista de controles en el menú de opciones para sabe
 
 Criterios de aceptación:
 
-- La pantalla de opciones muestra una tabla con cada acción y su tecla asignada: mover (flechas o WASD), correr (Mayús, HU-81), interactuar (E), inventario (I), objetivos (O), pausa (Escape), usar objeto (E o Enter, HU-82).
+- La pantalla de opciones muestra una tabla con cada acción y su tecla asignada: mover (flechas o WASD), correr (Mayús, HU-81), interactuar (E), inventario (I), objetivos (O), pausa (Escape), usar objeto (E o Enter, HU-82), pantalla completa (F, HU-83).
 - La tabla es de solo lectura: las teclas no se pueden cambiar.
 Escenario 1: Consultar los controles
 
@@ -1137,7 +1137,7 @@ Escenario 3: Contenido completo
 
 - Dado que la tabla de controles está visible
 - Cuando el jugador la recorre
-- Entonces aparecen las siete acciones de la lista","- La pantalla de opciones muestra una tabla con cada acción y su tecla asignada: mover (flechas o WASD), correr (Mayús, HU-81), interactuar (E), inventario (I), objetivos (O), pausa (Escape), usar objeto (E o Enter, HU-82).
+- Entonces aparecen las ocho acciones de la lista","- La pantalla de opciones muestra una tabla con cada acción y su tecla asignada: mover (flechas o WASD), correr (Mayús, HU-81), interactuar (E), inventario (I), objetivos (O), pausa (Escape), usar objeto (E o Enter, HU-82), pantalla completa (F, HU-83).
 - La tabla es de solo lectura: las teclas no se pueden cambiar."
 "HU-34","HU-34. Guardar las opciones","# HU-34. Guardar las opciones
 
@@ -2826,6 +2826,7 @@ Criterios de aceptación:
   6. Si no queda ninguna: “La fuente no tiene nada más que contarte.”
 - Echar una moneda se puede repetir las veces que se quiera; cada vez cuesta 5 monedas.
 - “Nada” cierra el cuadro sin hacer nada.
+- Las tres opciones se ven completas y separadas, sin montarse unas sobre otras.
 - La fuente es un obstáculo (HU-07).
 Escenario 1: Beber
 
@@ -2860,7 +2861,12 @@ Escenario 6: Pista siguiente
 
 - Dado que el cofre del granero ya está abierto y la Pala recogida
 - Cuando el jugador echa una moneda
-- Entonces aparece la pista “Al suroeste del lago, entre los árboles, se abre un sendero.”","- Al pulsar E junto a la fuente de la plaza aparece el cuadro “Fuente” con las opciones “Beber”, “Echar una moneda” y “Nada”.
+- Entonces aparece la pista “Al suroeste del lago, entre los árboles, se abre un sendero.”
+Escenario 7: Opciones legibles
+
+- Dado que el jugador está junto a la fuente
+- Cuando pulsa E
+- Entonces “Beber”, “Echar una moneda” y “Nada” se ven separadas, sin solaparse, también al cambiar la opción seleccionada","- Al pulsar E junto a la fuente de la plaza aparece el cuadro “Fuente” con las opciones “Beber”, “Echar una moneda” y “Nada”.
 - “Beber” recupera 15 puntos de energía, sin pasar de 100, y aparece “Te sientes con más energía”. Solo se puede beber una vez al día: la segunda vez aparece “Ya has bebido hoy” y la energía no cambia.
 - “Echar una moneda” cuesta 5 monedas y da una pista. Sin 5 monedas aparece “No tienes monedas suficientes” y no se da la pista.
 - La pista es la primera de la lista que todavía sirve (lo que indica aún no se ha hecho):
@@ -2872,6 +2878,7 @@ Escenario 6: Pista siguiente
   6. Si no queda ninguna: “La fuente no tiene nada más que contarte.”
 - Echar una moneda se puede repetir las veces que se quiera; cada vez cuesta 5 monedas.
 - “Nada” cierra el cuadro sin hacer nada.
+- Las tres opciones se ven completas y separadas, sin montarse unas sobre otras.
 - La fuente es un obstáculo (HU-07)."
 "HU-76","HU-76. Energía más exigente","# HU-76. Energía más exigente
 
@@ -3198,3 +3205,49 @@ Escenario 5: Menú de pausa con E
 - Las ayudas de la parte de abajo de esas pantallas indican la E (por ejemplo, “E: colocar”).
 - En el menú principal, las opciones, la pantalla del nombre y la del aspecto se sigue confirmando con Enter (en el nombre, la E es una letra).
 - La tabla de controles (HU-33) muestra “Usar objeto: E o Enter”."
+"HU-83","HU-83. Pantalla completa","# HU-83. Pantalla completa
+
+# HU-83. Pantalla completa
+
+Como jugador, quiero jugar en pantalla completa para que no se vea nada del navegador.
+
+Criterios de aceptación:
+
+- La tecla F activa la pantalla completa y, al volver a pulsarla, la desactiva. Funciona en los menús y durante la partida, salvo en la pantalla del nombre (HU-67), donde la F es una letra.
+- En la pantalla de opciones hay una fila “Pantalla completa” con el valor “Sí” o “No”. Enter o un clic la activan o la desactivan.
+- En pantalla completa el juego ocupa toda la pantalla, sin ninguna parte del navegador, y se ve sin deformarse.
+- Escape también sale de la pantalla completa (lo hace el navegador). La fila de las opciones muestra siempre el estado real.
+- Al recargar la página, el juego empieza en la ventana del navegador: los navegadores solo permiten entrar en pantalla completa después de que el jugador pulse una tecla o haga clic.
+- La tabla de controles (HU-33) incluye “Pantalla completa: F”.
+Escenario 1: Activar con F
+
+- Dado que el juego está en la ventana del navegador
+- Cuando el jugador pulsa F
+- Entonces el juego pasa a pantalla completa
+Escenario 2: Desactivar con F
+
+- Dado que el juego está en pantalla completa
+- Cuando el jugador pulsa F
+- Entonces el juego vuelve a la ventana del navegador
+Escenario 3: Desde las opciones
+
+- Dado que el jugador está en la pantalla de opciones con “Pantalla completa: No”
+- Cuando selecciona “Pantalla completa” y pulsa Enter
+- Entonces el juego pasa a pantalla completa
+- Y la fila muestra “Sí”
+Escenario 4: La F en el nombre
+
+- Dado que el jugador está escribiendo su nombre
+- Cuando pulsa F
+- Entonces se escribe la letra “F”
+- Y el juego no pasa a pantalla completa
+Escenario 5: Controles
+
+- Dado que el jugador abre el menú de opciones
+- Cuando consulta la tabla de controles
+- Entonces aparece “Pantalla completa” con la tecla “F”","- La tecla F activa la pantalla completa y, al volver a pulsarla, la desactiva. Funciona en los menús y durante la partida, salvo en la pantalla del nombre (HU-67), donde la F es una letra.
+- En la pantalla de opciones hay una fila “Pantalla completa” con el valor “Sí” o “No”. Enter o un clic la activan o la desactivan.
+- En pantalla completa el juego ocupa toda la pantalla, sin ninguna parte del navegador, y se ve sin deformarse.
+- Escape también sale de la pantalla completa (lo hace el navegador). La fila de las opciones muestra siempre el estado real.
+- Al recargar la página, el juego empieza en la ventana del navegador: los navegadores solo permiten entrar en pantalla completa después de que el jugador pulse una tecla o haga clic.
+- La tabla de controles (HU-33) incluye “Pantalla completa: F”."

@@ -18,6 +18,7 @@ Criterios de aceptación:
   6. Si no queda ninguna: “La fuente no tiene nada más que contarte.”
 - Echar una moneda se puede repetir las veces que se quiera; cada vez cuesta 5 monedas.
 - “Nada” cierra el cuadro sin hacer nada.
+- Las tres opciones se ven completas y separadas, sin montarse unas sobre otras.
 - La fuente es un obstáculo (HU-07).
 Escenario 1: Beber
 
@@ -53,3 +54,8 @@ Escenario 6: Pista siguiente
 - Dado que el cofre del granero ya está abierto y la Pala recogida
 - Cuando el jugador echa una moneda
 - Entonces aparece la pista “Al suroeste del lago, entre los árboles, se abre un sendero.”
+Escenario 7: Opciones legibles
+
+- Dado que el jugador está junto a la fuente
+- Cuando pulsa E
+- Entonces “Beber”, “Echar una moneda” y “Nada” se ven separadas, sin solaparse, también al cambiar la opción seleccionada

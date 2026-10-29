@@ -27,6 +27,8 @@ export interface DialogSceneData {
 
 const BOX_HEIGHT = 160;
 const MARGIN = 20;
+// Hueco entre las opciones de un diálogo.
+const CHOICE_GAP = 50;
 // Los retratos miden 38×38: se amplían ×3 sin suavizar.
 const PORTRAIT_SIZE = 114;
 
@@ -90,10 +92,11 @@ export class DialogScene extends Phaser.Scene {
       lineSpacing: 6,
     });
 
-    // Opciones, abajo a la derecha del cuadro. Están ocultas hasta que toca elegir.
-    this.choiceTexts = (this.choice?.options ?? []).map((option, index, options) =>
+    // Opciones, abajo a la derecha del cuadro. Están ocultas hasta que toca elegir. Se colocan en refreshChoice()
+    // según el ancho de cada una, para que las largas ("Echar una moneda") no se monten sobre las demás.
+    this.choiceTexts = (this.choice?.options ?? []).map((option, index) =>
       this.add
-        .text(width - MARGIN * 2 - (options.length - 1 - index) * 170, height - MARGIN - 16, option, {
+        .text(width - MARGIN * 2, height - MARGIN - 16, option, {
           fontFamily: FONT_FAMILY,
           fontSize: '22px',
         })
@@ -156,6 +159,12 @@ export class DialogScene extends Phaser.Scene {
       text.setText(selected ? `▶ ${this.choice!.options[index]}` : this.choice!.options[index]);
       text.setColor(selected ? COLORS.selected : COLORS.text);
     });
+    // De derecha a izquierda, cada opción termina donde empieza la siguiente menos un hueco fijo.
+    let right = this.scale.width - MARGIN * 2;
+    for (let index = this.choiceTexts.length - 1; index >= 0; index--) {
+      this.choiceTexts[index].setX(right);
+      right -= this.choiceTexts[index].width + CHOICE_GAP;
+    }
   }
 
   private moveChoice(delta: number): void {

@@ -1,5 +1,5 @@
 import { expect, test } from './fixtures';
-import { at, chooseDialogOption, currentGameState, dialogState, startAtWith, talkUntilChoiceOrEnd, waitForHudText } from './helpers';
+import { at, chooseDialogOption, currentGameState, dialogState, press, startAtWith, talkUntilChoiceOrEnd, waitForHudText } from './helpers';
 
 // HU-75. La fuente de la plaza
 // La fuente está en la casilla (17, 16) de la plaza; el jugador se pone debajo, en (17, 17).
@@ -68,4 +68,26 @@ test('Escenario 6: Pista siguiente', async ({ page }) => {
   await useFountain(page, 'Echar una moneda');
 
   expect((await dialogState(page))?.fullText).toBe('Al suroeste del lago, entre los árboles, se abre un sendero.');
+});
+
+test('Escenario 7: Opciones legibles', async ({ page }) => {
+  await startAtWith(page, 'plaza', NEXT_TO_FOUNTAIN, { day: 2, minutes: at(10) });
+  await talkUntilChoiceOrEnd(page);
+
+  // Con cada opción seleccionada (el "▶" la alarga), ninguna se monta sobre la siguiente.
+  for (let selected = 0; selected < 3; selected++) {
+    const bounds = await page.evaluate(() => {
+      const game = (window as unknown as { game: import('phaser').Game }).game;
+      const scene = game.scene.getScene('DialogScene') as unknown as { choiceTexts: import('phaser').GameObjects.Text[] };
+      return scene.choiceTexts.map((text) => {
+        const box = text.getBounds();
+        return { left: box.left, right: box.right };
+      });
+    });
+    expect(bounds).toHaveLength(3);
+    for (let i = 0; i < bounds.length - 1; i++) {
+      expect(bounds[i].right, `Opción ${i + 1} con la ${selected + 1} seleccionada`).toBeLessThanOrEqual(bounds[i + 1].left);
+    }
+    await press(page, 'ArrowRight');
+  }
 });

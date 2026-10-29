@@ -6,7 +6,7 @@ Como jugador, quiero ver la lista de controles en el menú de opciones para sabe
 
 Criterios de aceptación:
 
-- La pantalla de opciones muestra una tabla con cada acción y su tecla asignada: mover (flechas o WASD), correr (Mayús, HU-81), interactuar (E), inventario (I), objetivos (O), pausa (Escape), usar objeto (E o Enter, HU-82).
+- La pantalla de opciones muestra una tabla con cada acción y su tecla asignada: mover (flechas o WASD), correr (Mayús, HU-81), interactuar (E), inventario (I), objetivos (O), pausa (Escape), usar objeto (E o Enter, HU-82), pantalla completa (F, HU-83).
 - La tabla es de solo lectura: las teclas no se pueden cambiar.
 Escenario 1: Consultar los controles
 
@@ -22,5 +22,5 @@ Escenario 3: Contenido completo
 
 - Dado que la tabla de controles está visible
 - Cuando el jugador la recorre
-- Entonces aparecen las siete acciones de la lista
+- Entonces aparecen las ocho acciones de la lista
 

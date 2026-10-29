@@ -22,6 +22,7 @@ import { ItemChoiceScene } from './scenes/ItemChoiceScene';
 import { getAudioState } from './systems/audio';
 import { getGameState, isGameInProgress } from './systems/gameState';
 import { setRandomValues } from './systems/random';
+import { toggleFullscreen } from './systems/fullscreen';
 import type { ItemId } from './systems/inventory';
 
 // HU-30: Tab no es un control del juego. Por defecto el navegador mueve el foco a su barra; el juego lo pierde,
@@ -73,6 +74,15 @@ const game = new Phaser.Game({
     OptionsScene,
     CreditsScene,
   ],
+});
+
+// HU-83: F activa y desactiva la pantalla completa en cualquier momento, salvo en la pantalla del nombre, donde la F
+// es una letra. Se escucha en la página y no en Phaser para que la petición salga de la propia pulsación, como
+// exigen los navegadores.
+window.addEventListener('keydown', (event) => {
+  if ((event.key === 'f' || event.key === 'F') && !event.repeat && !game.scene.isActive('NameScene')) {
+    toggleFullscreen(game);
+  }
 });
 
 // Expone el juego y el estado de la partida en desarrollo para que los tests de Playwright

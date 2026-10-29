@@ -937,6 +937,7 @@ export interface OptionsView {
   musicBars: number;
   effectBars: number;
   muted: boolean;
+  fullscreen: boolean;
   controls: [string, string][];
 }
 
@@ -961,12 +962,15 @@ export async function audioState(page: Page): Promise<AudioState> {
 }
 
 // Abre Opciones desde el menú principal y selecciona una fila.
-export async function openOptionsAt(page: Page, row: 'Música' | 'Efectos' | 'Silenciar' | 'Volver'): Promise<void> {
+export async function openOptionsAt(
+  page: Page,
+  row: 'Música' | 'Efectos' | 'Silenciar' | 'Pantalla completa' | 'Volver',
+): Promise<void> {
   await openGame(page);
   for (let i = 0; i < 4; i++) await press(page, 'ArrowDown'); // "Opciones"
   await press(page, 'Enter');
   await waitForScene(page, 'OptionsScene');
-  const rows = ['Música', 'Efectos', 'Silenciar', 'Volver'];
+  const rows = ['Música', 'Efectos', 'Silenciar', 'Pantalla completa', 'Volver'];
   for (let i = 0; i < rows.indexOf(row); i++) await press(page, 'ArrowDown');
   expect((await optionsView(page))?.selected).toBe(row);
 }

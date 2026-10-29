@@ -11,6 +11,7 @@ const CONTROLS = [
   ['Objetivos', 'O'],
   ['Pausa', 'Escape'],
   ['Usar objeto', 'E o Enter'],
+  ['Pantalla completa', 'F'],
 ];
 
 test('Escenario 1: Consultar los controles', async ({ page }) => {
