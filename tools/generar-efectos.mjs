@@ -16,16 +16,26 @@ const EFFECTS = {
     { frequency: 660, duration: 0.07 },
     { frequency: 990, duration: 0.1 },
   ],
+  // Campanas de la torre (HU-78): la grande es la más grave y la pequeña, la más aguda.
+  'campana-grande': [{ frequency: 262, duration: 1.2, wave: 'bell' }],
+  'campana-mediana': [{ frequency: 392, duration: 1.0, wave: 'bell' }],
+  'campana-pequena': [{ frequency: 523, duration: 0.9, wave: 'bell' }],
 };
 
-// Onda cuadrada suavizada, con un ataque breve y caída exponencial para evitar chasquidos.
-function renderNote({ frequency, duration }) {
+// Onda cuadrada suavizada, con un ataque breve y caída exponencial para evitar chasquidos. Las campanas (`bell`)
+// son una onda senoidal con armónicos que se apagan despacio.
+function renderNote({ frequency, duration, wave }) {
   const length = Math.round(duration * SAMPLE_RATE);
   const samples = new Float32Array(length);
   for (let i = 0; i < length; i++) {
     const t = i / SAMPLE_RATE;
     const attack = Math.min(1, t / 0.005);
     const decay = Math.exp((-4 * t) / duration);
+    if (wave === 'bell') {
+      const tone = [1, 2.0, 2.76].reduce((sum, ratio, k) => sum + Math.sin(2 * Math.PI * frequency * ratio * t) / (k + 1), 0);
+      samples[i] = 0.25 * tone * attack * Math.exp((-3 * t) / duration);
+      continue;
+    }
     const square = Math.sin(2 * Math.PI * frequency * t) >= 0 ? 1 : -1;
     samples[i] = 0.3 * square * attack * decay;
   }

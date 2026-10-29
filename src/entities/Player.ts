@@ -119,6 +119,11 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     return this.isRunning() ? PLAYER_SPEED * RUN_SPEED_FACTOR : PLAYER_SPEED;
   }
 
+  // La dirección que manda entre las pulsadas, o null si no hay ninguna (para empujar cajas, HU-79).
+  heldDirection(): Direction | null {
+    return this.pressedDirections()[0] ?? null;
+  }
+
   getTilePosition(): TilePosition {
     return { x: Math.floor(this.x / TILE_SIZE), y: Math.floor(this.y / TILE_SIZE) };
   }

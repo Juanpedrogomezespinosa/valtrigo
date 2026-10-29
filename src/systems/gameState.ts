@@ -87,6 +87,8 @@ export interface GameState {
   missionProgress: string[];
   // Día en que se bebió por última vez de la fuente de la plaza, o null si nunca (HU-75).
   fountainDay: number | null;
+  // Puzles resueltos (HU-77 a HU-79): "losas", "campanas" y "cajas".
+  solvedPuzzles: string[];
 }
 
 let current: GameState | null = null;
@@ -126,6 +128,7 @@ export function createNewGameState(scene: Phaser.Scene): GameState {
     completedMissions: [],
     missionProgress: [],
     fountainDay: null,
+    solvedPuzzles: [],
   };
 }
 

@@ -10,7 +10,7 @@
  "tilewidth": 16,
  "tileheight": 16,
  "nextlayerid": 4,
- "nextobjectid": 7,
+ "nextobjectid": 11,
  "layers": [
   {
    "id": 1,
@@ -217,7 +217,7 @@
     0,
     173,
     173,
-    0,
+    84,
     0,
     0,
     0,
@@ -378,6 +378,82 @@
     },
     {
      "id": 6,
+     "name": "campana",
+     "type": "",
+     "point": true,
+     "x": 24,
+     "y": 40,
+     "width": 0,
+     "height": 0,
+     "rotation": 0,
+     "visible": true,
+     "properties": [
+      {
+       "name": "tamano",
+       "type": "string",
+       "value": "grande"
+      }
+     ]
+    },
+    {
+     "id": 7,
+     "name": "campana",
+     "type": "",
+     "point": true,
+     "x": 56,
+     "y": 40,
+     "width": 0,
+     "height": 0,
+     "rotation": 0,
+     "visible": true,
+     "properties": [
+      {
+       "name": "tamano",
+       "type": "string",
+       "value": "pequena"
+      }
+     ]
+    },
+    {
+     "id": 8,
+     "name": "campana",
+     "type": "",
+     "point": true,
+     "x": 120,
+     "y": 56,
+     "width": 0,
+     "height": 0,
+     "rotation": 0,
+     "visible": true,
+     "properties": [
+      {
+       "name": "tamano",
+       "type": "string",
+       "value": "mediana"
+      }
+     ]
+    },
+    {
+     "id": 9,
+     "name": "cartel",
+     "type": "",
+     "point": true,
+     "x": 24,
+     "y": 104,
+     "width": 0,
+     "height": 0,
+     "rotation": 0,
+     "visible": true,
+     "properties": [
+      {
+       "name": "id",
+       "type": "string",
+       "value": "partitura"
+      }
+     ]
+    },
+    {
+     "id": 10,
      "name": "puerta",
      "type": "",
      "x": 80,

@@ -14,6 +14,10 @@ export const SFX = {
   sell: { key: 'sfx-venta', path: 'assets/audio/sfx/venta.wav' },
   chest: { key: 'sfx-cofre', path: 'assets/audio/sfx/cofre.wav' },
   questComplete: { key: 'sfx-encargo-completado', path: 'assets/audio/sfx/encargo-completado.wav' },
+  // HU-78: las campanas de la torre (generadas con tools/generar-efectos.mjs).
+  bellLarge: { key: 'sfx-campana-grande', path: 'assets/audio/sfx/campana-grande.wav' },
+  bellMedium: { key: 'sfx-campana-mediana', path: 'assets/audio/sfx/campana-mediana.wav' },
+  bellSmall: { key: 'sfx-campana-pequena', path: 'assets/audio/sfx/campana-pequena.wav' },
 } as const;
 
 export type SfxName = keyof typeof SFX;

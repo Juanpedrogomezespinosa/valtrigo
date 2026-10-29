@@ -2909,6 +2909,137 @@ Escenario 5: Mayús sin energía
 - Correr (HU-81) gasta 1 punto de energía por cada 3 segundos que el personaje se desplaza corriendo. Corriendo contra un obstáculo o quieto no gasta.
 - Con 10 puntos de energía o menos no se puede correr. Si el jugador estaba corriendo, el personaje pasa a andar y aparece “Estás demasiado cansado para correr” (o “cansada”, HU-68). Al pulsar Mayús con 10 o menos, aparece el mismo mensaje y sigue andando.
 - Andar, hablar, abrir cofres, comprar y vender siguen sin gastar energía."
+"HU-77","HU-77. Las losas del bosque","# HU-77. Las losas del bosque
+
+# HU-77. Las losas del bosque
+
+Como jugador, quiero resolver un acertijo escondido en el bosque para descubrir sus secretos.
+
+Criterios de aceptación:
+
+- En un claro escondido del bosque, al que se llega por un sendero desde el camino principal, hay 9 losas de piedra en una cuadrícula de 3×3.
+- Junto a las losas hay un cartel: “Pisa todas las piedras, pero ninguna dos veces.”
+- Al pisar una losa apagada, se enciende.
+- Al pisar una losa que ya estaba encendida, todas se apagan y aparece “Las losas se apagan”.
+- Al encenderse las 9, aparece “Las losas brillan” y el jugador recibe 60 monedas y 2 Semillas de calabaza. Si las Semillas no caben en el inventario, aparece “Inventario lleno” y la última losa no se enciende: se puede volver a pisar cuando haya sitio.
+- Una vez resuelto, las losas se quedan encendidas para siempre y pisarlas no hace nada. El acertijo solo se puede resolver una vez.
+- Si el jugador sale del bosque sin resolverlo, las losas se apagan.
+Escenario 1: Encender una losa
+
+- Dado que todas las losas están apagadas
+- Cuando el jugador pisa una losa
+- Entonces esa losa se enciende
+Escenario 2: Pisar una losa encendida
+
+- Dado que hay 3 losas encendidas
+- Cuando el jugador vuelve a pisar una de ellas
+- Entonces todas las losas se apagan
+- Y aparece “Las losas se apagan”
+Escenario 3: Resolver el acertijo
+
+- Dado que hay 8 losas encendidas y el jugador tiene 100 monedas
+- Cuando pisa la que falta
+- Entonces aparece “Las losas brillan”
+- Y el jugador tiene 160 monedas y 2 Semillas de calabaza
+Escenario 4: Acertijo resuelto
+
+- Dado que el acertijo ya está resuelto
+- Cuando el jugador vuelve a pisar una losa
+- Entonces las losas siguen encendidas y no recibe nada más
+Escenario 5: Salir del bosque
+
+- Dado que hay 4 losas encendidas
+- Cuando el jugador sale del bosque y vuelve
+- Entonces todas las losas están apagadas","- En un claro escondido del bosque, al que se llega por un sendero desde el camino principal, hay 9 losas de piedra en una cuadrícula de 3×3.
+- Junto a las losas hay un cartel: “Pisa todas las piedras, pero ninguna dos veces.”
+- Al pisar una losa apagada, se enciende.
+- Al pisar una losa que ya estaba encendida, todas se apagan y aparece “Las losas se apagan”.
+- Al encenderse las 9, aparece “Las losas brillan” y el jugador recibe 60 monedas y 2 Semillas de calabaza. Si las Semillas no caben en el inventario, aparece “Inventario lleno” y la última losa no se enciende: se puede volver a pisar cuando haya sitio.
+- Una vez resuelto, las losas se quedan encendidas para siempre y pisarlas no hace nada. El acertijo solo se puede resolver una vez.
+- Si el jugador sale del bosque sin resolverlo, las losas se apagan."
+"HU-78","HU-78. Las campanas de la torre","# HU-78. Las campanas de la torre
+
+# HU-78. Las campanas de la torre
+
+Como jugador, quiero tocar las campanas de la torre en el orden correcto para descubrir la melodía de la relojera.
+
+Criterios de aceptación:
+
+- En la torre hay tres campanas de distinto tamaño: grande, mediana y pequeña. Al pulsar E junto a una, suena (cada una con su nota: la grande es la más grave y la pequeña la más aguda).
+- En la pared de la torre hay una partitura que se lee con E, como un cartel: “La melodía empieza grave, sube hasta lo más agudo y termina en el medio.” El orden correcto es grande, pequeña y mediana.
+- Las campanas recuerdan las tres últimas que se han tocado. Si son grande, pequeña y mediana, en ese orden, aparece “Suena la melodía de la relojera” y el jugador recibe 80 monedas.
+- Si se tocan tres campanas en otro orden, aparece “Las campanas desafinan” y se empieza de nuevo.
+- La melodía solo da la recompensa una vez. Después, las campanas siguen sonando al tocarlas, pero no pasa nada más.
+- Si el jugador sale de la torre a medias, se empieza de nuevo.
+Escenario 1: Tocar una campana
+
+- Dado que el jugador está junto a la campana grande
+- Cuando pulsa E
+- Entonces suena la nota de la campana grande
+Escenario 2: Orden correcto
+
+- Dado que el jugador tiene 100 monedas
+- Cuando toca la campana grande, la pequeña y la mediana, en ese orden
+- Entonces aparece “Suena la melodía de la relojera”
+- Y el jugador tiene 180 monedas
+Escenario 3: Orden incorrecto
+
+- Dado que el jugador no ha tocado ninguna campana
+- Cuando toca la mediana, la grande y la pequeña
+- Entonces aparece “Las campanas desafinan”
+- Y el dinero no cambia
+Escenario 4: Una sola vez
+
+- Dado que el jugador ya ha tocado la melodía
+- Cuando la vuelve a tocar
+- Entonces no aparece ningún mensaje y el dinero no cambia","- En la torre hay tres campanas de distinto tamaño: grande, mediana y pequeña. Al pulsar E junto a una, suena (cada una con su nota: la grande es la más grave y la pequeña la más aguda).
+- En la pared de la torre hay una partitura que se lee con E, como un cartel: “La melodía empieza grave, sube hasta lo más agudo y termina en el medio.” El orden correcto es grande, pequeña y mediana.
+- Las campanas recuerdan las tres últimas que se han tocado. Si son grande, pequeña y mediana, en ese orden, aparece “Suena la melodía de la relojera” y el jugador recibe 80 monedas.
+- Si se tocan tres campanas en otro orden, aparece “Las campanas desafinan” y se empieza de nuevo.
+- La melodía solo da la recompensa una vez. Después, las campanas siguen sonando al tocarlas, pero no pasa nada más.
+- Si el jugador sale de la torre a medias, se empieza de nuevo."
+"HU-79","HU-79. Las cajas del granero","# HU-79. Las cajas del granero
+
+# HU-79. Las cajas del granero
+
+Como jugador, quiero ordenar las cajas del corral del granero para ayudar al granjero.
+
+Criterios de aceptación:
+
+- En la granja, junto al granero, hay un corral vallado con dos cajas y dos marcas en el suelo.
+- Al caminar contra una caja, el personaje la empuja una casilla en esa dirección, si la casilla de detrás está libre (sin obstáculos, sin otra caja y dentro del corral). Si no, la caja no se mueve.
+- Las cajas no se pueden arrastrar: solo empujar.
+- Cuando las dos cajas están sobre las dos marcas, aparece “Las cajas están en su sitio” y el jugador recibe 50 monedas y 3 Semillas de zanahoria. Si las Semillas no caben en el inventario, aparece “Inventario lleno” y la última caja no se mueve.
+- Junto al corral hay un cartel: “Pon cada caja sobre una marca. Si te atascas, sal de la granja y vuelve: las cajas volverán a su sitio.”
+- Si el jugador sale de la granja sin resolverlo, las cajas vuelven a su posición inicial.
+- Una vez resuelto, las cajas se quedan sobre las marcas y no se pueden mover. Solo se resuelve una vez.
+Escenario 1: Empujar una caja
+
+- Dado que el jugador está junto a una caja y la casilla de detrás está libre
+- Cuando camina contra la caja
+- Entonces la caja avanza una casilla en esa dirección
+Escenario 2: Caja bloqueada
+
+- Dado que detrás de la caja hay una valla
+- Cuando el jugador camina contra la caja
+- Entonces la caja no se mueve
+Escenario 3: Resolver el acertijo
+
+- Dado que una caja ya está sobre su marca y el jugador tiene 100 monedas
+- Cuando empuja la otra caja sobre la marca libre
+- Entonces aparece “Las cajas están en su sitio”
+- Y el jugador tiene 150 monedas y 3 Semillas de zanahoria
+Escenario 4: Volver a empezar
+
+- Dado que el jugador ha movido una caja sin resolver el acertijo
+- Cuando sale de la granja y vuelve
+- Entonces las cajas están en su posición inicial","- En la granja, junto al granero, hay un corral vallado con dos cajas y dos marcas en el suelo.
+- Al caminar contra una caja, el personaje la empuja una casilla en esa dirección, si la casilla de detrás está libre (sin obstáculos, sin otra caja y dentro del corral). Si no, la caja no se mueve.
+- Las cajas no se pueden arrastrar: solo empujar.
+- Cuando las dos cajas están sobre las dos marcas, aparece “Las cajas están en su sitio” y el jugador recibe 50 monedas y 3 Semillas de zanahoria. Si las Semillas no caben en el inventario, aparece “Inventario lleno” y la última caja no se mueve.
+- Junto al corral hay un cartel: “Pon cada caja sobre una marca. Si te atascas, sal de la granja y vuelve: las cajas volverán a su sitio.”
+- Si el jugador sale de la granja sin resolverlo, las cajas vuelven a su posición inicial.
+- Una vez resuelto, las cajas se quedan sobre las marcas y no se pueden mover. Solo se resuelve una vez."
 "HU-80","HU-80. Interfaz con iconos","# HU-80. Interfaz con iconos
 
 # HU-80. Interfaz con iconos

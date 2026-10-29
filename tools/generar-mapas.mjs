@@ -287,6 +287,12 @@ function addTrees(map, x1, y1, x2, y2, density, reserved = new Set()) {
   }
 }
 
+// Pone un árbol en una casilla concreta (para cerrar un claro).
+function addTree(map, x, y) {
+  setTile(map.obstacles, map, x, y, TILE.smallTree);
+  map.trees.add(key(x, y));
+}
+
 // Dibuja los árboles: dos casillas de árbol una encima de otra forman un árbol alto (verde u otoñal) y una
 // casilla suelta, un árbol pequeño. Solo cambia el dibujo: las casillas con árbol son las mismas.
 function shapeTrees(map) {
@@ -561,6 +567,11 @@ function torre() {
   // Mecanismo del reloj (HU-56): obstáculo arriba, en el centro de la sala.
   map.points.push({ name: 'mecanismo', x: 5, y: 2 });
   addDiaryPage(map, { id: 'pagina-5', x: 8, y: 9 });
+  // HU-78: las tres campanas (obstáculos) y la partitura con la pista.
+  map.points.push({ name: 'campana', x: 1, y: 2, properties: { tamano: 'grande' } });
+  map.points.push({ name: 'campana', x: 3, y: 2, properties: { tamano: 'pequena' } });
+  map.points.push({ name: 'campana', x: 7, y: 3, properties: { tamano: 'mediana' } });
+  addSign(map, { id: 'partitura', x: 1, y: 6 });
   return map;
 }
 
@@ -572,7 +583,6 @@ function granja() {
   addDirt(map, 0, 10, 14, 12); // camino desde la plaza
   addDirt(map, 5, 9, 7, 9); // entrada del cercado
   addDirt(map, 17, 4, 22, 7); // huerto (HU-41): 6×4 parcelas
-  addDirt(map, 17, 14, 22, 17);
   addDirt(map, 24, 4, 27, 17);
 
   placeBuilding(map, BUILDINGS.granero, 4, 3);
@@ -601,6 +611,22 @@ function granja() {
   map.points.push({ name: 'manzano', x: 12, y: 5 });
   addDiaryPage(map, { id: 'pagina-2', x: 26, y: 18 }); // en la esquina del sureste
 
+  // HU-79: corral vallado (casillas 15 a 21, filas 13 a 18) con la entrada arriba, en la casilla 18. Dentro, dos
+  // cajas, dos marcas y un barril. El punto `corral` marca su interior.
+  const corral = [
+    [TILE.penTopLeft, TILE.penTop, TILE.penTop, -1, TILE.penTop, TILE.penTop, TILE.penTopRight],
+    ...Array.from({ length: 4 }, () => [TILE.penLeft, -1, -1, -1, -1, -1, TILE.penRight]),
+    [TILE.penBottomLeft, TILE.penBottom, TILE.penBottom, TILE.penBottom, TILE.penBottom, TILE.penBottom, TILE.penBottomRight],
+  ];
+  placeBuilding(map, corral, 15, 13);
+  setTile(map.obstacles, map, 18, 17, INTERIOR.barrel);
+  map.points.push({ name: 'corral', x: 16, y: 14, properties: { columnas: '5', filas: '4' } });
+  map.points.push({ name: 'caja', x: 17, y: 15 });
+  map.points.push({ name: 'caja', x: 19, y: 15 });
+  map.points.push({ name: 'marca', x: 16, y: 17 });
+  map.points.push({ name: 'marca', x: 20, y: 17 });
+  addSign(map, { id: 'cajas', x: 20, y: 12 });
+
   const exits = new Set();
   for (let x = 0; x < 2; x++) for (let y = 10; y <= 12; y++) exits.add(key(x, y));
   addTrees(map, 0, 0, 29, 1, 100, exits);
@@ -612,6 +638,8 @@ function granja() {
   paintGround(map);
   // Suelo del cercado (por debajo de la capa de obstáculos, que queda vacía en su interior).
   for (let y = 7; y <= 9; y++) for (let x = 5; x <= 7; x++) setTile(map.ground, map, x, y, TILE.penFloor);
+  for (let y = 14; y <= 17; y++) for (let x = 16; x <= 20; x++) setTile(map.ground, map, x, y, TILE.penFloor);
+  setTile(map.ground, map, 18, 13, TILE.penFloor); // entrada del corral
   return map;
 }
 
@@ -690,6 +718,7 @@ function bosque() {
   clear(3, 12, 5, 13); // junto al camino, al oeste
   clear(12, 12, 14, 12); // junto al camino, al centro
   clear(28, 9, 29, 12); // entrada
+  clear(3, 14, 5, 17); // claro de las losas (HU-77) y su sendero
 
   const resources = [
     { id: 'setas-1', tipo: 'setas', x: 5, y: 3 },
@@ -715,6 +744,18 @@ function bosque() {
   addTrees(map, 0, 0, 1, 21, 100, reserved);
   addTrees(map, 28, 0, 29, 21, 100, reserved);
   addTrees(map, 2, 2, 27, 19, 55, reserved);
+
+  // HU-77: las losas, 3×3 en las casillas 3 a 5 y filas 15 a 17. Se entra por la esquina de arriba a la izquierda,
+  // por un sendero que baja desde el camino principal. Un cerco de árboles y el cartel cierran el resto.
+  addDirt(map, 3, 12, 3, 14);
+  for (let y = 15; y <= 17; y++) for (let x = 3; x <= 5; x++) map.points.push({ name: 'losa', x, y });
+  for (let y = 14; y <= 18; y++) {
+    addTree(map, 2, y);
+    addTree(map, 6, y);
+  }
+  for (let x = 3; x <= 5; x++) addTree(map, x, 18);
+  addTree(map, 5, 14);
+  addSign(map, { id: 'losas', x: 4, y: 14 });
 
   paintGround(map);
   return map;

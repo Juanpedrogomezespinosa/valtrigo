@@ -7,6 +7,8 @@
 // - La feria (HU-58): guirnalda.png, poste-guirnalda.png (16×32, los postes de los extremos) y los puestos de la cosecha y de pesca (16×32, el de abajo es el mostrador).
 // - La ceremonia (HU-66): escenario.png y podio.png (48×32).
 // - Los iconos de la interfaz (HU-80): sol, luna, moneda y rayo (energía), en public/assets/sprites/iconos/.
+// - Los puzles: losas.png (HU-77, apagada y encendida), campanas.png (HU-78, grande, mediana y pequeña), caja.png y
+//   marca.png (HU-79).
 // Uso: node tools/generar-sprites.mjs
 //
 // cultivos.png: casillas de 16×16, de izquierda a derecha:
@@ -43,6 +45,9 @@ const PALETTE = {
   x: [214, 72, 64], // toldo y banderín rojos
   u: [72, 132, 214], // toldo y banderín azules
   c: [178, 184, 204], // sombra de la luna
+  q: [150, 150, 162], // piedra
+  Q: [112, 112, 126], // piedra oscura
+  z: [255, 236, 140], // brillo de las losas
 };
 
 const SOIL = [
@@ -480,6 +485,59 @@ const BOLT = [
   '................',
 ];
 
+// --- Puzles (HU-77 a HU-79) ---
+
+// Losa de piedra: borde oscuro y, encendida, un círculo que brilla en el centro.
+function slab(lit) {
+  return Array.from({ length: 16 }, (_, y) =>
+    Array.from({ length: 16 }, (_, x) => {
+      if (x === 0 || y === 0 || x === 15 || y === 15) return 'o';
+      if (x === 1 || y === 1 || x === 14 || y === 14) return 'Q';
+      if (lit && distance(x, y, 7.5, 7.5) <= 3.5) return 'z';
+      return (x * 7 + y * 3) % 11 === 0 ? 'Q' : 'q';
+    }).join(''),
+  );
+}
+
+// Campana colgada de una viga de madera. `width` es su anchura en la parte de abajo.
+function bell(width) {
+  const height = Math.round(width * 0.9);
+  const bottom = 14;
+  const top = bottom - height;
+  return outlined((x, y) => {
+    if (y === 1 && x >= 2 && x <= 13) return 'W';
+    if (y > 1 && y < top && x >= 7 && x <= 8) return 'B';
+    if (y < top || y > bottom) return '.';
+    const progress = (y - top) / Math.max(1, height);
+    // Copa redondeada arriba y boca ancha abajo.
+    const half = progress < 0.5 ? 2 + (width / 2 - 3.5) * Math.sqrt(progress * 2) * 0.6 : 2 + (width / 2 - 2) * (0.3 + 0.7 * Math.pow((progress - 0.5) * 2, 1.6));
+    if (Math.abs(x - 7.5) > half) return '.';
+    return x < 7.5 ? 'y' : 'Y';
+  });
+}
+
+// Caja de madera con tablas y una cruz.
+function crate() {
+  return Array.from({ length: 16 }, (_, y) =>
+    Array.from({ length: 16 }, (_, x) => {
+      if (x === 0 || y === 0 || x === 15 || y === 15) return 'o';
+      if (x === 1 || y === 1 || x === 14 || y === 14) return 'B';
+      if (x === y || x === 15 - y) return 'B';
+      return y % 5 === 0 ? 'B' : 'W';
+    }).join(''),
+  );
+}
+
+// Marca en el suelo: una cruz roja.
+function mark() {
+  return Array.from({ length: 16 }, (_, y) =>
+    Array.from({ length: 16 }, (_, x) => {
+      const onCross = (Math.abs(x - y) <= 1 || Math.abs(x - (15 - y)) <= 1) && x >= 3 && x <= 12 && y >= 3 && y <= 12;
+      return onCross ? 'x' : '.';
+    }).join(''),
+  );
+}
+
 function pixels(drawing) {
   if (drawing.length % 16 !== 0 || drawing.some((row) => row.length % 16 !== 0 || row.length !== drawing[0].length)) {
     throw new Error('Cada dibujo debe medir un múltiplo de 16 de ancho y de alto');
@@ -548,6 +606,10 @@ const files = {
   [`${SPRITES_DIR}/puesto-pesca.png`]: strip([stall('u')]),
   [`${SPRITES_DIR}/escenario.png`]: strip([stage()]),
   [`${SPRITES_DIR}/podio.png`]: strip([podium()]),
+  [`${SPRITES_DIR}/losas.png`]: strip([slab(false), slab(true)]),
+  [`${SPRITES_DIR}/campanas.png`]: strip([bell(14), bell(10), bell(7)]),
+  [`${SPRITES_DIR}/caja.png`]: strip([crate()]),
+  [`${SPRITES_DIR}/marca.png`]: strip([mark()]),
   [`${SPRITES_DIR}/iconos/sol.png`]: strip([sun()]),
   [`${SPRITES_DIR}/iconos/luna.png`]: strip([moon()]),
   [`${SPRITES_DIR}/iconos/moneda.png`]: strip([coin()]),

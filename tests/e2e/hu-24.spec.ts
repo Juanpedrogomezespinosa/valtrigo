@@ -2,6 +2,7 @@ import { expect, test } from './fixtures';
 import {
   answerSleep,
   at,
+  clickText,
   closeDaySummary,
   daySummaryTexts,
   currentGameState,
@@ -13,6 +14,7 @@ import {
   startAtWith,
   openGame,
   press,
+  sceneTexts,
   waitForMorning,
   waitForScene,
   waitForZone,
@@ -46,12 +48,16 @@ test('Escenario 1: Dormir por la noche', async ({ page }) => {
 test('Escenario 2: Cancelar', async ({ page }) => {
   await startAtWith(page, 'casa', NEXT_TO_BED, { day: 3, minutes: at(21), energy: 60 });
 
-  await answerSleep(page, 'No');
+  await press(page, 'e');
+  expect(await sceneTexts(page, 'HudScene')).toContain('¿Dormir?');
+  // El reloj sigue avanzando (1 minuto por segundo real): se compara con la hora a la que se contesta.
+  const before = (await currentGameState(page))!;
+  await clickText(page, 'HudScene', 'No');
   await page.waitForTimeout(700); // más que el fundido: no debe ocurrir nada
 
   const state = await currentGameState(page);
   expect(state?.day).toBe(3);
-  expectClockAt(state?.minutes, at(21));
+  expect(state!.minutes - before.minutes).toBeLessThanOrEqual(1); // sin saltar a la mañana
   expect(state?.energy).toBe(60);
   expect(await isSleeping(page)).toBe(false);
 });

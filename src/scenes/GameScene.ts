@@ -98,10 +98,11 @@ import {
   type NpcId,
   type Quest,
 } from '../systems/quests';
-import { findMapPoint, getProperty, mapKey, mapObjects, musicKey, pointTile, ZONES, type MapObject, type ZoneId } from '../systems/zones';
+import { findMapPoint, getProperty, mapKey, mapObjects, musicKey, pointTile, ZONES, type MapObject, type TilePosition, type ZoneId } from '../systems/zones';
 import { showConfirmDialog } from '../ui/confirmDialog';
 import { showMessage } from '../ui/message';
 import { drink, FOUNTAIN, throwCoin } from '../systems/fountain';
+import { canReceivePuzzleReward, isSolved, PUZZLES, solvePuzzle, type PuzzleId } from '../systems/puzzles';
 import {
   acceptMission,
   canAcceptMoreMissions,
@@ -155,6 +156,7 @@ interface Interactable {
     | 'recurso'
     | 'tablon'
     | 'fuente'
+    | 'campana'
     | 'mecanismo'
     | 'pagina'
     | 'puesto';
@@ -176,6 +178,15 @@ export class GameScene extends Phaser.Scene {
   private interactables: Interactable[] = [];
   private chests: Chest[] = [];
   private npcs: Npc[] = [];
+  // Puzles (HU-77 a HU-79). Lo que se lleva a medias solo vive en la escena: al salir de la zona, se empieza de nuevo.
+  private slabs = new Map<string, Phaser.GameObjects.Image>();
+  private litSlabs = new Set<string>();
+  private lastTile = '';
+  private bellSequence: string[] = [];
+  private crates: Phaser.Physics.Arcade.Image[] = [];
+  private marks: TilePosition[] = [];
+  private corral: Phaser.Geom.Rectangle | null = null;
+  private pushingCrate = false;
   // Tiempo corriendo que aún no ha llegado a gastar un punto de energía (HU-76).
   private runningMs = 0;
   // Marcador "!" o "?" de cada NPC (HU-73).
@@ -269,6 +280,13 @@ export class GameScene extends Phaser.Scene {
     this.garden = null;
     this.plotViews.clear();
     this.apple = null;
+    this.slabs.clear();
+    this.litSlabs.clear();
+    this.bellSequence = [];
+    this.crates = [];
+    this.marks = [];
+    this.corral = null;
+    this.pushingCrate = false;
     for (const object of objects) {
       if (object.name === 'npc' || object.name === 'visitante') this.addNpc(object);
       if (object.name === 'cofre') this.addChest(object);
@@ -282,6 +300,11 @@ export class GameScene extends Phaser.Scene {
       if (object.name === 'fuente') this.addFountain(object);
       if (object.name === 'mecanismo') this.addMechanism(object);
       if (object.name === 'pagina') this.addDiaryPage(object);
+      if (object.name === 'losa') this.addSlab(object);
+      if (object.name === 'campana') this.addBell(object);
+      if (object.name === 'marca') this.addMark(object);
+      if (object.name === 'caja') this.addCrate(object);
+      if (object.name === 'corral') this.corral = corralArea(object);
       // HU-58: los puestos y las guirnaldas de la feria solo están el día 7.
       if (object.name === 'puesto' && isFairDay()) this.addStall(object);
       if (object.name === 'guirnalda' && isFairDay()) this.addGarland(object);
@@ -289,6 +312,12 @@ export class GameScene extends Phaser.Scene {
       if (object.name === 'podio' && isFairDay()) this.podium = this.addCeremonyPlatform(object, 'podio');
       if (object.name === 'publico') this.audience.set(getProperty(object, 'personaje') as string, pointTile(object));
     }
+    // HU-79: con el puzle resuelto, las cajas están sobre las marcas.
+    if (isSolved('cajas')) {
+      this.crates.forEach((crate, index) => this.placeCrate(crate, this.marks[index]));
+    }
+    // Pisar la casilla en la que se aparece no cuenta como pisar una losa (HU-77).
+    this.lastTile = tileKey(this.player.getTilePosition());
     this.updateNpcPresence();
     // Después de la ceremonia, el alcalde sigue en el escenario y los visitantes delante (HU-66).
     if (isFairDay() && state.ceremonyDone) {
@@ -347,6 +376,8 @@ export class GameScene extends Phaser.Scene {
 
     this.player.update();
     this.playSteps(delta);
+    this.checkSlabStep();
+    this.pushCrate();
     this.updateIndicator();
     getGameState().position = this.player.getTilePosition();
 
@@ -1525,6 +1556,163 @@ export class GameScene extends Phaser.Scene {
 
   // El tablón es una casilla sólida de la capa de obstáculos. E junto a él entrega los pedidos que se pueden
   // entregar y, si no hay ninguno, muestra el pedido del día.
+  // --- Puzles (HU-77 a HU-79) ---
+
+  // HU-77: losas del bosque. Se encienden al pisarlas; pisar una encendida las apaga todas.
+  private addSlab(object: MapObject): void {
+    const area = tileArea(object);
+    const image = this.add.image(area.centerX, area.centerY, 'losas', isSolved('losas') ? 1 : 0);
+    this.children.moveBelow(image, this.player); // se pisan: por debajo del personaje
+    this.slabs.set(tileKey(pointTile(object)), image);
+  }
+
+  private checkSlabStep(): void {
+    const tile = tileKey(this.player.getTilePosition());
+    if (tile === this.lastTile) return;
+    this.lastTile = tile;
+    const slab = this.slabs.get(tile);
+    if (!slab || isSolved('losas')) return;
+
+    const hud = this.scene.get('HudScene');
+    if (this.litSlabs.has(tile)) {
+      this.litSlabs.clear();
+      this.slabs.forEach((image) => image.setFrame(0));
+      showMessage(hud, PUZZLES.losas.reset, MESSAGE_MS, 'top');
+      return;
+    }
+    if (this.litSlabs.size === this.slabs.size - 1) {
+      // La última: si la recompensa no cabe, no se enciende (se puede volver a pisar con sitio).
+      if (!canReceivePuzzleReward('losas')) {
+        showMessage(hud, 'Inventario lleno', MESSAGE_MS, 'top');
+        return;
+      }
+      slab.setFrame(1);
+      this.finishPuzzle('losas');
+      return;
+    }
+    this.litSlabs.add(tile);
+    slab.setFrame(1);
+  }
+
+  // HU-78: campanas de la torre. Suenan al pulsar E; las tres últimas tocadas deben seguir el orden de la partitura.
+  private addBell(object: MapObject): void {
+    const size = getProperty(object, 'tamano') as 'grande' | 'mediana' | 'pequena';
+    const frame = { grande: 0, mediana: 1, pequena: 2 }[size];
+    const sound = ({ grande: 'bellLarge', mediana: 'bellMedium', pequena: 'bellSmall' } as const)[size];
+    const area = tileArea(object);
+    const sprite = this.physics.add.staticImage(area.centerX, area.centerY, 'campanas', frame);
+    this.physics.add.collider(this.player, sprite);
+    this.interactables.push({
+      kind: 'campana',
+      id: size,
+      area,
+      isAvailable: () => true,
+      interact: () => {
+        playEffect(this, sound);
+        if (!isSolved('campanas')) this.ringBell(size);
+      },
+    });
+  }
+
+  private ringBell(size: string): void {
+    this.bellSequence.push(size);
+    if (this.bellSequence.length < PUZZLES.campanas.order.length) return;
+    const correct = this.bellSequence.every((bell, index) => bell === PUZZLES.campanas.order[index]);
+    this.bellSequence = [];
+    if (correct) {
+      this.finishPuzzle('campanas');
+    } else {
+      showMessage(this.scene.get('HudScene'), PUZZLES.campanas.wrong, MESSAGE_MS, 'top');
+    }
+  }
+
+  // HU-79: cajas del corral. Se empujan caminando contra ellas, una casilla cada vez.
+  private addMark(object: MapObject): void {
+    const area = tileArea(object);
+    this.children.moveBelow(this.add.image(area.centerX, area.centerY, 'marca'), this.player);
+    this.marks.push(pointTile(object));
+  }
+
+  private addCrate(object: MapObject): void {
+    const area = tileArea(object);
+    const crate = this.physics.add.staticImage(area.centerX, area.centerY, 'caja');
+    this.physics.add.collider(this.player, crate);
+    this.crates.push(crate);
+  }
+
+  private placeCrate(crate: Phaser.Physics.Arcade.Image, tile: TilePosition): void {
+    crate.setPosition(tile.x * TILE_SIZE + TILE_SIZE / 2, tile.y * TILE_SIZE + TILE_SIZE / 2);
+    (crate.body as Phaser.Physics.Arcade.StaticBody).updateFromGameObject();
+  }
+
+  private crateTile(crate: Phaser.Physics.Arcade.Image): TilePosition {
+    return { x: Math.floor(crate.x / TILE_SIZE), y: Math.floor(crate.y / TILE_SIZE) };
+  }
+
+  // Si el personaje camina contra una caja que tiene al lado, la empuja si la casilla de detrás
+  // está libre (dentro del corral, sin obstáculos ni otra caja).
+  private pushCrate(): void {
+    if (this.pushingCrate || this.crates.length === 0 || isSolved('cajas') || !this.corral) return;
+    const direction = this.player.heldDirection();
+    if (!direction || direction !== this.player.facing) return;
+    const step = DIRECTION_STEP[direction];
+    // La caja tiene que estar en la casilla de al lado (según el centro del personaje) y tocando su cuerpo.
+    const body = bodyArea(this.player.body);
+    const tile = this.player.getTilePosition();
+    const next = tileKey({ x: tile.x + step.x, y: tile.y + step.y });
+    const crate = this.crates.find((candidate) => {
+      if (tileKey(this.crateTile(candidate)) !== next) return false;
+      const area = new Phaser.Geom.Rectangle(candidate.x - TILE_SIZE / 2, candidate.y - TILE_SIZE / 2, TILE_SIZE, TILE_SIZE);
+      const gap = step.x > 0 ? area.left - body.right : step.x < 0 ? body.left - area.right : step.y > 0 ? area.top - body.bottom : body.top - area.bottom;
+      return gap >= -0.5 && gap <= 1.5;
+    });
+    if (!crate) return;
+
+    const from = this.crateTile(crate);
+    const to = { x: from.x + step.x, y: from.y + step.y };
+    const blocked =
+      !insideTiles(this.corral, to) ||
+      this.obstacles.hasTileAt(to.x, to.y) ||
+      this.crates.some((other) => other !== crate && tileKey(this.crateTile(other)) === tileKey(to));
+    if (blocked) return;
+
+    // Si con este empujón quedan las dos sobre las marcas, la recompensa tiene que caber.
+    const onMarks = (tiles: TilePosition[]) => tiles.every((tile) => this.marks.some((mark) => tileKey(mark) === tileKey(tile)));
+    const solves = onMarks(this.crates.map((other) => (other === crate ? to : this.crateTile(other))));
+    if (solves && !canReceivePuzzleReward('cajas')) {
+      showMessage(this.scene.get('HudScene'), 'Inventario lleno', MESSAGE_MS, 'top');
+      return;
+    }
+
+    this.pushingCrate = true;
+    this.tweens.add({
+      targets: crate,
+      x: to.x * TILE_SIZE + TILE_SIZE / 2,
+      y: to.y * TILE_SIZE + TILE_SIZE / 2,
+      duration: CRATE_PUSH_MS,
+      onUpdate: () => (crate.body as Phaser.Physics.Arcade.StaticBody).updateFromGameObject(),
+      onComplete: () => {
+        this.pushingCrate = false;
+        if (solves) this.finishPuzzle('cajas');
+      },
+    });
+  }
+
+  private finishPuzzle(puzzle: PuzzleId): void {
+    solvePuzzle(puzzle);
+    showMessage(this.scene.get('HudScene'), PUZZLES[puzzle].solved, MESSAGE_MS, 'top');
+    playEffect(this, 'questComplete');
+  }
+
+  // Consultas para los tests.
+  getLitSlabs(): string[] {
+    return isSolved('losas') ? [...this.slabs.keys()] : [...this.litSlabs];
+  }
+
+  getCrates(): TilePosition[] {
+    return this.crates.map((crate) => this.crateTile(crate));
+  }
+
   // HU-75: la fuente de la plaza. "Beber" recupera energía una vez al día y "Echar una moneda" da una pista.
   private addFountain(object: MapObject): void {
     this.interactables.push({
@@ -1856,6 +2044,28 @@ export class GameScene extends Phaser.Scene {
 
 function bodyArea(body: Phaser.Physics.Arcade.Body | Phaser.Physics.Arcade.StaticBody): Phaser.Geom.Rectangle {
   return new Phaser.Geom.Rectangle(body.x, body.y, body.width, body.height);
+}
+
+const tileKey = ({ x, y }: TilePosition) => `${x},${y}`;
+
+// Desplazamiento de una casilla en cada dirección (HU-79).
+const DIRECTION_STEP: Record<Direction, TilePosition> = {
+  up: { x: 0, y: -1 },
+  down: { x: 0, y: 1 },
+  left: { x: -1, y: 0 },
+  right: { x: 1, y: 0 },
+};
+// Lo que tarda una caja en avanzar una casilla al empujarla.
+const CRATE_PUSH_MS = 150;
+
+// Interior del corral de las cajas (HU-79), en casillas.
+function corralArea(object: MapObject): Phaser.Geom.Rectangle {
+  const { x, y } = pointTile(object);
+  return new Phaser.Geom.Rectangle(x, y, Number(getProperty(object, 'columnas')), Number(getProperty(object, 'filas')));
+}
+
+function insideTiles(area: Phaser.Geom.Rectangle, tile: TilePosition): boolean {
+  return tile.x >= area.left && tile.x < area.right && tile.y >= area.top && tile.y < area.bottom;
 }
 
 // Casilla completa en la que está un punto del mapa.

@@ -13,8 +13,8 @@
 | Ninja Adventure (efectos) | audio/sfx/pasos.wav, abrir-menu.wav, compra.wav, venta.wav, cofre.wav, encargo-completado.wav | Pixel-boy y AAA (pixel-boy.itch.io) | CC0 1.0 (dominio público) |
 | Música | audio/*.mp3 | Juanpe Gómez, generada con IA (Flow, de Google) | Propia |
 | Casillas de agua | tilesets/agua.png | Generadas por código (tools/generar-agua.mjs), con la paleta de Kenney | Propia |
-| Huerto, cosechas, moras, mecanismo del reloj, feria e iconos de la interfaz | sprites/cultivos.png, sprites/objetos/nabo.png, zanahoria.png, calabaza.png, mora.png, sprites/mecanismo.png, guirnalda.png, puesto-cosecha.png, puesto-pesca.png, escenario.png, podio.png, sprites/iconos/sol.png, luna.png, moneda.png, energia.png | Generados por código (tools/generar-sprites.mjs), con la paleta de Kenney | Propia |
-| Efectos de sonido provisionales | audio/sfx/menu-navegar.wav, menu-confirmar.wav | Generados por código (tools/generar-efectos.mjs) | Propia |
+| Huerto, cosechas, moras, mecanismo del reloj, feria, iconos de la interfaz y puzles | sprites/cultivos.png, sprites/objetos/nabo.png, zanahoria.png, calabaza.png, mora.png, sprites/mecanismo.png, guirnalda.png, puesto-cosecha.png, puesto-pesca.png, escenario.png, podio.png, sprites/iconos/sol.png, luna.png, moneda.png, energia.png, sprites/losas.png, campanas.png, caja.png, marca.png | Generados por código (tools/generar-sprites.mjs), con la paleta de Kenney | Propia |
+| Efectos de sonido provisionales | audio/sfx/menu-navegar.wav, menu-confirmar.wav, campana-grande.wav, campana-mediana.wav, campana-pequena.wav | Generados por código (tools/generar-efectos.mjs) | Propia |
 
 Las imágenes de Kenney son las hojas `Tilemap/tilemap_packed.png` de cada paquete, sin modificar:
 casillas de 16×16 px, 12 columnas y 11 filas, sin separación.

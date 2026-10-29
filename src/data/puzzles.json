@@ -1,0 +1,17 @@
+{
+  "losas": {
+    "reset": "Las losas se apagan",
+    "solved": "Las losas brillan",
+    "reward": { "money": 60, "items": [{ "item": "semilla-de-calabaza", "quantity": 2 }] }
+  },
+  "campanas": {
+    "order": ["grande", "pequena", "mediana"],
+    "wrong": "Las campanas desafinan",
+    "solved": "Suena la melodía de la relojera",
+    "reward": { "money": 80, "items": [] }
+  },
+  "cajas": {
+    "solved": "Las cajas están en su sitio",
+    "reward": { "money": 50, "items": [{ "item": "semilla-de-zanahoria", "quantity": 3 }] }
+  }
+}

@@ -34,6 +34,11 @@ export class BootScene extends Phaser.Scene {
     // Huerto y manzano (HU-41 a HU-45).
     this.load.spritesheet('cultivos', 'assets/sprites/cultivos.png', { frameWidth: 16, frameHeight: 16 });
     this.load.image('manzano', 'assets/sprites/manzano.png');
+    // Puzles (HU-77 a HU-79).
+    this.load.spritesheet('losas', 'assets/sprites/losas.png', { frameWidth: 16, frameHeight: 16 });
+    this.load.spritesheet('campanas', 'assets/sprites/campanas.png', { frameWidth: 16, frameHeight: 16 });
+    this.load.image('caja', 'assets/sprites/caja.png');
+    this.load.image('marca', 'assets/sprites/marca.png');
     // Puntos del bosque (HU-50), páginas del diario (HU-55), mecanismo del reloj (HU-56) y feria (HU-58).
     for (const sprite of ['setas', 'arbusto-moras', 'tocon', 'pagina', 'mecanismo', 'guirnalda', 'poste-guirnalda', 'puesto-cosecha', 'puesto-pesca', 'escenario', 'podio']) {
       this.load.image(sprite, `assets/sprites/${sprite}.png`);

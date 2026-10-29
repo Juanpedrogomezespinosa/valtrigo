@@ -120,6 +120,7 @@ export interface TestGameState {
   completedMissions: string[];
   missionProgress: string[];
   fountainDay: number | null;
+  solvedPuzzles: string[];
 }
 
 // Partida guardada de ejemplo, con el formato de src/systems/save.ts.
@@ -156,6 +157,7 @@ export function savedGame(overrides: Partial<TestGameState> = {}): TestGameState
     completedMissions: [],
     missionProgress: [],
     fountainDay: null,
+    solvedPuzzles: [],
     ...overrides,
   };
 }
@@ -644,6 +646,66 @@ export async function isNpcPresent(page: Page, id: string): Promise<boolean> {
     const game = (window as unknown as GameWindow).game;
     return (game.scene.getScene('GameScene') as unknown as { isNpcPresent(id: string): boolean }).isNpcPresent(id);
   }, id);
+}
+
+// --- Puzles (HU-77 a HU-79) ---
+
+// Coloca al personaje en el centro de una casilla de la zona actual, sin reiniciar la escena (al contrario que
+// moveTo). Sirve para ir de una losa a otra o junto a una campana sin depender de cuánto avanza en cada fotograma.
+export async function placePlayer(page: Page, tile: { x: number; y: number }): Promise<void> {
+  await page.evaluate((tile) => {
+    const game = (window as unknown as GameWindow).game;
+    const player = (game.scene.getScene('GameScene') as unknown as {
+      player: { body: { reset(x: number, y: number): void } };
+    }).player;
+    player.body.reset(tile.x * 16 + 8, tile.y * 16 + 8);
+  }, tile);
+  await expect.poll(() => playerTile(page), { intervals: [10] }).toEqual(tile);
+  await page.waitForTimeout(50); // la escena procesa la casilla nueva
+}
+
+// Mantiene pulsada una tecla hasta que una caja del corral llega a la casilla indicada (HU-79). Suelta la tecla
+// desde el navegador en cuanto llega: desde Playwright llegaría tarde si el equipo va cargado y la empujaría otra vez.
+export async function pushCrateTo(page: Page, key: string, index: number, tile: { x: number; y: number }): Promise<void> {
+  const keyCode = { ArrowLeft: 37, ArrowUp: 38, ArrowRight: 39, ArrowDown: 40 }[key];
+  await page.keyboard.down(key);
+  const reached = await page.evaluate(
+    ({ index, tile, key, keyCode }) =>
+      new Promise<boolean>((resolve) => {
+        const game = (window as unknown as GameWindow).game;
+        const scene = game.scene.getScene('GameScene') as unknown as { getCrates(): { x: number; y: number }[] };
+        const deadline = performance.now() + 5000;
+        const check = () => {
+          const crate = scene.getCrates()[index];
+          if (crate.x === tile.x && crate.y === tile.y) {
+            window.dispatchEvent(new KeyboardEvent('keyup', { key, code: key, keyCode } as KeyboardEventInit));
+            resolve(true);
+          } else if (performance.now() > deadline) resolve(false);
+          else requestAnimationFrame(check);
+        };
+        check();
+      }),
+    { index, tile, key, keyCode },
+  );
+  await page.keyboard.up(key);
+  expect(reached, `La caja ${index} no llega a la casilla ${tile.x}, ${tile.y}`).toBe(true);
+  await page.waitForTimeout(200); // termina el empujón
+}
+
+// Losas encendidas del bosque, como "x,y" (HU-77).
+export async function litSlabs(page: Page): Promise<string[]> {
+  return page.evaluate(() => {
+    const game = (window as unknown as GameWindow).game;
+    return (game.scene.getScene('GameScene') as unknown as { getLitSlabs(): string[] }).getLitSlabs().sort();
+  });
+}
+
+// Casillas de las cajas del corral (HU-79).
+export async function crates(page: Page): Promise<{ x: number; y: number }[]> {
+  return page.evaluate(() => {
+    const game = (window as unknown as GameWindow).game;
+    return (game.scene.getScene('GameScene') as unknown as { getCrates(): { x: number; y: number }[] }).getCrates();
+  });
 }
 
 // --- Misiones secundarias (HU-72 a HU-74) ---
