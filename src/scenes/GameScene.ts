@@ -97,6 +97,7 @@ import {
   receivedMessage,
   type NpcId,
   type Quest,
+  saysFairGreeting,
 } from '../systems/quests';
 import { findMapPoint, getProperty, mapKey, mapObjects, musicKey, pointTile, ZONES, type MapObject, type TilePosition, type ZoneId } from '../systems/zones';
 import { showConfirmDialog } from '../ui/confirmDialog';
@@ -821,7 +822,9 @@ export class GameScene extends Phaser.Scene {
     };
 
     // HU-72: lo del encargo principal va primero. Si no hay nada de eso, el vecino habla de sus misiones.
-    if (!['offer', 'active', 'complete', 'give-letter'].includes(conversation.kind) && this.talkAboutMissions(id, npcDialog)) {
+    // HU-71: el día de la feria, los vecinos de la feria solo dicen su frase de la feria.
+    const missionTalk = !['offer', 'active', 'complete', 'give-letter'].includes(conversation.kind) && !saysFairGreeting(id);
+    if (missionTalk && this.talkAboutMissions(id, npcDialog)) {
       return;
     }
 
@@ -962,6 +965,7 @@ export class GameScene extends Phaser.Scene {
   // HU-73: "?" sobre el NPC si se puede completar algo hablando con él y "!" si ofrecería un encargo o una misión.
   npcMarker(id: NpcId): '?' | '!' | null {
     const conversation = conversationWith(id);
+    if (saysFairGreeting(id)) return null;
     if (conversation.kind === 'complete' || missionToComplete(id) || missionToFind(id)) return '?';
     if (conversation.kind === 'offer' || (missionToOffer(id) && canAcceptMoreMissions())) return '!';
     return null;

@@ -20,7 +20,7 @@ Criterios de aceptación:
   - Marta: plaza de 08:00 a 10:00, barrio de 10:00 a 12:00, granja de 12:00 a 14:00, lago de 14:00 a 16:00 y plaza de 16:00 a 18:00.
 - El día 7 los seis vecinos de la feria siguen el horario de la feria (HU-58). Bruno sigue en el bosque, Bigotes en el barrio y Marta no reparte.
 - Cada vecino tiene su propio saludo al hablar con él (HU-10). Bigotes solo dice “¡Miau!”.
-- El día de la feria, los seis vecinos de la feria dicen lo mismo que en la feria.
+- El día de la feria, los seis vecinos de la feria dicen lo mismo que en la feria (HU-58), aunque tengan misiones secundarias sin hacer o activas (HU-72): ese día no las ofrecen ni hablan de ellas, y no tienen indicador encima (HU-73).
 Escenario 1: Vecino en su sitio
 
 - Dado que es el día 2 a las 10:00
@@ -53,3 +53,9 @@ Escenario 6: Día de la feria
 - Cuando el jugador entra en la plaza
 - Entonces los seis vecinos de la feria están en la plaza
 - Y Marta no está en ninguna zona
+Escenario 7: Frase de la feria con misiones pendientes
+
+- Dado que es el día 7 y el jugador no ha hecho la misión de Fran ni las de Elena
+- Cuando habla con Fran
+- Entonces Fran dice “He venido por el networking, pero bueno... el futuro es ansiedad.”
+- Y no ofrece ninguna misión

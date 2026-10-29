@@ -104,8 +104,8 @@ export function conversationWith(npc: NpcId): Conversation {
   }
 
   // HU-71: el día de la feria, los vecinos de la feria dicen lo mismo que en la feria (HU-58).
-  if (isFairDay() && 'fairGreeting' in npcData) {
-    return { kind: 'greeting', lines: npcData.fairGreeting };
+  if (saysFairGreeting(npc)) {
+    return { kind: 'greeting', lines: (npcData as { fairGreeting: string[] }).fairGreeting };
   }
 
   // HU-11 (escenario 5): con el reloj reparado, el NPC que no tiene nada de encargos que decir lo comenta.
@@ -120,6 +120,12 @@ export function conversationWith(npc: NpcId): Conversation {
   }
 
   return { kind: 'greeting', lines: npcData.greeting };
+}
+
+// HU-71: el día de la feria, los seis vecinos de la feria solo dicen su frase de la feria: ni ofrecen misiones ni
+// hablan de las que estén activas (HU-72).
+export function saysFairGreeting(npc: NpcId): boolean {
+  return isFairDay() && 'fairGreeting' in dialogues.npcs[npc];
 }
 
 // HU-19: aceptar un encargo. Solo puede haber uno activo.

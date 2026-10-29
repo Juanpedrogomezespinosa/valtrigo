@@ -1,5 +1,6 @@
 import { expect, test } from './fixtures';
-import { at, dialogState, isChangingZone, isNpcPresent, press, startAtWith, waitForDialogLineComplete, waitForZone } from './helpers';
+import dialogues from '../../src/data/dialogues.json' with { type: 'json' };
+import { at, dialogState, isChangingZone, isNpcPresent, npcMarker, press, startAtWith, talkUntilChoiceOrEnd, waitForDialogLineComplete, waitForZone } from './helpers';
 
 // HU-71. Los vecinos
 // Se entra en cada zona por su puerta: en la plaza, saliendo de la tienda (6, 8 hacia abajo); en el barrio, por
@@ -75,4 +76,18 @@ test('Escenario 6: Día de la feria', async ({ page, context }) => {
   const farm = await context.newPage();
   await startAtWith(farm, 'granja', { x: 16, y: 12 }, { day: 7, minutes: at(13) });
   expect(await isNpcPresent(farm, 'marta')).toBe(false);
+});
+
+test('Escenario 7: Frase de la feria con misiones pendientes', async ({ page, context }) => {
+  // En la feria, Fran pasea en (9, 15) y Elena en (24, 16). Ninguna de sus misiones está hecha.
+  await startAtWith(page, 'plaza', { x: 9, y: 16 }, { day: 7, minutes: at(13), completedMissions: [] });
+
+  expect(await talkUntilChoiceOrEnd(page)).toEqual(dialogues.npcs.fran.fairGreeting);
+  expect(await dialogState(page)).toBeNull(); // sin "Aceptar" ni "Rechazar"
+  expect(await npcMarker(page, 'fran')).toBeNull();
+
+  const elena = await context.newPage();
+  await startAtWith(elena, 'plaza', { x: 24, y: 17 }, { day: 7, minutes: at(13), completedMissions: [] });
+  expect(await talkUntilChoiceOrEnd(elena)).toEqual(dialogues.npcs.elena.fairGreeting);
+  expect(await dialogState(elena)).toBeNull();
 });
