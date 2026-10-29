@@ -1,0 +1,179 @@
+{
+  "full": ["Ya tienes 3 misiones activas"],
+  "completed": "Misión completada",
+  "failed": "Misión fallida: {nombre}",
+  "missions": [
+    {
+      "id": "mision-1",
+      "day": 1,
+      "npc": "marta",
+      "name": "Una carta para Tomás",
+      "description": "Lleva la Carta para Tomás a Tomás.",
+      "requirement": { "type": "carry", "item": "carta-para-tomas", "to": "tomas" },
+      "reward": { "money": 20, "items": [] },
+      "lines": {
+        "offer": ["Tengo una carta para Tomás y todavía me queda medio pueblo por recorrer.", "¿Se la llevas tú? Suele estar en la plaza por las mañanas."],
+        "active": ["La carta es para Tomás. Por las mañanas está en la plaza y por la tarde, en el barrio."],
+        "complete": ["¿Una carta para mí? ¡Es de mi hermana! Hacía meses que no sabía de ella.", "Toma, por las molestias."]
+      }
+    },
+    {
+      "id": "mision-2",
+      "day": 1,
+      "npc": "pablo",
+      "name": "¿Dónde está Bigotes?",
+      "description": "Encuentra a Bigotes y vuelve a hablar con Pablo.",
+      "requirement": { "type": "find", "npc": "bigotes", "zone": "granja" },
+      "reward": { "money": 0, "items": [{ "item": "manzana", "quantity": 2 }] },
+      "lines": {
+        "offer": ["¡Bigotes se ha vuelto a escapar!", "Le encantan las manzanas del granjero... ¿Me ayudas a buscarlo?"],
+        "active": ["¿Has encontrado a Bigotes? Seguro que anda cerca de algún árbol con fruta."],
+        "complete": ["¡Bigotes ha vuelto a casa! Gracias.", "Toma, son del manzano. Bigotes no se las come, solo las mira."]
+      }
+    },
+    {
+      "id": "mision-3",
+      "day": 2,
+      "npc": "lucia",
+      "name": "Semillas para Lucía",
+      "description": "Lleva 2 Semillas a Lucía.",
+      "requirement": { "type": "deliver", "items": [{ "item": "semilla", "quantity": 2 }] },
+      "reward": { "money": 0, "items": [{ "item": "semilla-de-calabaza", "quantity": 1 }] },
+      "lines": {
+        "offer": ["Se me han acabado las semillas y quiero plantar nabos antes de que llueva.", "¿Me traes 2 Semillas? Te daré algo mejor a cambio."],
+        "active": ["Necesito 2 Semillas. Las venden en la tienda."],
+        "complete": ["¡Perfecto! A cambio, toma esta Semilla de calabaza.", "Si la cuidas bien, quizá me ganes en la feria."]
+      }
+    },
+    {
+      "id": "mision-4",
+      "day": 2,
+      "npc": "elena",
+      "name": "Manzanas para la tarta",
+      "description": "Lleva 2 Manzanas a Elena.",
+      "deadline": "18:00",
+      "requirement": { "type": "deliver", "items": [{ "item": "manzana", "quantity": 2 }] },
+      "reward": { "money": 30, "items": [] },
+      "lines": {
+        "offer": ["Quiero hacer una tarta de manzana esta tarde, pero no tengo manzanas.", "¿Me traes 2 antes de las seis? Si no, no me da tiempo a hornearla."],
+        "active": ["Necesito 2 Manzanas antes de las seis. El manzano de la granja siempre tiene."],
+        "complete": ["¡Justo a tiempo! La tarta va a quedar buenísima.", "Toma, por la ayuda."]
+      }
+    },
+    {
+      "id": "mision-5",
+      "day": 3,
+      "npc": "rosa",
+      "name": "Una trucha para Rosa",
+      "description": "Lleva 1 Trucha a Rosa.",
+      "deadline": "12:00",
+      "requirement": { "type": "deliver", "items": [{ "item": "trucha", "quantity": 1 }] },
+      "reward": { "money": 40, "items": [] },
+      "lines": {
+        "offer": ["Hoy no pica nada y tengo invitados a comer.", "¿Me pescas una trucha antes de mediodía? Pican a primera hora."],
+        "active": ["Necesito una Trucha antes de las doce. Pican por la mañana temprano."],
+        "complete": ["¡Qué trucha más bonita! Mis invitados no se van a creer que la he pescado yo.", "Toma, y que quede entre nosotros."]
+      }
+    },
+    {
+      "id": "mision-6",
+      "day": 3,
+      "npc": "bruno",
+      "name": "Leña para el invierno",
+      "description": "Lleva 3 Leñas a Bruno.",
+      "requirement": { "type": "deliver", "items": [{ "item": "lena", "quantity": 3 }] },
+      "reward": { "money": 45, "items": [] },
+      "lines": {
+        "offer": ["El invierno se adelanta y voy con retraso con la leña.", "Si me traes 3 Leñas, te pago bien. Con un Hacha, los troncos del bosque dan buena leña."],
+        "active": ["Me faltan 3 Leñas. Los troncos del bosque se cortan con un Hacha."],
+        "complete": ["Buena leña, sí señor. Toma lo prometido."]
+      }
+    },
+    {
+      "id": "mision-7",
+      "day": 3,
+      "npc": "fran",
+      "name": "Setas para la cena",
+      "description": "Lleva 3 Setas a Fran.",
+      "requirement": { "type": "deliver", "items": [{ "item": "seta", "quantity": 3 }] },
+      "reward": { "money": 25, "items": [] },
+      "lines": {
+        "offer": ["He visto un tutorial de risotto de setas y quiero probarlo.", "¿Me traes 3 Setas del bosque? Yo no distingo las buenas de las malas."],
+        "active": ["Necesito 3 Setas. En el bosque hay, pero yo no me fío de elegirlas."],
+        "complete": ["¡Gracias! Si el risotto sale mal, la culpa será del tutorial.", "Toma, por las setas."]
+      }
+    },
+    {
+      "id": "mision-8",
+      "day": 4,
+      "npc": "tomas",
+      "name": "Un recado para el alcalde",
+      "description": "Dile al alcalde que el banco de la plaza está roto.",
+      "requirement": { "type": "talk", "to": "alcalde" },
+      "reward": { "money": 20, "items": [] },
+      "lines": {
+        "offer": ["El banco de la plaza cojea desde hace semanas y mis rodillas ya no están para quejas.", "¿Se lo dices al alcalde de mi parte?"],
+        "active": ["Dile al alcalde lo del banco de la plaza, por favor."],
+        "complete": ["¿El banco de Tomás? Tiene razón, lo mandaré arreglar esta semana.", "Toma, Tomás me dijo que te diera esto si venías."]
+      }
+    },
+    {
+      "id": "mision-9",
+      "day": 4,
+      "npc": "marta",
+      "name": "Paquete urgente",
+      "description": "Lleva el Paquete a Bruno, en el bosque.",
+      "deadline": "15:00",
+      "requirement": { "type": "carry", "item": "paquete", "to": "bruno" },
+      "reward": { "money": 35, "items": [] },
+      "lines": {
+        "offer": ["Tengo un paquete urgente para Bruno, el leñador.", "Yo no llego al bosque antes de las tres. ¿Se lo llevas tú?"],
+        "active": ["El paquete es para Bruno, en el bosque. Tiene que llegar antes de las tres."],
+        "complete": ["¡Mi hacha nueva! La estaba esperando.", "Toma, para que le des las gracias a Marta de mi parte... o te lo quedes."]
+      }
+    },
+    {
+      "id": "mision-10",
+      "day": 5,
+      "npc": "pablo",
+      "name": "El siluro gigante",
+      "description": "Lleva 1 Siluro a Pablo.",
+      "requirement": { "type": "deliver", "items": [{ "item": "siluro", "quantity": 1 }] },
+      "reward": { "money": 60, "items": [] },
+      "lines": {
+        "offer": ["Mi abuelo dice que los siluros solo salen de noche.", "¿Me traes uno? ¡Quiero ver si es verdad que son gigantes!"],
+        "active": ["¿Ya tienes el Siluro? Dicen que pican a partir de las ocho de la tarde."],
+        "complete": ["¡Es enorme! ¡Mi abuelo no se lo va a creer!", "Toma, son mis ahorros."]
+      }
+    },
+    {
+      "id": "mision-11",
+      "day": 5,
+      "npc": "lucia",
+      "name": "Zanahorias para Lucía",
+      "description": "Lleva 2 Zanahorias a Lucía.",
+      "requirement": { "type": "deliver", "items": [{ "item": "zanahoria", "quantity": 2 }] },
+      "reward": { "money": 50, "items": [] },
+      "lines": {
+        "offer": ["Este año mis zanahorias no han salido.", "Si me traes 2 de tu huerto, te las pago bien."],
+        "active": ["Necesito 2 Zanahorias. Tardan unos días en crecer, así que no te despistes."],
+        "complete": ["¡Qué zanahorias más bonitas! Se nota que las has regado.", "Toma, te las has ganado."]
+      }
+    },
+    {
+      "id": "mision-12",
+      "day": 6,
+      "npc": "elena",
+      "name": "Mermelada de moras",
+      "description": "Lleva 4 Moras a Elena.",
+      "deadline": "13:00",
+      "requirement": { "type": "deliver", "items": [{ "item": "mora", "quantity": 4 }] },
+      "reward": { "money": 30, "items": [] },
+      "lines": {
+        "offer": ["Quiero llevar mermelada casera a la feria.", "¿Me traes 4 Moras antes de la una? Tienen que cocer toda la tarde."],
+        "active": ["Necesito 4 Moras antes de la una. En el bosque hay arbustos llenos."],
+        "complete": ["¡Moras de verdad! Esta mermelada va a ser la envidia de la feria.", "Toma, por la ayuda."]
+      }
+    }
+  ]
+}

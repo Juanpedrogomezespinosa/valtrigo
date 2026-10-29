@@ -22,6 +22,7 @@ test('Escenario 2: Leer las notas', async ({ page }) => {
   await startAtWith(page, 'plaza', { x: 20, y: 17 }, { minutes: at(10), diaryPages: ['pagina-3'] });
 
   await press(page, 'o');
+  await press(page, 'ArrowRight'); // "Misiones"
   await press(page, 'ArrowRight'); // "Notas"
 
   const texts = (await objectivesTexts(page))!;

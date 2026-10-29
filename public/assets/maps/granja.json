@@ -10,7 +10,7 @@
  "tilewidth": 16,
  "tileheight": 16,
  "nextlayerid": 4,
- "nextobjectid": 12,
+ "nextobjectid": 13,
  "layers": [
   {
    "id": 1,
@@ -1446,6 +1446,25 @@
     },
     {
      "id": 5,
+     "name": "npc",
+     "type": "",
+     "point": true,
+     "x": 216,
+     "y": 104,
+     "width": 0,
+     "height": 0,
+     "rotation": 0,
+     "visible": true,
+     "properties": [
+      {
+       "name": "personaje",
+       "type": "string",
+       "value": "bigotes"
+      }
+     ]
+    },
+    {
+     "id": 6,
      "name": "cofre",
      "type": "",
      "point": true,
@@ -1464,7 +1483,7 @@
      ]
     },
     {
-     "id": 6,
+     "id": 7,
      "name": "objeto",
      "type": "",
      "point": true,
@@ -1483,7 +1502,7 @@
      ]
     },
     {
-     "id": 7,
+     "id": 8,
      "name": "cartel",
      "type": "",
      "point": true,
@@ -1502,7 +1521,7 @@
      ]
     },
     {
-     "id": 8,
+     "id": 9,
      "name": "huerto",
      "type": "",
      "point": true,
@@ -1526,7 +1545,7 @@
      ]
     },
     {
-     "id": 9,
+     "id": 10,
      "name": "manzano",
      "type": "",
      "point": true,
@@ -1538,7 +1557,7 @@
      "visible": true
     },
     {
-     "id": 10,
+     "id": 11,
      "name": "pagina",
      "type": "",
      "point": true,
@@ -1557,7 +1576,7 @@
      ]
     },
     {
-     "id": 11,
+     "id": 12,
      "name": "puerta",
      "type": "",
      "x": 0,

@@ -80,6 +80,11 @@ export interface GameState {
   fishingContest: { endsAt: number | null; best: number } | null;
   fishingResult: number | null;
   ceremonyDone: boolean;
+  // Misiones secundarias (HU-72 a HU-74): las activas con el día en que se aceptaron, las completadas y las
+  // activas en las que ya se ha dado el paso intermedio (encontrar a Bigotes).
+  activeMissions: { id: string; day: number }[];
+  completedMissions: string[];
+  missionProgress: string[];
 }
 
 let current: GameState | null = null;
@@ -115,6 +120,9 @@ export function createNewGameState(scene: Phaser.Scene): GameState {
     fishingContest: null,
     fishingResult: null,
     ceremonyDone: false,
+    activeMissions: [],
+    completedMissions: [],
+    missionProgress: [],
   };
 }
 

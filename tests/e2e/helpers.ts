@@ -116,6 +116,9 @@ export interface TestGameState {
   fishingContest: { endsAt: number | null; best: number } | null;
   fishingResult: number | null;
   ceremonyDone: boolean;
+  activeMissions: { id: string; day: number }[];
+  completedMissions: string[];
+  missionProgress: string[];
 }
 
 // Partida guardada de ejemplo, con el formato de src/systems/save.ts.
@@ -148,6 +151,9 @@ export function savedGame(overrides: Partial<TestGameState> = {}): TestGameState
     fishingContest: null,
     fishingResult: null,
     ceremonyDone: false,
+    activeMissions: [],
+    completedMissions: [],
+    missionProgress: [],
     ...overrides,
   };
 }
@@ -635,6 +641,16 @@ export async function isNpcPresent(page: Page, id: string): Promise<boolean> {
   return page.evaluate((id) => {
     const game = (window as unknown as GameWindow).game;
     return (game.scene.getScene('GameScene') as unknown as { isNpcPresent(id: string): boolean }).isNpcPresent(id);
+  }, id);
+}
+
+// --- Misiones secundarias (HU-72 a HU-74) ---
+
+// Marcador que se ve sobre un NPC ("!" o "?"), o null (HU-73).
+export async function npcMarker(page: Page, id: string): Promise<string | null> {
+  return page.evaluate((id) => {
+    const game = (window as unknown as GameWindow).game;
+    return (game.scene.getScene('GameScene') as unknown as { getNpcMarker(id: string): string | null }).getNpcMarker(id);
   }, id);
 }
 

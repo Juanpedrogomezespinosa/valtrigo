@@ -589,6 +589,8 @@ function granja() {
   addNpc(map, { character: 'granjero', x: 16, y: 9 });
   addNpc(map, { character: 'lucia', x: 24, y: 6 });
   addNpc(map, { character: 'marta', x: 11, y: 13 });
+  // HU-72: Bigotes, cuando se escapa, está junto al manzano.
+  addNpc(map, { character: 'bigotes', x: 13, y: 6 });
   addChest(map, { id: 'cofre-1', x: 7, y: 2 }); // detrás del granero, fuera del camino
   addWorldItem(map, { id: 'pala-de-la-granja', x: 10, y: 7 });
   addSign(map, { id: 'granja', x: 3, y: 9 });

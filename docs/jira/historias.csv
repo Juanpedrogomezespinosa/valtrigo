@@ -738,7 +738,7 @@ Criterios de aceptación:
 - Cada encargo muestra su nombre, su descripción y el NPC que lo encargó.
 - La lista muestra primero el encargo principal y después los pedidos del tablón, que aparecen como encargados por el “Tablón de anuncios”.
 - Si no hay encargos ni pedidos activos, aparece el mensaje “No tienes encargos activos”.
-- La lista tiene también el apartado “Notas”, con las páginas del diario (HU-55).
+- La lista tiene también el apartado “Misiones”, con las misiones secundarias activas (HU-72), y el apartado “Notas”, con las páginas del diario (HU-55).
 - La lista tiene también el apartado “Tareas de hoy”, con las tareas del día (HU-63).
 Escenario 1: Ver un encargo activo
 
@@ -758,7 +758,7 @@ Escenario 3: Encargo completado
 - Cada encargo muestra su nombre, su descripción y el NPC que lo encargó.
 - La lista muestra primero el encargo principal y después los pedidos del tablón, que aparecen como encargados por el “Tablón de anuncios”.
 - Si no hay encargos ni pedidos activos, aparece el mensaje “No tienes encargos activos”.
-- La lista tiene también el apartado “Notas”, con las páginas del diario (HU-55).
+- La lista tiene también el apartado “Misiones”, con las misiones secundarias activas (HU-72), y el apartado “Notas”, con las páginas del diario (HU-55).
 - La lista tiene también el apartado “Tareas de hoy”, con las tareas del día (HU-63)."
 "HU-22","HU-22. Ver el día y la hora","# HU-22. Ver el día y la hora
 
@@ -1886,7 +1886,7 @@ Criterios de aceptación:
 
 - Hay 5 páginas del diario escondidas: en la torre, en el bosque, en el lago, en la granja y en la plaza.
 - Al pulsar E junto a una página, se recoge, desaparece del mapa y aparece el mensaje “Has encontrado una página del diario”. Las páginas no ocupan sitio en el inventario.
-- La lista de objetivos (O) tiene dos apartados, “Encargos” y “Notas”, que se cambian con ← →. “Notas” muestra las páginas en orden, con su texto. Las que faltan aparecen como “Página sin encontrar”.
+- La lista de objetivos (O) tiene los apartados “Encargos”, “Misiones” (HU-72) y “Notas”, que se cambian con ← →. “Notas” muestra las páginas en orden, con su texto. Las que faltan aparecen como “Página sin encontrar”.
 Escenario 1: Encontrar una página
 
 - Dado que el jugador está junto a la página del lago
@@ -1900,7 +1900,7 @@ Escenario 2: Leer las notas
 - Entonces aparece el texto de la página 3
 - Y las páginas 1, 2, 4 y 5 aparecen como “Página sin encontrar”","- Hay 5 páginas del diario escondidas: en la torre, en el bosque, en el lago, en la granja y en la plaza.
 - Al pulsar E junto a una página, se recoge, desaparece del mapa y aparece el mensaje “Has encontrado una página del diario”. Las páginas no ocupan sitio en el inventario.
-- La lista de objetivos (O) tiene dos apartados, “Encargos” y “Notas”, que se cambian con ← →. “Notas” muestra las páginas en orden, con su texto. Las que faltan aparecen como “Página sin encontrar”."
+- La lista de objetivos (O) tiene los apartados “Encargos”, “Misiones” (HU-72) y “Notas”, que se cambian con ← →. “Notas” muestra las páginas en orden, con su texto. Las que faltan aparecen como “Página sin encontrar”."
 "HU-56","HU-56. Puzle del reloj","# HU-56. Puzle del reloj
 
 # HU-56. Puzle del reloj
@@ -2609,6 +2609,197 @@ Escenario 6: Día de la feria
 - El día 7 los seis vecinos de la feria siguen el horario de la feria (HU-58). Bruno sigue en el bosque, Bigotes en el barrio y Marta no reparte.
 - Cada vecino tiene su propio saludo al hablar con él (HU-10). Bigotes solo dice “¡Miau!”.
 - El día de la feria, los seis vecinos de la feria dicen lo mismo que en la feria."
+"HU-72","HU-72. Misiones secundarias","# HU-72. Misiones secundarias
+
+# HU-72. Misiones secundarias
+
+Como jugador, quiero ayudar a los vecinos con pequeñas misiones para ganar dinero y conocer mejor el pueblo.
+
+Criterios de aceptación:
+
+- Los vecinos ofrecen misiones secundarias al hablar con ellos, con las opciones “Aceptar” y “Rechazar”, como los encargos (HU-19). Al rechazar, la volverán a ofrecer la próxima vez.
+- Cada misión se ofrece a partir de su día y solo se puede completar una vez.
+- Se pueden tener hasta 3 misiones activas a la vez. Son independientes del encargo principal y de los pedidos del tablón (HU-53): ni los bloquean ni se bloquean por ellos.
+- Con 3 misiones activas, un vecino que tenga una misión que ofrecer dice “Ya tienes 3 misiones activas” y no la ofrece.
+- Si el vecino tiene algo que decir del encargo principal (ofrecerlo, su seguimiento o completarlo), eso va primero: la misión se ofrece la siguiente vez que se hable con él.
+- Tipos de misión:
+  - Entregar objetos al vecino que la encargó.
+  - Llevar un objeto de misión a otro vecino: el objeto se recibe al aceptar (con el aviso de HU-65) y no se puede vender. Si no cabe en el inventario, aparece “Inventario lleno” y la misión no se acepta. La misión se completa al hablar con el destinatario.
+  - Dar un recado: se completa al hablar con el vecino indicado.
+  - Encontrar a Bigotes: mientras la misión está activa, Bigotes está en la granja, junto al manzano. Al hablar con él vuelve al barrio y la misión se completa al hablar con Pablo.
+- Al completar una misión aparece “Misión completada”, se entregan los objetos pedidos y se cobra la recompensa. Si la recompensa no cabe en el inventario, aparece “Inventario lleno” y la misión sigue activa (como HU-20).
+- Las recompensas suman a las monedas ganadas del día (HU-39).
+- La lista de objetivos (HU-21) tiene un apartado nuevo, “Misiones”, entre “Encargos” y “Notas”: el nombre de cada misión activa, su descripción y “Encargada por: [vecino]”, o “No tienes misiones activas”.
+- Las misiones (día, vecino, tipo y recompensa):
+  1. Día 1, Marta, “Una carta para Tomás”: llevar la Carta para Tomás a Tomás. 20 monedas.
+  2. Día 1, Pablo, “¿Dónde está Bigotes?”: encontrar a Bigotes. 2 Manzanas.
+  3. Día 2, Lucía, “Semillas para Lucía”: entregarle 2 Semillas. 1 Semilla de calabaza.
+  4. Día 2, Elena, “Manzanas para la tarta”: entregarle 2 Manzanas antes de las 18:00 (HU-74). 30 monedas.
+  5. Día 3, Rosa, “Una trucha para Rosa”: entregarle 1 Trucha antes de las 12:00 (HU-74). 40 monedas.
+  6. Día 3, Bruno, “Leña para el invierno”: entregarle 3 Leñas. 45 monedas.
+  7. Día 3, Fran, “Setas para la cena”: entregarle 3 Setas. 25 monedas.
+  8. Día 4, Tomás, “Un recado para el alcalde”: hablar con el alcalde. 20 monedas.
+  9. Día 4, Marta, “Paquete urgente”: llevar el Paquete a Bruno antes de las 15:00 (HU-74). 35 monedas.
+  10. Día 5, Pablo, “El siluro gigante”: entregarle 1 Siluro. 60 monedas.
+  11. Día 5, Lucía, “Zanahorias para Lucía”: entregarle 2 Zanahorias. 50 monedas.
+  12. Día 6, Elena, “Mermelada de moras”: entregarle 4 Moras antes de las 13:00 (HU-74). 30 monedas.
+Escenario 1: Aceptar una misión
+
+- Dado que es el día 3 y el jugador habla con Bruno
+- Cuando elige “Aceptar”
+- Entonces “Leña para el invierno” aparece en el apartado “Misiones” de la lista de objetivos
+Escenario 2: Completar una misión
+
+- Dado que “Leña para el invierno” está activa y el jugador tiene 3 Leñas y 100 monedas
+- Cuando habla con Bruno
+- Entonces aparece “Misión completada”
+- Y el jugador tiene 145 monedas y ninguna Leña
+Escenario 3: Límite de misiones
+
+- Dado que el jugador tiene 3 misiones activas
+- Cuando habla con un vecino que tiene una misión que ofrecer
+- Entonces el vecino dice “Ya tienes 3 misiones activas”
+Escenario 4: Misión y encargo a la vez
+
+- Dado que el encargo principal “Semillas para la cosecha” está activo
+- Cuando el jugador acepta “Semillas para Lucía”
+- Entonces las dos aparecen en la lista de objetivos
+Escenario 5: Llevar un objeto a otro vecino
+
+- Dado que el jugador acepta “Una carta para Tomás”
+- Cuando habla con Tomás
+- Entonces aparece “Misión completada”
+- Y la Carta para Tomás ya no está en el inventario
+Escenario 6: Encontrar a Bigotes
+
+- Dado que “¿Dónde está Bigotes?” está activa
+- Cuando el jugador habla con Bigotes junto al manzano y después con Pablo
+- Entonces aparece “Misión completada”
+Escenario 7: Recompensa que no cabe
+
+- Dado que el inventario está lleno y “¿Dónde está Bigotes?” está activa
+- Cuando el jugador habla con Bigotes y después con Pablo
+- Entonces aparece “Inventario lleno”
+- Y la misión sigue activa","- Los vecinos ofrecen misiones secundarias al hablar con ellos, con las opciones “Aceptar” y “Rechazar”, como los encargos (HU-19). Al rechazar, la volverán a ofrecer la próxima vez.
+- Cada misión se ofrece a partir de su día y solo se puede completar una vez.
+- Se pueden tener hasta 3 misiones activas a la vez. Son independientes del encargo principal y de los pedidos del tablón (HU-53): ni los bloquean ni se bloquean por ellos.
+- Con 3 misiones activas, un vecino que tenga una misión que ofrecer dice “Ya tienes 3 misiones activas” y no la ofrece.
+- Si el vecino tiene algo que decir del encargo principal (ofrecerlo, su seguimiento o completarlo), eso va primero: la misión se ofrece la siguiente vez que se hable con él.
+- Tipos de misión:
+  - Entregar objetos al vecino que la encargó.
+  - Llevar un objeto de misión a otro vecino: el objeto se recibe al aceptar (con el aviso de HU-65) y no se puede vender. Si no cabe en el inventario, aparece “Inventario lleno” y la misión no se acepta. La misión se completa al hablar con el destinatario.
+  - Dar un recado: se completa al hablar con el vecino indicado.
+  - Encontrar a Bigotes: mientras la misión está activa, Bigotes está en la granja, junto al manzano. Al hablar con él vuelve al barrio y la misión se completa al hablar con Pablo.
+- Al completar una misión aparece “Misión completada”, se entregan los objetos pedidos y se cobra la recompensa. Si la recompensa no cabe en el inventario, aparece “Inventario lleno” y la misión sigue activa (como HU-20).
+- Las recompensas suman a las monedas ganadas del día (HU-39).
+- La lista de objetivos (HU-21) tiene un apartado nuevo, “Misiones”, entre “Encargos” y “Notas”: el nombre de cada misión activa, su descripción y “Encargada por: [vecino]”, o “No tienes misiones activas”.
+- Las misiones (día, vecino, tipo y recompensa):
+  1. Día 1, Marta, “Una carta para Tomás”: llevar la Carta para Tomás a Tomás. 20 monedas.
+  2. Día 1, Pablo, “¿Dónde está Bigotes?”: encontrar a Bigotes. 2 Manzanas.
+  3. Día 2, Lucía, “Semillas para Lucía”: entregarle 2 Semillas. 1 Semilla de calabaza.
+  4. Día 2, Elena, “Manzanas para la tarta”: entregarle 2 Manzanas antes de las 18:00 (HU-74). 30 monedas.
+  5. Día 3, Rosa, “Una trucha para Rosa”: entregarle 1 Trucha antes de las 12:00 (HU-74). 40 monedas.
+  6. Día 3, Bruno, “Leña para el invierno”: entregarle 3 Leñas. 45 monedas.
+  7. Día 3, Fran, “Setas para la cena”: entregarle 3 Setas. 25 monedas.
+  8. Día 4, Tomás, “Un recado para el alcalde”: hablar con el alcalde. 20 monedas.
+  9. Día 4, Marta, “Paquete urgente”: llevar el Paquete a Bruno antes de las 15:00 (HU-74). 35 monedas.
+  10. Día 5, Pablo, “El siluro gigante”: entregarle 1 Siluro. 60 monedas.
+  11. Día 5, Lucía, “Zanahorias para Lucía”: entregarle 2 Zanahorias. 50 monedas.
+  12. Día 6, Elena, “Mermelada de moras”: entregarle 4 Moras antes de las 13:00 (HU-74). 30 monedas."
+"HU-73","HU-73. Indicadores sobre los NPC","# HU-73. Indicadores sobre los NPC
+
+# HU-73. Indicadores sobre los NPC
+
+Como jugador, quiero ver sobre los personajes si tienen algo para mí para saber con quién hablar.
+
+Criterios de aceptación:
+
+- Sobre un NPC aparece “!” si al hablar con él ofrecería un encargo principal o una misión.
+- Sobre un NPC aparece “?” si tiene un encargo o una misión activa que se puede completar al hablar con él (por ejemplo, el jugador ya tiene los objetos pedidos, o es el destinatario de un recado). También aparece “?” sobre Bigotes mientras hay que encontrarlo.
+- Si se dan las dos cosas, aparece “?”.
+- Sin nada de eso, no aparece ningún indicador.
+- El indicador cambia en cuanto cambia la situación (al aceptar, al recoger los objetos, al completar...).
+- El indicador no tapa el “E” de HU-10: cuando el jugador está a tiro, se ve el “E” en su lugar.
+Escenario 1: Encargo para ofrecer
+
+- Dado que es el día 1 y el encargo “Entregar la Carta del alcalde” no se ha aceptado
+- Cuando el jugador mira al alcalde
+- Entonces aparece “!” sobre el alcalde
+Escenario 2: Misión lista para entregar
+
+- Dado que “Leña para el invierno” está activa y el jugador tiene 3 Leñas
+- Cuando mira a Bruno
+- Entonces aparece “?” sobre Bruno
+Escenario 3: Misión sin terminar
+
+- Dado que “Leña para el invierno” está activa y el jugador tiene 1 Leña
+- Cuando mira a Bruno
+- Entonces no aparece ningún indicador sobre Bruno
+Escenario 4: Destinatario de un recado
+
+- Dado que “Un recado para el alcalde” está activa
+- Cuando el jugador mira al alcalde
+- Entonces aparece “?” sobre el alcalde
+Escenario 5: Sin nada que ofrecer
+
+- Dado que el jugador ya ha completado “Leña para el invierno”
+- Cuando mira a Bruno
+- Entonces no aparece ningún indicador sobre Bruno","- Sobre un NPC aparece “!” si al hablar con él ofrecería un encargo principal o una misión.
+- Sobre un NPC aparece “?” si tiene un encargo o una misión activa que se puede completar al hablar con él (por ejemplo, el jugador ya tiene los objetos pedidos, o es el destinatario de un recado). También aparece “?” sobre Bigotes mientras hay que encontrarlo.
+- Si se dan las dos cosas, aparece “?”.
+- Sin nada de eso, no aparece ningún indicador.
+- El indicador cambia en cuanto cambia la situación (al aceptar, al recoger los objetos, al completar...).
+- El indicador no tapa el “E” de HU-10: cuando el jugador está a tiro, se ve el “E” en su lugar."
+"HU-74","HU-74. Misiones con hora límite","# HU-74. Misiones con hora límite
+
+# HU-74. Misiones con hora límite
+
+Como jugador, quiero que algunas misiones tengan prisa para tener que organizar el día.
+
+Criterios de aceptación:
+
+- Algunas misiones (HU-72) tienen una hora límite: hay que completarlas antes de esa hora del mismo día en que se aceptan.
+- Después de su hora límite, el vecino ya no ofrece esa misión ese día. La vuelve a ofrecer al día siguiente.
+- En la lista de objetivos, la misión muestra “Antes de las [hora]”.
+- Al llegar la hora límite sin completarla, aparece “Misión fallida: [nombre]” y la misión deja de estar activa. Si se recibió un objeto de misión, desaparece del inventario.
+- Una misión fallida se vuelve a ofrecer al día siguiente.
+- Si el día termina (al dormir o a medianoche) con una misión con hora límite activa, la misión falla.
+Escenario 1: Hora límite en la lista
+
+- Dado que el jugador acepta “Una trucha para Rosa” el día 3
+- Cuando abre la lista de objetivos
+- Entonces la misión muestra “Antes de las 12:00”
+Escenario 2: Completar a tiempo
+
+- Dado que “Una trucha para Rosa” está activa, son las 11:30 y el jugador tiene una Trucha
+- Cuando habla con Rosa
+- Entonces aparece “Misión completada”
+Escenario 3: Misión fallida
+
+- Dado que “Una trucha para Rosa” está activa y son las 11:59
+- Cuando el reloj llega a las 12:00
+- Entonces aparece “Misión fallida: Una trucha para Rosa”
+- Y la misión ya no está en la lista de objetivos
+Escenario 4: Objeto de misión al fallar
+
+- Dado que “Paquete urgente” está activa y el jugador tiene el Paquete
+- Cuando el reloj llega a las 15:00
+- Entonces el Paquete desaparece del inventario
+Escenario 5: Fuera de hora
+
+- Dado que es el día 3 a las 13:00 y el jugador no ha aceptado “Una trucha para Rosa”
+- Cuando habla con Rosa
+- Entonces Rosa no ofrece la misión
+Escenario 6: Otra oportunidad
+
+- Dado que “Una trucha para Rosa” falló el día 3
+- Cuando el jugador habla con Rosa el día 4 antes de las 12:00
+- Entonces Rosa vuelve a ofrecer la misión","- Algunas misiones (HU-72) tienen una hora límite: hay que completarlas antes de esa hora del mismo día en que se aceptan.
+- Después de su hora límite, el vecino ya no ofrece esa misión ese día. La vuelve a ofrecer al día siguiente.
+- En la lista de objetivos, la misión muestra “Antes de las [hora]”.
+- Al llegar la hora límite sin completarla, aparece “Misión fallida: [nombre]” y la misión deja de estar activa. Si se recibió un objeto de misión, desaparece del inventario.
+- Una misión fallida se vuelve a ofrecer al día siguiente.
+- Si el día termina (al dormir o a medianoche) con una misión con hora límite activa, la misión falla."
 "HU-80","HU-80. Interfaz con iconos","# HU-80. Interfaz con iconos
 
 # HU-80. Interfaz con iconos

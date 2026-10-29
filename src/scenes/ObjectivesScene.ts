@@ -4,6 +4,7 @@ import dialogues from '../data/dialogues.json';
 import { COLORS, FONT_FAMILY } from '../config';
 import { getGameState } from '../systems/gameState';
 import { activeOrders, BOARD_NAME } from '../systems/orders';
+import { activeMissions } from '../systems/missions';
 import { getActiveQuest } from '../systems/quests';
 import { todayTasks } from '../systems/tasks';
 import { playEffect } from '../systems/audio';
@@ -20,8 +21,9 @@ const ENTRY_GAP = 12;
 // Tareas del día que caben en la pantalla. Si hay más, se dejan fuera primero las ya hechas.
 const MAX_TASKS = 6;
 
-type Tab = 'Encargos' | 'Notas';
-const TABS: Tab[] = ['Encargos', 'Notas'];
+type Tab = 'Encargos' | 'Misiones' | 'Notas';
+const TABS: Tab[] = ['Encargos', 'Misiones', 'Notas'];
+const TAB_SPACING = 180;
 const TABS_Y = 115;
 const NOTE_LABEL_WIDTH = 130;
 
@@ -31,9 +33,10 @@ interface Objective {
   by: string;
 }
 
-// Lista de objetivos (HU-21), con dos apartados que se cambian con ← → (HU-55):
+// Lista de objetivos (HU-21), con tres apartados que se cambian con ← → (HU-55 y HU-72):
 // - "Encargos": primero el encargo principal y después los pedidos del tablón (HU-53), cada uno con su nombre,
 //   su descripción y quién lo encargó; y, en la otra columna, las tareas del día (HU-63).
+// - "Misiones": las misiones secundarias activas (HU-72), con su hora límite si la tienen (HU-74).
 // - "Notas": las páginas del diario de la relojera, en orden. Las que faltan, como "Página sin encontrar".
 // Se abre con O encima de la partida y se cierra con O o Escape. El tiempo sigue mientras está abierta.
 export class ObjectivesScene extends Phaser.Scene {
@@ -58,13 +61,13 @@ export class ObjectivesScene extends Phaser.Scene {
     addTitle(this, 'Objetivos', 60);
 
     this.tabTexts = TABS.map((tab, index) =>
-      this.add.text(width / 2 + (index === 0 ? -90 : 90), TABS_Y, tab, { fontFamily: FONT_FAMILY, fontSize: '24px' }).setOrigin(0.5),
+      this.add.text(width / 2 + (index - 1) * TAB_SPACING, TABS_Y, tab, { fontFamily: FONT_FAMILY, fontSize: '24px' }).setOrigin(0.5),
     );
     this.showTab();
 
     const keyboard = this.input.keyboard!;
-    keyboard.on('keydown-LEFT', () => this.switchTab('Encargos'));
-    keyboard.on('keydown-RIGHT', () => this.switchTab('Notas'));
+    keyboard.on('keydown-LEFT', () => this.switchTab(TABS[Math.max(0, TABS.indexOf(this.tab) - 1)]));
+    keyboard.on('keydown-RIGHT', () => this.switchTab(TABS[Math.min(TABS.length - 1, TABS.indexOf(this.tab) + 1)]));
     keyboard.on('keydown-O', () => this.close());
     keyboard.on('keydown-ESC', () => this.close());
   }
@@ -88,6 +91,8 @@ export class ObjectivesScene extends Phaser.Scene {
     if (this.tab === 'Encargos') {
       this.addObjectives();
       this.addTasks();
+    } else if (this.tab === 'Misiones') {
+      this.addMissions();
     } else {
       this.addNotes();
     }
@@ -146,6 +151,28 @@ export class ObjectivesScene extends Phaser.Scene {
       y += descriptionText.height + 2;
       const byText = this.text(LEFT_X, y, `Encargado por: ${by}`, { fontSize: '16px', color: COLORS.text });
       y += byText.height + ENTRY_GAP;
+    }
+  }
+
+  // HU-72: las misiones activas, con "Antes de las HH:MM" si tienen hora límite (HU-74).
+  private addMissions(): void {
+    const missions = activeMissions();
+    this.text(LEFT_X, TOP, 'Misiones activas', { fontSize: '22px', color: COLORS.selected });
+    if (missions.length === 0) {
+      this.text(LEFT_X, TOP + 38, 'No tienes misiones activas', { fontSize: '20px', color: COLORS.text });
+      return;
+    }
+    const width = this.scale.width - LEFT_X * 2;
+    let y = TOP + 38;
+    for (const mission of missions) {
+      const name = this.text(LEFT_X, y, mission.name, { fontSize: '20px', color: COLORS.selected });
+      y += name.height + 2;
+      const description = this.text(LEFT_X, y, mission.description, { fontSize: '18px', color: COLORS.text, wordWrap: { width } });
+      y += description.height + 2;
+      const npc = dialogues.npcs[mission.npc as keyof typeof dialogues.npcs];
+      const deadline = 'deadline' in mission && mission.deadline ? ` · Antes de las ${mission.deadline}` : '';
+      const by = this.text(LEFT_X, y, `Encargada por: ${npc.name}${deadline}`, { fontSize: '18px', color: COLORS.text });
+      y += by.height + ENTRY_GAP + 6;
     }
   }
 

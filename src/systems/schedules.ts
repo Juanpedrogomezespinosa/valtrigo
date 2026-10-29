@@ -1,5 +1,6 @@
 import schedules from '../data/schedules.json';
 import { getGameState } from './gameState';
+import { hidingZone } from './missions';
 import { toMinutes } from './time';
 import type { ZoneId } from './zones';
 
@@ -27,6 +28,11 @@ export function npcHoursIn(npc: string, zone: ZoneId): { from: string; to: strin
 
 // Indica si el NPC está ahora en la zona. Los NPC sin horario están siempre en su zona.
 export function isNpcInZone(npc: string, zone: ZoneId, minutes = getGameState().minutes): boolean {
+  // HU-72: mientras hay que encontrar a Bigotes, está escondido en otra zona a cualquier hora.
+  const hiding = hidingZone(npc);
+  if (hiding) {
+    return zone === hiding;
+  }
   const schedule = SCHEDULES[npc];
   if (!schedule) {
     return true;

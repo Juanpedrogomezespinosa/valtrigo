@@ -450,4 +450,12 @@ Rehecha después de jugarla, con las decisiones del autor: horario, visitantes, 
   - `onConfirmKeys()` (src/ui/confirmKeys.ts) registra Enter y, si se pide, E. Ignora las pulsaciones anteriores a abrir la pantalla: la E que abre "¿Dormir?" llega también a HudScene en el mismo fotograma y, sin esto, contestaba "No" nada más abrirse.
   - `showConfirmDialog(..., withE)` y `MenuList` (`confirmWithE`) lo usan; la pausa y los cuadros de la partida lo activan.
   - Las ayudas de abajo dicen "E: colocar", "E: sembrar"... y la tabla de controles, "Usar objeto: E o Enter".
-
+- **Misiones secundarias (HU-72 a HU-74, historias nuevas, decisión del autor):** 12 misiones de los vecinos entre los días 1 y 6, en src/data/missions.json (día, vecino, nombre, descripción, condición, hora límite, recompensa y sus líneas `offer`, `active` y `complete`). La lógica está en src/systems/missions.ts.
+  - Tipos: `deliver` (entregar objetos a quien la encarga), `carry` (el objeto se recibe al aceptar y se lleva a otro vecino: Carta para Tomás y Paquete, objetos de misión con iconos Letter2 y Bag de Ninja Adventure), `talk` (hablar con otro vecino) y `find` (encontrar a Bigotes).
+  - `GameState` tiene `activeMissions` (id y día en que se aceptó), `completedMissions` y `missionProgress` (Bigotes encontrado). Las partidas antiguas los cargan vacíos.
+  - En `talkTo()`, lo del encargo principal (ofrecer, seguimiento, completar o la carta de la vendedora) va primero; si no, el vecino habla de sus misiones: encontrar a Bigotes, completar, ofrecer (o "Ya tienes 3 misiones activas") y el seguimiento. Si no hay nada de misiones, sigue su diálogo normal. La línea de completar la dice quien recibe la misión (el destinatario, en `carry` y `talk`).
+  - Bigotes, mientras hay que encontrarlo, está en la granja (punto `npc` en 13, 6) a cualquier hora: `isNpcInZone()` consulta `hidingZone()`.
+  - Hora límite (HU-74): `failExpiredMissions()` se comprueba en cada fotograma; también falla una misión con hora límite aceptada un día anterior (si se ha dormido). Pasada la hora, el vecino no la ofrece ese día; al día siguiente, sí. Las misiones fallidas no se guardan.
+  - Lista de objetivos: tres apartados, "Encargos", "Misiones" y "Notas" (HU-21 y HU-55 actualizadas; el test de HU-55 pulsa → dos veces).
+  - Marcadores (HU-73): "!" o "?" sobre cada NPC presente, con el estilo del indicador "E" pero en amarillo. Se ocultan con un diálogo abierto y sobre el NPC que tiene el "E". `GameScene.npcMarker()` decide cuál: "?" si se puede completar algo (encargo o misión) o es Bigotes escondido; "!" si ofrecería un encargo o una misión (y caben más misiones).
+  - Las misiones no tienen tareas del día (HU-63): los días 1 a 3 ya tienen 6.

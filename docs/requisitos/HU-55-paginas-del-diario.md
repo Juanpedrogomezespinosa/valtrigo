@@ -8,7 +8,7 @@ Criterios de aceptación:
 
 - Hay 5 páginas del diario escondidas: en la torre, en el bosque, en el lago, en la granja y en la plaza.
 - Al pulsar E junto a una página, se recoge, desaparece del mapa y aparece el mensaje “Has encontrado una página del diario”. Las páginas no ocupan sitio en el inventario.
-- La lista de objetivos (O) tiene dos apartados, “Encargos” y “Notas”, que se cambian con ← →. “Notas” muestra las páginas en orden, con su texto. Las que faltan aparecen como “Página sin encontrar”.
+- La lista de objetivos (O) tiene los apartados “Encargos”, “Misiones” (HU-72) y “Notas”, que se cambian con ← →. “Notas” muestra las páginas en orden, con su texto. Las que faltan aparecen como “Página sin encontrar”.
 Escenario 1: Encontrar una página
 
 - Dado que el jugador está junto a la página del lago

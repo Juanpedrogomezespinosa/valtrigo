@@ -58,6 +58,9 @@ export function readSave(): GameState | null {
         fishingContest: state.fishingContest ?? null,
         fishingResult: state.fishingResult ?? null,
         ceremonyDone: state.ceremonyDone ?? false,
+        activeMissions: state.activeMissions ?? [],
+        completedMissions: state.completedMissions ?? [],
+        missionProgress: state.missionProgress ?? [],
       }
     : null;
 }

@@ -99,6 +99,23 @@ import {
 import { findMapPoint, getProperty, mapKey, mapObjects, musicKey, pointTile, ZONES, type MapObject, type ZoneId } from '../systems/zones';
 import { showConfirmDialog } from '../ui/confirmDialog';
 import { showMessage } from '../ui/message';
+import {
+  acceptMission,
+  canAcceptMoreMissions,
+  canReceiveMissionReward,
+  carriedItem,
+  completeMission,
+  failedMessage,
+  failExpiredMissions,
+  markFound,
+  MISSION_COMPLETED,
+  missionToComplete,
+  missionToFind,
+  missionToOffer,
+  MISSIONS_FULL_LINES,
+  ownActiveMission,
+  type Mission,
+} from '../systems/missions';
 import type { DaySummarySceneData } from './DaySummaryScene';
 import type { DialogSceneData } from './DialogScene';
 import type { OverlaySceneData } from './InventoryScene';
@@ -155,6 +172,8 @@ export class GameScene extends Phaser.Scene {
   private interactables: Interactable[] = [];
   private chests: Chest[] = [];
   private npcs: Npc[] = [];
+  // Marcador "!" o "?" de cada NPC (HU-73).
+  private npcMarkers = new Map<Npc, Phaser.GameObjects.Text>();
   // Huerto de la granja (HU-41): sus casillas y lo que se dibuja en cada parcela.
   private garden: Phaser.Geom.Rectangle | null = null;
   private plotViews = new Map<string, { soil: Phaser.GameObjects.Image; crop: Phaser.GameObjects.Image }>();
@@ -233,6 +252,7 @@ export class GameScene extends Phaser.Scene {
     this.interactables = [];
     this.chests = [];
     this.npcs = [];
+    this.npcMarkers.clear();
     this.npcAreas.clear();
     this.stage = null;
     this.podium = null;
@@ -308,8 +328,10 @@ export class GameScene extends Phaser.Scene {
     }
     if (!this.sleeping) {
       this.updateFair();
+      this.failExpiredMissions();
     }
     this.updateNpcPresence();
+    this.updateNpcMarkers();
 
     // Durante un cambio de zona, un diálogo o con el inventario abierto, el personaje no se mueve.
     if (this.isBusy()) {
@@ -370,6 +392,13 @@ export class GameScene extends Phaser.Scene {
 
   isChangingZone(): boolean {
     return this.changingZone;
+  }
+
+  // HU-73: el marcador que se ve sobre el NPC ("!" o "?"), o null si no se ve ninguno.
+  getNpcMarker(id: string): string | null {
+    const npc = this.npcs.find((candidate) => candidate.character === id);
+    const marker = npc && this.npcMarkers.get(npc);
+    return marker?.visible ? marker.text : null;
   }
 
   isDialogOpen(): boolean {
@@ -625,6 +654,22 @@ export class GameScene extends Phaser.Scene {
     const npc = new Npc(this, id, pointTile(object));
     this.physics.add.collider(this.player, npc);
     this.npcs.push(npc);
+    this.npcMarkers.set(
+      npc,
+      this.add
+        .text(npc.x, npc.y - TILE_SIZE / 2 - 1, '', {
+          fontFamily: FONT_FAMILY,
+          fontSize: '8px',
+          fontStyle: 'bold',
+          color: COLORS.background,
+          backgroundColor: COLORS.selected,
+          padding: { x: 2, y: 0 },
+        })
+        .setResolution(WORLD_ZOOM * 2)
+        .setOrigin(0.5, 1)
+        .setDepth(10)
+        .setVisible(false),
+    );
     const area = bodyArea(npc.body);
     this.npcAreas.set(id, area);
     this.interactables.push({
@@ -698,6 +743,11 @@ export class GameScene extends Phaser.Scene {
       typewriter: true,
     };
 
+    // HU-72: lo del encargo principal va primero. Si no hay nada de eso, el vecino habla de sus misiones.
+    if (!['offer', 'active', 'complete', 'give-letter'].includes(conversation.kind) && this.talkAboutMissions(id, npcDialog)) {
+      return;
+    }
+
     switch (conversation.kind) {
       case 'offer': {
         // HU-19: "Aceptar" o "Rechazar". Al aceptar, el NPC sigue con su diálogo de encargo en curso.
@@ -751,6 +801,104 @@ export class GameScene extends Phaser.Scene {
 
       default:
         this.openDialog({ ...npcDialog, lines: conversation.lines });
+    }
+  }
+
+  // HU-72: misiones secundarias al hablar con un vecino. Devuelve false si no tiene nada que decir de ellas.
+  private talkAboutMissions(id: NpcId, npcDialog: Omit<DialogSceneData, 'onClose' | 'lines'>): boolean {
+    const hud = this.scene.get('HudScene');
+
+    // Encontrar a Bigotes: al hablar con él, vuelve a casa.
+    const toFind = missionToFind(id);
+    if (toFind) {
+      markFound(toFind);
+      this.openDialog({ ...npcDialog, lines: dialogues.npcs[id].greeting });
+      return true;
+    }
+
+    const toComplete = missionToComplete(id);
+    if (toComplete) {
+      // Como en HU-20: si la recompensa no cabe, la misión sigue activa.
+      if (!canReceiveMissionReward(toComplete)) {
+        showMessage(hud, 'Inventario lleno', MESSAGE_MS, 'top');
+        return true;
+      }
+      completeMission(toComplete);
+      this.openDialog({ ...npcDialog, lines: toComplete.lines.complete }, () => this.announceMissionCompleted(id, toComplete));
+      return true;
+    }
+
+    const toOffer = missionToOffer(id);
+    if (toOffer) {
+      if (!canAcceptMoreMissions()) {
+        this.openDialog({ ...npcDialog, lines: MISSIONS_FULL_LINES });
+        return true;
+      }
+      // Las misiones en las que hay que llevar algo dan el objeto al aceptar (con el aviso de HU-65 al cerrar).
+      let received: ItemId | null = null;
+      this.openDialog(
+        {
+          ...npcDialog,
+          lines: toOffer.lines.offer,
+          choice: {
+            options: ['Aceptar', 'Rechazar'],
+            onChoose: (index) => {
+              if (index !== 0) return null;
+              if (!acceptMission(toOffer)) {
+                showMessage(hud, 'Inventario lleno', MESSAGE_MS, 'top');
+                return null;
+              }
+              received = carriedItem(toOffer);
+              return toOffer.lines.active;
+            },
+          },
+        },
+        () => received && showMessage(hud, receivedMessage(id, received, 1), MESSAGE_MS, 'top'),
+      );
+      return true;
+    }
+
+    const active = ownActiveMission(id);
+    if (active) {
+      this.openDialog({ ...npcDialog, lines: active.lines.active });
+      return true;
+    }
+    return false;
+  }
+
+  private announceMissionCompleted(npc: NpcId, mission: Mission): void {
+    const hud = this.scene.get('HudScene');
+    showMessage(hud, MISSION_COMPLETED, MESSAGE_MS, 'top');
+    for (const { item, quantity } of mission.reward.items) {
+      showMessage(hud, receivedMessage(npc, item as ItemId, quantity), MESSAGE_MS, 'top');
+    }
+    playEffect(this, 'questComplete');
+  }
+
+  // HU-74: al llegar la hora límite, la misión falla.
+  private failExpiredMissions(): void {
+    for (const mission of failExpiredMissions()) {
+      showMessage(this.scene.get('HudScene'), failedMessage(mission), MESSAGE_MS, 'top');
+    }
+  }
+
+  // HU-73: "?" sobre el NPC si se puede completar algo hablando con él y "!" si ofrecería un encargo o una misión.
+  npcMarker(id: NpcId): '?' | '!' | null {
+    const conversation = conversationWith(id);
+    if (conversation.kind === 'complete' || missionToComplete(id) || missionToFind(id)) return '?';
+    if (conversation.kind === 'offer' || (missionToOffer(id) && canAcceptMoreMissions())) return '!';
+    return null;
+  }
+
+  // El marcador se ve sobre los NPC presentes, salvo sobre el que tiene encima el indicador "E".
+  private updateNpcMarkers(): void {
+    const target = this.indicator.visible ? this.interactTarget() : null;
+    for (const npc of this.npcs) {
+      const marker = this.npcMarkers.get(npc)!;
+      const symbol = npc.isPresent() ? this.npcMarker(npc.character as NpcId) : null;
+      const covered = target?.kind === 'npc' && target.id === npc.character;
+      marker.setVisible(symbol !== null && !covered && !this.dialogOpen);
+      if (symbol) marker.setText(symbol).setPosition(npc.x, npc.y - TILE_SIZE / 2 - 1);
     }
   }
 
