@@ -36,6 +36,8 @@ export const MAX_ENERGY = 100;
 
 // Velocidad del personaje en píxeles por segundo: 4 casillas por segundo (HU-06).
 export const PLAYER_SPEED = 64;
+// Al correr (HU-81, Mayús), el doble: 8 casillas por segundo.
+export const RUN_SPEED_FACTOR = 2;
 
 // Duración del fundido a negro al cruzar una puerta (HU-08).
 export const ZONE_FADE_MS = 500;
@@ -64,6 +66,11 @@ export const SLEEP_FADE_MS = 500;
 // para que de noche se pueda seguir jugando.
 export const NIGHT_COLOR = 0x0a1030;
 export const NIGHT_MAX_ALPHA = 0.65;
+
+// Interfaz de la partida (HU-80): borde de los paneles y colores de la barra de energía, que es verde
+// por encima de 50, amarilla de 26 a 50 y roja de 25 o menos.
+export const HUD_BORDER = 0xc9a66b;
+export const ENERGY_COLORS = { high: 0x6abe30, medium: 0xf2c94c, low: 0xd9483b, empty: 0x3a2a2a };
 
 // Pesca (HU-48): "¡Pica!" aparece entre 2 y 5 segundos después de lanzar la caña y hay 1 segundo para sacar el pez.
 export const FISH_BITE_MIN_MS = 2000;

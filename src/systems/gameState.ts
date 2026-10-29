@@ -120,12 +120,26 @@ export function createNewGameState(scene: Phaser.Scene): GameState {
 
 export function startGame(state: GameState): void {
   current = state;
+  running = false;
   resetClock();
 }
 
 // Termina la partida en curso sin guardarla (al salir al menú principal).
 export function endGame(): void {
   current = null;
+  running = false;
+}
+
+// HU-81: si el personaje corre. Mayús lo activa y lo desactiva. No forma parte de la partida guardada: al
+// empezar o cargar una partida se anda, y al cambiar de zona se sigue como se iba.
+let running = false;
+
+export function isRunning(): boolean {
+  return running;
+}
+
+export function toggleRunning(): void {
+  running = !running;
 }
 
 export function isGameInProgress(): boolean {

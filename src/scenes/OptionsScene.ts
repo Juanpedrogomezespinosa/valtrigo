@@ -17,11 +17,12 @@ const ROWS: Row[] = ['Música', 'Efectos', 'Silenciar', 'Volver'];
 // HU-33: tabla de controles, de solo lectura.
 const CONTROLS: [string, string][] = [
   ['Mover', 'Flechas o WASD'],
+  ['Correr', 'Mayús'],
   ['Interactuar', 'E'],
   ['Inventario', 'I'],
   ['Objetivos', 'O'],
   ['Pausa', 'Escape'],
-  ['Usar objeto', 'Enter'],
+  ['Usar objeto', 'E o Enter'],
 ];
 
 const LEFT = 90;

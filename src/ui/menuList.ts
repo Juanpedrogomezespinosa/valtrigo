@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { COLORS, FONT_FAMILY } from '../config';
+import { onConfirmKeys } from './confirmKeys';
 import { playEffect } from '../systems/audio';
 
 export interface MenuListOption<T extends string> {
@@ -14,11 +15,13 @@ export interface MenuListConfig<T extends string> {
   // Opción seleccionada al crear la lista. Si no se indica, la primera.
   selected?: T;
   onActivate: (label: T) => void;
+  // Dentro de la partida (el menú de pausa), E también activa la opción.
+  confirmWithE?: boolean;
 }
 
 // Lista vertical de opciones de un menú (HU-01).
 // - Las flechas arriba y abajo recorren todas las opciones, también las desactivadas, y se detienen en los extremos.
-// - Enter o un clic activan la opción seleccionada. Las desactivadas se ven en gris y no hacen nada.
+// - Enter (y E, si se indica) o un clic activan la opción seleccionada. Las desactivadas se ven en gris y no hacen nada.
 // - Efectos de sonido de navegación y confirmación (HU-32).
 export class MenuList<T extends string> {
   // Mientras está inactiva (por ejemplo, con un cuadro de confirmación abierto) no responde al teclado.
@@ -64,7 +67,7 @@ export class MenuList<T extends string> {
     const keyboard = scene.input.keyboard!;
     keyboard.on('keydown-UP', () => this.active && this.select(this.selectedIndex - 1));
     keyboard.on('keydown-DOWN', () => this.active && this.select(this.selectedIndex + 1));
-    keyboard.on('keydown-ENTER', () => this.active && this.activateSelected());
+    onConfirmKeys(keyboard, config.confirmWithE ?? false, () => this.active && this.activateSelected());
 
     this.refresh();
   }

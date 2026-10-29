@@ -1,3 +1,4 @@
+import houses from '../data/houses.json';
 import shop from '../data/shop.json';
 import { isShopOpen } from './economy';
 import { getGameState } from './gameState';
@@ -32,6 +33,11 @@ export function closedDoorMessage(zone: ZoneId): string | null {
 function openingHour(): string {
   const [hours, minutes] = shop.opensAt.split(':');
   return minutes === '00' ? String(Number(hours)) : `${Number(hours)}:${minutes}`;
+}
+
+// HU-70: casas del barrio en las que no se puede entrar. Datos en src/data/houses.json.
+export function closedHouse(house: string): { title: string; message: string } {
+  return { title: houses.houses[house as keyof typeof houses.houses], message: houses.closedMessage };
 }
 
 // HU-64: aviso de la primera visita a una zona, o null si no tiene o ya se había visitado.

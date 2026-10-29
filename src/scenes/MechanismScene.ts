@@ -75,7 +75,7 @@ export class MechanismScene extends Phaser.Scene {
       .text(LIST_X - 24, LIST_TOP, '▶', { fontFamily: FONT_FAMILY, fontSize: '22px', color: COLORS.selected })
       .setOrigin(1, 0.5);
     this.add
-      .text(width / 2, height - 50, 'Enter: colocar · Escape: salir', { fontFamily: FONT_FAMILY, fontSize: '20px', color: COLORS.selected })
+      .text(width / 2, height - 50, 'E: colocar · Escape: salir', { fontFamily: FONT_FAMILY, fontSize: '20px', color: COLORS.selected })
       .setOrigin(0.5);
 
     const keyboard = this.input.keyboard!;

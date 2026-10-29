@@ -164,12 +164,15 @@
       "name": "Rosa",
       "from": "de Rosa",
       "greeting": [
+        "Buenos días. Por la mañana pesco en el lago y por la tarde me siento en la plaza a ver pasar a la gente.",
+        "Las truchas pican más temprano. Hazme caso."
+      ],
+      "fairGreeting": [
         "¡Qué bonita está la plaza con las guirnaldas!",
         "Este año pienso ganar el concurso de pesca. Mi trucha de la mañana medía más de sesenta centímetros."
       ],
       "clockRepaired": [
-        "¡Qué bonita está la plaza con las guirnaldas!",
-        "Este año pienso ganar el concurso de pesca. Mi trucha de la mañana medía más de sesenta centímetros."
+        "¡El reloj vuelve a sonar! Ahora sé a qué hora salen las truchas."
       ],
       "quests": {}
     },
@@ -177,12 +180,15 @@
       "name": "Lucía",
       "from": "de Lucía",
       "greeting": [
+        "¡Hola! Soy Lucía. Vivo en el barrio y por las tardes echo una mano al granjero.",
+        "Este año mi calabaza va a ser la más grande de la feria."
+      ],
+      "fairGreeting": [
         "He traído la calabaza más grande de mi huerto.",
         "Si quieres ganarme en el concurso de la cosecha, vas a tener que esforzarte."
       ],
       "clockRepaired": [
-        "He traído la calabaza más grande de mi huerto.",
-        "Si quieres ganarme en el concurso de la cosecha, vas a tener que esforzarte."
+        "Con el reloj en marcha, por fin sé cuándo regar."
       ],
       "quests": {}
     },
@@ -190,12 +196,15 @@
       "name": "Tomás",
       "from": "de Tomás",
       "greeting": [
+        "Soy Tomás. Vivo en el barrio con mi nieto Pablo y con Bigotes, el gato.",
+        "Por las mañanas me siento en la plaza. Desde que se paró el reloj, no sé si llego pronto o tarde."
+      ],
+      "fairGreeting": [
         "Llevo cuarenta ferias en Valtrigo y ninguna empezó tan tarde.",
         "Pero hoy es festivo: ¡a nadie le importa!"
       ],
       "clockRepaired": [
-        "Llevo cuarenta ferias en Valtrigo y ninguna empezó tan tarde.",
-        "Pero hoy es festivo: ¡a nadie le importa!"
+        "Cuarenta años oyendo ese reloj... Ya lo echaba de menos."
       ],
       "quests": {}
     },
@@ -203,12 +212,15 @@
       "name": "Pablo",
       "from": "de Pablo",
       "greeting": [
+        "¡Hola! Me llamo Pablo. ¿Has visto a Bigotes? Siempre se escapa.",
+        "Por las tardes voy al lago. ¡Algún día pescaré un siluro gigante!"
+      ],
+      "fairGreeting": [
         "¡Me he apuntado a los dos concursos!",
         "Mi abuelo dice que el que no participa no gana. A las seis es la ceremonia, ¿vendrás?"
       ],
       "clockRepaired": [
-        "¡Me he apuntado a los dos concursos!",
-        "Mi abuelo dice que el que no participa no gana. A las seis es la ceremonia, ¿vendrás?"
+        "¡El reloj suena otra vez! Mi abuelo está contentísimo."
       ],
       "quests": {}
     },
@@ -216,10 +228,14 @@
       "name": "Fran",
       "from": "de Fran",
       "greeting": [
+        "Soy Fran. Teletrabajo desde el barrio... cuando hay cobertura.",
+        "Valtrigo es muy tranquilo. Demasiado tranquilo."
+      ],
+      "fairGreeting": [
         "He venido por el networking, pero bueno... el futuro es ansiedad."
       ],
       "clockRepaired": [
-        "He venido por el networking, pero bueno... el futuro es ansiedad."
+        "Ahora que el reloj funciona, ya no tengo excusa para llegar tarde a las reuniones."
       ],
       "quests": {}
     },
@@ -227,10 +243,49 @@
       "name": "Elena",
       "from": "de Elena",
       "greeting": [
+        "Hola, soy Elena. Me mudé al barrio hace poco.",
+        "Echo de menos cosas de la ciudad, pero el aire de aquí no tiene precio."
+      ],
+      "fairGreeting": [
         "He venido porque me han prometido que después pondrán margarita frozen."
       ],
       "clockRepaired": [
-        "He venido porque me han prometido que después pondrán margarita frozen."
+        "El reloj de la torre da las horas otra vez. Qué bonito suena."
+      ],
+      "quests": {}
+    },
+    "bruno": {
+      "name": "Bruno",
+      "from": "de Bruno",
+      "greeting": [
+        "Soy Bruno, el leñador. Paso el día en el bosque.",
+        "Si quieres cortar troncos, necesitarás un Hacha. En la tienda las venden."
+      ],
+      "clockRepaired": [
+        "Hasta aquí, en el bosque, se oye el reloj de la torre."
+      ],
+      "quests": {}
+    },
+    "marta": {
+      "name": "Marta",
+      "from": "de Marta",
+      "greeting": [
+        "¡Correo! Soy Marta, la cartera. Recorro todo el pueblo cada día.",
+        "Sin el reloj, nadie sabe a qué hora llego. Yo tampoco."
+      ],
+      "clockRepaired": [
+        "¡Por fin puedo repartir a mi hora!"
+      ],
+      "quests": {}
+    },
+    "bigotes": {
+      "name": "Bigotes",
+      "from": "de Bigotes",
+      "greeting": [
+        "¡Miau!"
+      ],
+      "clockRepaired": [
+        "¡Miau!"
       ],
       "quests": {}
     }

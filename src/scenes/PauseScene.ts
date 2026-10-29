@@ -42,6 +42,7 @@ export class PauseScene extends Phaser.Scene {
         y: 200,
         selected: this.selected,
         onActivate: (label) => this.activate(label),
+        confirmWithE: true,
       },
     );
 
@@ -98,7 +99,7 @@ export class PauseScene extends Phaser.Scene {
       if (yes) {
         this.quitGame();
       }
-    });
+    }, true);
   }
 
   private quitGame(): void {

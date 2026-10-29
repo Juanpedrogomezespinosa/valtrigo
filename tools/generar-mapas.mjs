@@ -140,6 +140,12 @@ function addDoor(map, { x, y, width = 1, height = 1, zone, direction }) {
   map.doors.push({ x, y, width, height, zone, direction });
 }
 
+// Puerta de una casa en la que no se puede entrar (HU-70). `house` es su identificador en
+// src/data/houses.json. Al caminar hacia ella aparece "La puerta está cerrada".
+function addClosedDoor(map, { x, y, house }) {
+  map.doors.push({ x, y, width: 1, height: 1, closed: house, direction: 'up' });
+}
+
 // Punto donde aparece el personaje al llegar desde otra zona, mirando hacia `facing`.
 function addArrival(map, { from, x, y, facing }) {
   map.points.push({ name: `llegada-${from}`, x, y, properties: { mirando: facing } });
@@ -353,7 +359,9 @@ function toTiled(map) {
             rotation: 0,
             visible: true,
             properties: [
-              { name: 'zona', type: 'string', value: door.zone },
+              door.closed
+                ? { name: 'cerrada', type: 'string', value: door.closed }
+                : { name: 'zona', type: 'string', value: door.zone },
               { name: 'direccion', type: 'string', value: door.direction },
             ],
           })),
@@ -410,12 +418,12 @@ function layerBase(map) {
 
 // Exterior del pueblo (plaza): zona inicial.
 // Casa del jugador al oeste, torre del reloj al norte, tienda al este.
-// Salidas: camino al este (granja) y camino al sur (lago).
+// Salidas: camino al este (granja), camino al sur (lago) y camino al oeste (barrio, HU-70).
 function plaza() {
   const map = createMap(40, 30);
 
   addDirt(map, 13, 12, 26, 18); // plaza central
-  addDirt(map, 3, 13, 39, 15); // camino principal, sale por el este hacia la granja
+  addDirt(map, 0, 13, 39, 15); // camino principal, sale por el este hacia la granja y por el oeste hacia el barrio
   addDirt(map, 19, 19, 21, 29); // camino al sur, hacia el lago
   addDirt(map, 5, 11, 7, 12); // entrada de la casa del jugador
   addDirt(map, 18, 7, 20, 11); // entrada de la torre
@@ -462,8 +470,12 @@ function plaza() {
   addArrival(map, { from: 'granja', x: 38, y: 14, facing: 'left' });
   addDoor(map, { x: 19, y: 29, width: 3, zone: 'lago', direction: 'down' });
   addArrival(map, { from: 'lago', x: 20, y: 28, facing: 'up' });
+  addDoor(map, { x: 0, y: 13, height: 3, zone: 'barrio', direction: 'left' });
+  addArrival(map, { from: 'barrio', x: 1, y: 14, facing: 'right' });
 
   addNpc(map, { character: 'alcalde', x: 24, y: 13 });
+  // Vecinos (HU-71). Los de la feria usan los puntos de los visitantes.
+  addNpc(map, { character: 'marta', x: 28, y: 14 });
 
   // Borde de árboles, con huecos para las salidas.
   const exits = new Set();
@@ -485,9 +497,9 @@ function plaza() {
   return map;
 }
 
-// Interior: muros alrededor y la puerta de salida a la plaza en el centro del muro inferior.
-// Los interiores son más pequeños que la pantalla (HU-09).
-function interior(width, height, floor, floorDetail) {
+// Interior: muros alrededor y la puerta de salida (a la plaza, salvo que se indique otra zona) en el centro del
+// muro inferior. Los interiores son más pequeños que la pantalla (HU-09).
+function interior(width, height, floor, floorDetail, exitZone = 'plaza') {
   const map = createMap(width, height);
 
   for (let y = 0; y < map.height; y++) {
@@ -501,8 +513,8 @@ function interior(width, height, floor, floorDetail) {
 
   const doorX = Math.floor(width / 2);
   setTile(map.obstacles, map, doorX, height - 1, INTERIOR.door);
-  addDoor(map, { x: doorX, y: height - 1, zone: 'plaza', direction: 'down' });
-  addArrival(map, { from: 'plaza', x: doorX, y: height - 2, facing: 'up' });
+  addDoor(map, { x: doorX, y: height - 1, zone: exitZone, direction: 'down' });
+  addArrival(map, { from: exitZone, x: doorX, y: height - 2, facing: 'up' });
 
   return map;
 }
@@ -575,6 +587,8 @@ function granja() {
   addDoor(map, { x: 0, y: 10, height: 3, zone: 'plaza', direction: 'left' });
   addArrival(map, { from: 'plaza', x: 1, y: 11, facing: 'right' });
   addNpc(map, { character: 'granjero', x: 16, y: 9 });
+  addNpc(map, { character: 'lucia', x: 24, y: 6 });
+  addNpc(map, { character: 'marta', x: 11, y: 13 });
   addChest(map, { id: 'cofre-1', x: 7, y: 2 }); // detrás del granero, fuera del camino
   addWorldItem(map, { id: 'pala-de-la-granja', x: 10, y: 7 });
   addSign(map, { id: 'granja', x: 3, y: 9 });
@@ -618,6 +632,9 @@ function lago() {
   addSign(map, { id: 'lago', x: 13, y: 3 });
   // Por la tarde el granjero pesca en la orilla norte (HU-40). Se puede rodear por la fila de arriba.
   addNpc(map, { character: 'granjero', x: 17, y: 7 });
+  addNpc(map, { character: 'pablo', x: 20, y: 17 });
+  addNpc(map, { character: 'rosa', x: 25, y: 9 });
+  addNpc(map, { character: 'marta', x: 15, y: 4 });
 
   // Sendero escondido: sale de la orilla en (5, 17) hacia el suroeste y acaba en el cofre (2, 18).
   const hiddenPath = [[4, 17], [3, 17], [3, 18]];
@@ -657,6 +674,7 @@ function bosque() {
 
   addDoor(map, { x: 29, y: 10, height: 2, zone: 'lago', direction: 'right' });
   addArrival(map, { from: 'lago', x: 28, y: 10, facing: 'left' });
+  addNpc(map, { character: 'bruno', x: 18, y: 17 });
 
   // Claros sin árboles.
   const reserved = new Set();
@@ -699,8 +717,92 @@ function bosque() {
   return map;
 }
 
+// Barrio (HU-70): se llega por el camino del oeste de la plaza. Cinco casas de vecinos: arriba, la de Tomás y
+// Pablo y la de Lucía, en las que se puede entrar; abajo, la de Rosa, la de Fran y la de Elena, cerradas. Cada
+// casa tiene un cartel a su izquierda.
+function barrio() {
+  const map = createMap(30, 22);
+
+  addDirt(map, 2, 10, 29, 12); // calle principal, sale por el este hacia la plaza
+  addDirt(map, 5, 8, 7, 9); // entrada de la casa de Tomás y Pablo
+  addDirt(map, 15, 8, 17, 9); // entrada de la casa de Lucía
+  addDirt(map, 10, 13, 12, 16); // bajada a la calle de abajo
+  addDirt(map, 4, 17, 26, 18); // calle de las casas de abajo
+
+  placeBuilding(map, BUILDINGS.casa, 5, 5);
+  placeBuilding(map, BUILDINGS.casa, 15, 5);
+  placeBuilding(map, BUILDINGS.casa, 5, 14);
+  placeBuilding(map, BUILDINGS.casa, 15, 14);
+  placeBuilding(map, BUILDINGS.casa, 22, 14);
+  addSign(map, { id: 'casa-tomas', x: 4, y: 7 });
+  addSign(map, { id: 'casa-lucia', x: 14, y: 7 });
+  addSign(map, { id: 'casa-rosa', x: 4, y: 16 });
+  addSign(map, { id: 'casa-fran', x: 14, y: 16 });
+  addSign(map, { id: 'casa-elena', x: 21, y: 16 });
+
+  addDoor(map, { x: 29, y: 10, height: 3, zone: 'plaza', direction: 'right' });
+  addArrival(map, { from: 'plaza', x: 28, y: 11, facing: 'left' });
+  addDoor(map, { x: 6, y: 7, zone: 'casa-tomas', direction: 'up' });
+  addArrival(map, { from: 'casa-tomas', x: 6, y: 8, facing: 'down' });
+  addDoor(map, { x: 16, y: 7, zone: 'casa-lucia', direction: 'up' });
+  addArrival(map, { from: 'casa-lucia', x: 16, y: 8, facing: 'down' });
+  addClosedDoor(map, { x: 6, y: 16, house: 'casa-rosa' });
+  addClosedDoor(map, { x: 16, y: 16, house: 'casa-fran' });
+  addClosedDoor(map, { x: 23, y: 16, house: 'casa-elena' });
+
+  // Vecinos (HU-71).
+  addNpc(map, { character: 'tomas', x: 9, y: 8 });
+  addNpc(map, { character: 'bigotes', x: 9, y: 9 });
+  addNpc(map, { character: 'pablo', x: 13, y: 11 });
+  addNpc(map, { character: 'lucia', x: 19, y: 8 });
+  addNpc(map, { character: 'fran', x: 11, y: 18 });
+  addNpc(map, { character: 'elena', x: 20, y: 11 });
+  addNpc(map, { character: 'marta', x: 24, y: 11 });
+
+  // Borde de árboles, con el hueco de la salida, y arboledas de adorno.
+  const exits = new Set();
+  for (let x = 28; x < 30; x++) for (let y = 10; y <= 12; y++) exits.add(key(x, y));
+  addTrees(map, 0, 0, 29, 1, 100, exits);
+  addTrees(map, 0, 20, 29, 21, 100, exits);
+  addTrees(map, 0, 0, 1, 21, 100, exits);
+  addTrees(map, 28, 0, 29, 21, 100, exits);
+  addTrees(map, 21, 2, 27, 8, 40);
+  addTrees(map, 27, 13, 27, 19, 40);
+  addTrees(map, 2, 2, 13, 3, 35);
+  for (const [x, y] of [[8, 4], [18, 4], [3, 9], [9, 13]]) setTile(map.obstacles, map, x, y, TILE.bush);
+
+  paintGround(map);
+  return map;
+}
+
+// Casa de Tomás y Pablo (HU-70).
+function casaTomas() {
+  const map = interior(12, 9, INTERIOR.floor, INTERIOR.floorDetail, 'barrio');
+  setTile(map.obstacles, map, 2, 1, INTERIOR.shelf);
+  setTile(map.obstacles, map, 9, 1, INTERIOR.shelf);
+  setTile(map.obstacles, map, 5, 4, INTERIOR.table);
+  setTile(map.obstacles, map, 6, 4, INTERIOR.table);
+  setTile(map.obstacles, map, 5, 5, INTERIOR.chair);
+  setTile(map.obstacles, map, 1, 6, INTERIOR.barrel);
+  addNpc(map, { character: 'tomas', x: 3, y: 3 });
+  addNpc(map, { character: 'pablo', x: 8, y: 3 });
+  addNpc(map, { character: 'bigotes', x: 9, y: 6 });
+  return map;
+}
+
+// Casa de Lucía (HU-70).
+function casaLucia() {
+  const map = interior(10, 8, INTERIOR.floor, INTERIOR.floorDetail, 'barrio');
+  setTile(map.obstacles, map, 2, 1, INTERIOR.shelf);
+  setTile(map.obstacles, map, 6, 3, INTERIOR.table);
+  setTile(map.obstacles, map, 7, 3, INTERIOR.chair);
+  setTile(map.obstacles, map, 8, 1, INTERIOR.barrel);
+  addNpc(map, { character: 'lucia', x: 3, y: 3 });
+  return map;
+}
+
 mkdirSync(OUTPUT_DIR, { recursive: true });
-for (const [name, build] of Object.entries({ plaza, casa, tienda, torre, granja, lago, bosque })) {
+for (const [name, build] of Object.entries({ plaza, casa, tienda, torre, granja, lago, bosque, barrio, 'casa-tomas': casaTomas, 'casa-lucia': casaLucia })) {
   writeFileSync(`${OUTPUT_DIR}/${name}.json`, JSON.stringify(toTiled(shapeTrees(build())), null, 1) + '\n');
   console.log(`${OUTPUT_DIR}/${name}.json`);
 }

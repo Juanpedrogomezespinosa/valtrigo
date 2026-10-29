@@ -27,6 +27,18 @@
   ],
   "rosa": [
     {
+      "zone": "lago",
+      "from": "06:00",
+      "to": "12:00",
+      "notOnDay": 7
+    },
+    {
+      "zone": "plaza",
+      "from": "12:00",
+      "to": "19:00",
+      "notOnDay": 7
+    },
+    {
       "zone": "plaza",
       "from": "12:00",
       "to": "24:00",
@@ -34,6 +46,24 @@
     }
   ],
   "lucia": [
+    {
+      "zone": "barrio",
+      "from": "07:00",
+      "to": "12:00",
+      "notOnDay": 7
+    },
+    {
+      "zone": "granja",
+      "from": "12:00",
+      "to": "15:00",
+      "notOnDay": 7
+    },
+    {
+      "zone": "casa-lucia",
+      "from": "15:00",
+      "to": "22:00",
+      "notOnDay": 7
+    },
     {
       "zone": "plaza",
       "from": "12:00",
@@ -43,6 +73,30 @@
   ],
   "tomas": [
     {
+      "zone": "casa-tomas",
+      "from": "06:00",
+      "to": "09:00",
+      "notOnDay": 7
+    },
+    {
+      "zone": "plaza",
+      "from": "09:00",
+      "to": "13:00",
+      "notOnDay": 7
+    },
+    {
+      "zone": "barrio",
+      "from": "13:00",
+      "to": "19:00",
+      "notOnDay": 7
+    },
+    {
+      "zone": "casa-tomas",
+      "from": "19:00",
+      "to": "23:00",
+      "notOnDay": 7
+    },
+    {
       "zone": "plaza",
       "from": "12:00",
       "to": "24:00",
@@ -50,6 +104,36 @@
     }
   ],
   "pablo": [
+    {
+      "zone": "casa-tomas",
+      "from": "07:00",
+      "to": "09:00",
+      "notOnDay": 7
+    },
+    {
+      "zone": "barrio",
+      "from": "09:00",
+      "to": "12:00",
+      "notOnDay": 7
+    },
+    {
+      "zone": "lago",
+      "from": "12:00",
+      "to": "17:00",
+      "notOnDay": 7
+    },
+    {
+      "zone": "barrio",
+      "from": "17:00",
+      "to": "20:00",
+      "notOnDay": 7
+    },
+    {
+      "zone": "casa-tomas",
+      "from": "20:00",
+      "to": "22:00",
+      "notOnDay": 7
+    },
     {
       "zone": "plaza",
       "from": "12:00",
@@ -60,6 +144,18 @@
   "fran": [
     {
       "zone": "plaza",
+      "from": "10:00",
+      "to": "14:00",
+      "notOnDay": 7
+    },
+    {
+      "zone": "barrio",
+      "from": "16:00",
+      "to": "21:00",
+      "notOnDay": 7
+    },
+    {
+      "zone": "plaza",
       "from": "12:00",
       "to": "24:00",
       "day": 7
@@ -67,10 +163,73 @@
   ],
   "elena": [
     {
+      "zone": "barrio",
+      "from": "10:00",
+      "to": "14:00",
+      "notOnDay": 7
+    },
+    {
+      "zone": "plaza",
+      "from": "16:00",
+      "to": "21:00",
+      "notOnDay": 7
+    },
+    {
       "zone": "plaza",
       "from": "12:00",
       "to": "24:00",
       "day": 7
+    }
+  ],
+  "bigotes": [
+    {
+      "zone": "barrio",
+      "from": "06:00",
+      "to": "20:00"
+    },
+    {
+      "zone": "casa-tomas",
+      "from": "20:00",
+      "to": "24:00"
+    }
+  ],
+  "bruno": [
+    {
+      "zone": "bosque",
+      "from": "07:00",
+      "to": "19:00"
+    }
+  ],
+  "marta": [
+    {
+      "zone": "plaza",
+      "from": "08:00",
+      "to": "10:00",
+      "notOnDay": 7
+    },
+    {
+      "zone": "barrio",
+      "from": "10:00",
+      "to": "12:00",
+      "notOnDay": 7
+    },
+    {
+      "zone": "granja",
+      "from": "12:00",
+      "to": "14:00",
+      "notOnDay": 7
+    },
+    {
+      "zone": "lago",
+      "from": "14:00",
+      "to": "16:00",
+      "notOnDay": 7
+    },
+    {
+      "zone": "plaza",
+      "from": "16:00",
+      "to": "18:00",
+      "notOnDay": 7
     }
   ]
 }

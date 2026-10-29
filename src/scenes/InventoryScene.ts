@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { COLORS, FONT_FAMILY, INVENTORY_SLOTS, MESSAGE_MS } from '../config';
 import { getSlots, ITEMS, useSlot, type ItemId } from '../systems/inventory';
+import { onConfirmKeys } from '../ui/confirmKeys';
 import { showMessage } from '../ui/message';
 import { addTitle } from '../ui/title';
 
@@ -27,7 +28,7 @@ export interface OverlaySceneData {
 // Inventario (HU-13 y HU-14). Se abre encima de la partida. El tiempo sigue corriendo,
 // pero el personaje no se mueve mientras está abierto.
 // - 20 casillas en una cuadrícula de 5×4. Cada objeto muestra su icono, su nombre y su cantidad.
-// - Las flechas mueven la selección y Enter usa el objeto seleccionado.
+// - Las flechas mueven la selección y E o Enter usan el objeto seleccionado.
 // - I o Escape lo cierran.
 export class InventoryScene extends Phaser.Scene {
   private views: SlotView[] = [];
@@ -73,7 +74,7 @@ export class InventoryScene extends Phaser.Scene {
     keyboard.on('keydown-RIGHT', () => this.move(1, 0));
     keyboard.on('keydown-UP', () => this.move(0, -1));
     keyboard.on('keydown-DOWN', () => this.move(0, 1));
-    keyboard.on('keydown-ENTER', () => this.useSelected());
+    onConfirmKeys(keyboard, true, () => this.useSelected());
     keyboard.on('keydown-I', () => this.close());
     keyboard.on('keydown-ESC', () => this.close());
 

@@ -37,5 +37,20 @@
     "name": "Bosque",
     "map": "assets/maps/bosque.json",
     "music": "assets/audio/bosque.mp3"
+  },
+  "barrio": {
+    "name": "Barrio",
+    "map": "assets/maps/barrio.json",
+    "music": "assets/audio/barrio.mp3"
+  },
+  "casa-tomas": {
+    "name": "Casa de Tomás y Pablo",
+    "map": "assets/maps/casa-tomas.json",
+    "music": "assets/audio/casa.mp3"
+  },
+  "casa-lucia": {
+    "name": "Casa de Lucía",
+    "map": "assets/maps/casa-lucia.json",
+    "music": "assets/audio/casa.mp3"
   }
 }

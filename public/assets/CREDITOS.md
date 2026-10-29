@@ -13,7 +13,7 @@
 | Ninja Adventure (efectos) | audio/sfx/pasos.wav, abrir-menu.wav, compra.wav, venta.wav, cofre.wav, encargo-completado.wav | Pixel-boy y AAA (pixel-boy.itch.io) | CC0 1.0 (dominio público) |
 | Música | audio/*.mp3 | Juanpe Gómez, generada con IA (Flow, de Google) | Propia |
 | Casillas de agua | tilesets/agua.png | Generadas por código (tools/generar-agua.mjs), con la paleta de Kenney | Propia |
-| Huerto, cosechas, moras, mecanismo del reloj y feria | sprites/cultivos.png, sprites/objetos/nabo.png, zanahoria.png, calabaza.png, mora.png, sprites/mecanismo.png, guirnalda.png, puesto-cosecha.png, puesto-pesca.png, escenario.png, podio.png | Generados por código (tools/generar-sprites.mjs), con la paleta de Kenney | Propia |
+| Huerto, cosechas, moras, mecanismo del reloj, feria e iconos de la interfaz | sprites/cultivos.png, sprites/objetos/nabo.png, zanahoria.png, calabaza.png, mora.png, sprites/mecanismo.png, guirnalda.png, puesto-cosecha.png, puesto-pesca.png, escenario.png, podio.png, sprites/iconos/sol.png, luna.png, moneda.png, energia.png | Generados por código (tools/generar-sprites.mjs), con la paleta de Kenney | Propia |
 | Efectos de sonido provisionales | audio/sfx/menu-navegar.wav, menu-confirmar.wav | Generados por código (tools/generar-efectos.mjs) | Propia |
 
 Las imágenes de Kenney son las hojas `Tilemap/tilemap_packed.png` de cada paquete, sin modificar:
@@ -36,6 +36,9 @@ Archivos de Ninja Adventure (https://pixel-boy.itch.io/ninja-adventure-asset-pac
 | sprites/personajes/pablo.png | Actor/Character/Child/SpriteSheet.png |
 | sprites/personajes/fran.png | Actor/Character/Villager2/SpriteSheet.png, con la piel aclarada (#d14b34 → #ef914f, #8f3e56 → #cf736d) |
 | sprites/personajes/elena.png | Actor/Character/Cavegirl/SpriteSheet.png, con el pelo rubio (#56864c → #f1c471, #345a52 → #d78b4a) |
+| sprites/personajes/bruno.png | Actor/Character/Hunter/SpriteSheet.png |
+| sprites/personajes/marta.png | Actor/Character/Villager5/SpriteSheet.png |
+| sprites/personajes/bigotes.png | Actor/Animal/Cat/SpriteSheet.png |
 | sprites/retratos/vendedora.png | Actor/Character/Woman/Faceset.png |
 | sprites/retratos/alcalde.png | Actor/Character/Noble/Faceset.png |
 | sprites/retratos/relojera.png | Actor/Character/OldWoman/Faceset.png |
@@ -46,6 +49,9 @@ Archivos de Ninja Adventure (https://pixel-boy.itch.io/ninja-adventure-asset-pac
 | sprites/retratos/pablo.png | Actor/Character/Child/Faceset.png |
 | sprites/retratos/fran.png | Actor/Character/Villager2/Faceset.png, con los mismos cambios de color que su hoja |
 | sprites/retratos/elena.png | Actor/Character/Cavegirl/Faceset.png, con los mismos cambios de color que su hoja |
+| sprites/retratos/bruno.png | Actor/Character/Hunter/Faceset.png |
+| sprites/retratos/marta.png | Actor/Character/Villager5/Faceset.png |
+| sprites/retratos/bigotes.png | Actor/Animal/Cat/Faceset.png |
 | sprites/objetos/manzana.png | Items/Food/SeedBig3.png |
 | sprites/objetos/semilla.png | Items/Food/Seed1.png |
 | sprites/objetos/pala.png | Items/Tool/Shovel.png |

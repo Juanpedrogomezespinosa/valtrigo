@@ -7,6 +7,7 @@ import {
   FONT_FAMILY,
   MESSAGE_MS,
   SLEEP_FADE_MS,
+  RUN_SPEED_FACTOR,
   STEP_SOUND_MS,
   TALK_DISTANCE,
   TILE_SIZE,
@@ -41,7 +42,7 @@ import {
   water,
   type SeedId,
 } from '../systems/farm';
-import { closedDoorMessage, firstVisitNotice } from '../systems/doors';
+import { closedDoorMessage, closedHouse, firstVisitNotice } from '../systems/doors';
 import {
   areContestsOpen,
   awardPrize,
@@ -95,7 +96,7 @@ import {
   type NpcId,
   type Quest,
 } from '../systems/quests';
-import { findMapPoint, getProperty, mapKey, mapObjects, pointTile, ZONES, type MapObject, type ZoneId } from '../systems/zones';
+import { findMapPoint, getProperty, mapKey, mapObjects, musicKey, pointTile, ZONES, type MapObject, type ZoneId } from '../systems/zones';
 import { showConfirmDialog } from '../ui/confirmDialog';
 import { showMessage } from '../ui/message';
 import type { DaySummarySceneData } from './DaySummaryScene';
@@ -114,6 +115,8 @@ export interface GameSceneData {
 interface Door {
   area: Phaser.Geom.Rectangle;
   zone: ZoneId;
+  // Casa en la que no se puede entrar (HU-70): la puerta no lleva a ninguna zona.
+  closedHouse?: string;
   // Dirección en la que hay que caminar para cruzarla.
   direction: Direction;
 }
@@ -283,7 +286,7 @@ export class GameScene extends Phaser.Scene {
     this.setUpKeys();
 
     // HU-31: la música de la zona. Si es la misma que ya suena, no se reinicia.
-    playZoneMusic(this, `music-${state.zone}`, ZONES[state.zone].music);
+    playZoneMusic(this, musicKey(state.zone), ZONES[state.zone].music);
 
     // Capa de noche (HU-23) e interfaz fija (día, hora, dinero y energía), por encima de la partida.
     for (const key of ['NightScene', 'HudScene']) {
@@ -347,6 +350,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   // HU-32: mientras el personaje anda (se desplaza de verdad, no contra un obstáculo), suenan sus pasos.
+  // Al correr (HU-81), el doble de seguidos.
   private playSteps(delta: number): void {
     const body = this.player.body;
     const walking = body.velocity.lengthSq() > 0 && (body.deltaAbsX() > 0 || body.deltaAbsY() > 0);
@@ -355,7 +359,8 @@ export class GameScene extends Phaser.Scene {
       return;
     }
     this.stepMs += delta;
-    if (this.stepMs >= STEP_SOUND_MS) {
+    const interval = this.player.isRunning() ? STEP_SOUND_MS / RUN_SPEED_FACTOR : STEP_SOUND_MS;
+    if (this.stepMs >= interval) {
       this.stepMs = 0;
       playEffect(this, 'steps');
     }
@@ -455,7 +460,7 @@ export class GameScene extends Phaser.Scene {
       if (yes) {
         this.goToBed();
       }
-    });
+    }, true);
   }
 
   // HU-24 y HU-25: al dormir se guarda la partida tal como está al acostarse (decisión del autor:
@@ -1041,7 +1046,7 @@ export class GameScene extends Phaser.Scene {
         recordEvent('contest:pesca'); // HU-63
         this.stallMessage(FISHING_CONTEST, 'Ve al lago y lanza la caña para empezar');
       }
-    });
+    }, true);
   }
 
   // Cuadro de diálogo de un puesto de la feria, con el texto completo.
@@ -1555,6 +1560,7 @@ export class GameScene extends Phaser.Scene {
     return {
       area: new Phaser.Geom.Rectangle(object.x, object.y, object.width, object.height),
       zone: getProperty(object, 'zona') as ZoneId,
+      closedHouse: getProperty(object, 'cerrada'),
       direction: getProperty(object, 'direccion') as Direction,
     };
   }
@@ -1579,7 +1585,14 @@ export class GameScene extends Phaser.Scene {
   }
 
   // HU-17 y HU-57: si el edificio está cerrado, aparece un aviso (se cierra con E) y no se cambia de zona.
+  // HU-70: lo mismo con las casas del barrio en las que no se puede entrar.
   private useDoor(door: Door): void {
+    if (door.closedHouse) {
+      const { title, message } = closedHouse(door.closedHouse);
+      this.warnedDoor = door;
+      this.openDialog({ speaker: 'puerta', title, lines: [message], typewriter: false });
+      return;
+    }
     const closedMessage = closedDoorMessage(door.zone);
     if (!closedMessage) {
       this.changeZone(door);

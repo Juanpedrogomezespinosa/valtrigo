@@ -473,11 +473,11 @@ Como jugador, quiero usar objetos como las manzanas para recuperar energía.
 
 Criterios de aceptación:
 
-- Desde el inventario, el jugador selecciona un objeto y pulsa Enter para usarlo.
+- Desde el inventario, el jugador selecciona un objeto y pulsa E o Enter para usarlo (HU-82).
 - Una Manzana recupera 15 puntos de energía, sin superar el máximo de 100.
 - Al usar un objeto consumible se reduce su cantidad en 1. Si la cantidad llega a 0, el objeto desaparece del inventario.
 - Si la energía está al máximo, la Manzana no se consume.
-- La energía aparece en la esquina superior derecha de la pantalla, debajo del dinero, con el formato “Energía: [actual]/100”.
+- La energía aparece en la esquina superior derecha de la pantalla, debajo del dinero, con un rayo, una barra y el texto “[actual]/100” (HU-80).
 Escenario 1: Usar una Manzana
 
 - Dado que el jugador tiene 3 Manzanas y 60 puntos de energía
@@ -504,11 +504,11 @@ Escenario 5: Ver la energía
 
 - Dado que el jugador tiene 60 puntos de energía
 - Cuando usa una Manzana
-- Entonces la interfaz pasa de “Energía: 60/100” a “Energía: 75/100”","- Desde el inventario, el jugador selecciona un objeto y pulsa Enter para usarlo.
+- Entonces la interfaz pasa de “60/100” a “75/100”","- Desde el inventario, el jugador selecciona un objeto y pulsa E o Enter para usarlo (HU-82).
 - Una Manzana recupera 15 puntos de energía, sin superar el máximo de 100.
 - Al usar un objeto consumible se reduce su cantidad en 1. Si la cantidad llega a 0, el objeto desaparece del inventario.
 - Si la energía está al máximo, la Manzana no se consume.
-- La energía aparece en la esquina superior derecha de la pantalla, debajo del dinero, con el formato “Energía: [actual]/100”."
+- La energía aparece en la esquina superior derecha de la pantalla, debajo del dinero, con un rayo, una barra y el texto “[actual]/100” (HU-80)."
 "HU-15","HU-15. Límite de espacio en el inventario","# HU-15. Límite de espacio en el inventario
 
 # HU-15. Límite de espacio en el inventario
@@ -548,29 +548,29 @@ Como jugador, quiero ver mi dinero en pantalla para saber si puedo comprar algo.
 
 Criterios de aceptación:
 
-- El dinero aparece en la esquina superior derecha de la pantalla durante la partida, con el formato “[cantidad] monedas”.
+- El dinero aparece en la esquina superior derecha de la pantalla durante la partida, con el icono de una moneda seguido de la cantidad (HU-80).
 - El dinero se actualiza al instante al comprar, vender, completar encargos o recibir recompensas.
 - El dinero sigue visible con el menú de pausa abierto.
 Escenario 1: Dinero inicial
 
 - Dado que el jugador empieza una partida nueva
 - Cuando mira la interfaz
-- Entonces aparece “100 monedas”
+- Entonces aparece “100” junto al icono de la moneda
 Escenario 2: Actualización al comprar
 
 - Dado que el jugador tiene 100 monedas
 - Cuando compra un objeto que cuesta 30 monedas
-- Entonces aparece “70 monedas” en la interfaz
+- Entonces aparece “70” en la interfaz
 Escenario 3: Actualización al completar un encargo
 
 - Dado que el jugador tiene 70 monedas
 - Cuando completa un encargo que paga 50 monedas
-- Entonces aparece “120 monedas” en la interfaz
+- Entonces aparece “120” en la interfaz
 Escenario 4: Dinero visible en pausa
 
 - Dado que el jugador abre el menú de pausa
 - Cuando el menú se muestra
-- Entonces el dinero sigue visible en la esquina superior derecha","- El dinero aparece en la esquina superior derecha de la pantalla durante la partida, con el formato “[cantidad] monedas”.
+- Entonces el dinero sigue visible en la esquina superior derecha","- El dinero aparece en la esquina superior derecha de la pantalla durante la partida, con el icono de una moneda seguido de la cantidad (HU-80).
 - El dinero se actualiza al instante al comprar, vender, completar encargos o recibir recompensas.
 - El dinero sigue visible con el menú de pausa abierto."
 "HU-17","HU-17. Comprar objetos en la tienda","# HU-17. Comprar objetos en la tienda
@@ -1121,7 +1121,7 @@ Como jugador, quiero ver la lista de controles en el menú de opciones para sabe
 
 Criterios de aceptación:
 
-- La pantalla de opciones muestra una tabla con cada acción y su tecla asignada: mover (flechas o WASD), interactuar (E), inventario (I), objetivos (O), pausa (Escape), usar objeto (Enter).
+- La pantalla de opciones muestra una tabla con cada acción y su tecla asignada: mover (flechas o WASD), correr (Mayús, HU-81), interactuar (E), inventario (I), objetivos (O), pausa (Escape), usar objeto (E o Enter, HU-82).
 - La tabla es de solo lectura: las teclas no se pueden cambiar.
 Escenario 1: Consultar los controles
 
@@ -1137,7 +1137,7 @@ Escenario 3: Contenido completo
 
 - Dado que la tabla de controles está visible
 - Cuando el jugador la recorre
-- Entonces aparecen las seis acciones de la lista","- La pantalla de opciones muestra una tabla con cada acción y su tecla asignada: mover (flechas o WASD), interactuar (E), inventario (I), objetivos (O), pausa (Escape), usar objeto (Enter).
+- Entonces aparecen las siete acciones de la lista","- La pantalla de opciones muestra una tabla con cada acción y su tecla asignada: mover (flechas o WASD), correr (Mayús, HU-81), interactuar (E), inventario (I), objetivos (O), pausa (Escape), usar objeto (E o Enter, HU-82).
 - La tabla es de solo lectura: las teclas no se pueden cambiar."
 "HU-34","HU-34. Guardar las opciones","# HU-34. Guardar las opciones
 
@@ -1986,7 +1986,7 @@ Criterios de aceptación:
 - El día 7, a partir de las 12:00, hay seis visitantes en la plaza: Rosa, Lucía, Tomás, Pablo, Fran y Elena. Cada uno tiene un diálogo sencillo al pulsar E junto a él. Fran dice “He venido por el networking, pero bueno... el futuro es ansiedad.” y Elena “He venido porque me han prometido que después pondrán margarita frozen.”.
 - Los concursos admiten participantes de 12:00 a 17:00. A las 17:00 aparece el mensaje “Los concursos han terminado. Ceremonia a las 18:00 en la plaza”.
 - Los postes de las guirnaldas, los puestos, el escenario y el podio son obstáculos.
-- Antes y después del día 7, la plaza tiene su aspecto normal: no hay guirnaldas, puestos, escenario, podio ni visitantes.
+- Antes y después del día 7, la plaza tiene su aspecto normal: no hay guirnaldas, puestos, escenario ni podio. Los vecinos están donde marque su horario (HU-71).
 - Pasado el día 7, el encargo “La feria de Valtrigo” se puede seguir completando al hablar con el alcalde, aunque ya no haya feria.
 Escenario 1: Día de feria
 
@@ -1998,12 +1998,12 @@ Escenario 2: Antes de la feria
 
 - Dado que es el día 6
 - Cuando el jugador entra en la plaza
-- Entonces no hay guirnaldas, puestos, escenario, podio ni visitantes
+- Entonces no hay guirnaldas, puestos, escenario ni podio
 Escenario 3: Después de la feria
 
 - Dado que es el día 8
 - Cuando el jugador entra en la plaza
-- Entonces no hay guirnaldas, puestos, escenario, podio ni visitantes
+- Entonces no hay guirnaldas, puestos, escenario ni podio
 Escenario 4: Encargo final después de la feria
 
 - Dado que es el día 8 y el encargo “La feria de Valtrigo” está activo
@@ -2018,7 +2018,7 @@ Escenario 6: Hablar con un visitante
 
 - Dado que es el día 7 y el jugador está junto a Rosa
 - Cuando pulsa E
-- Entonces Rosa dice su diálogo
+- Entonces Rosa dice su diálogo de la feria
 Escenario 7: Fin de los concursos
 
 - Dado que es el día 7 a las 16:59
@@ -2034,7 +2034,7 @@ Escenario 8: Postes de la guirnalda
 - El día 7, a partir de las 12:00, hay seis visitantes en la plaza: Rosa, Lucía, Tomás, Pablo, Fran y Elena. Cada uno tiene un diálogo sencillo al pulsar E junto a él. Fran dice “He venido por el networking, pero bueno... el futuro es ansiedad.” y Elena “He venido porque me han prometido que después pondrán margarita frozen.”.
 - Los concursos admiten participantes de 12:00 a 17:00. A las 17:00 aparece el mensaje “Los concursos han terminado. Ceremonia a las 18:00 en la plaza”.
 - Los postes de las guirnaldas, los puestos, el escenario y el podio son obstáculos.
-- Antes y después del día 7, la plaza tiene su aspecto normal: no hay guirnaldas, puestos, escenario, podio ni visitantes.
+- Antes y después del día 7, la plaza tiene su aspecto normal: no hay guirnaldas, puestos, escenario ni podio. Los vecinos están donde marque su horario (HU-71).
 - Pasado el día 7, el encargo “La feria de Valtrigo” se puede seguir completando al hablar con el alcalde, aunque ya no haya feria."
 "HU-59","HU-59. Concurso de la cosecha","# HU-59. Concurso de la cosecha
 
@@ -2495,3 +2495,269 @@ Escenario 3: Árboles sólidos
 - Entonces el personaje se detiene junto al tronco","- En las zonas exteriores (plaza, granja, lago y bosque) hay árboles altos, de dos casillas, y árboles pequeños, de una. Unos son verdes y otros otoñales.
 - Un árbol alto tiene la copa en la casilla de arriba y el tronco en la de abajo, y las dos partes son del mismo árbol: ningún árbol aparece cortado ni mezcla un árbol verde con uno otoñal.
 - Todas las casillas de un árbol, alto o pequeño, son obstáculos (HU-07)."
+"HU-70","HU-70. Nueva zona: el Barrio","# HU-70. Nueva zona: el Barrio
+
+# HU-70. Nueva zona: el Barrio
+
+Como jugador, quiero visitar el barrio donde viven los vecinos para conocer mejor el pueblo.
+
+Criterios de aceptación:
+
+- El barrio es una zona nueva conectada con la plaza por un camino en el borde oeste de la plaza.
+- En el barrio hay cinco casas: la de Tomás y Pablo, la de Lucía, la de Rosa, la de Fran y la de Elena. Cada una tiene un cartel con el nombre de quien vive en ella.
+- Se puede entrar en la casa de Tomás y Pablo y en la de Lucía. Cada una es una zona interior, con su puerta, como la casa del jugador.
+- Al caminar hacia la puerta de la casa de Rosa, la de Fran o la de Elena aparece el cuadro de diálogo “La puerta está cerrada” y no se cambia de zona (como las puertas cerradas de HU-57).
+- El barrio tiene su propia música, que entra al llegar como en las demás zonas (HU-31). Las dos casas usan la música de la casa del jugador.
+- El cambio de zona funciona como el resto de puertas (HU-08).
+Escenario 1: Entrar al barrio
+
+- Dado que el jugador está en la plaza
+- Cuando camina por el camino del oeste
+- Entonces aparece en el barrio, junto a la salida hacia la plaza
+Escenario 2: Volver a la plaza
+
+- Dado que el jugador está en el barrio
+- Cuando camina por el camino del este
+- Entonces aparece en la plaza, junto al camino del oeste
+Escenario 3: Entrar en una casa
+
+- Dado que el jugador está en el barrio, delante de la casa de Lucía
+- Cuando camina hacia la puerta
+- Entonces aparece dentro de la casa de Lucía
+Escenario 4: Casa cerrada
+
+- Dado que el jugador está en el barrio, delante de la casa de Rosa
+- Cuando camina hacia la puerta
+- Entonces aparece el cuadro “La puerta está cerrada”
+- Y el jugador sigue en el barrio
+Escenario 5: Carteles de las casas
+
+- Dado que el jugador está junto al cartel de la casa de Tomás y Pablo
+- Cuando pulsa E
+- Entonces aparece el texto “Casa de Tomás y Pablo”","- El barrio es una zona nueva conectada con la plaza por un camino en el borde oeste de la plaza.
+- En el barrio hay cinco casas: la de Tomás y Pablo, la de Lucía, la de Rosa, la de Fran y la de Elena. Cada una tiene un cartel con el nombre de quien vive en ella.
+- Se puede entrar en la casa de Tomás y Pablo y en la de Lucía. Cada una es una zona interior, con su puerta, como la casa del jugador.
+- Al caminar hacia la puerta de la casa de Rosa, la de Fran o la de Elena aparece el cuadro de diálogo “La puerta está cerrada” y no se cambia de zona (como las puertas cerradas de HU-57).
+- El barrio tiene su propia música, que entra al llegar como en las demás zonas (HU-31). Las dos casas usan la música de la casa del jugador.
+- El cambio de zona funciona como el resto de puertas (HU-08)."
+"HU-71","HU-71. Los vecinos","# HU-71. Los vecinos
+
+# HU-71. Los vecinos
+
+Como jugador, quiero encontrarme a los vecinos por el pueblo durante toda la semana para que Valtrigo parezca un pueblo de verdad.
+
+Criterios de aceptación:
+
+- Los seis vecinos de la feria (Rosa, Lucía, Tomás, Pablo, Fran y Elena) viven en el pueblo y siguen un horario por zonas del día 1 al día 6, como los NPC de HU-40.
+- Hay tres vecinos nuevos: Bruno, el leñador, que está en el bosque; Marta, la cartera, que recorre el pueblo; y Bigotes, el gato de Pablo.
+- Horarios del día 1 al día 6 (cada tramo va desde la primera hora hasta antes de la segunda; fuera de sus tramos, el vecino no está en ninguna zona):
+  - Tomás: casa de Tomás y Pablo de 06:00 a 09:00, plaza de 09:00 a 13:00, barrio de 13:00 a 19:00 y casa de 19:00 a 23:00.
+  - Pablo: casa de 07:00 a 09:00, barrio de 09:00 a 12:00, lago de 12:00 a 17:00, barrio de 17:00 a 20:00 y casa de 20:00 a 22:00.
+  - Bigotes: barrio de 06:00 a 20:00 y casa de Tomás y Pablo de 20:00 a 24:00.
+  - Lucía: barrio de 07:00 a 12:00, granja de 12:00 a 15:00 y casa de Lucía de 15:00 a 22:00.
+  - Rosa: lago de 06:00 a 12:00 y plaza de 12:00 a 19:00.
+  - Fran: plaza de 10:00 a 14:00 y barrio de 16:00 a 21:00.
+  - Elena: barrio de 10:00 a 14:00 y plaza de 16:00 a 21:00.
+  - Bruno: bosque de 07:00 a 19:00.
+  - Marta: plaza de 08:00 a 10:00, barrio de 10:00 a 12:00, granja de 12:00 a 14:00, lago de 14:00 a 16:00 y plaza de 16:00 a 18:00.
+- El día 7 los seis vecinos de la feria siguen el horario de la feria (HU-58). Bruno sigue en el bosque, Bigotes en el barrio y Marta no reparte.
+- Cada vecino tiene su propio saludo al hablar con él (HU-10). Bigotes solo dice “¡Miau!”.
+- El día de la feria, los seis vecinos de la feria dicen lo mismo que en la feria.
+Escenario 1: Vecino en su sitio
+
+- Dado que es el día 2 a las 10:00
+- Cuando el jugador entra en la plaza
+- Entonces Tomás está en la plaza
+Escenario 2: Vecino que cambia de zona
+
+- Dado que es el día 2 a las 14:00
+- Cuando el jugador entra en el barrio
+- Entonces Tomás está en el barrio
+- Y no está en la plaza
+Escenario 3: Bruno en el bosque
+
+- Dado que es el día 3 a las 10:00
+- Cuando el jugador entra en el bosque
+- Entonces Bruno está en el bosque
+Escenario 4: La ronda de Marta
+
+- Dado que es el día 2 a las 13:00
+- Cuando el jugador entra en la granja
+- Entonces Marta está en la granja
+Escenario 5: Hablar con Bigotes
+
+- Dado que el jugador está junto a Bigotes
+- Cuando pulsa E
+- Entonces aparece el diálogo “¡Miau!”
+Escenario 6: Día de la feria
+
+- Dado que es el día 7 a las 13:00
+- Cuando el jugador entra en la plaza
+- Entonces los seis vecinos de la feria están en la plaza
+- Y Marta no está en ninguna zona","- Los seis vecinos de la feria (Rosa, Lucía, Tomás, Pablo, Fran y Elena) viven en el pueblo y siguen un horario por zonas del día 1 al día 6, como los NPC de HU-40.
+- Hay tres vecinos nuevos: Bruno, el leñador, que está en el bosque; Marta, la cartera, que recorre el pueblo; y Bigotes, el gato de Pablo.
+- Horarios del día 1 al día 6 (cada tramo va desde la primera hora hasta antes de la segunda; fuera de sus tramos, el vecino no está en ninguna zona):
+  - Tomás: casa de Tomás y Pablo de 06:00 a 09:00, plaza de 09:00 a 13:00, barrio de 13:00 a 19:00 y casa de 19:00 a 23:00.
+  - Pablo: casa de 07:00 a 09:00, barrio de 09:00 a 12:00, lago de 12:00 a 17:00, barrio de 17:00 a 20:00 y casa de 20:00 a 22:00.
+  - Bigotes: barrio de 06:00 a 20:00 y casa de Tomás y Pablo de 20:00 a 24:00.
+  - Lucía: barrio de 07:00 a 12:00, granja de 12:00 a 15:00 y casa de Lucía de 15:00 a 22:00.
+  - Rosa: lago de 06:00 a 12:00 y plaza de 12:00 a 19:00.
+  - Fran: plaza de 10:00 a 14:00 y barrio de 16:00 a 21:00.
+  - Elena: barrio de 10:00 a 14:00 y plaza de 16:00 a 21:00.
+  - Bruno: bosque de 07:00 a 19:00.
+  - Marta: plaza de 08:00 a 10:00, barrio de 10:00 a 12:00, granja de 12:00 a 14:00, lago de 14:00 a 16:00 y plaza de 16:00 a 18:00.
+- El día 7 los seis vecinos de la feria siguen el horario de la feria (HU-58). Bruno sigue en el bosque, Bigotes en el barrio y Marta no reparte.
+- Cada vecino tiene su propio saludo al hablar con él (HU-10). Bigotes solo dice “¡Miau!”.
+- El día de la feria, los seis vecinos de la feria dicen lo mismo que en la feria."
+"HU-80","HU-80. Interfaz con iconos","# HU-80. Interfaz con iconos
+
+# HU-80. Interfaz con iconos
+
+Como jugador, quiero una interfaz más clara y bonita para ver de un vistazo la hora, el dinero y la energía.
+
+Criterios de aceptación:
+
+- La interfaz de la partida se muestra en dos paneles con fondo oscuro y borde claro: el del día y la hora, arriba a la izquierda, y el del dinero y la energía, arriba a la derecha.
+- Delante del día aparece un sol de 06:00 a 19:59 y una luna de 20:00 a 05:59.
+- El dinero se muestra con el icono de una moneda seguido de la cantidad, por ejemplo “125” (HU-16).
+- La energía se muestra con el icono de un rayo, una barra y el texto “[actual]/100” (HU-14).
+- La barra de energía se llena en proporción a la energía actual. Es verde por encima de 50, amarilla de 26 a 50 y roja de 25 o menos.
+- La cuenta atrás del concurso de pesca (HU-60) aparece en un panel debajo del día y la hora.
+- Los textos de los paneles cumplen el contraste de HU-36.
+Escenario 1: Sol de día
+
+- Dado que son las 10:00
+- Cuando el jugador mira la interfaz
+- Entonces aparece un sol delante del día
+Escenario 2: Luna de noche
+
+- Dado que son las 21:00
+- Cuando el jugador mira la interfaz
+- Entonces aparece una luna delante del día
+Escenario 3: Dinero con icono
+
+- Dado que el jugador empieza una partida nueva
+- Cuando mira la interfaz
+- Entonces aparece el icono de la moneda seguido de “100”
+Escenario 4: Barra de energía verde
+
+- Dado que el jugador tiene 80 puntos de energía
+- Cuando mira la interfaz
+- Entonces la barra de energía está llena en un 80 % y es verde
+- Y aparece “80/100”
+Escenario 5: Barra de energía amarilla
+
+- Dado que el jugador tiene 40 puntos de energía
+- Cuando mira la interfaz
+- Entonces la barra de energía está llena en un 40 % y es amarilla
+Escenario 6: Barra de energía roja
+
+- Dado que el jugador tiene 20 puntos de energía
+- Cuando mira la interfaz
+- Entonces la barra de energía está llena en un 20 % y es roja
+Escenario 7: Interfaz legible
+
+- Dado que el jugador está en la partida
+- Cuando mira la interfaz
+- Entonces el contraste entre los textos de los paneles y su fondo es de al menos 4,5:1","- La interfaz de la partida se muestra en dos paneles con fondo oscuro y borde claro: el del día y la hora, arriba a la izquierda, y el del dinero y la energía, arriba a la derecha.
+- Delante del día aparece un sol de 06:00 a 19:59 y una luna de 20:00 a 05:59.
+- El dinero se muestra con el icono de una moneda seguido de la cantidad, por ejemplo “125” (HU-16).
+- La energía se muestra con el icono de un rayo, una barra y el texto “[actual]/100” (HU-14).
+- La barra de energía se llena en proporción a la energía actual. Es verde por encima de 50, amarilla de 26 a 50 y roja de 25 o menos.
+- La cuenta atrás del concurso de pesca (HU-60) aparece en un panel debajo del día y la hora.
+- Los textos de los paneles cumplen el contraste de HU-36."
+"HU-81","HU-81. Correr","# HU-81. Correr
+
+# HU-81. Correr
+
+Como jugador, quiero correr para recorrer el pueblo más deprisa.
+
+Criterios de aceptación:
+
+- Al pulsar la tecla Mayús se activa correr y al volver a pulsarla se desactiva. No hace falta mantenerla pulsada.
+- Con correr activado, el personaje se mueve al doble de la velocidad normal (8 casillas por segundo). Con correr desactivado, anda a la velocidad normal (HU-06).
+- Pulsar Mayús no mueve al personaje.
+- Correr sigue activado al cambiar de zona. Al empezar o cargar una partida, el personaje anda.
+- Al correr, la animación y los pasos (HU-32) van al doble de rápido.
+- Correr no gasta energía.
+- Al correr, las colisiones (HU-07), la ayuda en las esquinas y las puertas (HU-08) funcionan igual que al andar.
+- La tabla de controles (HU-33) incluye “Correr: Mayús”.
+Escenario 1: Activar correr
+
+- Dado que el personaje está quieto en la plaza
+- Cuando el jugador pulsa Mayús una vez y después mantiene la flecha derecha
+- Entonces el personaje se mueve hacia la derecha al doble de la velocidad normal
+Escenario 2: Desactivar correr
+
+- Dado que el personaje está corriendo hacia la derecha
+- Cuando el jugador vuelve a pulsar Mayús sin soltar la flecha
+- Entonces el personaje sigue moviéndose hacia la derecha a la velocidad normal
+Escenario 3: Mayús no mueve
+
+- Dado que el personaje está quieto
+- Cuando el jugador pulsa Mayús
+- Entonces el personaje no se mueve
+Escenario 4: Sin gasto de energía
+
+- Dado que el jugador tiene 50 puntos de energía y correr está activado
+- Cuando corre durante 2 segundos
+- Entonces sigue teniendo 50 puntos de energía
+Escenario 5: Al cambiar de zona
+
+- Dado que correr está activado
+- Cuando el jugador cruza una puerta
+- Entonces en la nueva zona el personaje sigue corriendo
+Escenario 6: Controles
+
+- Dado que el jugador abre el menú de opciones
+- Cuando consulta la tabla de controles
+- Entonces aparece “Correr” con la tecla “Mayús”","- Al pulsar la tecla Mayús se activa correr y al volver a pulsarla se desactiva. No hace falta mantenerla pulsada.
+- Con correr activado, el personaje se mueve al doble de la velocidad normal (8 casillas por segundo). Con correr desactivado, anda a la velocidad normal (HU-06).
+- Pulsar Mayús no mueve al personaje.
+- Correr sigue activado al cambiar de zona. Al empezar o cargar una partida, el personaje anda.
+- Al correr, la animación y los pasos (HU-32) van al doble de rápido.
+- Correr no gasta energía.
+- Al correr, las colisiones (HU-07), la ayuda en las esquinas y las puertas (HU-08) funcionan igual que al andar.
+- La tabla de controles (HU-33) incluye “Correr: Mayús”."
+"HU-82","HU-82. Confirmar con E","# HU-82. Confirmar con E
+
+# HU-82. Confirmar con E
+
+Como jugador, quiero hacer todas las acciones de la partida con la E para no tener que cambiar de tecla.
+
+Criterios de aceptación:
+
+- Durante la partida, todo lo que se confirma con Enter se confirma también con E: comprar y vender en la tienda, usar un objeto del inventario, “¿Dormir?” y “¿Inscribirte en el concurso de pesca?”, las opciones de los diálogos, colocar piezas en el mecanismo del reloj, elegir semilla o cosecha, y el menú de pausa con su cuadro de confirmación.
+- La E con la que se abre una pantalla no confirma nada en ella: para confirmar hay que volver a pulsarla.
+- Las ayudas de la parte de abajo de esas pantallas indican la E (por ejemplo, “E: colocar”).
+- En el menú principal, las opciones, la pantalla del nombre y la del aspecto se sigue confirmando con Enter (en el nombre, la E es una letra).
+- La tabla de controles (HU-33) muestra “Usar objeto: E o Enter”.
+Escenario 1: Comprar con E
+
+- Dado que el jugador está en la tienda con la Pala seleccionada y 100 monedas
+- Cuando pulsa E
+- Entonces compra una Pala y le quedan 70 monedas
+Escenario 2: Usar un objeto con E
+
+- Dado que el jugador tiene 60 puntos de energía y una Manzana seleccionada en el inventario
+- Cuando pulsa E
+- Entonces la energía sube a 75
+Escenario 3: Dormir con E
+
+- Dado que el jugador está junto a la cama
+- Cuando pulsa E, elige “Sí” y vuelve a pulsar E
+- Entonces se duerme
+Escenario 4: La E que abre no confirma
+
+- Dado que el jugador está junto a la cama
+- Cuando pulsa E
+- Entonces aparece “¿Dormir?” y sigue abierto
+Escenario 5: Menú de pausa con E
+
+- Dado que el menú de pausa está abierto con “Continuar” seleccionado
+- Cuando el jugador pulsa E
+- Entonces la partida se reanuda","- Durante la partida, todo lo que se confirma con Enter se confirma también con E: comprar y vender en la tienda, usar un objeto del inventario, “¿Dormir?” y “¿Inscribirte en el concurso de pesca?”, las opciones de los diálogos, colocar piezas en el mecanismo del reloj, elegir semilla o cosecha, y el menú de pausa con su cuadro de confirmación.
+- La E con la que se abre una pantalla no confirma nada en ella: para confirmar hay que volver a pulsarla.
+- Las ayudas de la parte de abajo de esas pantallas indican la E (por ejemplo, “E: colocar”).
+- En el menú principal, las opciones, la pantalla del nombre y la del aspecto se sigue confirmando con Enter (en el nombre, la E es una letra).
+- La tabla de controles (HU-33) muestra “Usar objeto: E o Enter”."

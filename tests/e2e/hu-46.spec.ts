@@ -23,7 +23,7 @@ test('Escenario 1: Gastar energía', async ({ page }) => {
   expect((await plotState(page)).dug).toBe(true);
   expect((await currentGameState(page))?.energy).toBe(46);
   // La energía en pantalla se actualiza en cuanto se gasta.
-  await expect.poll(() => hudEnergy(page), { intervals: [25] }).toBe('Energía: 46/100');
+  await expect.poll(() => hudEnergy(page), { intervals: [25] }).toBe('46/100');
 });
 
 test('Escenario 2: Acciones gratuitas', async ({ page }) => {
@@ -38,5 +38,5 @@ test('Escenario 2: Acciones gratuitas', async ({ page }) => {
   const state = await currentGameState(page);
   expect(state?.inventory).toEqual([{ item: 'semilla', quantity: 1 }]);
   expect(state?.energy).toBe(50);
-  expect(await hudEnergy(page)).toBe('Energía: 50/100');
+  expect(await hudEnergy(page)).toBe('50/100');
 });

@@ -1,0 +1,8 @@
+{
+  "closedMessage": "La puerta está cerrada",
+  "houses": {
+    "casa-rosa": "Casa de Rosa",
+    "casa-fran": "Casa de Fran",
+    "casa-elena": "Casa de Elena"
+  }
+}

@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
-import { PLAYER_SPEED, TILE_SIZE } from '../config';
+import { PLAYER_SPEED, RUN_SPEED_FACTOR, TILE_SIZE } from '../config';
+import { isRunning, toggleRunning } from '../systems/gameState';
 import type { TilePosition } from '../systems/zones';
 
 export type Direction = 'down' | 'up' | 'left' | 'right';
@@ -33,6 +34,7 @@ const VELOCITY: Record<Direction, { x: number; y: number }> = {
 // - No atraviesa obstáculos. Si la dirección que manda está bloqueada y otra de las pulsadas
 //   está libre, se mueve en la libre (HU-07).
 // - Si choca por poco con la esquina de un hueco, se desliza de lado hasta entrar en él (CORNER_ASSIST).
+// - Mayús activa o desactiva correr: va al doble de velocidad y la animación también (HU-81).
 export class Player extends Phaser.Physics.Arcade.Sprite {
   declare body: Phaser.Physics.Arcade.Body;
   facing: Direction = 'down';
@@ -62,6 +64,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       [KeyCodes.D, 'right'],
     ];
     this.keys = bindings.map(([code, direction]) => ({ key: keyboard.addKey(code), direction }));
+    keyboard.on('keydown-SHIFT', (event: KeyboardEvent) => !event.repeat && toggleRunning());
 
     createWalkAnimations(scene, texture);
   }
@@ -78,6 +81,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       this.stand();
       return;
     }
+    this.anims.timeScale = this.isRunning() ? RUN_SPEED_FACTOR : 1;
 
     const slide = this.canMove(pressed[0]) ? null : this.cornerSlide(pressed[0]);
     if (slide) {
@@ -97,7 +101,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
     this.facing = direction;
     const { x, y } = VELOCITY[direction];
-    this.setVelocity(x * PLAYER_SPEED, y * PLAYER_SPEED);
+    this.setVelocity(x * this.speed(), y * this.speed());
     this.anims.play(`${this.texture.key}-andar-${direction}`, true);
   }
 
@@ -106,6 +110,14 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.setVelocity(0, 0);
     this.anims.stop();
     this.setFrame(DIRECTION_COLUMN[this.facing]);
+  }
+
+  isRunning(): boolean {
+    return isRunning();
+  }
+
+  private speed(): number {
+    return this.isRunning() ? PLAYER_SPEED * RUN_SPEED_FACTOR : PLAYER_SPEED;
   }
 
   getTilePosition(): TilePosition {
@@ -129,7 +141,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         const side: Direction = horizontal ? (sign < 0 ? 'up' : 'down') : sign < 0 ? 'left' : 'right';
         if (!this.canMove(direction, shift) || !this.canMove(side)) continue;
         const frameSeconds = this.scene.game.loop.delta / 1000;
-        const speed = frameSeconds > 0 ? Math.min(PLAYER_SPEED, distance / frameSeconds) : PLAYER_SPEED;
+        const speed = frameSeconds > 0 ? Math.min(this.speed(), distance / frameSeconds) : this.speed();
         return { x: shift.x === 0 ? 0 : sign * speed, y: shift.y === 0 ? 0 : sign * speed };
       }
     }

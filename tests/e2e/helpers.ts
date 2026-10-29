@@ -581,6 +581,29 @@ export async function hudEnergy(page: Page): Promise<string | null> {
   });
 }
 
+// Interfaz con iconos (HU-80): el icono de la hora, la moneda y la barra de energía (su relleno y su color).
+export async function hudIcons(
+  page: Page,
+): Promise<{ timeIcon: string; coinBeforeMoney: boolean; barFill: number; barColor: number } | null> {
+  return page.evaluate(() => {
+    const game = (window as unknown as GameWindow).game;
+    if (!game.scene.isActive('HudScene')) return null;
+    const hud = game.scene.getScene('HudScene');
+    const byName = <T,>(name: string) => hud.children.getByName(name) as T;
+    type Image = import('phaser').GameObjects.Image;
+    type Rectangle = import('phaser').GameObjects.Rectangle;
+    const coin = byName<Image>('icono-moneda').getBounds();
+    const money = byName<import('phaser').GameObjects.Text>('dinero').getBounds();
+    const bar = byName<Rectangle>('barra-energia');
+    return {
+      timeIcon: byName<Image>('icono-hora').texture.key,
+      coinBeforeMoney: coin.right <= money.left && Math.abs(coin.centerY - money.centerY) < 4,
+      barFill: bar.displayWidth / byName<Rectangle>('barra-energia-fondo').displayWidth,
+      barColor: bar.fillColor,
+    };
+  });
+}
+
 // --- Objetos del mundo (HU-12) ---
 
 export async function isChestOpen(page: Page, id: string): Promise<boolean> {

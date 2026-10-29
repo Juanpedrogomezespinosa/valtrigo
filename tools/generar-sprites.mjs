@@ -6,6 +6,7 @@
 // - El mecanismo del reloj de la torre (HU-56): public/assets/sprites/mecanismo.png.
 // - La feria (HU-58): guirnalda.png, poste-guirnalda.png (16×32, los postes de los extremos) y los puestos de la cosecha y de pesca (16×32, el de abajo es el mostrador).
 // - La ceremonia (HU-66): escenario.png y podio.png (48×32).
+// - Los iconos de la interfaz (HU-80): sol, luna, moneda y rayo (energía), en public/assets/sprites/iconos/.
 // Uso: node tools/generar-sprites.mjs
 //
 // cultivos.png: casillas de 16×16, de izquierda a derecha:
@@ -41,6 +42,7 @@ const PALETTE = {
   Y: [184, 132, 44], // latón oscuro
   x: [214, 72, 64], // toldo y banderín rojos
   u: [72, 132, 214], // toldo y banderín azules
+  c: [178, 184, 204], // sombra de la luna
 };
 
 const SOIL = [
@@ -420,6 +422,64 @@ function podium() {
   return rows.map((row) => row.join(''));
 }
 
+// --- Iconos de la interfaz (HU-80) ---
+
+// Dibuja un icono de 16×16 a partir de una función que da el color de cada píxel y le pone el contorno
+// oscuro alrededor.
+function outlined(color) {
+  const rows = Array.from({ length: 16 }, (_, y) => Array.from({ length: 16 }, (_, x) => color(x, y)));
+  const filled = (x, y) => rows[y]?.[x] !== undefined && rows[y][x] !== '.' && rows[y][x] !== 'o';
+  return rows.map((row, y) =>
+    row.map((char, x) => (char === '.' && (filled(x - 1, y) || filled(x + 1, y) || filled(x, y - 1) || filled(x, y + 1)) ? 'o' : char)).join(''),
+  );
+}
+const distance = (x, y, cx, cy) => Math.hypot(x - cx, y - cy);
+
+// Sol: un disco con ocho rayos, que no llevan contorno.
+const SUN_RAYS = ['7,0', '8,0', '7,15', '8,15', '0,7', '0,8', '15,7', '15,8', '2,2', '3,3', '13,2', '12,3', '2,13', '3,12', '13,13', '12,12'];
+function sun() {
+  const disc = outlined((x, y) => (distance(x, y, 7.5, 7.5) <= 4 ? (x + y > 17 ? 'Y' : 'y') : '.'));
+  return disc.map((row, y) => [...row].map((char, x) => (SUN_RAYS.includes(`${x},${y}`) ? 'Y' : char)).join(''));
+}
+
+// Luna creciente: un disco al que se le quita otro desplazado hacia arriba a la derecha.
+function moon() {
+  return outlined((x, y) => {
+    if (distance(x, y, 7.5, 7.5) > 6 || distance(x, y, 10.5, 5) <= 5) return '.';
+    return distance(x, y, 10.5, 5) <= 6.5 ? 'w' : 'c';
+  });
+}
+
+// Moneda: borde oscuro, cara clara con una marca en el centro y un brillo arriba a la izquierda.
+function coin() {
+  return outlined((x, y) => {
+    const d = distance(x, y, 7.5, 7.5);
+    if (d > 6) return '.';
+    if (d > 4.6) return 'Y';
+    if ((x === 7 || x === 8) && y >= 5 && y <= 10) return 'Y';
+    return x + y <= 9 ? 'w' : 'y';
+  });
+}
+
+const BOLT = [
+  '................',
+  '.........oooo...',
+  '........oyyo....',
+  '.......oyyo.....',
+  '......oyyo......',
+  '.....oyyo.......',
+  '....oyyyoooo....',
+  '....oyyyyyyo....',
+  '....ooooyyo.....',
+  '.......oyyo.....',
+  '......oyyo......',
+  '.....oyyo.......',
+  '....oyyo........',
+  '...oyyo.........',
+  '...ooo..........',
+  '................',
+];
+
 function pixels(drawing) {
   if (drawing.length % 16 !== 0 || drawing.some((row) => row.length % 16 !== 0 || row.length !== drawing[0].length)) {
     throw new Error('Cada dibujo debe medir un múltiplo de 16 de ancho y de alto');
@@ -474,6 +534,7 @@ function encodePng(rows) {
 }
 
 mkdirSync(`${SPRITES_DIR}/objetos`, { recursive: true });
+mkdirSync(`${SPRITES_DIR}/iconos`, { recursive: true });
 const files = {
   [`${SPRITES_DIR}/cultivos.png`]: strip([SOIL, SEEDS, SPROUT, GROWING, TURNIP, CARROT, PUMPKIN]),
   [`${SPRITES_DIR}/objetos/nabo.png`]: strip([TURNIP_ICON]),
@@ -487,6 +548,10 @@ const files = {
   [`${SPRITES_DIR}/puesto-pesca.png`]: strip([stall('u')]),
   [`${SPRITES_DIR}/escenario.png`]: strip([stage()]),
   [`${SPRITES_DIR}/podio.png`]: strip([podium()]),
+  [`${SPRITES_DIR}/iconos/sol.png`]: strip([sun()]),
+  [`${SPRITES_DIR}/iconos/luna.png`]: strip([moon()]),
+  [`${SPRITES_DIR}/iconos/moneda.png`]: strip([coin()]),
+  [`${SPRITES_DIR}/iconos/energia.png`]: strip([BOLT]),
 };
 for (const [path, rows] of Object.entries(files)) {
   writeFileSync(path, encodePng(rows));

@@ -53,12 +53,12 @@ test('Escenario 4: Objeto no consumible', async ({ page }) => {
 
 test('Escenario 5: Ver la energía', async ({ page }) => {
   await startWith(page, { energy: 60, inventory: [{ item: 'manzana', quantity: 1 }] });
-  await expect.poll(() => hudEnergy(page)).toBe('Energía: 60/100');
+  await expect.poll(() => hudEnergy(page)).toBe('60/100');
 
   await press(page, 'i');
   await press(page, 'Enter');
 
-  await expect.poll(() => hudEnergy(page)).toBe('Energía: 75/100');
+  await expect.poll(() => hudEnergy(page)).toBe('75/100');
   // Debajo del dinero, en la esquina superior derecha.
   const layout = await page.evaluate(() => {
     const game = (window as unknown as { game: import('phaser').Game }).game;

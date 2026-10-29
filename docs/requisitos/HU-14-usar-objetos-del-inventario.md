@@ -6,11 +6,11 @@ Como jugador, quiero usar objetos como las manzanas para recuperar energía.
 
 Criterios de aceptación:
 
-- Desde el inventario, el jugador selecciona un objeto y pulsa Enter para usarlo.
+- Desde el inventario, el jugador selecciona un objeto y pulsa E o Enter para usarlo (HU-82).
 - Una Manzana recupera 15 puntos de energía, sin superar el máximo de 100.
 - Al usar un objeto consumible se reduce su cantidad en 1. Si la cantidad llega a 0, el objeto desaparece del inventario.
 - Si la energía está al máximo, la Manzana no se consume.
-- La energía aparece en la esquina superior derecha de la pantalla, debajo del dinero, con el formato “Energía: [actual]/100”.
+- La energía aparece en la esquina superior derecha de la pantalla, debajo del dinero, con un rayo, una barra y el texto “[actual]/100” (HU-80).
 Escenario 1: Usar una Manzana
 
 - Dado que el jugador tiene 3 Manzanas y 60 puntos de energía
@@ -37,5 +37,5 @@ Escenario 5: Ver la energía
 
 - Dado que el jugador tiene 60 puntos de energía
 - Cuando usa una Manzana
-- Entonces la interfaz pasa de “Energía: 60/100” a “Energía: 75/100”
+- Entonces la interfaz pasa de “60/100” a “75/100”
 

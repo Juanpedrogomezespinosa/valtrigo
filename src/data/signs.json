@@ -1,6 +1,11 @@
 {
-  "plaza": "Plaza de Valtrigo. Al norte, la torre del reloj. Al este, la tienda y el camino a la granja. Al oeste, tu casa. Al sur, el camino del lago.",
+  "plaza": "Plaza de Valtrigo. Al norte, la torre del reloj. Al este, la tienda y el camino a la granja. Al oeste, tu casa y el barrio. Al sur, el camino del lago.",
   "camino-del-lago": "Camino del lago. Dicen que alguien escondió un cofre en lo más espeso del bosque, al suroeste del agua.",
   "granja": "Granja de Valtrigo. Detrás del granero nadie limpia desde hace años. Y alguien ha vuelto a dejarse la pala por ahí...",
-  "lago": "Lago de Valtrigo. Prohibido bañarse. Hay quien dice que entre los árboles de la orilla sur se abre un sendero."
+  "lago": "Lago de Valtrigo. Prohibido bañarse. Hay quien dice que entre los árboles de la orilla sur se abre un sendero.",
+  "casa-tomas": "Casa de Tomás y Pablo",
+  "casa-lucia": "Casa de Lucía",
+  "casa-rosa": "Casa de Rosa",
+  "casa-fran": "Casa de Fran",
+  "casa-elena": "Casa de Elena"
 }

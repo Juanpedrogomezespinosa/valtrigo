@@ -7,7 +7,7 @@ test('Escenario 1: Dinero inicial', async ({ page }) => {
   await startNewGame(page);
 
   const money = await hudMoney(page);
-  expect(money?.text).toBe('100 monedas');
+  expect(money?.text).toBe('100');
   // Esquina superior derecha de la pantalla (960×540).
   expect(money?.x).toBeGreaterThan(960 * 0.75);
   expect(money?.y).toBeLessThan(540 * 0.15);
@@ -16,13 +16,13 @@ test('Escenario 1: Dinero inicial', async ({ page }) => {
 test('Escenario 2: Actualización al comprar', async ({ page }) => {
   // La Pala cuesta 30 monedas.
   await startNextTo(page, 'vendedora', { minutes: at(10), money: 100, inventory: [] });
-  expect((await hudMoney(page))?.text).toBe('100 monedas');
+  expect((await hudMoney(page))?.text).toBe('100');
 
   await press(page, 'e');
   await selectShopRow(page, 'pala');
   await press(page, 'Enter');
 
-  await expect.poll(async () => (await hudMoney(page))?.text).toBe('70 monedas');
+  await expect.poll(async () => (await hudMoney(page))?.text).toBe('70');
 });
 
 test('Escenario 3: Actualización al completar un encargo', async ({ page }) => {
@@ -32,11 +32,11 @@ test('Escenario 3: Actualización al completar un encargo', async ({ page }) => 
     activeQuests: ['encargo-1'],
     inventory: [{ item: 'carta-del-alcalde', quantity: 1 }],
   });
-  expect((await hudMoney(page))?.text).toBe('70 monedas');
+  expect((await hudMoney(page))?.text).toBe('70');
 
   await press(page, 'e');
 
-  await expect.poll(async () => (await hudMoney(page))?.text).toBe('120 monedas');
+  await expect.poll(async () => (await hudMoney(page))?.text).toBe('120');
 });
 
 test('Escenario 4: Dinero visible en pausa', async ({ page }) => {
@@ -46,7 +46,7 @@ test('Escenario 4: Dinero visible en pausa', async ({ page }) => {
 
   const money = await hudMoney(page);
   expect(money?.visible).toBe(true);
-  expect(money?.text).toBe('100 monedas');
+  expect(money?.text).toBe('100');
   expect(money?.x).toBeGreaterThan(960 * 0.75);
   expect(money?.y).toBeLessThan(540 * 0.15);
   // La interfaz se dibuja por encima del menú de pausa.

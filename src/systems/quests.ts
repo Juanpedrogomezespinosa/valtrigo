@@ -103,6 +103,11 @@ export function conversationWith(npc: NpcId): Conversation {
     return { kind: 'offer', quest: next, lines: questDialogue(npc, next).offer };
   }
 
+  // HU-71: el día de la feria, los vecinos de la feria dicen lo mismo que en la feria (HU-58).
+  if (isFairDay() && 'fairGreeting' in npcData) {
+    return { kind: 'greeting', lines: npcData.fairGreeting };
+  }
+
   // HU-11 (escenario 5): con el reloj reparado, el NPC que no tiene nada de encargos que decir lo comenta.
   if (state.completedQuests.includes(CLOCK_QUEST)) {
     return { kind: 'clock-repaired', lines: npcData.clockRepaired };

@@ -3,6 +3,7 @@ import { COLORS, FONT_FAMILY, MESSAGE_MS } from '../config';
 import { buy, buyPrice, sellOne, sellPrice, SHOP_ITEMS, type BuyResult, type SellResult } from '../systems/economy';
 import { getSlots, ITEMS, type ItemId } from '../systems/inventory';
 import { playEffect } from '../systems/audio';
+import { onConfirmKeys } from '../ui/confirmKeys';
 import { showMessage } from '../ui/message';
 import { addTitle } from '../ui/title';
 import type { OverlaySceneData } from './InventoryScene';
@@ -30,7 +31,7 @@ interface Row {
 
 // Tienda (HU-17 y HU-18). Se abre al hablar con la vendedora, encima de la partida.
 // Como el inventario, no detiene el tiempo y el personaje no se mueve mientras está abierta.
-// - ← → cambian entre "Comprar" y "Vender"; ↑ ↓ eligen un objeto; Enter compra o vende una unidad.
+// - ← → cambian entre "Comprar" y "Vender"; ↑ ↓ eligen un objeto; E o Enter compran o venden una unidad.
 // - Escape cierra la tienda.
 export class ShopScene extends Phaser.Scene {
   private onClose!: () => void;
@@ -82,7 +83,7 @@ export class ShopScene extends Phaser.Scene {
     keyboard.on('keydown-RIGHT', () => this.switchTab(1));
     keyboard.on('keydown-UP', () => this.move(-1));
     keyboard.on('keydown-DOWN', () => this.move(1));
-    keyboard.on('keydown-ENTER', () => this.confirm());
+    onConfirmKeys(keyboard, true, () => this.confirm());
     keyboard.on('keydown-ESC', () => this.close());
 
     this.refresh();

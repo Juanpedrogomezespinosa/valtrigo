@@ -40,6 +40,11 @@ export function darkness(minutes = getGameState().minutes): number {
   return 0;
 }
 
+// HU-80: la interfaz muestra un sol de 06:00 a 19:59 y una luna de 20:00 a 05:59.
+export function isDaytime(minutes = getGameState().minutes): boolean {
+  return minutes >= 6 * 60 && minutes < 20 * 60;
+}
+
 // Minutos desde las 00:00 de una hora escrita como HH:MM (en los datos de src/data/).
 export function toMinutes(time: string): number {
   const [hours, minutes] = time.split(':').map(Number);

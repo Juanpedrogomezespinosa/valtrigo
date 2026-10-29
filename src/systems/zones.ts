@@ -26,6 +26,13 @@ export function mapKey(zone: ZoneId): string {
   return `map-${zone}`;
 }
 
+// Clave de la música de una zona (HU-31): sale del nombre del archivo, para que dos zonas con la misma pista
+// (las casas de los vecinos usan la de la casa del jugador, HU-70) no la reinicien al pasar de una a otra.
+export function musicKey(zone: ZoneId): string {
+  const file = ZONES[zone].music.split('/').pop()!;
+  return `music-${file.replace(/\.[^.]+$/, '')}`;
+}
+
 // Objetos de la capa "puntos" del mapa de una zona.
 export function mapObjects(scene: Phaser.Scene, zone: ZoneId): MapObject[] {
   const map = scene.cache.tilemap.get(mapKey(zone)).data as { layers: { name: string; objects?: MapObject[] }[] };

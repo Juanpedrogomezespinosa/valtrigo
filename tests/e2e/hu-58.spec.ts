@@ -24,7 +24,13 @@ import {
 // HU-58. La feria
 // Se entra en la plaza saliendo de la tienda (puerta en la casilla 6, 8, caminando hacia abajo).
 
-const NOTHING = { harvestStall: false, fishingStall: false, garland: false, stage: false, podium: false, visitors: [] };
+// Fuera del día 7 no hay decoración de feria. Los vecinos están donde marque su horario (HU-71).
+const NO_FAIR = { harvestStall: false, fishingStall: false, garland: false, stage: false, podium: false };
+
+async function fairDecoration(page: import('@playwright/test').Page) {
+  const { visitors: _visitors, ...decoration } = (await fairView(page))!;
+  return decoration;
+}
 
 async function enterPlaza(page: import('@playwright/test').Page, day: number): Promise<void> {
   await startAtWith(page, 'tienda', { x: 6, y: 6 }, { day, minutes: at(13) });
@@ -50,13 +56,13 @@ test('Escenario 1: Día de feria', async ({ page }) => {
 test('Escenario 2: Antes de la feria', async ({ page }) => {
   await enterPlaza(page, 6);
 
-  expect(await fairView(page)).toEqual(NOTHING);
+  expect(await fairDecoration(page)).toEqual(NO_FAIR);
 });
 
 test('Escenario 3: Después de la feria', async ({ page }) => {
   await enterPlaza(page, 8);
 
-  expect(await fairView(page)).toEqual(NOTHING);
+  expect(await fairDecoration(page)).toEqual(NO_FAIR);
 });
 
 test('Escenario 4: Encargo final después de la feria', async ({ page }) => {
@@ -91,7 +97,7 @@ test('Escenario 6: Hablar con un visitante', async ({ page }) => {
 
   const lines = await talkUntilChoiceOrEnd(page);
 
-  expect(lines).toEqual(dialogues.npcs.rosa.greeting);
+  expect(lines).toEqual(dialogues.npcs.rosa.fairGreeting);
 });
 
 test('Escenario 7: Fin de los concursos', async ({ page }) => {

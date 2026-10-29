@@ -11,7 +11,7 @@ Criterios de aceptación:
 - El día 7, a partir de las 12:00, hay seis visitantes en la plaza: Rosa, Lucía, Tomás, Pablo, Fran y Elena. Cada uno tiene un diálogo sencillo al pulsar E junto a él. Fran dice “He venido por el networking, pero bueno... el futuro es ansiedad.” y Elena “He venido porque me han prometido que después pondrán margarita frozen.”.
 - Los concursos admiten participantes de 12:00 a 17:00. A las 17:00 aparece el mensaje “Los concursos han terminado. Ceremonia a las 18:00 en la plaza”.
 - Los postes de las guirnaldas, los puestos, el escenario y el podio son obstáculos.
-- Antes y después del día 7, la plaza tiene su aspecto normal: no hay guirnaldas, puestos, escenario, podio ni visitantes.
+- Antes y después del día 7, la plaza tiene su aspecto normal: no hay guirnaldas, puestos, escenario ni podio. Los vecinos están donde marque su horario (HU-71).
 - Pasado el día 7, el encargo “La feria de Valtrigo” se puede seguir completando al hablar con el alcalde, aunque ya no haya feria.
 Escenario 1: Día de feria
 
@@ -23,12 +23,12 @@ Escenario 2: Antes de la feria
 
 - Dado que es el día 6
 - Cuando el jugador entra en la plaza
-- Entonces no hay guirnaldas, puestos, escenario, podio ni visitantes
+- Entonces no hay guirnaldas, puestos, escenario ni podio
 Escenario 3: Después de la feria
 
 - Dado que es el día 8
 - Cuando el jugador entra en la plaza
-- Entonces no hay guirnaldas, puestos, escenario, podio ni visitantes
+- Entonces no hay guirnaldas, puestos, escenario ni podio
 Escenario 4: Encargo final después de la feria
 
 - Dado que es el día 8 y el encargo “La feria de Valtrigo” está activo
@@ -43,7 +43,7 @@ Escenario 6: Hablar con un visitante
 
 - Dado que es el día 7 y el jugador está junto a Rosa
 - Cuando pulsa E
-- Entonces Rosa dice su diálogo
+- Entonces Rosa dice su diálogo de la feria
 Escenario 7: Fin de los concursos
 
 - Dado que es el día 7 a las 16:59

@@ -10,7 +10,7 @@
  "tilewidth": 16,
  "tileheight": 16,
  "nextlayerid": 4,
- "nextobjectid": 10,
+ "nextobjectid": 12,
  "layers": [
   {
    "id": 1,
@@ -1408,6 +1408,44 @@
     },
     {
      "id": 3,
+     "name": "npc",
+     "type": "",
+     "point": true,
+     "x": 392,
+     "y": 104,
+     "width": 0,
+     "height": 0,
+     "rotation": 0,
+     "visible": true,
+     "properties": [
+      {
+       "name": "personaje",
+       "type": "string",
+       "value": "lucia"
+      }
+     ]
+    },
+    {
+     "id": 4,
+     "name": "npc",
+     "type": "",
+     "point": true,
+     "x": 184,
+     "y": 216,
+     "width": 0,
+     "height": 0,
+     "rotation": 0,
+     "visible": true,
+     "properties": [
+      {
+       "name": "personaje",
+       "type": "string",
+       "value": "marta"
+      }
+     ]
+    },
+    {
+     "id": 5,
      "name": "cofre",
      "type": "",
      "point": true,
@@ -1426,7 +1464,7 @@
      ]
     },
     {
-     "id": 4,
+     "id": 6,
      "name": "objeto",
      "type": "",
      "point": true,
@@ -1445,7 +1483,7 @@
      ]
     },
     {
-     "id": 5,
+     "id": 7,
      "name": "cartel",
      "type": "",
      "point": true,
@@ -1464,7 +1502,7 @@
      ]
     },
     {
-     "id": 6,
+     "id": 8,
      "name": "huerto",
      "type": "",
      "point": true,
@@ -1488,7 +1526,7 @@
      ]
     },
     {
-     "id": 7,
+     "id": 9,
      "name": "manzano",
      "type": "",
      "point": true,
@@ -1500,7 +1538,7 @@
      "visible": true
     },
     {
-     "id": 8,
+     "id": 10,
      "name": "pagina",
      "type": "",
      "point": true,
@@ -1519,7 +1557,7 @@
      ]
     },
     {
-     "id": 9,
+     "id": 11,
      "name": "puerta",
      "type": "",
      "x": 0,

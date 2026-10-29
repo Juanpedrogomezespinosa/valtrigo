@@ -7,7 +7,7 @@ import type { OverlaySceneData } from './InventoryScene';
 
 export interface ItemChoiceSceneData extends OverlaySceneData {
   title: string;
-  // Lo que hace Enter, para la ayuda de abajo ("sembrar", "presentar").
+  // Lo que hace E, para la ayuda de abajo ("sembrar", "presentar").
   action: string;
   // Objetos que se pueden elegir, en este orden.
   items: ItemId[];
@@ -61,7 +61,7 @@ export class ItemChoiceScene extends Phaser.Scene {
       .text(left - 24, LIST_TOP, '▶', { fontFamily: FONT_FAMILY, fontSize: '24px', color: COLORS.selected })
       .setOrigin(1, 0.5);
     this.add
-      .text(width / 2, height - 60, `Enter: ${this.action} · Escape: cancelar`, { fontFamily: FONT_FAMILY, fontSize: '20px', color: COLORS.selected })
+      .text(width / 2, height - 60, `E: ${this.action} · Escape: cancelar`, { fontFamily: FONT_FAMILY, fontSize: '20px', color: COLORS.selected })
       .setOrigin(0.5);
 
     const keyboard = this.input.keyboard!;

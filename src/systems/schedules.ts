@@ -4,8 +4,9 @@ import { toMinutes } from './time';
 import type { ZoneId } from './zones';
 
 // Horario de los NPC (HU-40). Datos en src/data/schedules.json: en qué zona está cada NPC y de qué hora
-// a qué hora (desde `from` hasta antes de `to`) y, si se indica, qué día (`day`; los visitantes de la feria,
-// HU-58). Fuera de su horario no está en ninguna zona.
+// a qué hora (desde `from` hasta antes de `to`) y, si se indica, solo qué día (`day`; los visitantes de la feria,
+// HU-58) o todos los días menos uno (`notOnDay`; los vecinos, que el día de la feria van a la feria, HU-71).
+// Fuera de su horario no está en ninguna zona.
 // La vendedora no tiene horario: está siempre en la tienda, que solo se puede visitar en su horario (HU-17).
 
 interface ScheduleEntry {
@@ -13,6 +14,7 @@ interface ScheduleEntry {
   from: string;
   to: string;
   day?: number;
+  notOnDay?: number;
 }
 
 const SCHEDULES: Record<string, ScheduleEntry[]> = schedules;
@@ -34,6 +36,7 @@ export function isNpcInZone(npc: string, zone: ZoneId, minutes = getGameState().
     (entry) =>
       entry.zone === zone &&
       (entry.day === undefined || entry.day === day) &&
+      entry.notOnDay !== day &&
       minutes >= toMinutes(entry.from) &&
       minutes < toMinutes(entry.to),
   );

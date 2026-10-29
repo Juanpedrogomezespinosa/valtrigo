@@ -32,6 +32,7 @@
   },
   { "day": 4, "text": "Vuelve a hablar con la vendedora", "done": { "questCompleted": "encargo-3" } },
   { "day": 4, "text": "Recoge tu primera cosecha", "done": { "event": "harvest" } },
+  { "day": 4, "text": "Visita el barrio, al oeste de la plaza", "done": { "event": "visit:barrio" } },
 
   { "day": 5, "text": "Entra en la torre del reloj", "done": { "event": "visit:torre" } },
   { "day": 5, "text": "Habla con la relojera", "done": { "event": "talk:relojera" } },

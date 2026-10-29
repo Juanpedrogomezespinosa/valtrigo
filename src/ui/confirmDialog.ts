@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { COLORS, FONT_FAMILY } from '../config';
 import { playEffect } from '../systems/audio';
+import { onConfirmKeys } from './confirmKeys';
 
 const WIDTH = 560;
 const PADDING = 40;
@@ -10,9 +11,15 @@ const BOTTOM_GAP = 30;
 const DEPTH = 100;
 
 // Cuadro de confirmación con "Sí" y "No", centrado sobre la escena.
-// Se maneja con las flechas izquierda y derecha, Enter, Escape (equivale a "No") o el ratón.
+// Se maneja con las flechas izquierda y derecha, Enter, Escape (equivale a "No") o el ratón. Dentro de la partida
+// (`withE`), también con E.
 // Empieza con "No" seleccionado, para que pulsar Enter por error no tenga consecuencias.
-export function showConfirmDialog(scene: Phaser.Scene, message: string, onAnswer: (yes: boolean) => void): void {
+export function showConfirmDialog(
+  scene: Phaser.Scene,
+  message: string,
+  onAnswer: (yes: boolean) => void,
+  withE = false,
+): void {
   const { width, height } = scene.scale;
   const objects: Phaser.GameObjects.GameObject[] = [];
 
@@ -74,17 +81,16 @@ export function showConfirmDialog(scene: Phaser.Scene, message: string, onAnswer
   };
   const onLeft = () => select(0);
   const onRight = () => select(1);
-  const onEnter = () => answer(selected === 0);
   const onEscape = () => answer(false);
   keyboard.on('keydown-LEFT', onLeft);
   keyboard.on('keydown-RIGHT', onRight);
-  keyboard.on('keydown-ENTER', onEnter);
+  const offConfirm = onConfirmKeys(keyboard, withE, () => answer(selected === 0));
   keyboard.on('keydown-ESC', onEscape);
 
   function answer(yes: boolean): void {
     keyboard.off('keydown-LEFT', onLeft);
     keyboard.off('keydown-RIGHT', onRight);
-    keyboard.off('keydown-ENTER', onEnter);
+    offConfirm();
     keyboard.off('keydown-ESC', onEscape);
     objects.forEach((object) => object.destroy());
     playEffect(scene, 'menuConfirm');

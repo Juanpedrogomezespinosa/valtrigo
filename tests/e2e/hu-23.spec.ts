@@ -37,7 +37,7 @@ test('Escenario 3: Interfaz en la oscuridad', async ({ page }) => {
   expect(clock?.day).toMatch(/^Día \d+$/);
   expect(clock?.time).toMatch(/^\d\d:\d\d$/);
   expect((await hudMoney(page))?.visible).toBe(true);
-  expect(await hudEnergy(page)).toMatch(/^Energía: \d+\/100$/);
+  expect(await hudEnergy(page)).toMatch(/^\d+\/100$/);
 });
 
 test('Escenario 4: Amanecer', async ({ page }) => {

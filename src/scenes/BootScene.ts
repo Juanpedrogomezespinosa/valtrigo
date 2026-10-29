@@ -38,6 +38,10 @@ export class BootScene extends Phaser.Scene {
     for (const sprite of ['setas', 'arbusto-moras', 'tocon', 'pagina', 'mecanismo', 'guirnalda', 'poste-guirnalda', 'puesto-cosecha', 'puesto-pesca', 'escenario', 'podio']) {
       this.load.image(sprite, `assets/sprites/${sprite}.png`);
     }
+    // Iconos de la interfaz (HU-80).
+    for (const icon of ['sol', 'luna', 'moneda', 'energia']) {
+      this.load.image(`icono-${icon}`, `assets/sprites/iconos/${icon}.png`);
+    }
     for (const item of Object.keys(ITEMS)) {
       this.load.image(`objeto-${item}`, `assets/sprites/objetos/${item}.png`);
     }
