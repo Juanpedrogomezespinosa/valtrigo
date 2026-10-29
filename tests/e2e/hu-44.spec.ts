@@ -77,7 +77,7 @@ test('Escenario 3: Cosechar', async ({ page }) => {
 
   const state = await currentGameState(page);
   expect(state?.inventory).toEqual([{ item: 'nabo', quantity: 1 }]);
-  expect(state?.energy).toBe(49);
+  expect(state?.energy).toBe(48);
   expect(await plotState(page)).toEqual(DUG);
   expect((await plotView(page))?.cropFrame).toBeNull();
 });

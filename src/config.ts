@@ -36,8 +36,11 @@ export const MAX_ENERGY = 100;
 
 // Velocidad del personaje en píxeles por segundo: 4 casillas por segundo (HU-06).
 export const PLAYER_SPEED = 64;
-// Al correr (HU-81, Mayús), el doble: 8 casillas por segundo.
-export const RUN_SPEED_FACTOR = 2;
+// Al correr (HU-81, Mayús), 1,5 veces más rápido: 6 casillas por segundo.
+export const RUN_SPEED_FACTOR = 1.5;
+// HU-76: correr gasta 1 punto de energía por cada 3 segundos desplazándose, y no se puede correr con 10 o menos.
+export const RUN_ENERGY_MS = 3000;
+export const RUN_MIN_ENERGY = 10;
 
 // Duración del fundido a negro al cruzar una puerta (HU-08).
 export const ZONE_FADE_MS = 500;

@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { PLAYER_SPEED, RUN_SPEED_FACTOR, TILE_SIZE } from '../config';
-import { isRunning, toggleRunning } from '../systems/gameState';
+import { isRunning } from '../systems/gameState';
 import type { TilePosition } from '../systems/zones';
 
 export type Direction = 'down' | 'up' | 'left' | 'right';
@@ -34,7 +34,7 @@ const VELOCITY: Record<Direction, { x: number; y: number }> = {
 // - No atraviesa obstáculos. Si la dirección que manda está bloqueada y otra de las pulsadas
 //   está libre, se mueve en la libre (HU-07).
 // - Si choca por poco con la esquina de un hueco, se desliza de lado hasta entrar en él (CORNER_ASSIST).
-// - Mayús activa o desactiva correr: va al doble de velocidad y la animación también (HU-81).
+// - Corriendo (HU-81, Mayús en GameScene) va 1,5 veces más rápido y la animación también.
 export class Player extends Phaser.Physics.Arcade.Sprite {
   declare body: Phaser.Physics.Arcade.Body;
   facing: Direction = 'down';
@@ -64,7 +64,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       [KeyCodes.D, 'right'],
     ];
     this.keys = bindings.map(([code, direction]) => ({ key: keyboard.addKey(code), direction }));
-    keyboard.on('keydown-SHIFT', (event: KeyboardEvent) => !event.repeat && toggleRunning());
 
     createWalkAnimations(scene, texture);
   }

@@ -17,7 +17,7 @@ test('Escenario 1: Energía insuficiente', async ({ page }) => {
 });
 
 test('Escenario 2: Energía justa', async ({ page }) => {
-  await startAtWith(page, 'granja', FRONT_OF_PLOT, { minutes: at(10), energy: 4, inventory: [PALA] });
+  await startAtWith(page, 'granja', FRONT_OF_PLOT, { minutes: at(10), energy: 8, inventory: [PALA] });
 
   await press(page, 'e');
 
@@ -41,5 +41,5 @@ test('Escenario 3: Recuperarse comiendo', async ({ page }) => {
   // Y puede volver a trabajar.
   await press(page, 'e');
   expect((await plotState(page)).dug).toBe(true);
-  expect((await currentGameState(page))?.energy).toBe(11);
+  expect((await currentGameState(page))?.energy).toBe(7);
 });

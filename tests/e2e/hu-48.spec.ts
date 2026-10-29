@@ -24,7 +24,7 @@ test('Escenario 1: Pescar a tiempo', async ({ page }) => {
 
   const state = await currentGameState(page);
   expect(state?.inventory).toEqual([ROD, { item: 'carpa', quantity: 1 }]);
-  expect(state?.energy).toBe(47);
+  expect(state?.energy).toBe(44);
   expect(await isFishing(page)).toBe(false);
 });
 
@@ -67,7 +67,7 @@ test('Escenario 4: Recoger la caña', async ({ page }) => {
   await page.waitForTimeout(2500); // pasado el momento en que habría picado, no pasa nada
   const state = await currentGameState(page);
   expect(state?.inventory).toEqual([ROD]);
-  expect(state?.energy).toBe(47); // la energía gastada no se devuelve
+  expect(state?.energy).toBe(44); // la energía gastada no se devuelve
   expect(await sceneTexts(page, 'HudScene')).not.toContain('¡Pica!');
 });
 

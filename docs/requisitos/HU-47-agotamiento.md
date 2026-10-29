@@ -18,7 +18,7 @@ Escenario 1: Energía insuficiente
 - Y la energía sigue siendo 3
 Escenario 2: Energía justa
 
-- Dado que la energía es 4
+- Dado que la energía es 8
 - Cuando el jugador cava una parcela
 - Entonces la parcela queda cavada
 - Y la energía es 0

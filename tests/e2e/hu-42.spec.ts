@@ -20,7 +20,7 @@ test('Escenario 1: Sembrar', async ({ page }) => {
   expect((await plotView(page))?.cropFrame).not.toBeNull();
   const state = await currentGameState(page);
   expect(state?.inventory).toEqual([{ item: 'semilla', quantity: 2 }]);
-  expect(state?.energy).toBe(49);
+  expect(state?.energy).toBe(48);
 });
 
 test('Escenario 2: Elegir entre varias semillas', async ({ page }) => {

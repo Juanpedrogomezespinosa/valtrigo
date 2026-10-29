@@ -8,7 +8,7 @@ Criterios de aceptación:
 
 - Al empezar cada día, un cultivo que se regó el día anterior crece un día. Si no se regó, no crece, pero tampoco se pierde.
 - Un cultivo está listo cuando ha crecido todos los días que necesita (Nabo 2, Zanahoria 3, Calabaza 4). Cada cultivo se ve distinto cuando está listo.
-- Al pulsar E junto a un cultivo listo, se recoge 1 unidad, se gasta 1 de energía y la parcela queda cavada y vacía.
+- Al pulsar E junto a un cultivo listo, se recoge 1 unidad, se gastan 2 de energía (HU-76) y la parcela queda cavada y vacía.
 - Si la cosecha no cabe en el inventario, aparece “Inventario lleno” y el cultivo sigue en la parcela.
 - Las cosechas se pueden comer: Nabo da 10 de energía, Zanahoria 15 y Calabaza 30.
 - Precios de venta: Nabo 15 monedas, Zanahoria 35 y Calabaza 80.

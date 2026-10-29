@@ -1381,7 +1381,7 @@ Como jugador, quiero cavar la tierra de la granja para poder sembrar.
 Criterios de aceptación:
 
 - La granja tiene un huerto de 6×4 parcelas. Solo se puede cavar en ellas.
-- Al pulsar E junto a una parcela sin cavar, con una Pala en el inventario, la parcela queda cavada y se gastan 4 de energía.
+- Al pulsar E junto a una parcela sin cavar, con una Pala en el inventario, la parcela queda cavada y se gastan 8 de energía (HU-76).
 - Sin Pala aparece el mensaje “Necesitas una Pala” y la parcela no cambia.
 - Una parcela cavada sigue cavada los días siguientes.
 Escenario 1: Cavar
@@ -1389,7 +1389,7 @@ Escenario 1: Cavar
 - Dado que el jugador tiene una Pala y 100 de energía
 - Cuando pulsa E junto a una parcela sin cavar
 - Entonces la parcela queda cavada
-- Y la energía es 96
+- Y la energía es 92
 Escenario 2: Sin Pala
 
 - Dado que el jugador no tiene ninguna Pala
@@ -1406,7 +1406,7 @@ Escenario 4: Al día siguiente
 - Dado que el jugador ha cavado una parcela
 - Cuando duerme y empieza el día siguiente
 - Entonces la parcela sigue cavada","- La granja tiene un huerto de 6×4 parcelas. Solo se puede cavar en ellas.
-- Al pulsar E junto a una parcela sin cavar, con una Pala en el inventario, la parcela queda cavada y se gastan 4 de energía.
+- Al pulsar E junto a una parcela sin cavar, con una Pala en el inventario, la parcela queda cavada y se gastan 8 de energía (HU-76).
 - Sin Pala aparece el mensaje “Necesitas una Pala” y la parcela no cambia.
 - Una parcela cavada sigue cavada los días siguientes."
 "HU-42","HU-42. Sembrar semillas","# HU-42. Sembrar semillas
@@ -1418,7 +1418,7 @@ Como jugador, quiero sembrar semillas en las parcelas cavadas para obtener cosec
 Criterios de aceptación:
 
 - Hay tres semillas: “Semilla” (da Nabo, tarda 2 días), “Semilla de zanahoria” (Zanahoria, 3 días) y “Semilla de calabaza” (Calabaza, 4 días).
-- Al pulsar E junto a una parcela cavada y vacía aparece la lista de semillas del inventario. Al elegir una, se siembra, se gasta 1 unidad y 1 de energía.
+- Al pulsar E junto a una parcela cavada y vacía aparece la lista de semillas del inventario. Al elegir una, se siembra, se gasta 1 unidad y 2 de energía (HU-76).
 - Sin semillas aparece el mensaje “No tienes semillas” y la parcela no cambia.
 - En una parcela sembrada no se puede sembrar otra vez.
 Escenario 1: Sembrar
@@ -1427,7 +1427,7 @@ Escenario 1: Sembrar
 - Cuando pulsa E y elige “Semilla”
 - Entonces la parcela queda sembrada de Nabo
 - Y le quedan 2 Semillas
-- Y gasta 1 de energía
+- Y gasta 2 de energía
 Escenario 2: Elegir entre varias semillas
 
 - Dado que el jugador tiene Semillas y Semillas de calabaza
@@ -1445,7 +1445,7 @@ Escenario 4: Parcela sin cavar
 - Cuando pulsa E junto a una parcela sin cavar
 - Entonces aparece el mensaje “Necesitas una Pala”
 - Y no se siembra nada","- Hay tres semillas: “Semilla” (da Nabo, tarda 2 días), “Semilla de zanahoria” (Zanahoria, 3 días) y “Semilla de calabaza” (Calabaza, 4 días).
-- Al pulsar E junto a una parcela cavada y vacía aparece la lista de semillas del inventario. Al elegir una, se siembra, se gasta 1 unidad y 1 de energía.
+- Al pulsar E junto a una parcela cavada y vacía aparece la lista de semillas del inventario. Al elegir una, se siembra, se gasta 1 unidad y 2 de energía (HU-76).
 - Sin semillas aparece el mensaje “No tienes semillas” y la parcela no cambia.
 - En una parcela sembrada no se puede sembrar otra vez."
 "HU-43","HU-43. Regar con la Regadera","# HU-43. Regar con la Regadera
@@ -1456,7 +1456,7 @@ Como jugador, quiero regar mis cultivos para que crezcan.
 
 Criterios de aceptación:
 
-- Al pulsar E junto a una parcela sembrada y sin regar ese día, con una Regadera en el inventario, la parcela queda regada y se gastan 2 de energía.
+- Al pulsar E junto a una parcela sembrada y sin regar ese día, con una Regadera en el inventario, la parcela queda regada y se gastan 4 de energía (HU-76).
 - Una parcela regada se ve más oscura hasta el día siguiente.
 - Una parcela ya regada ese día no se puede volver a regar.
 - Sin Regadera aparece el mensaje “Necesitas una Regadera”.
@@ -1466,7 +1466,7 @@ Escenario 1: Regar
 - Dado que el jugador tiene una Regadera y 100 de energía
 - Cuando pulsa E junto a una parcela sembrada y sin regar
 - Entonces la parcela queda regada
-- Y la energía es 98
+- Y la energía es 96
 Escenario 2: Ya regada
 
 - Dado que la parcela ya está regada ese día
@@ -1481,7 +1481,7 @@ Escenario 4: Nuevo día
 
 - Dado que el jugador ha regado una parcela
 - Cuando duerme y empieza el día siguiente
-- Entonces la parcela está sin regar","- Al pulsar E junto a una parcela sembrada y sin regar ese día, con una Regadera en el inventario, la parcela queda regada y se gastan 2 de energía.
+- Entonces la parcela está sin regar","- Al pulsar E junto a una parcela sembrada y sin regar ese día, con una Regadera en el inventario, la parcela queda regada y se gastan 4 de energía (HU-76).
 - Una parcela regada se ve más oscura hasta el día siguiente.
 - Una parcela ya regada ese día no se puede volver a regar.
 - Sin Regadera aparece el mensaje “Necesitas una Regadera”.
@@ -1496,7 +1496,7 @@ Criterios de aceptación:
 
 - Al empezar cada día, un cultivo que se regó el día anterior crece un día. Si no se regó, no crece, pero tampoco se pierde.
 - Un cultivo está listo cuando ha crecido todos los días que necesita (Nabo 2, Zanahoria 3, Calabaza 4). Cada cultivo se ve distinto cuando está listo.
-- Al pulsar E junto a un cultivo listo, se recoge 1 unidad, se gasta 1 de energía y la parcela queda cavada y vacía.
+- Al pulsar E junto a un cultivo listo, se recoge 1 unidad, se gastan 2 de energía (HU-76) y la parcela queda cavada y vacía.
 - Si la cosecha no cabe en el inventario, aparece “Inventario lleno” y el cultivo sigue en la parcela.
 - Las cosechas se pueden comer: Nabo da 10 de energía, Zanahoria 15 y Calabaza 30.
 - Precios de venta: Nabo 15 monedas, Zanahoria 35 y Calabaza 80.
@@ -1524,7 +1524,7 @@ Escenario 4: Inventario lleno
 - Entonces aparece el mensaje “Inventario lleno”
 - Y el Nabo sigue en la parcela","- Al empezar cada día, un cultivo que se regó el día anterior crece un día. Si no se regó, no crece, pero tampoco se pierde.
 - Un cultivo está listo cuando ha crecido todos los días que necesita (Nabo 2, Zanahoria 3, Calabaza 4). Cada cultivo se ve distinto cuando está listo.
-- Al pulsar E junto a un cultivo listo, se recoge 1 unidad, se gasta 1 de energía y la parcela queda cavada y vacía.
+- Al pulsar E junto a un cultivo listo, se recoge 1 unidad, se gastan 2 de energía (HU-76) y la parcela queda cavada y vacía.
 - Si la cosecha no cabe en el inventario, aparece “Inventario lleno” y el cultivo sigue en la parcela.
 - Las cosechas se pueden comer: Nabo da 10 de energía, Zanahoria 15 y Calabaza 30.
 - Precios de venta: Nabo 15 monedas, Zanahoria 35 y Calabaza 80."
@@ -1569,20 +1569,20 @@ Como jugador, quiero que trabajar me canse para tener que organizar mi día.
 
 Criterios de aceptación:
 
-- Cada acción de trabajo gasta energía: cavar 4, sembrar 1, regar 2, cosechar 1, pescar 3 cada vez que se lanza la caña salvo durante el concurso de pesca (HU-60), talar 5 y recoger setas o moras 1.
-- Andar, hablar, abrir cofres, comprar y vender no gastan energía.
+- Cada acción de trabajo gasta energía: cavar 8, sembrar 2, regar 4, cosechar 2, pescar 6 cada vez que se lanza la caña salvo durante el concurso de pesca (HU-60), talar 10 y recoger setas o moras 2 (costes doblados en HU-76).
+- Andar, hablar, abrir cofres, comprar y vender no gastan energía. Correr sí (HU-76).
 - La energía en pantalla se actualiza en cuanto se gasta.
 Escenario 1: Gastar energía
 
 - Dado que la energía es 50
 - Cuando el jugador cava una parcela
-- Entonces la energía es 46
+- Entonces la energía es 42
 Escenario 2: Acciones gratuitas
 
 - Dado que la energía es 50
 - Cuando el jugador habla con un NPC y compra una Semilla
-- Entonces la energía sigue siendo 50","- Cada acción de trabajo gasta energía: cavar 4, sembrar 1, regar 2, cosechar 1, pescar 3 cada vez que se lanza la caña salvo durante el concurso de pesca (HU-60), talar 5 y recoger setas o moras 1.
-- Andar, hablar, abrir cofres, comprar y vender no gastan energía.
+- Entonces la energía sigue siendo 50","- Cada acción de trabajo gasta energía: cavar 8, sembrar 2, regar 4, cosechar 2, pescar 6 cada vez que se lanza la caña salvo durante el concurso de pesca (HU-60), talar 10 y recoger setas o moras 2 (costes doblados en HU-76).
+- Andar, hablar, abrir cofres, comprar y vender no gastan energía. Correr sí (HU-76).
 - La energía en pantalla se actualiza en cuanto se gasta."
 "HU-47","HU-47. Agotamiento","# HU-47. Agotamiento
 
@@ -1604,7 +1604,7 @@ Escenario 1: Energía insuficiente
 - Y la energía sigue siendo 3
 Escenario 2: Energía justa
 
-- Dado que la energía es 4
+- Dado que la energía es 8
 - Cuando el jugador cava una parcela
 - Entonces la parcela queda cavada
 - Y la energía es 0
@@ -1624,7 +1624,7 @@ Como jugador, quiero pescar en el lago para conseguir peces y venderlos.
 
 Criterios de aceptación:
 
-- Al pulsar E mirando al agua del lago, a menos de una casilla, con una Caña de pescar en el inventario, el personaje lanza la caña y se gastan 3 de energía.
+- Al pulsar E mirando al agua del lago, a menos de una casilla, con una Caña de pescar en el inventario, el personaje lanza la caña y se gastan 6 de energía (HU-76).
 - Entre 2 y 5 segundos después aparece “¡Pica!”. Si el jugador pulsa E antes de que pase 1 segundo, el pez va al inventario. Si tarda más, aparece “Se ha escapado”.
 - Si pulsa E antes de que aparezca “¡Pica!”, aparece “Has tirado demasiado pronto” y no pesca nada.
 - Pulsar una flecha recoge la caña sin pescar nada. La energía gastada no se devuelve.
@@ -1636,7 +1636,7 @@ Escenario 1: Pescar a tiempo
 - Dado que el jugador tiene una Caña de pescar y está mirando al agua
 - Cuando pulsa E y vuelve a pulsar E menos de 1 segundo después de que aparezca “¡Pica!”
 - Entonces aparece un pez en el inventario
-- Y la energía ha bajado 3
+- Y la energía ha bajado 6
 Escenario 2: Demasiado tarde
 
 - Dado que aparece “¡Pica!”
@@ -1658,7 +1658,7 @@ Escenario 5: Sin caña
 
 - Dado que el jugador no tiene ninguna Caña de pescar
 - Cuando pulsa E mirando al agua
-- Entonces aparece el mensaje “Necesitas una Caña de pescar”","- Al pulsar E mirando al agua del lago, a menos de una casilla, con una Caña de pescar en el inventario, el personaje lanza la caña y se gastan 3 de energía.
+- Entonces aparece el mensaje “Necesitas una Caña de pescar”","- Al pulsar E mirando al agua del lago, a menos de una casilla, con una Caña de pescar en el inventario, el personaje lanza la caña y se gastan 6 de energía (HU-76).
 - Entre 2 y 5 segundos después aparece “¡Pica!”. Si el jugador pulsa E antes de que pase 1 segundo, el pez va al inventario. Si tarda más, aparece “Se ha escapado”.
 - Si pulsa E antes de que aparezca “¡Pica!”, aparece “Has tirado demasiado pronto” y no pesca nada.
 - Pulsar una flecha recoge la caña sin pescar nada. La energía gastada no se devuelve.
@@ -1710,8 +1710,8 @@ Como jugador, quiero recoger lo que da el bosque para conseguir comida y cosas q
 Criterios de aceptación:
 
 - En el bosque hay puntos fijos: 4 de Setas, 3 de Moras y 5 troncos.
-- Al pulsar E junto a un punto de Setas o de Moras, se recoge 1 unidad, se gasta 1 de energía y el punto desaparece.
-- Al pulsar E junto a un tronco, con un Hacha en el inventario, se tala: se recibe 1 Leña, se gastan 5 de energía y el tronco desaparece. Sin Hacha aparece el mensaje “Necesitas un Hacha”.
+- Al pulsar E junto a un punto de Setas o de Moras, se recoge 1 unidad, se gastan 2 de energía (HU-76) y el punto desaparece.
+- Al pulsar E junto a un tronco, con un Hacha en el inventario, se tala: se recibe 1 Leña, se gastan 10 de energía (HU-76) y el tronco desaparece. Sin Hacha aparece el mensaje “Necesitas un Hacha”.
 - Al empezar cada día, todos los puntos y troncos vuelven a aparecer.
 - Si no cabe en el inventario, aparece “Inventario lleno” y el punto o el tronco siguen ahí.
 - Precios de venta: Setas 8 monedas, Moras 5 y Leña 3. Las Setas dan 10 de energía y las Moras 5; la Leña no se puede comer.
@@ -1726,7 +1726,7 @@ Escenario 2: Talar
 - Dado que el jugador tiene un Hacha y 100 de energía
 - Cuando pulsa E junto a un tronco
 - Entonces aparece 1 Leña en el inventario
-- Y la energía es 95
+- Y la energía es 90
 - Y el tronco desaparece
 Escenario 3: Sin Hacha
 
@@ -1745,8 +1745,8 @@ Escenario 5: Inventario lleno
 - Cuando el jugador pulsa E junto a un punto de Moras
 - Entonces aparece el mensaje “Inventario lleno”
 - Y el punto sigue en el bosque","- En el bosque hay puntos fijos: 4 de Setas, 3 de Moras y 5 troncos.
-- Al pulsar E junto a un punto de Setas o de Moras, se recoge 1 unidad, se gasta 1 de energía y el punto desaparece.
-- Al pulsar E junto a un tronco, con un Hacha en el inventario, se tala: se recibe 1 Leña, se gastan 5 de energía y el tronco desaparece. Sin Hacha aparece el mensaje “Necesitas un Hacha”.
+- Al pulsar E junto a un punto de Setas o de Moras, se recoge 1 unidad, se gastan 2 de energía (HU-76) y el punto desaparece.
+- Al pulsar E junto a un tronco, con un Hacha en el inventario, se tala: se recibe 1 Leña, se gastan 10 de energía (HU-76) y el tronco desaparece. Sin Hacha aparece el mensaje “Necesitas un Hacha”.
 - Al empezar cada día, todos los puntos y troncos vuelven a aparecer.
 - Si no cabe en el inventario, aparece “Inventario lleno” y el punto o el tronco siguen ahí.
 - Precios de venta: Setas 8 monedas, Moras 5 y Leña 3. Las Setas dan 10 de energía y las Moras 5; la Leña no se puede comer."
@@ -2800,6 +2800,115 @@ Escenario 6: Otra oportunidad
 - Al llegar la hora límite sin completarla, aparece “Misión fallida: [nombre]” y la misión deja de estar activa. Si se recibió un objeto de misión, desaparece del inventario.
 - Una misión fallida se vuelve a ofrecer al día siguiente.
 - Si el día termina (al dormir o a medianoche) con una misión con hora límite activa, la misión falla."
+"HU-75","HU-75. La fuente de la plaza","# HU-75. La fuente de la plaza
+
+# HU-75. La fuente de la plaza
+
+Como jugador, quiero usar la fuente de la plaza para recuperar algo de energía y recibir pistas cuando me atasco.
+
+Criterios de aceptación:
+
+- Al pulsar E junto a la fuente de la plaza aparece el cuadro “Fuente” con las opciones “Beber”, “Echar una moneda” y “Nada”.
+- “Beber” recupera 15 puntos de energía, sin pasar de 100, y aparece “Te sientes con más energía”. Solo se puede beber una vez al día: la segunda vez aparece “Ya has bebido hoy” y la energía no cambia.
+- “Echar una moneda” cuesta 5 monedas y da una pista. Sin 5 monedas aparece “No tienes monedas suficientes” y no se da la pista.
+- La pista es la primera de la lista que todavía sirve (lo que indica aún no se ha hecho):
+  1. El cofre del granero está sin abrir: “Detrás del granero hay algo que brilla.”
+  2. La Pala sigue en la granja: “El granjero siempre pierde la pala cerca del granero.”
+  3. El cofre del lago está sin abrir: “Al suroeste del lago, entre los árboles, se abre un sendero.”
+  4. El cofre de la torre está sin abrir (a partir del día 5): “En la torre hay un almacén que nadie usa.”
+  5. Falta alguna página del diario: “La relojera escribía mucho. Busca en las esquinas del pueblo.”
+  6. Si no queda ninguna: “La fuente no tiene nada más que contarte.”
+- Echar una moneda se puede repetir las veces que se quiera; cada vez cuesta 5 monedas.
+- “Nada” cierra el cuadro sin hacer nada.
+- La fuente es un obstáculo (HU-07).
+Escenario 1: Beber
+
+- Dado que el jugador tiene 60 puntos de energía y hoy no ha bebido
+- Cuando elige “Beber”
+- Entonces la energía sube a 75
+- Y aparece “Te sientes con más energía”
+Escenario 2: Beber dos veces el mismo día
+
+- Dado que el jugador ya ha bebido hoy y tiene 75 puntos de energía
+- Cuando vuelve a elegir “Beber”
+- Entonces aparece “Ya has bebido hoy”
+- Y la energía sigue en 75
+Escenario 3: Al día siguiente
+
+- Dado que el jugador bebió ayer
+- Cuando elige “Beber”
+- Entonces recupera 15 puntos de energía
+Escenario 4: Echar una moneda
+
+- Dado que el jugador tiene 20 monedas y no ha abierto el cofre del granero
+- Cuando elige “Echar una moneda”
+- Entonces tiene 15 monedas
+- Y aparece la pista “Detrás del granero hay algo que brilla.”
+Escenario 5: Sin monedas
+
+- Dado que el jugador tiene 3 monedas
+- Cuando elige “Echar una moneda”
+- Entonces aparece “No tienes monedas suficientes”
+- Y sigue teniendo 3 monedas
+Escenario 6: Pista siguiente
+
+- Dado que el cofre del granero ya está abierto y la Pala recogida
+- Cuando el jugador echa una moneda
+- Entonces aparece la pista “Al suroeste del lago, entre los árboles, se abre un sendero.”","- Al pulsar E junto a la fuente de la plaza aparece el cuadro “Fuente” con las opciones “Beber”, “Echar una moneda” y “Nada”.
+- “Beber” recupera 15 puntos de energía, sin pasar de 100, y aparece “Te sientes con más energía”. Solo se puede beber una vez al día: la segunda vez aparece “Ya has bebido hoy” y la energía no cambia.
+- “Echar una moneda” cuesta 5 monedas y da una pista. Sin 5 monedas aparece “No tienes monedas suficientes” y no se da la pista.
+- La pista es la primera de la lista que todavía sirve (lo que indica aún no se ha hecho):
+  1. El cofre del granero está sin abrir: “Detrás del granero hay algo que brilla.”
+  2. La Pala sigue en la granja: “El granjero siempre pierde la pala cerca del granero.”
+  3. El cofre del lago está sin abrir: “Al suroeste del lago, entre los árboles, se abre un sendero.”
+  4. El cofre de la torre está sin abrir (a partir del día 5): “En la torre hay un almacén que nadie usa.”
+  5. Falta alguna página del diario: “La relojera escribía mucho. Busca en las esquinas del pueblo.”
+  6. Si no queda ninguna: “La fuente no tiene nada más que contarte.”
+- Echar una moneda se puede repetir las veces que se quiera; cada vez cuesta 5 monedas.
+- “Nada” cierra el cuadro sin hacer nada.
+- La fuente es un obstáculo (HU-07)."
+"HU-76","HU-76. Energía más exigente","# HU-76. Energía más exigente
+
+# HU-76. Energía más exigente
+
+Como jugador, quiero que la energía se gaste más deprisa para tener que elegir qué hago cada día, comer o descansar.
+
+Criterios de aceptación:
+
+- Los costes de energía de HU-46 se doblan: cavar 8, sembrar 2, regar 4, cosechar 2, pescar 6 cada vez que se lanza la caña (salvo durante el concurso de pesca, HU-60), talar 10 y recoger setas o moras 2.
+- Correr (HU-81) gasta 1 punto de energía por cada 3 segundos que el personaje se desplaza corriendo. Corriendo contra un obstáculo o quieto no gasta.
+- Con 10 puntos de energía o menos no se puede correr. Si el jugador estaba corriendo, el personaje pasa a andar y aparece “Estás demasiado cansado para correr” (o “cansada”, HU-68). Al pulsar Mayús con 10 o menos, aparece el mismo mensaje y sigue andando.
+- Andar, hablar, abrir cofres, comprar y vender siguen sin gastar energía.
+Escenario 1: Cavar cuesta el doble
+
+- Dado que la energía es 50
+- Cuando el jugador cava una parcela
+- Entonces la energía es 42
+Escenario 2: Correr gasta energía
+
+- Dado que la energía es 50 y correr está activado
+- Cuando el personaje corre durante 6 segundos sin chocar
+- Entonces la energía es 48
+Escenario 3: Correr sin moverse no gasta
+
+- Dado que la energía es 50 y correr está activado
+- Cuando el personaje está quieto durante 6 segundos
+- Entonces la energía sigue en 50
+Escenario 4: Demasiado cansado para correr
+
+- Dado que la energía es 11 y el personaje está corriendo
+- Cuando la energía baja a 10
+- Entonces el personaje pasa a andar
+- Y aparece “Estás demasiado cansado para correr”
+Escenario 5: Mayús sin energía
+
+- Dado que la energía es 8
+- Cuando el jugador pulsa Mayús
+- Entonces aparece “Estás demasiado cansado para correr”
+- Y el personaje sigue andando","- Los costes de energía de HU-46 se doblan: cavar 8, sembrar 2, regar 4, cosechar 2, pescar 6 cada vez que se lanza la caña (salvo durante el concurso de pesca, HU-60), talar 10 y recoger setas o moras 2.
+- Correr (HU-81) gasta 1 punto de energía por cada 3 segundos que el personaje se desplaza corriendo. Corriendo contra un obstáculo o quieto no gasta.
+- Con 10 puntos de energía o menos no se puede correr. Si el jugador estaba corriendo, el personaje pasa a andar y aparece “Estás demasiado cansado para correr” (o “cansada”, HU-68). Al pulsar Mayús con 10 o menos, aparece el mismo mensaje y sigue andando.
+- Andar, hablar, abrir cofres, comprar y vender siguen sin gastar energía."
 "HU-80","HU-80. Interfaz con iconos","# HU-80. Interfaz con iconos
 
 # HU-80. Interfaz con iconos
@@ -2866,18 +2975,18 @@ Como jugador, quiero correr para recorrer el pueblo más deprisa.
 Criterios de aceptación:
 
 - Al pulsar la tecla Mayús se activa correr y al volver a pulsarla se desactiva. No hace falta mantenerla pulsada.
-- Con correr activado, el personaje se mueve al doble de la velocidad normal (8 casillas por segundo). Con correr desactivado, anda a la velocidad normal (HU-06).
+- Con correr activado, el personaje se mueve a 1,5 veces la velocidad normal (6 casillas por segundo). Con correr desactivado, anda a la velocidad normal (HU-06).
 - Pulsar Mayús no mueve al personaje.
 - Correr sigue activado al cambiar de zona. Al empezar o cargar una partida, el personaje anda.
-- Al correr, la animación y los pasos (HU-32) van al doble de rápido.
-- Correr no gasta energía.
+- Al correr, la animación y los pasos (HU-32) van 1,5 veces más rápido.
+- Correr gasta energía y no se puede correr con 10 puntos o menos (HU-76). Andar no gasta energía.
 - Al correr, las colisiones (HU-07), la ayuda en las esquinas y las puertas (HU-08) funcionan igual que al andar.
 - La tabla de controles (HU-33) incluye “Correr: Mayús”.
 Escenario 1: Activar correr
 
 - Dado que el personaje está quieto en la plaza
 - Cuando el jugador pulsa Mayús una vez y después mantiene la flecha derecha
-- Entonces el personaje se mueve hacia la derecha al doble de la velocidad normal
+- Entonces el personaje se mueve hacia la derecha a 1,5 veces la velocidad normal
 Escenario 2: Desactivar correr
 
 - Dado que el personaje está corriendo hacia la derecha
@@ -2888,10 +2997,10 @@ Escenario 3: Mayús no mueve
 - Dado que el personaje está quieto
 - Cuando el jugador pulsa Mayús
 - Entonces el personaje no se mueve
-Escenario 4: Sin gasto de energía
+Escenario 4: Andar no gasta energía
 
-- Dado que el jugador tiene 50 puntos de energía y correr está activado
-- Cuando corre durante 2 segundos
+- Dado que el jugador tiene 50 puntos de energía y correr está desactivado
+- Cuando anda durante 2 segundos
 - Entonces sigue teniendo 50 puntos de energía
 Escenario 5: Al cambiar de zona
 
@@ -2903,11 +3012,11 @@ Escenario 6: Controles
 - Dado que el jugador abre el menú de opciones
 - Cuando consulta la tabla de controles
 - Entonces aparece “Correr” con la tecla “Mayús”","- Al pulsar la tecla Mayús se activa correr y al volver a pulsarla se desactiva. No hace falta mantenerla pulsada.
-- Con correr activado, el personaje se mueve al doble de la velocidad normal (8 casillas por segundo). Con correr desactivado, anda a la velocidad normal (HU-06).
+- Con correr activado, el personaje se mueve a 1,5 veces la velocidad normal (6 casillas por segundo). Con correr desactivado, anda a la velocidad normal (HU-06).
 - Pulsar Mayús no mueve al personaje.
 - Correr sigue activado al cambiar de zona. Al empezar o cargar una partida, el personaje anda.
-- Al correr, la animación y los pasos (HU-32) van al doble de rápido.
-- Correr no gasta energía.
+- Al correr, la animación y los pasos (HU-32) van 1,5 veces más rápido.
+- Correr gasta energía y no se puede correr con 10 puntos o menos (HU-76). Andar no gasta energía.
 - Al correr, las colisiones (HU-07), la ayuda en las esquinas y las puertas (HU-08) funcionan igual que al andar.
 - La tabla de controles (HU-33) incluye “Correr: Mayús”."
 "HU-82","HU-82. Confirmar con E","# HU-82. Confirmar con E

@@ -3,9 +3,10 @@ import { at, currentGameState, isChangingZone, openOptionsAt, optionsView, press
 
 // HU-81. Correr
 // La partida empieza en la plaza (20, 17), con espacio libre a la derecha. La velocidad normal es de 64 px/s
-// (4 casillas por segundo, HU-06) y al correr, el doble. Mayús activa y desactiva correr.
+// (4 casillas por segundo, HU-06) y al correr, 1,5 veces más. Mayús activa y desactiva correr.
 
 const WALK_SPEED = 64;
+const RUN_SPEED = WALK_SPEED * 1.5;
 
 async function velocity(page: import('@playwright/test').Page): Promise<{ x: number; y: number }> {
   return page.evaluate(() => {
@@ -21,7 +22,7 @@ test('Escenario 1: Activar correr', async ({ page }) => {
   await press(page, 'Shift');
   await page.keyboard.down('ArrowRight');
 
-  await expect.poll(async () => (await velocity(page)).x, { intervals: [25] }).toBe(WALK_SPEED * 2);
+  await expect.poll(async () => (await velocity(page)).x, { intervals: [25] }).toBe(RUN_SPEED);
   expect((await velocity(page)).y).toBe(0);
 });
 
@@ -29,7 +30,7 @@ test('Escenario 2: Desactivar correr', async ({ page }) => {
   await startWith(page, {});
   await press(page, 'Shift');
   await page.keyboard.down('ArrowRight');
-  await expect.poll(async () => (await velocity(page)).x, { intervals: [25] }).toBe(WALK_SPEED * 2);
+  await expect.poll(async () => (await velocity(page)).x, { intervals: [25] }).toBe(RUN_SPEED);
 
   await press(page, 'Shift');
 
@@ -47,9 +48,8 @@ test('Escenario 3: Mayús no mueve', async ({ page }) => {
   expect((await currentGameState(page))!.position).toEqual(before);
 });
 
-test('Escenario 4: Sin gasto de energía', async ({ page }) => {
+test('Escenario 4: Andar no gasta energía', async ({ page }) => {
   await startWith(page, { energy: 50 });
-  await press(page, 'Shift');
 
   await page.keyboard.down('ArrowRight');
   await page.waitForTimeout(2000);
@@ -69,7 +69,7 @@ test('Escenario 5: Al cambiar de zona', async ({ page }) => {
   await waitForZone(page, 'tienda');
 
   await page.keyboard.down('ArrowLeft');
-  await expect.poll(async () => (await velocity(page)).x, { intervals: [25] }).toBe(-WALK_SPEED * 2);
+  await expect.poll(async () => (await velocity(page)).x, { intervals: [25] }).toBe(-RUN_SPEED);
 });
 
 test('Escenario 6: Controles', async ({ page }) => {

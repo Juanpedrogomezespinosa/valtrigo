@@ -433,6 +433,7 @@ function plaza() {
   placeBuilding(map, BUILDINGS.torre, 18, 2);
   placeBuilding(map, BUILDINGS.tienda, 29, 8);
   setTile(map.obstacles, map, 17, 16, TILE.well);
+  map.points.push({ name: 'fuente', x: 17, y: 16 }); // HU-75
   addSign(map, { id: 'plaza', x: 23, y: 11 });
   addSign(map, { id: 'camino-del-lago', x: 18, y: 22 });
   addNoticeBoard(map, { x: 17, y: 11 });

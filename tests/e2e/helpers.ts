@@ -119,6 +119,7 @@ export interface TestGameState {
   activeMissions: { id: string; day: number }[];
   completedMissions: string[];
   missionProgress: string[];
+  fountainDay: number | null;
 }
 
 // Partida guardada de ejemplo, con el formato de src/systems/save.ts.
@@ -154,6 +155,7 @@ export function savedGame(overrides: Partial<TestGameState> = {}): TestGameState
     activeMissions: [],
     completedMissions: [],
     missionProgress: [],
+    fountainDay: null,
     ...overrides,
   };
 }

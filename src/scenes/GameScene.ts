@@ -7,6 +7,8 @@ import {
   FONT_FAMILY,
   MESSAGE_MS,
   SLEEP_FADE_MS,
+  RUN_ENERGY_MS,
+  RUN_MIN_ENERGY,
   RUN_SPEED_FACTOR,
   STEP_SOUND_MS,
   TALK_DISTANCE,
@@ -25,7 +27,7 @@ import worldItems from '../data/worldItems.json';
 import { Chest } from '../entities/Chest';
 import { Npc } from '../entities/Npc';
 import { Player, type Direction } from '../entities/Player';
-import { getGameState, startGame } from '../systems/gameState';
+import { getGameState, isRunning, setRunning, startGame } from '../systems/gameState';
 import { addItem, canAdd, countItem, removeItem, type ItemId } from '../systems/inventory';
 import {
   clearPlot,
@@ -99,6 +101,7 @@ import {
 import { findMapPoint, getProperty, mapKey, mapObjects, musicKey, pointTile, ZONES, type MapObject, type ZoneId } from '../systems/zones';
 import { showConfirmDialog } from '../ui/confirmDialog';
 import { showMessage } from '../ui/message';
+import { drink, FOUNTAIN, throwCoin } from '../systems/fountain';
 import {
   acceptMission,
   canAcceptMoreMissions,
@@ -151,6 +154,7 @@ interface Interactable {
     | 'agua'
     | 'recurso'
     | 'tablon'
+    | 'fuente'
     | 'mecanismo'
     | 'pagina'
     | 'puesto';
@@ -172,6 +176,8 @@ export class GameScene extends Phaser.Scene {
   private interactables: Interactable[] = [];
   private chests: Chest[] = [];
   private npcs: Npc[] = [];
+  // Tiempo corriendo que aún no ha llegado a gastar un punto de energía (HU-76).
+  private runningMs = 0;
   // Marcador "!" o "?" de cada NPC (HU-73).
   private npcMarkers = new Map<Npc, Phaser.GameObjects.Text>();
   // Huerto de la granja (HU-41): sus casillas y lo que se dibuja en cada parcela.
@@ -273,6 +279,7 @@ export class GameScene extends Phaser.Scene {
       if (object.name === 'manzano') this.addAppleTree(object);
       if (object.name === 'recurso') this.addForageSpot(object);
       if (object.name === 'tablon') this.addNoticeBoard(object);
+      if (object.name === 'fuente') this.addFountain(object);
       if (object.name === 'mecanismo') this.addMechanism(object);
       if (object.name === 'pagina') this.addDiaryPage(object);
       // HU-58: los puestos y las guirnaldas de la feria solo están el día 7.
@@ -376,6 +383,7 @@ export class GameScene extends Phaser.Scene {
   private playSteps(delta: number): void {
     const body = this.player.body;
     const walking = body.velocity.lengthSq() > 0 && (body.deltaAbsX() > 0 || body.deltaAbsY() > 0);
+    this.spendRunningEnergy(walking, delta);
     if (!walking) {
       this.stepMs = STEP_SOUND_MS; // al empezar a andar, el primer paso suena enseguida
       return;
@@ -386,6 +394,42 @@ export class GameScene extends Phaser.Scene {
       this.stepMs = 0;
       playEffect(this, 'steps');
     }
+  }
+
+  // HU-81 y HU-76: con 10 de energía o menos no se puede empezar a correr.
+  private toggleRunning(): void {
+    if (isRunning()) {
+      setRunning(false);
+    } else if (getGameState().energy > RUN_MIN_ENERGY) {
+      setRunning(true);
+    } else {
+      this.showTooTiredToRun();
+    }
+  }
+
+  // HU-76: correr gasta 1 punto de energía por cada 3 segundos que el personaje se desplaza corriendo. Si la
+  // energía baja a 10 o menos (corriendo o trabajando), el personaje pasa a andar.
+  private spendRunningEnergy(moving: boolean, delta: number): void {
+    if (!isRunning()) {
+      return;
+    }
+    const state = getGameState();
+    if (moving) {
+      this.runningMs += delta;
+      while (this.runningMs >= RUN_ENERGY_MS) {
+        this.runningMs -= RUN_ENERGY_MS;
+        state.energy = Math.max(0, state.energy - 1);
+      }
+    }
+    if (state.energy <= RUN_MIN_ENERGY) {
+      setRunning(false);
+      this.showTooTiredToRun();
+    }
+  }
+
+  private showTooTiredToRun(): void {
+    const text = byGender(getGameState().appearance, 'Estás demasiado cansado para correr', 'Estás demasiado cansada para correr');
+    showMessage(this.scene.get('HudScene'), text, MESSAGE_MS, 'top');
   }
 
   // --- Consultas para los tests ---
@@ -439,6 +483,8 @@ export class GameScene extends Phaser.Scene {
     for (const key of ['UP', 'DOWN', 'LEFT', 'RIGHT', 'W', 'A', 'S', 'D']) {
       keyboard.on(`keydown-${key}`, () => this.fishing && this.stopFishing());
     }
+    // HU-81: Mayús activa y desactiva correr.
+    keyboard.on('keydown-SHIFT', (event: KeyboardEvent) => !event.repeat && this.toggleRunning());
     keyboard.on('keydown-I', () => this.openOverlay('InventoryScene'));
     keyboard.on('keydown-O', () => this.openOverlay('ObjectivesScene'));
 
@@ -1479,6 +1525,40 @@ export class GameScene extends Phaser.Scene {
 
   // El tablón es una casilla sólida de la capa de obstáculos. E junto a él entrega los pedidos que se pueden
   // entregar y, si no hay ninguno, muestra el pedido del día.
+  // HU-75: la fuente de la plaza. "Beber" recupera energía una vez al día y "Echar una moneda" da una pista.
+  private addFountain(object: MapObject): void {
+    this.interactables.push({
+      kind: 'fuente',
+      id: 'fuente',
+      area: tileArea(object),
+      isAvailable: () => true,
+      interact: () => this.useFountain(),
+    });
+  }
+
+  private useFountain(): void {
+    const hud = this.scene.get('HudScene');
+    this.openDialog({
+      speaker: 'fuente',
+      title: FOUNTAIN.title,
+      lines: [FOUNTAIN.text],
+      typewriter: false,
+      choice: {
+        options: FOUNTAIN.options,
+        onChoose: (index) => {
+          if (index === 0) {
+            showMessage(hud, drink(), MESSAGE_MS, 'top');
+          } else if (index === 1) {
+            const hint = throwCoin();
+            if (hint) return [hint];
+            showMessage(hud, FOUNTAIN.coin.notEnough, MESSAGE_MS, 'top');
+          }
+          return null;
+        },
+      },
+    });
+  }
+
   private addNoticeBoard(object: MapObject): void {
     this.interactables.push({
       kind: 'tablon',

@@ -13,7 +13,7 @@ test('Escenario 1: Cavar', async ({ page }) => {
 
   expect((await plotState(page)).dug).toBe(true);
   expect((await plotView(page))?.soilVisible).toBe(true);
-  expect((await currentGameState(page))?.energy).toBe(96);
+  expect((await currentGameState(page))?.energy).toBe(92);
 });
 
 test('Escenario 2: Sin Pala', async ({ page }) => {

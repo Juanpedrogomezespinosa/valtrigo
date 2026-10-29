@@ -1,9 +1,9 @@
 {
-  "dig": 4,
-  "sow": 1,
-  "water": 2,
-  "harvest": 1,
-  "cast": 3,
-  "chop": 5,
-  "forage": 1
+  "dig": 8,
+  "sow": 2,
+  "water": 4,
+  "harvest": 2,
+  "cast": 6,
+  "chop": 10,
+  "forage": 2
 }

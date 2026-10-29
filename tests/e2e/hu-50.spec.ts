@@ -23,7 +23,7 @@ test('Escenario 1: Recoger', async ({ page }) => {
 
   const state = await currentGameState(page);
   expect(state?.inventory).toEqual([{ item: 'seta', quantity: 1 }]);
-  expect(state?.energy).toBe(49);
+  expect(state?.energy).toBe(48);
   expect(await isForageSpotOnMap(page, 'setas-1')).toBe(false);
 });
 
@@ -38,7 +38,7 @@ test('Escenario 2: Talar', async ({ page }) => {
 
   const state = await currentGameState(page);
   expect(state?.inventory).toContainEqual({ item: 'lena', quantity: 1 });
-  expect(state?.energy).toBe(95);
+  expect(state?.energy).toBe(90);
   expect(await isForageSpotOnMap(page, 'tronco-5')).toBe(false);
 });
 

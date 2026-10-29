@@ -1,0 +1,15 @@
+{
+  "title": "Fuente",
+  "text": "El agua de la fuente está fresca y limpia.",
+  "options": ["Beber", "Echar una moneda", "Nada"],
+  "drink": { "energy": 15, "message": "Te sientes con más energía", "already": "Ya has bebido hoy" },
+  "coin": { "cost": 5, "notEnough": "No tienes monedas suficientes" },
+  "hints": [
+    { "text": "Detrás del granero hay algo que brilla.", "unless": { "chestOpened": "cofre-1" } },
+    { "text": "El granjero siempre pierde la pala cerca del granero.", "unless": { "pickedUp": "pala-de-la-granja" } },
+    { "text": "Al suroeste del lago, entre los árboles, se abre un sendero.", "unless": { "chestOpened": "cofre-3" } },
+    { "text": "En la torre hay un almacén que nadie usa.", "fromDay": 5, "unless": { "chestOpened": "cofre-2" } },
+    { "text": "La relojera escribía mucho. Busca en las esquinas del pueblo.", "unless": { "allDiaryPages": true } }
+  ],
+  "noHints": "La fuente no tiene nada más que contarte."
+}

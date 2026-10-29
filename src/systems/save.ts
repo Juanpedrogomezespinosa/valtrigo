@@ -61,6 +61,7 @@ export function readSave(): GameState | null {
         activeMissions: state.activeMissions ?? [],
         completedMissions: state.completedMissions ?? [],
         missionProgress: state.missionProgress ?? [],
+        fountainDay: state.fountainDay ?? null,
       }
     : null;
 }

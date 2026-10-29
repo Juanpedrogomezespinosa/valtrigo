@@ -21,9 +21,9 @@ test('Escenario 1: Gastar energía', async ({ page }) => {
   await press(page, 'e'); // cava la parcela
 
   expect((await plotState(page)).dug).toBe(true);
-  expect((await currentGameState(page))?.energy).toBe(46);
+  expect((await currentGameState(page))?.energy).toBe(42);
   // La energía en pantalla se actualiza en cuanto se gasta.
-  await expect.poll(() => hudEnergy(page), { intervals: [25] }).toBe('46/100');
+  await expect.poll(() => hudEnergy(page), { intervals: [25] }).toBe('42/100');
 });
 
 test('Escenario 2: Acciones gratuitas', async ({ page }) => {

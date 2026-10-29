@@ -85,6 +85,8 @@ export interface GameState {
   activeMissions: { id: string; day: number }[];
   completedMissions: string[];
   missionProgress: string[];
+  // Día en que se bebió por última vez de la fuente de la plaza, o null si nunca (HU-75).
+  fountainDay: number | null;
 }
 
 let current: GameState | null = null;
@@ -123,6 +125,7 @@ export function createNewGameState(scene: Phaser.Scene): GameState {
     activeMissions: [],
     completedMissions: [],
     missionProgress: [],
+    fountainDay: null,
   };
 }
 
@@ -146,8 +149,8 @@ export function isRunning(): boolean {
   return running;
 }
 
-export function toggleRunning(): void {
-  running = !running;
+export function setRunning(value: boolean): void {
+  running = value;
 }
 
 export function isGameInProgress(): boolean {

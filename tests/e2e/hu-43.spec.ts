@@ -14,7 +14,7 @@ test('Escenario 1: Regar', async ({ page }) => {
   expect((await plotState(page)).watered).toBe(true);
   // Se ve más oscura.
   expect((await plotView(page))?.watered).toBe(true);
-  expect((await currentGameState(page))?.energy).toBe(98);
+  expect((await currentGameState(page))?.energy).toBe(96);
 });
 
 test('Escenario 2: Ya regada', async ({ page }) => {
