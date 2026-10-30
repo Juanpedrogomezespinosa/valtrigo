@@ -500,3 +500,8 @@ Petición del autor tras jugar: el juego se quedaba vacío de cosas que hacer a 
 - **Partida de práctica "Día 5: cocina y mejoras" (HU-61, escenario 5):** en la casa, con los ingredientes de las cuatro recetas y 400 monedas. Las partidas de practice.json admiten ahora su propio `money`. Con 9 opciones, PracticeScene las separa 42 px en vez de 46.
 - **Test intermitente de HU-66 (escenario 3):** buscaba "Premio: 100 monedas" después de que se escribiera entera la línea siguiente, que tarda más que los 2 s del mensaje. Ahora vigila el mensaje dentro del navegador mientras avanza el diálogo (`watchForText` y `textWasShown` en helpers.ts). Comprueba lo mismo que antes.
 
+
+### Glosario visual y catálogo de bugs (fase 8)
+
+- **Glosario visual** (petición del autor): docs/glosario/README.md muestra cada gráfico del juego limpio, ampliado y con su nombre debajo, por categorías (personajes, retratos, objetos, platos, mejoras, naturaleza, edificios, interiores, huerto, feria, puzles e interfaz). Sirve de referencia para los bugs visuales: el alumnado compara lo que ve en el juego con el glosario. Lo genera `python3 tools/generar-glosario.py` (necesita Pillow), que recorta las hojas con las mismas casillas que tools/generar-mapas.mjs. Hay que volver a ejecutarlo si cambia un gráfico del juego limpio, nunca con bugs sembrados.
+- **Catálogo de bugs** (docs/bugs.md): 24 bugs con fallo, pasos, resultado esperado y real, severidad, por qué está, cómo se siembra, por qué no bloquea y el test que lo detecta. Decisiones del autor: ningún bug puede impedir seguir jugando, B-11 tiene una condición fija (sin azar) y el autor hace los commits de la siembra.
