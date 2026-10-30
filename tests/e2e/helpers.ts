@@ -1134,6 +1134,7 @@ export async function catchFish(page: Page): Promise<string> {
   await press(page, 'e');
   await waitForHudText(page, '¡Pica!');
   await press(page, 'e');
+  await playFishingGame(page);
   await expect
     .poll(async () => (await sceneTexts(page, 'HudScene')).find((text) => text.startsWith('Has pescado')), { intervals: [25] })
     .toBeTruthy();
@@ -1352,11 +1353,50 @@ export async function cookView(page: Page): Promise<CookView | null> {
   });
 }
 
-// Espera actual de la pesca: hasta "¡Pica!" o, después, el tiempo para pulsar E. Null si no se está pescando.
-export async function fishingTimer(page: Page): Promise<{ biting: boolean; delayMs: number } | null> {
+// --- Minijuego de pesca (HU-87) ---
+
+export interface FishingView {
+  phase: 'waiting' | 'biting' | 'fighting';
+  delayMs: number | null;
+  game: { item: string; seconds: number; zoneSize: number; zoneBottom: number; progress: number; fishY: number } | null;
+}
+
+// Estado de la pesca: la fase, la espera en curso y el minijuego. Null si no se está pescando.
+export async function fishingState(page: Page): Promise<FishingView | null> {
   return page.evaluate(() => {
     const game = (window as unknown as GameWindow).game;
-    const scene = game.scene.getScene('GameScene') as unknown as { getFishingTimer(): { biting: boolean; delayMs: number } | null };
-    return scene.getFishingTimer();
+    return (game.scene.getScene('GameScene') as unknown as { getFishingState(): FishingView | null }).getFishingState();
   });
+}
+
+// Juega el minijuego de pesca dentro del navegador, como lo haría un jugador: en cada fotograma mantiene E pulsada
+// si el pez está por encima del centro de la zona verde y la suelta si está por debajo. Termina cuando acaba la
+// pesca (el pez se pesca o se escapa). Los eventos de teclado son los del navegador, como los de Playwright, pero
+// sin la latencia entre Playwright y el navegador, que con el equipo cargado haría perder el pez.
+export async function playFishingGame(page: Page): Promise<void> {
+  await page.evaluate(
+    () =>
+      new Promise<void>((resolve) => {
+        const game = (window as unknown as GameWindow).game;
+        const scene = game.scene.getScene('GameScene') as unknown as { getFishingState(): FishingView | null };
+        const send = (type: string) => window.dispatchEvent(new KeyboardEvent(type, { key: 'e', code: 'KeyE', keyCode: 69, which: 69 } as KeyboardEventInit));
+        let holding = false;
+        const tick = () => {
+          const state = scene.getFishingState();
+          if (!state || state.phase !== 'fighting') {
+            if (holding) send('keyup');
+            resolve();
+            return;
+          }
+          const center = state.game!.zoneBottom + state.game!.zoneSize / 2;
+          const wanted = state.game!.fishY > center;
+          if (wanted !== holding) {
+            holding = wanted;
+            send(holding ? 'keydown' : 'keyup');
+          }
+          requestAnimationFrame(tick);
+        };
+        tick();
+      }),
+  );
 }

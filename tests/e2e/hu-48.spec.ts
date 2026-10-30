@@ -14,7 +14,7 @@ import {
 } from './helpers';
 
 // HU-48. Pescar en el lago
-// Con setRandom([0]), "¡Pica!" aparece a los 2 segundos de lanzar la caña.
+// Con setRandom([0]), "¡Pica!" aparece al segundo de lanzar la caña. Después se juega el minijuego (HU-87).
 
 test('Escenario 1: Pescar a tiempo', async ({ page }) => {
   await startAtWith(page, 'lago', FISHING_SPOT, { minutes: at(15), energy: 50, inventory: [ROD] });

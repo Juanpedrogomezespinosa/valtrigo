@@ -21,9 +21,7 @@
       "name": "Caña buena",
       "price": 100,
       "icon": "objeto-cana-de-pescar",
-      "biteMinMs": 1000,
-      "biteMaxMs": 3000,
-      "reactionMs": 2000
+      "zoneSize": 40
     }
   ]
 }

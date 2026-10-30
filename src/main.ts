@@ -20,6 +20,7 @@ import { PauseScene } from './scenes/PauseScene';
 import { PracticeScene } from './scenes/PracticeScene';
 import { ItemChoiceScene } from './scenes/ItemChoiceScene';
 import { CookScene } from './scenes/CookScene';
+import { FishingScene } from './scenes/FishingScene';
 import { getAudioState } from './systems/audio';
 import { getGameState, isGameInProgress } from './systems/gameState';
 import { setRandomValues } from './systems/random';
@@ -57,6 +58,7 @@ const game = new Phaser.Game({
     AppearanceScene,
     GameScene,
     NightScene,
+    FishingScene,
     DialogScene,
     InventoryScene,
     ObjectivesScene,

@@ -7,16 +7,15 @@ Como jugador, quiero pescar en el lago para conseguir peces y venderlos.
 Criterios de aceptación:
 
 - Al pulsar E mirando al agua del lago, a menos de una casilla, con una Caña de pescar en el inventario, el personaje lanza la caña y se gastan 6 de energía (HU-76).
-- Entre 2 y 5 segundos después aparece “¡Pica!”. Si el jugador pulsa E antes de que pase 1 segundo, el pez va al inventario. Si tarda más, aparece “Se ha escapado”.
+- Entre 1 y 3 segundos después aparece “¡Pica!”. Si el jugador pulsa E antes de que pase 1 segundo, empieza el minijuego de pesca (HU-87), y si lo gana el pez va al inventario. Si tarda más, aparece “Se ha escapado”.
 - Si pulsa E antes de que aparezca “¡Pica!”, aparece “Has tirado demasiado pronto” y no pesca nada.
 - Pulsar una flecha recoge la caña sin pescar nada. La energía gastada no se devuelve.
 - Mientras pesca, el personaje no se mueve. Escape abre la pausa y la pesca continúa al reanudar.
-- Si el pez no cabe en el inventario, aparece “Inventario lleno” y se pierde.
 - Sin Caña de pescar aparece el mensaje “Necesitas una Caña de pescar”.
 Escenario 1: Pescar a tiempo
 
 - Dado que el jugador tiene una Caña de pescar y está mirando al agua
-- Cuando pulsa E y vuelve a pulsar E menos de 1 segundo después de que aparezca “¡Pica!”
+- Cuando pulsa E, vuelve a pulsar E menos de 1 segundo después de que aparezca “¡Pica!” y gana el minijuego (HU-87)
 - Entonces aparece un pez en el inventario
 - Y la energía ha bajado 6
 Escenario 2: Demasiado tarde

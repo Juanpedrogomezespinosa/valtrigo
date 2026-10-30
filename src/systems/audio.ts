@@ -18,6 +18,12 @@ export const SFX = {
   // tools/generar-efectos.mjs).
   dialogLetter: { key: 'sfx-dialogo-letra', path: 'assets/audio/sfx/dialogo-letra.wav' },
   dialogNext: { key: 'sfx-dialogo-siguiente', path: 'assets/audio/sfx/dialogo-siguiente.wav' },
+  // HU-87: pesca (Ninja Adventure, ver CREDITOS.md).
+  fishCast: { key: 'sfx-pesca-lanzar', path: 'assets/audio/sfx/pesca-lanzar.wav' },
+  fishBite: { key: 'sfx-pesca-pica', path: 'assets/audio/sfx/pesca-pica.wav' },
+  fishReel: { key: 'sfx-pesca-carrete', path: 'assets/audio/sfx/pesca-carrete.wav' },
+  fishCatch: { key: 'sfx-pesca-captura', path: 'assets/audio/sfx/pesca-captura.wav' },
+  fishEscape: { key: 'sfx-pesca-escapa', path: 'assets/audio/sfx/pesca-escapa.wav' },
   // HU-78: las campanas de la torre (generadas con tools/generar-efectos.mjs).
   bellLarge: { key: 'sfx-campana-grande', path: 'assets/audio/sfx/campana-grande.wav' },
   bellMedium: { key: 'sfx-campana-mediana', path: 'assets/audio/sfx/campana-mediana.wav' },

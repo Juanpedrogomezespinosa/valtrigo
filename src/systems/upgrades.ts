@@ -1,5 +1,6 @@
+import fish from '../data/fish.json';
 import upgrades from '../data/upgrades.json';
-import { FISH_BITE_MAX_MS, FISH_BITE_MIN_MS, FISH_REACTION_MS, INVENTORY_SLOTS } from '../config';
+import { INVENTORY_SLOTS } from '../config';
 import { getGameState } from './gameState';
 
 // Mejoras de la tienda (HU-85). Datos en src/data/upgrades.json. Las compradas se guardan en
@@ -13,10 +14,8 @@ export interface UpgradeData {
   icon: string;
   // Mochila grande: casillas del inventario.
   inventorySlots?: number;
-  // Caña buena: espera hasta "¡Pica!" y tiempo para pulsar E, en milisegundos.
-  biteMinMs?: number;
-  biteMaxMs?: number;
-  reactionMs?: number;
+  // Caña buena: tamaño de la zona verde del minijuego de pesca (HU-87).
+  zoneSize?: number;
 }
 
 export const UPGRADES: UpgradeData[] = upgrades.upgrades;
@@ -40,11 +39,7 @@ export function watersSides(): boolean {
   return hasUpgrade('regadera-grande');
 }
 
-// Tiempos de la pesca (HU-48): con la Caña buena el pez pica antes y hay más tiempo para pulsar E.
-export function fishingTimes(): { biteMinMs: number; biteMaxMs: number; reactionMs: number } {
-  if (!hasUpgrade('cana-buena')) {
-    return { biteMinMs: FISH_BITE_MIN_MS, biteMaxMs: FISH_BITE_MAX_MS, reactionMs: FISH_REACTION_MS };
-  }
-  const { biteMinMs, biteMaxMs, reactionMs } = upgrade('cana-buena');
-  return { biteMinMs: biteMinMs!, biteMaxMs: biteMaxMs!, reactionMs: reactionMs! };
+// Tamaño de la zona verde del minijuego de pesca (HU-87): más grande con la Caña buena.
+export function fishingZoneSize(): number {
+  return hasUpgrade('cana-buena') ? upgrade('cana-buena').zoneSize! : fish.minigame.zoneSize;
 }

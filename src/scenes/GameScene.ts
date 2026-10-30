@@ -1,6 +1,9 @@
 import Phaser from 'phaser';
 import {
   COLORS,
+  FISH_BITE_MAX_MS,
+  FISH_BITE_MIN_MS,
+  FISH_REACTION_MS,
   FONT_FAMILY,
   MESSAGE_MS,
   SLEEP_FADE_MS,
@@ -75,7 +78,8 @@ import {
 import { randomInt } from '../systems/random';
 import { spendEnergy, type WorkAction } from '../systems/energy';
 import { isShopOpen } from '../systems/economy';
-import { fishingTimes, watersSides } from '../systems/upgrades';
+import { fishingZoneSize, watersSides } from '../systems/upgrades';
+import { ESCAPED_MESSAGE, isFishInZone, REEL_SOUND_MS, startFishingGame, stepFishingGame, type FishingGame } from '../systems/fishingGame';
 import { writeSave } from '../systems/save';
 import { playEffect, playZoneMusic } from '../systems/audio';
 import { isNpcInZone } from '../systems/schedules';
@@ -197,7 +201,17 @@ export class GameScene extends Phaser.Scene {
   private obstacles!: Phaser.Tilemaps.TilemapLayer;
   // Pesca en curso (HU-48): el temporizador de lo que pasa después ("¡Pica!" o que se escape), si el pez
   // ya ha picado y el corcho que se ve en el agua.
-  private fishing: { timer: Phaser.Time.TimerEvent; biting: boolean; bobber: Phaser.GameObjects.Arc } | null = null;
+  // Pesca (HU-48 y HU-87): esperando a que pique, con "¡Pica!" en pantalla o en el minijuego. El pez se decide al
+  // picar (HU-49). `reelMs` cuenta el tiempo para el sonido del carrete.
+  private fishing: {
+    phase: 'waiting' | 'biting' | 'fighting';
+    timer: Phaser.Time.TimerEvent | null;
+    bobber: Phaser.GameObjects.Arc;
+    catch: Catch | null;
+    game: FishingGame | null;
+    reelMs: number;
+  } | null = null;
+  private fishingKey!: Phaser.Input.Keyboard.Key;
   // Último pez pescado, con su tamaño.
   private lastCatch: Catch | null = null;
   // Ceremonia de la feria (HU-66): escenario, podio, sitios del público, lo que se dibuja en el podio, si está
@@ -373,6 +387,7 @@ export class GameScene extends Phaser.Scene {
     }
     this.updateNpcPresence();
     this.updateNpcMarkers();
+    this.updateFishingGame(delta);
 
     // Durante un cambio de zona, un diálogo o con el inventario abierto, el personaje no se mueve.
     if (this.isBusy()) {
@@ -515,6 +530,8 @@ export class GameScene extends Phaser.Scene {
   private setUpKeys(): void {
     const keyboard = this.input.keyboard!;
     keyboard.on('keydown-E', () => this.interact());
+    // HU-87: en el minijuego de pesca, mantener E sube la zona verde.
+    this.fishingKey = keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
     // HU-48: una flecha (o WASD) recoge la caña sin pescar nada.
     for (const key of ['UP', 'DOWN', 'LEFT', 'RIGHT', 'W', 'A', 'S', 'D']) {
       keyboard.on(`keydown-${key}`, () => this.fishing && this.stopFishing());
@@ -1905,8 +1922,8 @@ export class GameScene extends Phaser.Scene {
     };
   }
 
-  // Lanza la caña. "¡Pica!" aparece entre 2 y 5 segundos después (entre 1 y 3 con la Caña buena, HU-85). Los
-  // temporizadores son del reloj de la escena: con la pausa abierta se detienen y la pesca sigue al reanudar.
+  // Lanza la caña. "¡Pica!" aparece entre 1 y 3 segundos después. Los temporizadores son del reloj de la escena:
+  // con la pausa abierta se detienen y la pesca sigue al reanudar.
   private castRod(tile: { x: number; y: number }): void {
     if (countItem('cana-de-pescar') === 0) {
       showMessage(this.scene.get('HudScene'), 'Necesitas una Caña de pescar', MESSAGE_MS, 'top');
@@ -1920,39 +1937,76 @@ export class GameScene extends Phaser.Scene {
     }
     this.player.stand();
     this.indicator.setVisible(false);
+    playEffect(this, 'fishCast');
     const bobber = this.add
       .circle(tile.x * TILE_SIZE + TILE_SIZE / 2, tile.y * TILE_SIZE + TILE_SIZE / 2, 2, 0xd83c3c)
       .setStrokeStyle(1, 0xf2f2f2);
     this.fishing = {
-      biting: false,
+      phase: 'waiting',
       bobber,
-      timer: this.time.delayedCall(randomInt(fishingTimes().biteMinMs, fishingTimes().biteMaxMs), () => this.bite()),
+      catch: null,
+      game: null,
+      reelMs: 0,
+      timer: this.time.delayedCall(randomInt(FISH_BITE_MIN_MS, FISH_BITE_MAX_MS), () => this.bite()),
     };
   }
 
-  // "¡Pica!": hay 1 segundo para pulsar E (2 con la Caña buena, HU-85). Si no, el pez se escapa.
+  // "¡Pica!": el pez se decide ahora (HU-49: según la hora a la que pica) y hay 1 segundo para pulsar E.
   private bite(): void {
     if (!this.fishing) return;
-    this.fishing.biting = true;
+    this.fishing.phase = 'biting';
+    this.fishing.catch = catchAt(getGameState().minutes, isFishingContestRunning());
     this.fishing.bobber.setY(this.fishing.bobber.y + 2);
-    const { reactionMs } = fishingTimes();
-    showMessage(this.scene.get('HudScene'), '¡Pica!', reactionMs, 'top');
-    this.fishing.timer = this.time.delayedCall(reactionMs, () => {
-      this.stopFishing();
-      showMessage(this.scene.get('HudScene'), 'Se ha escapado', MESSAGE_MS, 'top');
-    });
+    playEffect(this, 'fishBite');
+    showMessage(this.scene.get('HudScene'), '¡Pica!', FISH_REACTION_MS, 'top');
+    this.fishing.timer = this.time.delayedCall(FISH_REACTION_MS, () => this.fishEscaped());
   }
 
-  // E con la caña lanzada: demasiado pronto, o el pez (HU-49: según la hora a la que ha picado).
+  // E con la caña lanzada: antes de "¡Pica!" es demasiado pronto; con "¡Pica!" empieza el minijuego (HU-87).
+  // Durante el minijuego, E se mantiene pulsada para subir la zona (updateFishingGame).
   private reel(): void {
-    const hud = this.scene.get('HudScene');
-    const biting = this.fishing?.biting;
-    this.stopFishing();
-    if (!biting) {
-      showMessage(hud, 'Has tirado demasiado pronto', MESSAGE_MS, 'top');
+    if (!this.fishing || this.fishing.phase === 'fighting') return;
+    if (this.fishing.phase === 'waiting') {
+      this.stopFishing();
+      playEffect(this, 'fishEscape');
+      showMessage(this.scene.get('HudScene'), 'Has tirado demasiado pronto', MESSAGE_MS, 'top');
       return;
     }
-    const fish = catchAt(getGameState().minutes, isFishingContestRunning());
+    this.fishing.timer?.remove();
+    this.fishing.timer = null;
+    this.fishing.phase = 'fighting';
+    this.fishing.game = startFishingGame(this.fishing.catch!.item, fishingZoneSize());
+    this.scene.launch('FishingScene');
+  }
+
+  // HU-87: avanza el minijuego. Mientras el pez está en la zona suena el carrete.
+  private updateFishingGame(delta: number): void {
+    const game = this.fishing?.phase === 'fighting' ? this.fishing.game! : null;
+    if (!game) return;
+    const result = stepFishingGame(game, delta, this.fishingKey.isDown);
+    if (isFishInZone(game)) {
+      this.fishing!.reelMs += delta;
+      if (this.fishing!.reelMs >= REEL_SOUND_MS) {
+        this.fishing!.reelMs = 0;
+        playEffect(this, 'fishReel');
+      }
+    }
+    if (result === 'caught') this.landFish();
+    if (result === 'escaped') this.fishEscaped();
+  }
+
+  // El pez se escapa: no se pulsó E a tiempo o se vació el medidor del minijuego.
+  private fishEscaped(): void {
+    this.stopFishing();
+    playEffect(this, 'fishEscape');
+    showMessage(this.scene.get('HudScene'), ESCAPED_MESSAGE, MESSAGE_MS, 'top');
+  }
+
+  // Minijuego ganado: el pez va al inventario (si cabe).
+  private landFish(): void {
+    const hud = this.scene.get('HudScene');
+    const fish = this.fishing!.catch!;
+    this.stopFishing();
     if (!canAdd(fish.item, 1)) {
       showMessage(hud, 'Inventario lleno', MESSAGE_MS, 'top');
       return;
@@ -1962,25 +2016,28 @@ export class GameScene extends Phaser.Scene {
     recordContestCatch(fish.size); // HU-60, si hay concurso
     getGameState().dayStats.fish += 1; // HU-39
     recordEvent('fish'); // HU-63
+    playEffect(this, 'fishCatch');
     showMessage(hud, caughtMessage(fish), MESSAGE_MS, 'top');
   }
 
   // Deja de pescar (también al recoger la caña con una flecha: la energía gastada no se devuelve).
   private stopFishing(): void {
     if (!this.fishing) return;
-    this.fishing.timer.remove();
+    this.fishing.timer?.remove();
     this.fishing.bobber.destroy();
     this.fishing = null;
+    this.scene.stop('FishingScene');
   }
 
   isFishing(): boolean {
     return this.fishing !== null;
   }
 
-  // Para los tests de HU-85: si el pez ya ha picado y cuánto dura la espera actual, en milisegundos (hasta
-  // "¡Pica!" o, después, el tiempo para pulsar E). Null si no se está pescando.
-  getFishingTimer(): { biting: boolean; delayMs: number } | null {
-    return this.fishing ? { biting: this.fishing.biting, delayMs: this.fishing.timer.delay } : null;
+  // Estado de la pesca, para FishingScene y los tests: la fase, la espera en curso (hasta "¡Pica!" o el tiempo
+  // para pulsar E) y el minijuego. Null si no se está pescando.
+  getFishingState(): { phase: string; delayMs: number | null; game: FishingGame | null } | null {
+    if (!this.fishing) return null;
+    return { phase: this.fishing.phase, delayMs: this.fishing.timer?.delay ?? null, game: this.fishing.game };
   }
 
   getLastCatch(): Catch | null {
