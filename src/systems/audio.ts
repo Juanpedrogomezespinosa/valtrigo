@@ -14,6 +14,10 @@ export const SFX = {
   sell: { key: 'sfx-venta', path: 'assets/audio/sfx/venta.wav' },
   chest: { key: 'sfx-cofre', path: 'assets/audio/sfx/cofre.wav' },
   questComplete: { key: 'sfx-encargo-completado', path: 'assets/audio/sfx/encargo-completado.wav' },
+  // HU-32: cuadros de diálogo, al escribirse las letras y al pasar al siguiente cuadro con E (generados con
+  // tools/generar-efectos.mjs).
+  dialogLetter: { key: 'sfx-dialogo-letra', path: 'assets/audio/sfx/dialogo-letra.wav' },
+  dialogNext: { key: 'sfx-dialogo-siguiente', path: 'assets/audio/sfx/dialogo-siguiente.wav' },
   // HU-78: las campanas de la torre (generadas con tools/generar-efectos.mjs).
   bellLarge: { key: 'sfx-campana-grande', path: 'assets/audio/sfx/campana-grande.wav' },
   bellMedium: { key: 'sfx-campana-mediana', path: 'assets/audio/sfx/campana-mediana.wav' },

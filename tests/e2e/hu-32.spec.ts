@@ -1,6 +1,7 @@
 import { expect, test } from './fixtures';
 import {
   at,
+  dialogState,
   openGame,
   playedEffects,
   press,
@@ -17,6 +18,10 @@ import {
 
 const NAVIGATE = 'sfx-menu-navegar';
 const CONFIRM = 'sfx-menu-confirmar';
+const DIALOG_LETTER = 'sfx-dialogo-letra';
+const DIALOG_NEXT = 'sfx-dialogo-siguiente';
+// Con el reloj reparado, el alcalde dice sus dos líneas `clockRepaired` (HU-11, escenario 5).
+const CLOCK_REPAIRED = { completedQuests: ['encargo-1', 'encargo-2', 'encargo-3', 'encargo-4', 'encargo-5'] };
 
 test('Escenario 1: Andar', async ({ page }) => {
   await startNewGame(page); // centro de la plaza, sin obstáculos cerca
@@ -90,4 +95,27 @@ test('Escenario 6: Activar una opción', async ({ page }) => {
   await recordEffects(page);
   await press(page, 'Enter');
   expect(await playedEffects(page)).toEqual([CONFIRM]);
+});
+
+test('Escenario 7: Letras de un diálogo', async ({ page }) => {
+  await startNextTo(page, 'alcalde', CLOCK_REPAIRED);
+  await recordEffects(page);
+
+  await press(page, 'e');
+  await expect.poll(async () => (await dialogState(page))?.typing, { intervals: [25] }).toBe(false);
+
+  const letters = (await playedEffects(page)).filter((key) => key === DIALOG_LETTER);
+  expect(letters.length).toBeGreaterThanOrEqual(2);
+});
+
+test('Escenario 8: Siguiente cuadro de diálogo', async ({ page }) => {
+  await startNextTo(page, 'alcalde', CLOCK_REPAIRED);
+  await press(page, 'e');
+  await expect.poll(async () => (await dialogState(page))?.typing, { intervals: [25] }).toBe(false);
+  await recordEffects(page);
+
+  await press(page, 'e');
+
+  expect((await dialogState(page))?.lineIndex).toBe(1);
+  expect((await playedEffects(page))[0]).toBe(DIALOG_NEXT);
 });

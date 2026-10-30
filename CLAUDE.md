@@ -65,6 +65,7 @@ Es un proyecto público con un fin doble: servir de base para un curso de testin
 - Si la flecha no cambia la selección (por ejemplo, arriba en la primera opción), no suena nada.
 - Con el ratón, un clic en una opción solo reproduce el efecto de confirmación, no el de navegación.
 - "Volver" (con clic, Enter o Escape) reproduce el efecto de confirmación.
+- **Efectos de los diálogos** (petición del autor, criterio y escenarios 7 y 8 de HU-32): mientras se escribe una línea letra a letra suena `dialogLetter`, una vez cada 2 letras (`LETTERS_PER_SOUND` en DialogScene) y nunca en un espacio, porque uno por letra, cada 30 ms, era un zumbido. Al pasar con E a la línea siguiente suena `dialogNext`. No suenan: los carteles (el texto aparece completo), la E que completa una línea a medio escribir ni la E que cierra el diálogo. Las opciones siguen con los efectos de navegación y confirmación. Los dos son provisionales y salen de tools/generar-efectos.mjs (onda `soft`, senoidal).
 - Efectos de las acciones (Ninja Adventure): pasos al andar (cada 250 ms mientras el personaje se desplaza de verdad; contra un obstáculo no suena), abrir menús (inventario, objetivos, pausa y tienda), comprar, vender, abrir un cofre y completar un encargo. En la tienda, una compra o venta correcta suena con su efecto en lugar del de confirmación.
 
 ### Mundo y gráficos

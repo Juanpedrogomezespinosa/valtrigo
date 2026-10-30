@@ -27,6 +27,9 @@ export interface DialogSceneData {
 
 const BOX_HEIGHT = 160;
 const MARGIN = 20;
+// HU-32: mientras se escribe una línea, el efecto de las letras suena cada tantas letras (sin contar los espacios),
+// porque una vez por letra, cada 30 ms, sería un zumbido.
+const LETTERS_PER_SOUND = 2;
 // Hueco entre las opciones de un diálogo.
 const CHOICE_GAP = 50;
 // Los retratos miden 38×38: se amplían ×3 sin suavizar.
@@ -38,6 +41,8 @@ const PORTRAIT_SIZE = 114;
 // - Carteles (HU-12): el texto aparece completo y E lo cierra.
 // - Con opciones (HU-19): al completarse la última línea aparecen las opciones. Se eligen con ← →
 //   y se confirman con E, Enter o un clic.
+// - Efectos (HU-32): mientras se escribe una línea suena el efecto de las letras y al pasar con E a la línea
+//   siguiente suena el del siguiente cuadro.
 export class DialogScene extends Phaser.Scene {
   private dialog!: DialogSceneData;
   private lines: string[] = [];
@@ -214,6 +219,10 @@ export class DialogScene extends Phaser.Scene {
       callback: () => {
         this.shownLetters++;
         this.text.setText(this.lines[this.lineIndex].slice(0, this.shownLetters));
+        const letter = this.lines[this.lineIndex][this.shownLetters - 1];
+        if (letter.trim() && this.shownLetters % LETTERS_PER_SOUND === 1) {
+          playEffect(this, 'dialogLetter');
+        }
         this.refreshChoice();
       },
     });
@@ -234,6 +243,7 @@ export class DialogScene extends Phaser.Scene {
     }
 
     if (this.lineIndex < this.lines.length - 1) {
+      playEffect(this, 'dialogNext');
       this.showLine(this.lineIndex + 1);
       return;
     }

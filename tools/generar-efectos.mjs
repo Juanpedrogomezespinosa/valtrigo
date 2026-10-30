@@ -16,6 +16,10 @@ const EFFECTS = {
     { frequency: 660, duration: 0.07 },
     { frequency: 990, duration: 0.1 },
   ],
+  // Cuadros de diálogo (HU-32): un toque muy corto y suave mientras se escriben las letras y otro al pasar
+  // al siguiente cuadro con E.
+  'dialogo-letra': [{ frequency: 520, duration: 0.03, wave: 'soft', volume: 0.5 }],
+  'dialogo-siguiente': [{ frequency: 740, duration: 0.08, wave: 'soft' }],
   // Campanas de la torre (HU-78): la grande es la más grave y la pequeña, la más aguda.
   'campana-grande': [{ frequency: 262, duration: 1.2, wave: 'bell' }],
   'campana-mediana': [{ frequency: 392, duration: 1.0, wave: 'bell' }],
@@ -23,8 +27,9 @@ const EFFECTS = {
 };
 
 // Onda cuadrada suavizada, con un ataque breve y caída exponencial para evitar chasquidos. Las campanas (`bell`)
-// son una onda senoidal con armónicos que se apagan despacio.
-function renderNote({ frequency, duration, wave }) {
+// son una onda senoidal con armónicos que se apagan despacio. `soft` es una onda senoidal, más suave que la
+// cuadrada. `volume` (de 0 a 1, 1 por defecto) baja la nota.
+function renderNote({ frequency, duration, wave, volume = 1 }) {
   const length = Math.round(duration * SAMPLE_RATE);
   const samples = new Float32Array(length);
   for (let i = 0; i < length; i++) {
@@ -36,8 +41,12 @@ function renderNote({ frequency, duration, wave }) {
       samples[i] = 0.25 * tone * attack * Math.exp((-3 * t) / duration);
       continue;
     }
+    if (wave === 'soft') {
+      samples[i] = 0.4 * volume * Math.sin(2 * Math.PI * frequency * t) * attack * decay;
+      continue;
+    }
     const square = Math.sin(2 * Math.PI * frequency * t) >= 0 ? 1 : -1;
-    samples[i] = 0.3 * square * attack * decay;
+    samples[i] = 0.3 * volume * square * attack * decay;
   }
   return samples;
 }
