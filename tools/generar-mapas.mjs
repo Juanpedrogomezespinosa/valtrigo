@@ -455,11 +455,11 @@ function plaza() {
   map.points.push({ name: 'escenario', x: 22, y: 9 });
   map.points.push({ name: 'podio', x: 27, y: 9 });
   // Visitantes de la feria (HU-58): dónde pasean durante el día y dónde se colocan como público en la ceremonia.
-  const strollers = [['rosa', 21, 15], ['lucia', 13, 15], ['tomas', 11, 13], ['pablo', 26, 16], ['fran', 9, 15], ['elena', 24, 16]];
+  const strollers = [['rosa', 21, 15], ['lucia', 13, 15], ['tomas', 11, 13], ['pablo', 26, 16], ['fran', 9, 15], ['elena', 24, 16], ['pedro', 12, 17]];
   for (const [character, x, y] of strollers) {
     map.points.push({ name: 'visitante', x, y, properties: { personaje: character } });
   }
-  const audience = [['rosa', 20, 11], ['lucia', 21, 11], ['tomas', 25, 11], ['pablo', 26, 11], ['fran', 19, 11], ['elena', 27, 11], ['jugador', 22, 11]];
+  const audience = [['rosa', 20, 11], ['lucia', 21, 11], ['tomas', 25, 11], ['pablo', 26, 11], ['fran', 19, 11], ['elena', 27, 11], ['pedro', 18, 11], ['jugador', 22, 11]];
   for (const [character, x, y] of audience) {
     map.points.push({ name: 'publico', x, y, properties: { personaje: character } });
   }

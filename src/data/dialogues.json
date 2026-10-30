@@ -254,6 +254,23 @@
       ],
       "quests": {}
     },
+    "pedro": {
+      "name": "Pedro",
+      "from": "de Pedro",
+      "greeting": [
+        "¡¡He venido por la comida gratis!!",
+        "¡¡¿Dónde está la comida?!!"
+      ],
+      "fairGreeting": [
+        "¡¡He venido por la comida gratis!!",
+        "¡¡¿Dónde está la comida?!!"
+      ],
+      "clockRepaired": [
+        "¡¡He venido por la comida gratis!!",
+        "¡¡¿Dónde está la comida?!!"
+      ],
+      "quests": {}
+    },
     "bruno": {
       "name": "Bruno",
       "from": "de Bruno",

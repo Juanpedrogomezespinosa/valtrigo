@@ -181,6 +181,14 @@
       "day": 7
     }
   ],
+  "pedro": [
+    {
+      "zone": "plaza",
+      "from": "12:00",
+      "to": "24:00",
+      "day": 7
+    }
+  ],
   "bigotes": [
     {
       "zone": "barrio",

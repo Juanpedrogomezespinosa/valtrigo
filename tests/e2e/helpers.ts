@@ -1204,7 +1204,7 @@ export async function isDiaryPageOnMap(page: Page, id: string): Promise<boolean>
 export const NEXT_TO_HARVEST_STALL = { x: 15, y: 15 };
 export const NEXT_TO_FISHING_STALL = { x: 19, y: 15 };
 
-export const VISITORS = ['rosa', 'lucia', 'tomas', 'pablo', 'fran', 'elena'];
+export const VISITORS = ['rosa', 'lucia', 'tomas', 'pablo', 'fran', 'elena', 'pedro'];
 
 // Casillas de la guirnalda de la feria y de sus postes (HU-58).
 export async function garlandView(page: Page): Promise<{ tiles: { x: number; y: number }[]; posts: { x: number; y: number }[] }> {

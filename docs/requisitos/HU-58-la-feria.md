@@ -8,7 +8,8 @@ Criterios de aceptación:
 
 - La feria se celebra en la plaza el día 7. Es festivo: ese día el jugador se despierta a las 12:00 y la feria ya está montada.
 - Durante la feria, la plaza tiene guirnaldas, sujetas por un poste de madera en cada extremo, dos puestos (el de la cosecha, HU-59, y el de pesca, HU-60), un escenario y un podio para la ceremonia (HU-66).
-- El día 7, a partir de las 12:00, hay seis visitantes en la plaza: Rosa, Lucía, Tomás, Pablo, Fran y Elena. Cada uno tiene un diálogo sencillo al pulsar E junto a él. Fran dice “He venido por el networking, pero bueno... el futuro es ansiedad.” y Elena “He venido porque me han prometido que después pondrán margarita frozen.”.
+- El día 7, a partir de las 12:00, hay siete visitantes en la plaza: Rosa, Lucía, Tomás, Pablo, Fran, Elena y Pedro. Cada uno tiene un diálogo sencillo al pulsar E junto a él. Fran dice “He venido por el networking, pero bueno... el futuro es ansiedad.” y Elena “He venido porque me han prometido que después pondrán margarita frozen.”.
+- Pedro es un visitante de fuera del pueblo: solo aparece en la feria, el día 7. Tiene la piel clara y morena, el pelo negro y un polo de rayas horizontales verdes y azules. Su diálogo tiene dos ventanas: “¡¡He venido por la comida gratis!!” y, en la segunda, “¡¡¿Dónde está la comida?!!”.
 - Los concursos admiten participantes de 12:00 a 17:00. A las 17:00 aparece el mensaje “Los concursos han terminado. Ceremonia a las 18:00 en la plaza”.
 - Los postes de las guirnaldas, los puestos, el escenario y el podio son obstáculos.
 - Antes y después del día 7, la plaza tiene su aspecto normal: no hay guirnaldas, puestos, escenario ni podio. Los vecinos están donde marque su horario (HU-71).
@@ -18,7 +19,7 @@ Escenario 1: Día de feria
 - Dado que es el día 7
 - Cuando el jugador entra en la plaza
 - Entonces la plaza tiene guirnaldas, los puestos de la cosecha y de pesca, el escenario y el podio
-- Y están los seis visitantes
+- Y están los siete visitantes
 Escenario 2: Antes de la feria
 
 - Dado que es el día 6
@@ -55,3 +56,14 @@ Escenario 8: Postes de la guirnalda
 - Cuando camina hacia uno de los postes de la guirnalda
 - Entonces el personaje se detiene junto al poste
 - Y hay un poste en cada extremo de la guirnalda
+Escenario 9: Hablar con Pedro
+
+- Dado que es el día 7 y el jugador está junto a Pedro
+- Cuando pulsa E
+- Entonces Pedro dice “¡¡He venido por la comida gratis!!”
+- Y, al pasar a la segunda ventana, dice “¡¡¿Dónde está la comida?!!”
+Escenario 10: Pedro solo viene a la feria
+
+- Dado que es el día 6 a las 13:00
+- Cuando el jugador entra en la plaza
+- Entonces Pedro no está

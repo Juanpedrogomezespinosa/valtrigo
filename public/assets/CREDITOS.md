@@ -36,6 +36,7 @@ Archivos de Ninja Adventure (https://pixel-boy.itch.io/ninja-adventure-asset-pac
 | sprites/personajes/pablo.png | Actor/Character/Child/SpriteSheet.png |
 | sprites/personajes/fran.png | Actor/Character/Villager2/SpriteSheet.png, con la piel aclarada (#d14b34 → #ef914f, #8f3e56 → #cf736d) |
 | sprites/personajes/elena.png | Actor/Character/Cavegirl/SpriteSheet.png, con el pelo rubio (#56864c → #f1c471, #345a52 → #d78b4a) |
+| sprites/personajes/pedro.png | Actor/Character/Boy/SpriteSheet.png, con la piel más clara (#ef914f → #f0a56a), el pelo negro (#d14b34 → #4e484a, #965340 → #3b3643), los pantalones marrones (#548789 → #6b5440) y la camiseta (#e3f1f5, de la fila 10 de cada fotograma hacia abajo) a rayas horizontales de un píxel: verde #4f9e46 en las filas pares y azul #3d63c4 en las impares |
 | sprites/personajes/bruno.png | Actor/Character/Hunter/SpriteSheet.png |
 | sprites/personajes/marta.png | Actor/Character/Villager5/SpriteSheet.png |
 | sprites/personajes/bigotes.png | Actor/Animal/Cat/SpriteSheet.png |
@@ -49,6 +50,7 @@ Archivos de Ninja Adventure (https://pixel-boy.itch.io/ninja-adventure-asset-pac
 | sprites/retratos/pablo.png | Actor/Character/Child/Faceset.png |
 | sprites/retratos/fran.png | Actor/Character/Villager2/Faceset.png, con los mismos cambios de color que su hoja |
 | sprites/retratos/elena.png | Actor/Character/Cavegirl/Faceset.png, con los mismos cambios de color que su hoja |
+| sprites/retratos/pedro.png | Actor/Character/Boy/Faceset.png, con la misma piel y el mismo pelo que su hoja (el pelo, solo en la parte de arriba, porque #d14b34 también perfila la cara) y la camiseta (#f2eaf1 y su sombra #d3a2c0, de la fila 32 hacia abajo) a rayas horizontales de dos píxeles, verdes y azules (#4f9e46 y #3d63c4; sombras #3b7a35 y #2d4a99) |
 | sprites/retratos/bruno.png | Actor/Character/Hunter/Faceset.png |
 | sprites/retratos/marta.png | Actor/Character/Villager5/Faceset.png |
 | sprites/retratos/bigotes.png | Actor/Animal/Cat/Faceset.png |

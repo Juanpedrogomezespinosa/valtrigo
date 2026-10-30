@@ -10,6 +10,7 @@ import {
   garlandView,
   playerBody,
   isChangingZone,
+  isNpcPresent,
   NEXT_TO_BED,
   sceneTexts,
   startAtWith,
@@ -126,3 +127,18 @@ test('Escenario 8: Postes de la guirnalda', async ({ page }) => {
   ]);
 });
 
+
+test('Escenario 9: Hablar con Pedro', async ({ page }) => {
+  // Pedro pasea en la casilla (12, 17).
+  await startAtWith(page, 'plaza', { x: 12, y: 18 }, { day: 7, minutes: at(13) });
+
+  const lines = await talkUntilChoiceOrEnd(page);
+
+  expect(lines).toEqual(['¡¡He venido por la comida gratis!!', '¡¡¿Dónde está la comida?!!']);
+});
+
+test('Escenario 10: Pedro solo viene a la feria', async ({ page }) => {
+  await enterPlaza(page, 6);
+
+  expect(await isNpcPresent(page, 'pedro')).toBe(false);
+});
