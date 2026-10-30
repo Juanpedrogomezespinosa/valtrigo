@@ -195,7 +195,7 @@ export class ShopScene extends Phaser.Scene {
       view.name.setText(row ? `${row.name}${row.quantity ? ` x${row.quantity}` : ''}` : '');
       view.price.setText(row ? (row.bought ? UPGRADE_TEXTS.bought : `${row.price} monedas`) : '');
       if (row) {
-        view.icon.setTexture(row.icon);
+        view.icon.setTexture(row.id === 'regadera' ? 'objeto-pala' : row.icon);
       }
     });
 

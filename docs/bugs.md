@@ -34,6 +34,14 @@ Catálogo de los fallos que se siembran en el juego para el curso de testing man
 | B-17 | Un árbol de la plaza es rojo | Día 1, plaza | HU-69 | Fácil | Baja |
 | B-18 | Bruno tiene aspecto de mujer | Día 3, bosque | HU-71 | Fácil | Baja |
 | B-19 | La Manzana tiene el icono de la Calabaza | Día 1, inventario | HU-13 | Fácil | Baja |
+| B-25 | Con pelo Rubio, el personaje sale castaño | Día 1, inicio de la partida | HU-68 | Fácil | Media |
+| B-26 | Rosa tiene la piel oscura y el pelo negro | Día 1, plaza (de 12:00 a 19:00) | HU-71 | Fácil | Baja |
+| B-27 | Lucía tiene aspecto de hombre | Día 1, barrio | HU-71 | Fácil | Baja |
+| B-28 | El agua de la fuente es roja | Día 1, plaza | HU-75 | Fácil | Baja |
+| B-29 | El alcalde está de espaldas | Día 1, plaza | HU-10 | Fácil | Baja |
+| B-30 | En la tienda, la Regadera tiene el icono de la Pala | Día 1, tienda | HU-17 | Fácil | Baja |
+| B-31 | La cama es verde | Día 1, casa del jugador | HU-24 | Fácil | Baja |
+| B-32 | La tienda tiene el tejado rojo | Día 1, plaza | HU-17 | Fácil | Baja |
 | B-05 | Vender 3 Semillas da 10 monedas, no 15 | Día 1-4, tienda | HU-18 | Medio | Media |
 | B-06 | El encargo del alcalde no da la Manzana | Día 1, plaza | HU-20 | Medio | Media |
 | B-07 | Oscurece a las 19:30, no a las 20:00 | Día 1-2, cualquier zona exterior | HU-23 | Medio | Baja |
@@ -52,7 +60,7 @@ Catálogo de los fallos que se siembran en el juego para el curso de testing man
 | B-16 | Tab deja el juego sin sonido ni teclado | Cualquier día | HU-30 | Difícil | Media |
 | B-24 | Correr gasta la mitad de energía | Día 1+, cualquier zona | HU-76 | Difícil | Baja |
 
-19 de los 24 bugs se pueden encontrar en los días 1 y 2 (unos 30 minutos de juego), para que dé tiempo a encontrarlos en una sesión de clase.
+27 de los 32 bugs se pueden encontrar en los días 1 y 2 (unos 30 minutos de juego), para que dé tiempo a encontrarlos en una sesión de clase.
 
 ## Fáciles: visibles en los primeros minutos
 
@@ -139,6 +147,102 @@ Catálogo de los fallos que se siembran en el juego para el curso de testing man
 - **Cómo se siembra:** en InventoryScene, usar `objeto-calabaza` como textura cuando el objeto es la Manzana.
 - **No bloquea porque:** la Manzana funciona igual.
 - **Test que lo detecta:** HU-13, escenario 1 ("Abrir el inventario con objetos").
+
+### B-25 · Día 1, inicio de la partida · HU-68 · Bug visual
+
+- **Fallo:** si en "¿Cómo eres?" se elige el pelo Rubio, el personaje aparece en la partida con el pelo castaño. La vista previa de la pantalla sí lo muestra rubio.
+- **Cómo reproducirlo:** empezar una partida nueva, elegir "Pelo: Rubio" (con cualquier género y piel), confirmar y mirar al personaje.
+- **Resultado esperado:** el personaje tiene el pelo rubio, como en la vista previa.
+- **Resultado real:** tiene el pelo castaño. Con los demás colores de pelo sale bien.
+- **Severidad:** media (es lo primero que personaliza el jugador).
+- **Por qué está:** enseña a comprobar que lo que se elige en una pantalla se mantiene después, y a probar todas las opciones de una lista, no solo la primera o la que viene por defecto.
+- **Cómo se siembra:** en GameScene, al crear el personaje, usar el pelo castaño cuando el elegido es el rubio.
+- **No bloquea porque:** solo cambia el aspecto.
+- **Test que lo detecta:** HU-68, escenario 1 ("Elegir el aspecto"), que elige pelo rubio.
+
+### B-26 · Día 1, plaza o lago · HU-71 · Bug visual
+
+- **Fallo:** Rosa tiene la piel oscura y el pelo negro, aunque en el glosario y en su retrato es rubia y de piel clara.
+- **Cómo reproducirlo:** buscar a Rosa (en el lago de 06:00 a 12:00 o en la plaza de 12:00 a 19:00) y compararla con el glosario y con su retrato al hablar con ella.
+- **Resultado esperado:** Rosa se ve como en el glosario.
+- **Resultado real:** tiene los colores de piel y de pelo de Lucía.
+- **Severidad:** baja.
+- **Por qué está:** enseña a usar el glosario como referencia y a fijarse en detalles de color, no solo en la forma.
+- **Cómo se siembra:** recolorear public/assets/sprites/personajes/rosa.png con la piel y el pelo de Lucía (#f1c471 → #4e484a, #d78b4a → #3b3643, #ef914f → #a3754e y #d14b34 → #965340). El retrato no se cambia.
+- **No bloquea porque:** Rosa funciona igual.
+- **Test que lo detecta:** ninguno (los tests no miran los colores de los NPC).
+
+### B-27 · Día 1, barrio · HU-71 · Bug visual
+
+- **Fallo:** Lucía tiene el aspecto de un hombre: usa el dibujo de Pedro, el visitante de la feria.
+- **Cómo reproducirlo:** ir al barrio entre las 07:00 y las 12:00 y hablar con el personaje que dice ser Lucía.
+- **Resultado esperado:** Lucía se ve como en el glosario.
+- **Resultado real:** se ve como Pedro, con su nombre y su retrato de Lucía. El día 7 hay dos "Pedros" en la feria.
+- **Severidad:** baja.
+- **Por qué está:** como B-18, enseña a cruzar nombre, retrato y aspecto de un personaje.
+- **Cómo se siembra:** en GameScene (`addNpc`), usar para Lucía la hoja de Pedro.
+- **No bloquea porque:** Lucía sigue hablando y dando sus misiones.
+- **Test que lo detecta:** ninguno (los tests no miran la hoja de los NPC).
+
+### B-28 · Día 1, plaza · HU-75 · Bug visual
+
+- **Fallo:** el agua de la fuente de la plaza es roja.
+- **Cómo reproducirlo:** ir al centro de la plaza y mirar la fuente.
+- **Resultado esperado:** el agua es azul, como en el glosario ("Fuente de la plaza").
+- **Resultado real:** toda la fuente se ve teñida de rojo.
+- **Severidad:** baja.
+- **Por qué está:** fallo visual muy evidente para empezar a practicar el reporte de fallos visuales.
+- **Cómo se siembra:** en GameScene, al crear la capa de obstáculos de la plaza, teñir de rojo la casilla (17, 16).
+- **No bloquea porque:** la fuente funciona igual.
+- **Test que lo detecta:** ninguno.
+
+### B-29 · Día 1, plaza · HU-10 · Bug visual
+
+- **Fallo:** el alcalde está de espaldas: mira hacia arriba en lugar de hacia abajo.
+- **Cómo reproducirlo:** salir a la plaza y buscar al alcalde.
+- **Resultado esperado:** los NPC están quietos y miran hacia abajo, hacia el jugador.
+- **Resultado real:** el alcalde se ve de espaldas, también mientras habla.
+- **Severidad:** baja.
+- **Por qué está:** enseña a comparar un personaje con los demás: todos miran hacia abajo menos uno.
+- **Cómo se siembra:** en GameScene (`addNpc`), usar el fotograma 1 (mirando hacia arriba) para el alcalde.
+- **No bloquea porque:** se puede hablar con él igual.
+- **Test que lo detecta:** ninguno.
+
+### B-30 · Día 1, tienda · HU-17 · Bug visual
+
+- **Fallo:** en la tienda, la Regadera aparece con el icono de la Pala.
+- **Cómo reproducirlo:** abrir la tienda y mirar los iconos de "Comprar" (o de "Vender", si se tiene una Regadera).
+- **Resultado esperado:** cada objeto tiene su icono, como en el glosario.
+- **Resultado real:** la Regadera y la Pala tienen el mismo icono. En el inventario la Regadera se ve bien.
+- **Severidad:** baja.
+- **Por qué está:** enseña a revisar una lista entera y a comparar el mismo objeto en dos pantallas distintas (tienda e inventario).
+- **Cómo se siembra:** en `refresh()` (src/scenes/ShopScene.ts), usar `objeto-pala` como icono de la Regadera.
+- **No bloquea porque:** se compra y se vende igual.
+- **Test que lo detecta:** ninguno (HU-17 solo comprueba el icono de la Pala).
+
+### B-31 · Día 1, casa del jugador · HU-24 · Bug visual
+
+- **Fallo:** la cama de la casa es verde.
+- **Cómo reproducirlo:** entrar en la casa del jugador.
+- **Resultado esperado:** la cama es roja, como en el glosario.
+- **Resultado real:** la cama es verde.
+- **Severidad:** baja.
+- **Por qué está:** fallo visual evidente en el primer interior que se visita.
+- **Cómo se siembra:** en GameScene (`addBed`), teñir de verde la imagen de la cama.
+- **No bloquea porque:** se puede dormir igual.
+- **Test que lo detecta:** ninguno.
+
+### B-32 · Día 1, plaza · HU-17 · Bug visual
+
+- **Fallo:** la tienda tiene el tejado rojo, como las casas, en lugar de gris.
+- **Cómo reproducirlo:** ir al este de la plaza y mirar la tienda.
+- **Resultado esperado:** la tienda tiene el tejado gris, como en el glosario ("Tienda").
+- **Resultado real:** tiene el tejado rojo y se confunde con una casa.
+- **Severidad:** baja (puede costar encontrar la tienda).
+- **Por qué está:** enseña a comparar edificios con la referencia y a pensar en el efecto en el jugador (encontrar la tienda).
+- **Cómo se siembra:** en tools/generar-mapas.mjs (`BUILDINGS.tienda`), usar las casillas del tejado de la casa y volver a generar los mapas.
+- **No bloquea porque:** la puerta y la tienda funcionan igual.
+- **Test que lo detecta:** ninguno.
 
 ## Medios: requieren comprobar un valor o un momento
 

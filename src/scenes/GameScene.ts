@@ -257,12 +257,14 @@ export class GameScene extends Phaser.Scene {
     obstacles.setCollisionByExclusion([-1]);
     if (getGameState().zone === 'plaza') {
       for (const y of [6, 7]) obstacles.getTileAt(12, y)!.tint = 0xff3030;
+      obstacles.getTileAt(17, 16)!.tint = 0xff4040;
     }
     this.obstacles = obstacles;
     this.fishing = null;
     this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
 
-    this.player = new Player(this, state.position, this.facing, playerTexture(this, state.appearance));
+    const appearance = state.appearance.hair === 'rubio' ? { ...state.appearance, hair: 'castano' } : state.appearance;
+    this.player = new Player(this, state.position, this.facing, playerTexture(this, appearance));
     this.player.setObstacles(obstacles);
     this.physics.add.collider(this.player, obstacles);
 
@@ -733,6 +735,8 @@ export class GameScene extends Phaser.Scene {
     const id = getProperty(object, 'personaje') as NpcId;
     const npc = new Npc(this, id, pointTile(object));
     if (id === 'bruno') npc.setTexture('vendedora', 0);
+    if (id === 'lucia') npc.setTexture('pedro', 0);
+    if (id === 'alcalde') npc.setFrame(1);
     this.physics.add.collider(this.player, npc);
     this.npcs.push(npc);
     this.npcMarkers.set(
@@ -1054,7 +1058,7 @@ export class GameScene extends Phaser.Scene {
   // Cama de la casa del jugador: ocupa dos casillas de alto y es un obstáculo. E junto a ella para dormir (HU-24).
   private addBed(object: MapObject): void {
     const tile = tileArea(object);
-    const bed = this.physics.add.staticImage(tile.centerX, tile.top + TILE_SIZE, 'cama');
+    const bed = this.physics.add.staticImage(tile.centerX, tile.top + TILE_SIZE, 'cama').setTint(0x40ff40);
     this.physics.add.collider(this.player, bed);
     this.interactables.push({
       kind: 'cama',
