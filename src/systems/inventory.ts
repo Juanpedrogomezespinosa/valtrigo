@@ -109,7 +109,7 @@ export function useSlot(index: number): UseResult {
     return 'energy-full';
   }
 
-  state.energy = Math.min(MAX_ENERGY, state.energy + (data.energy ?? 0));
+  if (state.energy < 90) state.energy = Math.min(MAX_ENERGY, state.energy + (data.energy ?? 0));
   slot.quantity -= 1;
   if (slot.quantity === 0) {
     getSlots().splice(index, 1);

@@ -43,7 +43,7 @@ Catálogo de los fallos que se siembran en el juego para el curso de testing man
 | B-21 | La Sopa de setas no gasta el Nabo | Día 5, casa del jugador | HU-84 | Medio | Media |
 | B-22 | La Regadera grande gasta tres riegos | Día 4-5, granja | HU-85 | Medio | Media |
 | B-23 | Se puede beber de la fuente varias veces al día | Día 1, plaza | HU-75 | Medio | Media |
-| B-10 | Al continuar la partida se aparece en el agua | Día 3, lago | HU-03 | Difícil | Media |
+| B-10 | Guardar en el lago guarda la posición de la entrada | Día 3, lago | HU-04 | Difícil | Media |
 | B-11 | La ayuda en las esquinas no funciona en el cercado | Día 2, granja | HU-07 | Difícil | Media |
 | B-12 | La Manzana no sube la energía entre 90 y 99 | Día 2-3, cualquier zona | HU-14 | Difícil | Media |
 | B-13 | El cofre 2 se puede volver a abrir | Día 5, torre | HU-12 | Difícil | Baja |
@@ -76,7 +76,7 @@ Catálogo de los fallos que se siembran en el juego para el curso de testing man
 - **Resultado real:** aparece en la otra punta de la tienda.
 - **Severidad:** media.
 - **Por qué está:** enseña a comprobar las transiciones entre zonas, que son de lo primero que falla en un juego, y a reportar con precisión dónde aparece el personaje.
-- **Cómo se siembra:** mover el punto `llegada-plaza` de la tienda a una casilla libre de la esquina (tools/generar-mapas.mjs, `tienda()`).
+- **Cómo se siembra:** mover el punto `llegada-plaza` de la tienda a la casilla libre (2, 2), en la esquina de arriba a la izquierda (tools/generar-mapas.mjs, `tienda()`, y volver a generar los mapas).
 - **No bloquea porque:** la casilla de llegada es libre y se puede caminar hasta la vendedora o la puerta.
 - **Test que lo detecta:** HU-08, escenario 1 ("Entrar a la tienda").
 
@@ -100,7 +100,7 @@ Catálogo de los fallos que se siembran en el juego para el curso de testing man
 - **Resultado real:** aparece la pantalla de despedida, como si se hubiera elegido "Sí".
 - **Severidad:** alta (hace justo lo contrario de lo que pide el jugador).
 - **Por qué está:** enseña a probar todas las respuestas de un cuadro de confirmación, no solo la que se usa normalmente.
-- **Cómo se siembra:** en MenuScene, ejecutar la salida con las dos respuestas del cuadro de confirmación.
+- **Cómo se siembra:** en `exit()` (src/scenes/MenuScene.ts), cerrar el juego con cualquier respuesta del cuadro de confirmación.
 - **No bloquea porque:** la partida guardada no se toca; basta con recargar la página y pulsar "Continuar".
 - **Test que lo detecta:** HU-05, escenario 2 ("Cancelar la salida").
 
@@ -112,7 +112,7 @@ Catálogo de los fallos que se siembran en el juego para el curso de testing man
 - **Resultado real:** uno de ellos es rojo.
 - **Severidad:** baja.
 - **Por qué está:** enseña a usar una referencia (el glosario) para reportar fallos visuales, y a describirlos con precisión: cuál es el árbol y dónde está.
-- **Cómo se siembra:** en GameScene, teñir de rojo (`setTint`) las dos casillas de ese árbol en la plaza.
+- **Cómo se siembra:** en GameScene, al crear la capa de obstáculos de la plaza, teñir de rojo (`tint`) las casillas (12, 6) y (12, 7).
 - **No bloquea porque:** solo cambia el color.
 - **Test que lo detecta:** ninguno todavía. Propuesta: añadir a HU-69 la comprobación de que ninguna casilla de árbol está teñida (escenario 1, "del mismo color").
 
@@ -124,7 +124,7 @@ Catálogo de los fallos que se siembran en el juego para el curso de testing man
 - **Resultado real:** se ve con la hoja de otro personaje, una mujer, aunque su nombre y su retrato son los de Bruno.
 - **Severidad:** baja.
 - **Por qué está:** enseña a comprobar que lo que se ve coincide con lo que se dice (nombre y retrato frente al sprite) usando el glosario.
-- **Cómo se siembra:** en GameScene (`addNpc`), usar para Bruno la textura de otro personaje.
+- **Cómo se siembra:** en GameScene (`addNpc`), usar para Bruno la hoja de la vendedora.
 - **No bloquea porque:** Bruno sigue hablando y dando sus misiones.
 - **Test que lo detecta:** ninguno todavía. Propuesta: añadir a HU-71 la comprobación de que cada vecino usa su propia hoja (escenario 3, "Bruno en el bosque").
 
@@ -150,7 +150,7 @@ Catálogo de los fallos que se siembran en el juego para el curso de testing man
 - **Resultado real:** sube 10: la tercera venta no da dinero.
 - **Severidad:** media.
 - **Por qué está:** enseña a hacer las cuentas en vez de fiarse de que "el dinero ha subido", y a probar acciones repetidas, no solo una.
-- **Cómo se siembra:** en `sellOne()` (src/systems/economy.ts), no sumar el precio cuando se vende la última unidad de una casilla de 3 o más.
+- **Cómo se siembra:** en `sellOne()` (src/systems/economy.ts), no sumar el precio cuando a la casilla le quedan exactamente 3 unidades antes de vender. Con 3 Semillas, la primera venta no da dinero; con 5, la tercera.
 - **No bloquea porque:** solo se pierden 5 monedas.
 - **Test que lo detecta:** HU-18, escenario 2 ("Venta de varias unidades").
 
@@ -186,7 +186,7 @@ Catálogo de los fallos que se siembran en el juego para el curso de testing man
 - **Resultado real:** Ninja Adventure aparece sin licencia.
 - **Severidad:** baja (pero es un incumplimiento legal en un juego publicado).
 - **Por qué está:** enseña que los textos legales también se prueban, comparándolos con la lista de recursos usados.
-- **Cómo se siembra:** quitar la licencia de Ninja Adventure en src/data/credits.json.
+- **Cómo se siembra:** dejar vacía la licencia de Ninja Adventure en src/data/credits.json (se ve "Pixel-boy y AAA · " sin nada detrás).
 - **No bloquea porque:** no afecta a la partida.
 - **Test que lo detecta:** HU-35, escenario 2 ("Contenido de los créditos").
 
@@ -198,7 +198,7 @@ Catálogo de los fallos que se siembran en el juego para el curso de testing man
 - **Resultado real:** el texto gris claro sobre el fondo del cuadro se lee mal (unos 3:1).
 - **Severidad:** baja.
 - **Por qué está:** introduce las pruebas de accesibilidad y la medición objetiva frente a "a mí se me lee bien".
-- **Cómo se siembra:** en DialogScene, usar un color de texto más oscuro cuando habla el granjero.
+- **Cómo se siembra:** en `showLine()` (src/scenes/DialogScene.ts), usar el gris #707070 (2,99:1 sobre el fondo del cuadro) cuando habla el granjero.
 - **No bloquea porque:** el texto se sigue pudiendo leer, aunque cuesta.
 - **Test que lo detecta:** HU-36, escenario 1 ("Contraste en diálogos"), que habla con el granjero.
 
@@ -210,7 +210,7 @@ Catálogo de los fallos que se siembran en el juego para el curso de testing man
 - **Resultado real:** el retrato del alcalde, con el nombre "Granjero" encima.
 - **Severidad:** baja.
 - **Por qué está:** enseña a revisar cada parte de una pantalla (nombre, retrato y texto) y a cruzar datos entre personajes.
-- **Cómo se siembra:** en GameScene, usar `retrato-alcalde` al abrir el diálogo del granjero.
+- **Cómo se siembra:** en GameScene (`talkTo`), usar `retrato-alcalde` como retrato del granjero.
 - **No bloquea porque:** el diálogo funciona igual.
 - **Test que lo detecta:** HU-10, escenario 1 ("Iniciar un diálogo").
 
@@ -222,7 +222,7 @@ Catálogo de los fallos que se siembran en el juego para el curso de testing man
 - **Resultado real:** el Nabo sigue en el inventario.
 - **Severidad:** media (se puede cocinar más de lo que se debería).
 - **Por qué está:** los fallos que benefician al jugador también son fallos. Enseña a revisar cada ingrediente de una receta, no solo el resultado.
-- **Cómo se siembra:** en `cook()` (src/systems/cooking.ts), no quitar el último ingrediente de la Sopa de setas.
+- **Cómo se siembra:** en `cook()` (src/systems/cooking.ts), no quitar el último ingrediente (el Nabo) cuando el plato es la Sopa de setas.
 - **No bloquea porque:** sobra un Nabo.
 - **Test que lo detecta:** HU-84, escenario 2 ("Cocinar").
 
@@ -234,7 +234,7 @@ Catálogo de los fallos que se siembran en el juego para el curso de testing man
 - **Resultado real:** se riegan las tres y la energía baja 12.
 - **Severidad:** media (la mejora es peor de lo que promete).
 - **Por qué está:** enseña a comprobar que una mejora hace exactamente lo que anuncia, midiendo el antes y el después.
-- **Cómo se siembra:** en GameScene (`workPlot`), gastar un riego más por cada parcela de los lados que se riega.
+- **Cómo se siembra:** en GameScene (`workPlot`), gastar un riego más (`work('water')`) por cada parcela de los lados que se riega.
 - **No bloquea porque:** solo se gasta más energía; se recupera durmiendo o comiendo.
 - **Test que lo detecta:** HU-85, escenario 6 ("Regadera grande").
 
@@ -252,18 +252,18 @@ Catálogo de los fallos que se siembran en el juego para el curso de testing man
 
 ## Difíciles: solo aparecen con una condición concreta
 
-### B-10 · Día 3, orilla del lago · HU-03
+### B-10 · Día 3, lago · HU-04
 
-- **Fallo:** al continuar la partida, el personaje aparece una casilla más abajo, dentro del agua.
-- **Condición:** la partida se guardó (desde la pausa) con el personaje junto a la orilla norte del lago.
-- **Cómo reproducirlo:** en el lago, ponerse junto al agua, guardar desde la pausa, salir al menú y pulsar "Continuar".
+- **Fallo:** al guardar desde la pausa estando en el lago, se guarda la posición de la entrada del lago (al norte, junto al camino de la plaza) en vez de la del personaje. Al continuar la partida, el personaje aparece en la entrada.
+- **Condición:** guardar desde la pausa estando en el lago.
+- **Cómo reproducirlo:** en el lago, ir a un sitio lejos de la entrada (por ejemplo, la orilla del este), abrir la pausa, "Guardar partida", salir al menú principal y pulsar "Continuar".
 - **Resultado esperado:** el personaje aparece donde se guardó.
-- **Resultado real:** aparece encima del agua.
+- **Resultado real:** aparece en la entrada del lago. Además, justo después de guardar, "Salir al menú principal" pregunta por cambios sin guardar, porque la partida guardada no coincide con la actual.
 - **Severidad:** media.
-- **Por qué está:** enseña a probar el guardado y la carga en posiciones límite (junto a obstáculos), no solo en sitios cómodos.
-- **Cómo se siembra:** al cargar la partida (`readSave()` en src/systems/save.ts), sumar una casilla hacia abajo cuando la zona es el lago y la casilla de abajo es agua.
-- **No bloquea porque:** el personaje puede caminar hacia la orilla y salir del agua. Hay que comprobarlo al sembrarlo.
-- **Test que lo detecta:** ninguno todavía. Propuesta: añadir a HU-03 el escenario "Guardar junto al agua".
+- **Por qué está:** enseña a probar el guardado en distintas zonas y a comprobarlo cargando la partida, no solo mirando el mensaje "Partida guardada".
+- **Cómo se siembra:** en `saveGame()` (src/scenes/PauseScene.ts), guardar la posición (15, 1) cuando la zona es el lago.
+- **No bloquea porque:** el personaje aparece en una casilla libre del lago y puede ir a donde estaba.
+- **Test que lo detecta:** ninguno todavía. Propuesta: añadir a HU-04 el escenario "Guardar en el lago y continuar".
 
 ### B-11 · Día 2, granja · HU-07
 
@@ -274,7 +274,7 @@ Catálogo de los fallos que se siembran en el juego para el curso de testing man
 - **Resultado real:** se queda parado contra el muro hasta que el jugador se alinea a mano.
 - **Severidad:** media.
 - **Por qué está:** enseña a probar el mismo comportamiento en varios sitios: en otros huecos la ayuda funciona y en este no.
-- **Cómo se siembra:** en Player.ts, desactivar la ayuda en las esquinas en la granja.
+- **Cómo se siembra:** en `cornerSlide()` (src/entities/Player.ts), no buscar hueco cuando la zona es la granja.
 - **No bloquea porque:** alineándose a mano se entra; además, el cercado es opcional.
 - **Test que lo detecta:** HU-07, escenario 5 ("Hueco estrecho").
 
@@ -300,7 +300,7 @@ Catálogo de los fallos que se siembran en el juego para el curso de testing man
 - **Resultado real:** el cofre está cerrado y se puede abrir otra vez.
 - **Severidad:** baja.
 - **Por qué está:** enseña que los fallos de tiempo (condiciones de carrera) solo aparecen si se prueba deprisa.
-- **Cómo se siembra:** en GameScene, anotar el cofre en `openedChests` con 3 segundos de retraso, y no anotarlo si se cambia de zona antes.
+- **Cómo se siembra:** en GameScene (`addChest`), anotar el cofre 2 en `openedChests` con un temporizador de 3 segundos de la escena. Al cambiar de zona la escena se reinicia y el temporizador se pierde.
 - **No bloquea porque:** solo se obtiene un Péndulo de más.
 - **Test que lo detecta:** ninguno todavía. Propuesta: añadir a HU-12 el escenario "Salir justo después de abrir un cofre".
 
@@ -313,7 +313,7 @@ Catálogo de los fallos que se siembran en el juego para el curso de testing man
 - **Resultado real:** la música vuelve a sonar (y la opción sigue diciendo que está silenciado).
 - **Severidad:** media.
 - **Por qué está:** enseña a combinar opciones (silencio + guardado) en lugar de probarlas por separado.
-- **Cómo se siembra:** en PauseScene, quitar el silencio de Phaser al guardar.
+- **Cómo se siembra:** en `saveGame()` (src/scenes/PauseScene.ts), quitar el silencio de Phaser (`this.sound.mute = false`) al guardar.
 - **No bloquea porque:** se puede volver a silenciar.
 - **Test que lo detecta:** ninguno todavía. Propuesta: añadir a HU-30 el escenario "Silencio después de guardar".
 
@@ -326,7 +326,7 @@ Catálogo de los fallos que se siembran en el juego para el curso de testing man
 - **Resultado real:** es 50.
 - **Severidad:** media.
 - **Por qué está:** valores límite y estados: con energía alta parece funcionar, el fallo solo aparece si se llega cansado.
-- **Cómo se siembra:** en `stateAfterSleeping()` (src/systems/sleep.ts), poner 50 si la energía al dormir era 20 o menos.
+- **Cómo se siembra:** en `wakeUp()` (src/systems/sleep.ts), poner 50 si la energía de la partida de la que se parte (la del momento de acostarse) era 20 o menos.
 - **No bloquea porque:** 50 de energía bastan para trabajar, y se puede comer.
 - **Test que lo detecta:** HU-24, escenario 4 ("Energía baja").
 
@@ -339,7 +339,7 @@ Catálogo de los fallos que se siembran en el juego para el curso de testing man
 - **Resultado real:** el foco pasa a la barra del navegador; el juego pierde el sonido y el teclado.
 - **Severidad:** media.
 - **Por qué está:** fallo real encontrado al jugar. Enseña a probar teclas que el juego no usa y la integración con el navegador.
-- **Cómo se siembra:** quitar en main.ts la línea que anula la acción por defecto de Tab.
+- **Cómo se siembra:** quitar en main.ts el listener que anula la acción por defecto de Tab.
 - **No bloquea porque:** un clic en el juego lo recupera.
 - **Test que lo detecta:** HU-30, escenario 4 ("Tecla Tab").
 
@@ -352,7 +352,7 @@ Catálogo de los fallos que se siembran en el juego para el curso de testing man
 - **Resultado real:** unos 5 puntos menos.
 - **Severidad:** baja.
 - **Por qué está:** un fallo que solo se ve midiendo con cuidado. Enseña a cronometrar y a comparar con el requisito en lugar de "parece que gasta".
-- **Cómo se siembra:** en GameScene (`spendRunningEnergy`), usar 6000 ms en vez de `RUN_ENERGY_MS`.
+- **Cómo se siembra:** en GameScene (`spendRunningEnergy`), usar 6000 ms en vez de `RUN_ENERGY_MS` (3000).
 - **No bloquea porque:** solo da ventaja.
 - **Test que lo detecta:** HU-76, escenario 2 ("Correr gasta energía").
 

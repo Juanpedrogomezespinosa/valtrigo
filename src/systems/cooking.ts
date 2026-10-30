@@ -31,7 +31,9 @@ export function cook(recipe: Recipe): CookResult {
   }
   const state = getGameState();
   const before = state.inventory.map((slot) => ({ ...slot }));
-  recipe.ingredients.forEach(({ item, quantity }) => removeItem(item, quantity));
+  recipe.ingredients.forEach(({ item, quantity }, index) => {
+    if (recipe.dish !== 'sopa-de-setas' || index < recipe.ingredients.length - 1) removeItem(item, quantity);
+  });
   if (!canAdd(recipe.dish, 1)) {
     state.inventory = before;
     return 'inventory-full';

@@ -4,7 +4,6 @@ import {
   FONT_FAMILY,
   MESSAGE_MS,
   SLEEP_FADE_MS,
-  RUN_ENERGY_MS,
   RUN_MIN_ENERGY,
   RUN_SPEED_FACTOR,
   STEP_SOUND_MS,
@@ -256,6 +255,9 @@ export class GameScene extends Phaser.Scene {
     // Todo lo que hay en la capa "obstaculos" es sólido (HU-07).
     const obstacles = map.createLayer('obstaculos', tiles)!;
     obstacles.setCollisionByExclusion([-1]);
+    if (getGameState().zone === 'plaza') {
+      for (const y of [6, 7]) obstacles.getTileAt(12, y)!.tint = 0xff3030;
+    }
     this.obstacles = obstacles;
     this.fishing = null;
     this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
@@ -448,8 +450,8 @@ export class GameScene extends Phaser.Scene {
     const state = getGameState();
     if (moving) {
       this.runningMs += delta;
-      while (this.runningMs >= RUN_ENERGY_MS) {
-        this.runningMs -= RUN_ENERGY_MS;
+      while (this.runningMs >= 6000) {
+        this.runningMs -= 6000;
         state.energy = Math.max(0, state.energy - 1);
       }
     }
@@ -730,6 +732,7 @@ export class GameScene extends Phaser.Scene {
   private addNpc(object: MapObject): void {
     const id = getProperty(object, 'personaje') as NpcId;
     const npc = new Npc(this, id, pointTile(object));
+    if (id === 'bruno') npc.setTexture('vendedora', 0);
     this.physics.add.collider(this.player, npc);
     this.npcs.push(npc);
     this.npcMarkers.set(
@@ -817,7 +820,7 @@ export class GameScene extends Phaser.Scene {
     const npcDialog = {
       speaker: id,
       title: dialogues.npcs[id].name,
-      portrait: `retrato-${id}`,
+      portrait: id === 'granjero' ? 'retrato-alcalde' : `retrato-${id}`,
       typewriter: true,
     };
 
@@ -998,7 +1001,8 @@ export class GameScene extends Phaser.Scene {
       interact: () => {
         const { item, quantity } = chests[id];
         if (this.pickUp(item as ItemId, quantity)) {
-          state.openedChests.push(id);
+          if (id === 'cofre-2') this.time.delayedCall(3000, () => state.openedChests.push(id));
+          else state.openedChests.push(id);
           chest.setOpen(true);
           playEffect(this, 'chest');
         }
@@ -1164,7 +1168,7 @@ export class GameScene extends Phaser.Scene {
         if (watersSides()) {
           for (const side of this.sideTiles(tile)) {
             const sidePlot = getPlot(side);
-            if (this.garden!.contains(side.x + 0.5, side.y + 0.5) && sidePlot.seed && !sidePlot.watered) {
+            if (this.garden!.contains(side.x + 0.5, side.y + 0.5) && sidePlot.seed && !sidePlot.watered && this.work('water')) {
               water(side);
               this.refreshPlot(side);
             }

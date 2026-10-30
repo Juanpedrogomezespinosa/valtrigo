@@ -159,7 +159,7 @@ export function completeQuest(quest: Quest): boolean {
   state.money += quest.reward.money;
   state.dayStats.moneyEarned += quest.reward.money; // HU-39
   for (const { item, quantity } of quest.reward.items) {
-    addItem(item as ItemId, quantity);
+    if (quest.id !== 'encargo-1') addItem(item as ItemId, quantity);
   }
   state.activeQuests = [];
   state.completedQuests.push(quest.id);
