@@ -75,9 +75,10 @@ export const NIGHT_MAX_ALPHA = 0.65;
 export const HUD_BORDER = 0xc9a66b;
 export const ENERGY_COLORS = { high: 0x6abe30, medium: 0xf2c94c, low: 0xd9483b, empty: 0x3a2a2a };
 
-// Pesca (HU-48): "¡Pica!" aparece entre 2 y 5 segundos después de lanzar la caña y hay 1 segundo para sacar el pez.
-export const FISH_BITE_MIN_MS = 2000;
-export const FISH_BITE_MAX_MS = 5000;
+// Pesca (HU-48): "¡Pica!" aparece entre 1 y 3 segundos después de lanzar la caña y hay 1 segundo para pulsar E y
+// empezar el minijuego (HU-87).
+export const FISH_BITE_MIN_MS = 1000;
+export const FISH_BITE_MAX_MS = 3000;
 export const FISH_REACTION_MS = 1000;
 
 // Huerto (HU-43): una parcela regada se ve más oscura hasta el día siguiente.

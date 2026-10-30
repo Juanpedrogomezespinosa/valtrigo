@@ -1637,16 +1637,15 @@ Como jugador, quiero pescar en el lago para conseguir peces y venderlos.
 Criterios de aceptación:
 
 - Al pulsar E mirando al agua del lago, a menos de una casilla, con una Caña de pescar en el inventario, el personaje lanza la caña y se gastan 6 de energía (HU-76).
-- Entre 2 y 5 segundos después aparece “¡Pica!”. Si el jugador pulsa E antes de que pase 1 segundo, el pez va al inventario. Si tarda más, aparece “Se ha escapado”.
+- Entre 1 y 3 segundos después aparece “¡Pica!”. Si el jugador pulsa E antes de que pase 1 segundo, empieza el minijuego de pesca (HU-87), y si lo gana el pez va al inventario. Si tarda más, aparece “Se ha escapado”.
 - Si pulsa E antes de que aparezca “¡Pica!”, aparece “Has tirado demasiado pronto” y no pesca nada.
 - Pulsar una flecha recoge la caña sin pescar nada. La energía gastada no se devuelve.
 - Mientras pesca, el personaje no se mueve. Escape abre la pausa y la pesca continúa al reanudar.
-- Si el pez no cabe en el inventario, aparece “Inventario lleno” y se pierde.
 - Sin Caña de pescar aparece el mensaje “Necesitas una Caña de pescar”.
 Escenario 1: Pescar a tiempo
 
 - Dado que el jugador tiene una Caña de pescar y está mirando al agua
-- Cuando pulsa E y vuelve a pulsar E menos de 1 segundo después de que aparezca “¡Pica!”
+- Cuando pulsa E, vuelve a pulsar E menos de 1 segundo después de que aparezca “¡Pica!” y gana el minijuego (HU-87)
 - Entonces aparece un pez en el inventario
 - Y la energía ha bajado 6
 Escenario 2: Demasiado tarde
@@ -1671,11 +1670,10 @@ Escenario 5: Sin caña
 - Dado que el jugador no tiene ninguna Caña de pescar
 - Cuando pulsa E mirando al agua
 - Entonces aparece el mensaje “Necesitas una Caña de pescar”","- Al pulsar E mirando al agua del lago, a menos de una casilla, con una Caña de pescar en el inventario, el personaje lanza la caña y se gastan 6 de energía (HU-76).
-- Entre 2 y 5 segundos después aparece “¡Pica!”. Si el jugador pulsa E antes de que pase 1 segundo, el pez va al inventario. Si tarda más, aparece “Se ha escapado”.
+- Entre 1 y 3 segundos después aparece “¡Pica!”. Si el jugador pulsa E antes de que pase 1 segundo, empieza el minijuego de pesca (HU-87), y si lo gana el pez va al inventario. Si tarda más, aparece “Se ha escapado”.
 - Si pulsa E antes de que aparezca “¡Pica!”, aparece “Has tirado demasiado pronto” y no pesca nada.
 - Pulsar una flecha recoge la caña sin pescar nada. La energía gastada no se devuelve.
 - Mientras pesca, el personaje no se mueve. Escape abre la pausa y la pesca continúa al reanudar.
-- Si el pez no cabe en el inventario, aparece “Inventario lleno” y se pierde.
 - Sin Caña de pescar aparece el mensaje “Necesitas una Caña de pescar”."
 "HU-49","HU-49. Peces según la hora","# HU-49. Peces según la hora
 
@@ -3363,7 +3361,7 @@ Criterios de aceptación:
 - Hay tres mejoras:
   - Mochila grande (150 monedas): el inventario pasa de 20 a 30 casillas.
   - Regadera grande (120 monedas): al regar una parcela también se riegan las de sus dos lados, si están sembradas y sin regar. Se gasta la energía de un solo riego.
-  - Caña buena (100 monedas): el pez pica entre 1 y 3 segundos después de lanzar la caña (en vez de entre 2 y 5) y, después de “¡Pica!”, hay 2 segundos para pulsar E (en vez de 1).
+  - Caña buena (100 monedas): en el minijuego de pesca (HU-87), la zona verde es más grande: un 40 % de la barra en vez de un 28 %.
 - Cada mejora se compra una sola vez. E o Enter sobre una mejora comprada muestra “Ya tienes esta mejora” y no cobra nada.
 - Al comprar se comprueba el horario de la tienda (“La tienda está cerrada”) y el dinero (“Dinero insuficiente”). Una compra correcta reproduce el efecto de compra (HU-32).
 - Las mejoras no ocupan inventario, no se pueden vender y se guardan con la partida.
@@ -3407,13 +3405,12 @@ Escenario 6: Regadera grande
 Escenario 7: Caña buena
 
 - Dado que el jugador tiene la Caña buena y una Caña de pescar
-- Cuando lanza la caña
-- Entonces “¡Pica!” aparece como mucho 3 segundos después
-- Y hay 2 segundos para pulsar E","- La tienda tiene una tercera pestaña, “Mejoras”, a la derecha de “Vender”. Muestra las mejoras con su precio, o “Comprada” si ya se tiene.
+- Cuando empieza el minijuego de pesca
+- Entonces la zona verde ocupa el 40 % de la barra","- La tienda tiene una tercera pestaña, “Mejoras”, a la derecha de “Vender”. Muestra las mejoras con su precio, o “Comprada” si ya se tiene.
 - Hay tres mejoras:
   - Mochila grande (150 monedas): el inventario pasa de 20 a 30 casillas.
   - Regadera grande (120 monedas): al regar una parcela también se riegan las de sus dos lados, si están sembradas y sin regar. Se gasta la energía de un solo riego.
-  - Caña buena (100 monedas): el pez pica entre 1 y 3 segundos después de lanzar la caña (en vez de entre 2 y 5) y, después de “¡Pica!”, hay 2 segundos para pulsar E (en vez de 1).
+  - Caña buena (100 monedas): en el minijuego de pesca (HU-87), la zona verde es más grande: un 40 % de la barra en vez de un 28 %.
 - Cada mejora se compra una sola vez. E o Enter sobre una mejora comprada muestra “Ya tienes esta mejora” y no cobra nada.
 - Al comprar se comprueba el horario de la tienda (“La tienda está cerrada”) y el dinero (“Dinero insuficiente”). Una compra correcta reproduce el efecto de compra (HU-32).
 - Las mejoras no ocupan inventario, no se pueden vender y se guardan con la partida.
@@ -3457,3 +3454,70 @@ Escenario 3: Entregar un pedido de un plato
   - Día 5, “Sopa para el comedor”: 1 Sopa de setas. Recompensa: 70 monedas.
   - Día 6, “Guiso para la feria”: 1 Guiso de calabaza. Recompensa: 200 monedas.
 - Estos pedidos y misiones funcionan igual que los demás: se aceptan, se entregan y se cobran como dicen HU-52 a HU-54 y HU-72 a HU-74."
+"HU-87","HU-87. Minijuego de pesca","# HU-87. Minijuego de pesca
+
+# HU-87. Minijuego de pesca
+
+Como jugador, quiero tener que luchar con el pez para sacarlo, para que pescar sea un reto y no solo esperar.
+
+Criterios de aceptación:
+
+- Al pulsar E con “¡Pica!” en pantalla (HU-48) empieza el minijuego: aparece a la derecha del personaje una barra vertical con el pez, una zona verde y, al lado, un medidor de captura. Encima de la barra pone “Mantén E”.
+- Al empezar, la zona verde está centrada en el pez y el medidor está a un 30 %.
+- Mientras se mantiene pulsada E, la zona verde sube; al soltarla, baja. No sale de la barra.
+- Mientras el pez está dentro de la zona verde, el medidor se llena (un 25 % por segundo) y suena el carrete. Mientras está fuera, se vacía (un 15 % por segundo).
+- Si el medidor se llena, el pez va al inventario y aparece “Has pescado [pez] de [tamaño] cm” (HU-49). Si se vacía, aparece “Se ha escapado” y no se pesca nada.
+- Cada especie se mueve siempre igual:
+  - la Carpa sube y baja despacio (la más fácil);
+  - la Trucha sube y baja deprisa y con temblores;
+  - el Siluro se queda quieto un momento y da tirones bruscos de un extremo a otro (la más difícil).
+- Durante el minijuego el personaje no se mueve. Una flecha recoge la caña y el pez se escapa. Escape abre la pausa: el minijuego se detiene y continúa al reanudar.
+- Si el pez no cabe en el inventario, aparece “Inventario lleno” y se pierde.
+- La pesca tiene sonidos (Ninja Adventure): al lanzar la caña, al picar, el carrete mientras el pez está en la zona, al pescar el pez y cuando se escapa (también si se tira demasiado pronto o no se pulsa E a tiempo).
+- En el concurso de pesca (HU-60) se pesca con el mismo minijuego.
+Escenario 1: Empieza el minijuego
+
+- Dado que aparece “¡Pica!”
+- Cuando el jugador pulsa E
+- Entonces aparece la barra del minijuego con el pez, la zona verde y el medidor al 30 %
+Escenario 2: Subir y bajar la zona
+
+- Dado que el minijuego está en marcha
+- Cuando el jugador mantiene pulsada E
+- Entonces la zona verde sube
+- Y cuando la suelta, baja
+Escenario 3: Pescar el pez
+
+- Dado que el minijuego está en marcha
+- Cuando el jugador mantiene el pez dentro de la zona verde hasta llenar el medidor
+- Entonces el pez va al inventario
+- Y aparece “Has pescado...”
+Escenario 4: Se escapa
+
+- Dado que el minijuego está en marcha
+- Cuando el jugador no pulsa nada y el pez sale de la zona verde hasta vaciar el medidor
+- Entonces aparece “Se ha escapado”
+- Y el inventario no cambia
+Escenario 5: Pausa
+
+- Dado que el minijuego está en marcha
+- Cuando el jugador pulsa Escape y espera
+- Entonces el medidor no cambia mientras la pausa está abierta
+- Y el minijuego continúa al reanudar
+Escenario 6: Sonidos
+
+- Dado que el jugador pesca un pez
+- Cuando lanza la caña, pica el pez, lo mantiene en la zona y lo saca
+- Entonces suenan los efectos de lanzar, picar, carrete y pez pescado","- Al pulsar E con “¡Pica!” en pantalla (HU-48) empieza el minijuego: aparece a la derecha del personaje una barra vertical con el pez, una zona verde y, al lado, un medidor de captura. Encima de la barra pone “Mantén E”.
+- Al empezar, la zona verde está centrada en el pez y el medidor está a un 30 %.
+- Mientras se mantiene pulsada E, la zona verde sube; al soltarla, baja. No sale de la barra.
+- Mientras el pez está dentro de la zona verde, el medidor se llena (un 25 % por segundo) y suena el carrete. Mientras está fuera, se vacía (un 15 % por segundo).
+- Si el medidor se llena, el pez va al inventario y aparece “Has pescado [pez] de [tamaño] cm” (HU-49). Si se vacía, aparece “Se ha escapado” y no se pesca nada.
+- Cada especie se mueve siempre igual:
+  - la Carpa sube y baja despacio (la más fácil);
+  - la Trucha sube y baja deprisa y con temblores;
+  - el Siluro se queda quieto un momento y da tirones bruscos de un extremo a otro (la más difícil).
+- Durante el minijuego el personaje no se mueve. Una flecha recoge la caña y el pez se escapa. Escape abre la pausa: el minijuego se detiene y continúa al reanudar.
+- Si el pez no cabe en el inventario, aparece “Inventario lleno” y se pierde.
+- La pesca tiene sonidos (Ninja Adventure): al lanzar la caña, al picar, el carrete mientras el pez está en la zona, al pescar el pez y cuando se escapa (también si se tira demasiado pronto o no se pulsa E a tiempo).
+- En el concurso de pesca (HU-60) se pesca con el mismo minijuego."

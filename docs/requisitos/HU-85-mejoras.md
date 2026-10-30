@@ -10,7 +10,7 @@ Criterios de aceptación:
 - Hay tres mejoras:
   - Mochila grande (150 monedas): el inventario pasa de 20 a 30 casillas.
   - Regadera grande (120 monedas): al regar una parcela también se riegan las de sus dos lados, si están sembradas y sin regar. Se gasta la energía de un solo riego.
-  - Caña buena (100 monedas): el pez pica entre 1 y 3 segundos después de lanzar la caña (en vez de entre 2 y 5) y, después de “¡Pica!”, hay 2 segundos para pulsar E (en vez de 1).
+  - Caña buena (100 monedas): en el minijuego de pesca (HU-87), la zona verde es más grande: un 40 % de la barra en vez de un 28 %.
 - Cada mejora se compra una sola vez. E o Enter sobre una mejora comprada muestra “Ya tienes esta mejora” y no cobra nada.
 - Al comprar se comprueba el horario de la tienda (“La tienda está cerrada”) y el dinero (“Dinero insuficiente”). Una compra correcta reproduce el efecto de compra (HU-32).
 - Las mejoras no ocupan inventario, no se pueden vender y se guardan con la partida.
@@ -54,6 +54,5 @@ Escenario 6: Regadera grande
 Escenario 7: Caña buena
 
 - Dado que el jugador tiene la Caña buena y una Caña de pescar
-- Cuando lanza la caña
-- Entonces “¡Pica!” aparece como mucho 3 segundos después
-- Y hay 2 segundos para pulsar E
+- Cuando empieza el minijuego de pesca
+- Entonces la zona verde ocupa el 40 % de la barra

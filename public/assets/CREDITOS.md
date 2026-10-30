@@ -10,7 +10,7 @@
 | Ninja Adventure (cama) | sprites/cama.png | Pixel-boy y AAA (pixel-boy.itch.io) | CC0 1.0 (dominio público) |
 | Ninja Adventure (manzano, bosque y páginas) | sprites/manzano.png, sprites/tocon.png, sprites/arbusto-moras.png, sprites/pagina.png | Pixel-boy y AAA (pixel-boy.itch.io) | CC0 1.0 (dominio público) |
 | Tiny Town 1.1 (setas) | sprites/setas.png, sprites/objetos/seta.png | Kenney (www.kenney.nl) | CC0 1.0 (dominio público) |
-| Ninja Adventure (efectos) | audio/sfx/pasos.wav, abrir-menu.wav, compra.wav, venta.wav, cofre.wav, encargo-completado.wav | Pixel-boy y AAA (pixel-boy.itch.io) | CC0 1.0 (dominio público) |
+| Ninja Adventure (efectos) | audio/sfx/pasos.wav, abrir-menu.wav, compra.wav, venta.wav, cofre.wav, encargo-completado.wav, pesca-lanzar.wav, pesca-pica.wav, pesca-carrete.wav, pesca-captura.wav, pesca-escapa.wav | Pixel-boy y AAA (pixel-boy.itch.io) | CC0 1.0 (dominio público) |
 | Música | audio/*.mp3 | Juanpe Gómez, generada con IA (Flow, de Google) | Propia |
 | Casillas de agua | tilesets/agua.png | Generadas por código (tools/generar-agua.mjs), con la paleta de Kenney | Propia |
 | Huerto, cosechas, moras, mecanismo del reloj, feria, iconos de la interfaz, puzles y cocina | sprites/cultivos.png, sprites/objetos/nabo.png, zanahoria.png, calabaza.png, mora.png, sprites/mecanismo.png, guirnalda.png, puesto-cosecha.png, puesto-pesca.png, escenario.png, podio.png, sprites/iconos/sol.png, luna.png, moneda.png, energia.png, sprites/losas.png, campanas.png, caja.png, marca.png, sprites/fogon.png, sprites/objetos/sopa-de-setas.png, tarta-de-moras.png, carpa-asada.png, guiso-de-calabaza.png | Generados por código (tools/generar-sprites.mjs), con la paleta de Kenney | Propia |
@@ -85,6 +85,11 @@ Archivos de Ninja Adventure (https://pixel-boy.itch.io/ninja-adventure-asset-pac
 | audio/sfx/venta.wav | Audio/Sounds/Bonus/Coin2.wav |
 | audio/sfx/cofre.wav | Audio/Sounds/Bonus/Bonus.wav |
 | audio/sfx/encargo-completado.wav | Audio/Jingles/Success1.wav |
+| audio/sfx/pesca-lanzar.wav | Audio/Sounds/Elemental/Water1.wav |
+| audio/sfx/pesca-pica.wav | Audio/Sounds/Elemental/Bubble2.wav |
+| audio/sfx/pesca-carrete.wav | Audio/Sounds/Menu/Move1.wav |
+| audio/sfx/pesca-captura.wav | Audio/Sounds/Bonus/PowerUp1.wav |
+| audio/sfx/pesca-escapa.wav | Audio/Sounds/Menu/Cancel2.wav |
 
 Las hojas de personajes miden 64×112: 4 columnas (mirando abajo, arriba, izquierda y derecha)
 y 7 filas de 16×16. Las 4 primeras filas son la animación de andar.

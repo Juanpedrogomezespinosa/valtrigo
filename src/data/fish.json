@@ -1,8 +1,41 @@
 {
   "caught": "Has pescado {articulo} {pez} de {tamaño} cm",
+  "escaped": "Se ha escapado",
+  "minigame": {
+    "zoneSize": 28,
+    "zoneSpeed": 120,
+    "startProgress": 30,
+    "gainPerSecond": 25,
+    "lossPerSecond": 15,
+    "reelSoundMs": 250
+  },
   "species": [
-    { "item": "trucha", "article": "una", "from": "06:00", "to": "10:00", "minSize": 25, "maxSize": 50 },
-    { "item": "carpa", "article": "una", "from": "10:00", "to": "20:00", "minSize": 20, "maxSize": 45 },
-    { "item": "siluro", "article": "un", "from": "20:00", "to": "24:00", "minSize": 50, "maxSize": 120 }
+    {
+      "item": "trucha",
+      "article": "una",
+      "from": "06:00",
+      "to": "10:00",
+      "minSize": 25,
+      "maxSize": 50,
+      "movement": { "type": "wave", "amplitude": 35, "period": 2.5, "tremorAmplitude": 6, "tremorPeriod": 0.9 }
+    },
+    {
+      "item": "carpa",
+      "article": "una",
+      "from": "10:00",
+      "to": "20:00",
+      "minSize": 20,
+      "maxSize": 45,
+      "movement": { "type": "wave", "amplitude": 30, "period": 5 }
+    },
+    {
+      "item": "siluro",
+      "article": "un",
+      "from": "20:00",
+      "to": "24:00",
+      "minSize": 50,
+      "maxSize": 120,
+      "movement": { "type": "jumps", "positions": [50, 90, 10, 80, 15, 95, 20], "holdSeconds": 0.9, "jumpSeconds": 0.3 }
+    }
   ]
 }

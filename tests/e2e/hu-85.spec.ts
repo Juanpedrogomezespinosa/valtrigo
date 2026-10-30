@@ -3,7 +3,7 @@ import {
   at,
   currentGameState,
   FISHING_SPOT,
-  fishingTimer,
+  fishingState,
   inventoryView,
   pickUp,
   plotState,
@@ -122,12 +122,11 @@ test('Escenario 6: Regadera grande', async ({ page }) => {
 
 test('Escenario 7: Caña buena', async ({ page }) => {
   await startAtWith(page, 'lago', FISHING_SPOT, { minutes: at(15), inventory: [ROD], upgrades: ['cana-buena'] });
-  // La espera más larga posible hasta "¡Pica!".
-  await setRandom(page, [0.9999]);
+  await setRandom(page, [0]);
 
   await press(page, 'e');
+  await waitForHudText(page, '¡Pica!');
+  await press(page, 'e');
 
-  expect(await fishingTimer(page)).toEqual({ biting: false, delayMs: 3000 });
-  await waitForHudText(page, '¡Pica!', 5000);
-  expect(await fishingTimer(page)).toEqual({ biting: true, delayMs: 2000 });
+  expect((await fishingState(page))?.game?.zoneSize).toBe(40);
 });
