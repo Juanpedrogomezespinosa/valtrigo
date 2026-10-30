@@ -1,6 +1,7 @@
 import items from '../data/items.json';
-import { INVENTORY_SLOTS, MAX_ENERGY, MAX_STACK } from '../config';
+import { MAX_ENERGY, MAX_STACK } from '../config';
 import { getGameState, type InventoryItem } from './gameState';
+import { inventorySlots } from './upgrades';
 
 // Inventario (HU-13, HU-14 y HU-15). Todo cambio en el inventario pasa por aquí.
 // El inventario es la lista de casillas ocupadas, en orden. Cada casilla guarda un objeto y su cantidad.
@@ -38,7 +39,7 @@ export function canAdd(item: ItemId, quantity: number): boolean {
   const partialSpace = slots
     .filter((slot) => slot.item === item)
     .reduce((space, slot) => space + (MAX_STACK - slot.quantity), 0);
-  const freeSpace = (INVENTORY_SLOTS - slots.length) * MAX_STACK;
+  const freeSpace = (inventorySlots() - slots.length) * MAX_STACK;
   return partialSpace + freeSpace >= quantity;
 }
 

@@ -26,16 +26,16 @@
       "reward": { "money": 40, "items": [{ "item": "semilla-de-zanahoria", "quantity": 2 }] }
     },
     {
-      "title": "Setas para la sopa",
-      "description": "Se necesitan 3 Setas para una sopa.",
-      "items": [{ "item": "seta", "quantity": 3 }],
-      "reward": { "money": 30, "items": [] }
+      "title": "Sopa para el comedor",
+      "description": "El comedor del pueblo necesita 1 Sopa de setas.",
+      "items": [{ "item": "sopa-de-setas", "quantity": 1 }],
+      "reward": { "money": 70, "items": [] }
     },
     {
-      "title": "Carpa para el mercado",
-      "description": "El mercado busca 1 Carpa.",
-      "items": [{ "item": "carpa", "quantity": 1 }],
-      "reward": { "money": 25, "items": [] }
+      "title": "Guiso para la feria",
+      "description": "Para la comida de la feria hace falta 1 Guiso de calabaza.",
+      "items": [{ "item": "guiso-de-calabaza", "quantity": 1 }],
+      "reward": { "money": 200, "items": [] }
     }
   ]
 }

@@ -535,6 +535,7 @@ function casa() {
   setTile(map.obstacles, map, 8, 5, INTERIOR.chair);
   setTile(map.obstacles, map, 10, 2, INTERIOR.barrel);
   addBed(map, { x: 1, y: 3, wakeX: 2, wakeY: 4 });
+  map.points.push({ name: 'fogon', x: 6, y: 2 }); // HU-84: contra la pared del fondo
   return map;
 }
 

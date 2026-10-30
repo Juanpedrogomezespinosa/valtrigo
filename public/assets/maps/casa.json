@@ -10,7 +10,7 @@
  "tilewidth": 16,
  "tileheight": 16,
  "nextlayerid": 4,
- "nextobjectid": 5,
+ "nextobjectid": 6,
  "layers": [
   {
    "id": 1,
@@ -316,6 +316,18 @@
     },
     {
      "id": 4,
+     "name": "fogon",
+     "type": "",
+     "point": true,
+     "x": 104,
+     "y": 40,
+     "width": 0,
+     "height": 0,
+     "rotation": 0,
+     "visible": true
+    },
+    {
+     "id": 5,
      "name": "puerta",
      "type": "",
      "x": 96,

@@ -174,6 +174,34 @@
         "active": ["Necesito 4 Moras antes de la una. En el bosque hay arbustos llenos."],
         "complete": ["¡Moras de verdad! Esta mermelada va a ser la envidia de la feria.", "Toma, por la ayuda."]
       }
+    },
+    {
+      "id": "mision-13",
+      "day": 5,
+      "npc": "bruno",
+      "name": "Algo caliente para el bosque",
+      "description": "Lleva 1 Sopa de setas a Bruno.",
+      "requirement": { "type": "deliver", "items": [{ "item": "sopa-de-setas", "quantity": 1 }] },
+      "reward": { "money": 60, "items": [] },
+      "lines": {
+        "offer": ["Llevo toda la mañana cortando leña y aquí dentro del bosque no llega el sol.", "¿Me traes una Sopa de setas? Dicen que tienes un fogón en casa."],
+        "active": ["Una Sopa de setas me vendría de maravilla. Se hace con 2 Setas y un Nabo."],
+        "complete": ["¡Qué calentita! Así da gusto trabajar.", "Toma, te la has ganado."]
+      }
+    },
+    {
+      "id": "mision-14",
+      "day": 6,
+      "npc": "tomas",
+      "name": "La cena de Tomás",
+      "description": "Lleva 1 Carpa asada a Tomás.",
+      "requirement": { "type": "deliver", "items": [{ "item": "carpa-asada", "quantity": 1 }] },
+      "reward": { "money": 90, "items": [] },
+      "lines": {
+        "offer": ["Mañana es la feria y quiero cenar bien esta noche, como cuando era joven.", "¿Me traes una Carpa asada? Yo ya no tengo pulso para la caña."],
+        "active": ["Una Carpa asada, con su zanahoria. Las carpas pican de día, a partir de las diez."],
+        "complete": ["¡Huele como la que hacía mi mujer!", "Toma, y gracias por acordarte de este viejo."]
+      }
     }
   ]
 }

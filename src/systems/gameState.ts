@@ -89,6 +89,8 @@ export interface GameState {
   fountainDay: number | null;
   // Puzles resueltos (HU-77 a HU-79): "losas", "campanas" y "cajas".
   solvedPuzzles: string[];
+  // Mejoras compradas en la tienda (HU-85): "mochila-grande", "regadera-grande" y "cana-buena".
+  upgrades: string[];
 }
 
 let current: GameState | null = null;
@@ -129,6 +131,7 @@ export function createNewGameState(scene: Phaser.Scene): GameState {
     missionProgress: [],
     fountainDay: null,
     solvedPuzzles: [],
+    upgrades: [],
   };
 }
 

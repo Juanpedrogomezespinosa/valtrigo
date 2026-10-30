@@ -32,6 +32,8 @@ Criterios de aceptación:
   10. Día 5, Pablo, “El siluro gigante”: entregarle 1 Siluro. 60 monedas.
   11. Día 5, Lucía, “Zanahorias para Lucía”: entregarle 2 Zanahorias. 50 monedas.
   12. Día 6, Elena, “Mermelada de moras”: entregarle 4 Moras antes de las 13:00 (HU-74). 30 monedas.
+  13. Día 5, Bruno, “Algo caliente para el bosque”: entregarle 1 Sopa de setas (HU-86). 60 monedas.
+  14. Día 6, Tomás, “La cena de Tomás”: entregarle 1 Carpa asada (HU-86). 90 monedas.
 Escenario 1: Aceptar una misión
 
 - Dado que es el día 3 y el jugador habla con Bruno

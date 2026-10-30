@@ -1,0 +1,14 @@
+{
+  "title": "Fogón",
+  "cooked": "Has cocinado {plato}",
+  "missing": "Te faltan ingredientes",
+  "recipes": [
+    { "dish": "sopa-de-setas", "ingredients": [{ "item": "seta", "quantity": 2 }, { "item": "nabo", "quantity": 1 }] },
+    { "dish": "tarta-de-moras", "ingredients": [{ "item": "mora", "quantity": 3 }, { "item": "manzana", "quantity": 1 }] },
+    { "dish": "carpa-asada", "ingredients": [{ "item": "carpa", "quantity": 1 }, { "item": "zanahoria", "quantity": 1 }] },
+    {
+      "dish": "guiso-de-calabaza",
+      "ingredients": [{ "item": "calabaza", "quantity": 1 }, { "item": "nabo", "quantity": 1 }, { "item": "seta", "quantity": 1 }]
+    }
+  ]
+}

@@ -54,6 +54,24 @@
       "openedChests": ["cofre-1", "cofre-3"]
     },
     {
+      "title": "Día 5: cocina y mejoras",
+      "day": 5,
+      "zone": "casa",
+      "point": "llegada-plaza",
+      "money": 400,
+      "completedQuests": ["encargo-1", "encargo-2", "encargo-3"],
+      "inventory": [
+        { "item": "seta", "quantity": 3 },
+        { "item": "nabo", "quantity": 2 },
+        { "item": "mora", "quantity": 3 },
+        { "item": "manzana", "quantity": 1 },
+        { "item": "carpa", "quantity": 1 },
+        { "item": "zanahoria", "quantity": 1 },
+        { "item": "calabaza", "quantity": 1 }
+      ],
+      "openedChests": ["cofre-1", "cofre-3"]
+    },
+    {
       "title": "Día 6: la reparación",
       "day": 6,
       "zone": "torre",

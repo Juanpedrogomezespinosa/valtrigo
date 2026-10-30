@@ -9,6 +9,8 @@ import {
   sceneTexts,
   startAtWith,
   talkUntilChoiceOrEnd,
+  textWasShown,
+  watchForText,
   waitForZone,
 } from './helpers';
 
@@ -58,9 +60,11 @@ test('Escenario 3: Podio y premio', async ({ page }) => {
 
   expect((await ceremonyView(page)).podium).toEqual(['jugador', 'lucia', 'tomas']);
   expect((await dialogState(page))?.fullText).toBe('Concurso de la cosecha. Primer puesto: Juan, con una Calabaza de 12 kg.');
-  // Al terminar el anuncio de la cosecha cobra su premio.
+  // Al terminar el anuncio de la cosecha cobra su premio. El mensaje dura 2 segundos y la línea siguiente tarda
+  // más en escribirse, así que se vigila dentro del navegador mientras avanza el diálogo.
+  await watchForText(page, 'HudScene', 'Premio: 100 monedas');
   await advanceDialogUntil(page, 'Concurso de pesca');
-  expect(await sceneTexts(page, 'HudScene')).toContain('Premio: 100 monedas');
+  expect(await textWasShown(page, 'Premio: 100 monedas')).toBe(true);
   expect((await currentGameState(page))?.money).toBe(200);
 });
 

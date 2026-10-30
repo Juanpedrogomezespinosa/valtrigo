@@ -121,6 +121,7 @@ export interface TestGameState {
   missionProgress: string[];
   fountainDay: number | null;
   solvedPuzzles: string[];
+  upgrades: string[];
 }
 
 // Partida guardada de ejemplo, con el formato de src/systems/save.ts.
@@ -158,6 +159,7 @@ export function savedGame(overrides: Partial<TestGameState> = {}): TestGameState
     missionProgress: [],
     fountainDay: null,
     solvedPuzzles: [],
+    upgrades: [],
     ...overrides,
   };
 }
@@ -786,7 +788,7 @@ export async function objectivesTexts(page: Page): Promise<string[] | null> {
 export interface ShopView {
   tab: string;
   selected: number;
-  rows: { item: string; name: string; quantity?: number; price: number; icon: string }[];
+  rows: { item: string; name: string; quantity?: number; price: number; icon: string; bought?: boolean }[];
 }
 
 export async function shopView(page: Page): Promise<ShopView | null> {
@@ -1260,6 +1262,37 @@ export async function ceremonyView(
 }
 
 // Avanza el diálogo con E hasta que aparece una línea que empieza por `prefix` (y se termina de escribir).
+// Vigila dentro del navegador, en cada fotograma, si un texto llega a verse en una escena. Sirve para los mensajes
+// de 2 segundos que aparecen mientras el test hace otra cosa (por ejemplo, avanzar un diálogo que tarda más que
+// eso en escribirse). `textWasShown` dice después si se vio.
+export async function watchForText(page: Page, sceneKey: string, text: string): Promise<void> {
+  await page.evaluate(
+    ({ sceneKey, text }) => {
+      const target = window as unknown as { shownTexts?: string[] };
+      target.shownTexts = [];
+      const game = (window as unknown as GameWindow).game;
+      const tick = () => {
+        const visible = game.scene
+          .getScene(sceneKey)
+          .children.list.some(
+            (child) =>
+              child.type === 'Text' &&
+              (child as import('phaser').GameObjects.Text).text === text &&
+              (child as import('phaser').GameObjects.Text).visible,
+          );
+        if (visible) target.shownTexts!.push(text);
+        else requestAnimationFrame(tick);
+      };
+      tick();
+    },
+    { sceneKey, text },
+  );
+}
+
+export async function textWasShown(page: Page, text: string): Promise<boolean> {
+  return page.evaluate((text) => ((window as unknown as { shownTexts?: string[] }).shownTexts ?? []).includes(text), text);
+}
+
 export async function advanceDialogUntil(page: Page, prefix: string, timeout = 30_000): Promise<void> {
   const deadline = Date.now() + timeout;
   while (Date.now() < deadline) {
@@ -1299,4 +1332,31 @@ export async function openPracticeMenu(page: Page): Promise<void> {
   await press(page, 'ArrowDown');
   await press(page, 'Enter');
   await waitForScene(page, 'PracticeScene');
+}
+
+// --- Cocina (HU-84) y mejoras (HU-85) ---
+
+// Junto al fogón de la casa, que está en la casilla (6, 2).
+export const NEXT_TO_STOVE = { x: 6, y: 3 };
+
+export interface CookView {
+  selected: number;
+  recipes: { dish: string; name: string; ingredients: string }[];
+}
+
+export async function cookView(page: Page): Promise<CookView | null> {
+  return page.evaluate(() => {
+    const game = (window as unknown as GameWindow).game;
+    if (!game.scene.isActive('CookScene')) return null;
+    return (game.scene.getScene('CookScene') as unknown as { getState(): CookView }).getState();
+  });
+}
+
+// Espera actual de la pesca: hasta "¡Pica!" o, después, el tiempo para pulsar E. Null si no se está pescando.
+export async function fishingTimer(page: Page): Promise<{ biting: boolean; delayMs: number } | null> {
+  return page.evaluate(() => {
+    const game = (window as unknown as GameWindow).game;
+    const scene = game.scene.getScene('GameScene') as unknown as { getFishingTimer(): { biting: boolean; delayMs: number } | null };
+    return scene.getFishingTimer();
+  });
 }

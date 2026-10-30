@@ -38,6 +38,7 @@ test('Escenario 1: Abrir la lista', async ({ page }) => {
     'Día 3: el lago',
     'Día 4: día de mercado',
     'Día 5: la torre',
+    'Día 5: cocina y mejoras',
     'Día 6: la reparación',
     'Día 7: la feria',
     'Inventario lleno',
@@ -87,4 +88,25 @@ test('Escenario 4: Volver', async ({ page }) => {
     return (game.scene.getScene('MenuScene') as unknown as { getSelectedOption(): string }).getSelectedOption();
   });
   expect(selected).toBe('Partidas de práctica');
+});
+
+test('Escenario 5: Cocina y mejoras', async ({ page }) => {
+  await openPracticeMenu(page);
+
+  await choose(page, 'Día 5: cocina y mejoras');
+
+  const state = await currentGameState(page);
+  expect(state?.day).toBe(5);
+  expectClockAt(state?.minutes, at(6));
+  expect(state?.zone).toBe('casa');
+  expect(state?.money).toBe(400);
+  expect(state?.inventory).toEqual([
+    { item: 'seta', quantity: 3 },
+    { item: 'nabo', quantity: 2 },
+    { item: 'mora', quantity: 3 },
+    { item: 'manzana', quantity: 1 },
+    { item: 'carpa', quantity: 1 },
+    { item: 'zanahoria', quantity: 1 },
+    { item: 'calabaza', quantity: 1 },
+  ]);
 });

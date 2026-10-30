@@ -1,0 +1,29 @@
+{
+  "tab": "Mejoras",
+  "bought": "Comprada",
+  "alreadyBought": "Ya tienes esta mejora",
+  "upgrades": [
+    {
+      "id": "mochila-grande",
+      "name": "Mochila grande",
+      "price": 150,
+      "icon": "objeto-paquete",
+      "inventorySlots": 30
+    },
+    {
+      "id": "regadera-grande",
+      "name": "Regadera grande",
+      "price": 120,
+      "icon": "objeto-regadera"
+    },
+    {
+      "id": "cana-buena",
+      "name": "Caña buena",
+      "price": 100,
+      "icon": "objeto-cana-de-pescar",
+      "biteMinMs": 1000,
+      "biteMaxMs": 3000,
+      "reactionMs": 2000
+    }
+  ]
+}

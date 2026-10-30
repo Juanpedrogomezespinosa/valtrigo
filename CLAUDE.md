@@ -340,7 +340,7 @@ Es un proyecto público con un fin doble: servir de base para un curso de testin
 ### Fase 4 de la ampliación: pedidos del tablón (HU-52 a HU-54)
 
 - **Tablón:** casilla 57 de Tiny Town (un tablón con un papel), sólida, en la plaza (17, 11), con el punto `tablon` (`addNoticeBoard` en el generador de mapas). No mueve ningún árbol: solo cambia esa casilla.
-- **Pedidos:** src/data/orders.json tiene uno por día, del 1 al 6, que se repiten desde el día 7. Los títulos son decisión del autor, salvo "Leña para el horno", que da la historia: Moras para la mermelada, Trucha para la cena, Nabos para el puchero, Setas para la sopa y Carpa para el mercado. Cada pedido se identifica por el **día en que se ofreció**. `GameState.activeOrders` guarda los aceptados sin entregar y `acceptedOrderDays`, los días cuyo pedido se aceptó. Así el pedido del día 7 (que es el del día 1) es otro pedido distinto. La lógica está en src/systems/orders.ts.
+- **Pedidos:** src/data/orders.json tiene uno por día, del 1 al 6, que se repiten desde el día 7. Los títulos son decisión del autor, salvo "Leña para el horno", que da la historia: Moras para la mermelada, Trucha para la cena y Nabos para el puchero. Los de los días 5 y 6 eran Setas para la sopa y Carpa para el mercado; desde HU-86 piden platos. Cada pedido se identifica por el **día en que se ofreció**. `GameState.activeOrders` guarda los aceptados sin entregar y `acceptedOrderDays`, los días cuyo pedido se aceptó. Así el pedido del día 7 (que es el del día 1) es otro pedido distinto. La lógica está en src/systems/orders.ts.
 - **E junto al tablón:** primero entrega todos los pedidos activos que tengan sus objetos ("Pedido completado" y el efecto de encargo completado). Si la recompensa de alguno no cabe en el inventario tal y como está, ese pedido sigue activo y aparece "Inventario lleno". Si no hay nada que entregar, abre el cuadro "Tablón de anuncios" (texto completo) con el pedido del día ("[título]. [descripción] Recompensa: …") y las opciones "Aceptar" y "Rechazar". Si ya se aceptó el de hoy, muestra "Ya has aceptado el pedido de hoy"; con 3 pedidos activos, "Ya tienes 3 pedidos activos". Rechazar solo cierra el cuadro y se puede volver a leer.
 - Las recompensas de los pedidos suman a las monedas ganadas del día (HU-39). No muestran "Recibiste…" (HU-65), porque el tablón no es un NPC.
 - Los pedidos no tocan `activeQuests`, así que no impiden aceptar ni completar un encargo principal (HU-53).
@@ -470,3 +470,33 @@ Rehecha después de jugarla, con las decisiones del autor: horario, visitantes, 
   - En los tests, `placePlayer()` coloca al personaje en una casilla sin reiniciar la escena (para pisar losas o ponerse junto a una campana o una caja); los recorridos con el teclado no eran fiables con el equipo cargado, porque Phaser recupera varios pasos de física en un fotograma. `pushCrateTo()` empuja una caja con el teclado y suelta la tecla desde el navegador. `litSlabs()` y `crates()` consultan el estado de los puzles.
 - **Opciones de los diálogos:** se colocaban con una separación fija de 170 px y "Echar una moneda" (fuente, HU-75) se montaba sobre "Beber". Ahora DialogScene las coloca de derecha a izquierda según su ancho real, con 50 px entre ellas (`CHOICE_GAP`). Criterio y escenario 7 añadidos a HU-75 (detectado al jugar).
 - **Pantalla completa (HU-83, historia nueva, petición del autor):** F la activa y la desactiva (listener de `keydown` en la página, en main.ts, para que la petición salga de la propia pulsación; no en la pantalla del nombre). Fila "Pantalla completa" (Sí/No) en OptionsScene, que se actualiza con los eventos de Phaser al entrar y salir (también con Escape, que gestiona el navegador). La lógica está en src/systems/fullscreen.ts. No se guarda en las opciones: el navegador no deja entrar en pantalla completa sin una pulsación. La tabla de controles tiene 8 filas y la columna de las teclas empieza después de la acción más larga.
+
+### Cocina y mejoras (HU-84 y HU-85)
+
+Petición del autor tras jugar: el juego se quedaba vacío de cosas que hacer a media mañana. Dos historias nuevas que dan uso a lo que se recoge (cocina) y al dinero (mejoras).
+
+- **Cocina (HU-84):** el fogón es el punto `fogon` de la casa (6, 2), un obstáculo con collider propio, como el mecanismo. E abre CookScene, que se comporta como el inventario (el tiempo sigue y el personaje no se mueve). Las recetas están en src/data/recipes.json y la lógica en src/systems/cooking.ts.
+  - Los cuatro platos están en items.json: Sopa de setas, Tarta de moras, Carpa asada y Guiso de calabaza, con su energía y su `sellPrice`. Sus precios dan más que vender los ingredientes por separado.
+  - `cook()` comprueba los ingredientes y después si el plato cabe **quitando antes los ingredientes**. Si no cabe, deja el inventario como estaba. Es distinto de los encargos (HU-20), que comprueban el inventario tal y como está, porque al cocinar los ingredientes desaparecen siempre.
+  - Los mensajes de CookScene salen arriba, porque abajo está la ayuda de las teclas.
+  - Tarea del día 5 (HU-63): "Cocina un plato en el fogón de tu casa" (evento "cook").
+- **Mejoras (HU-85):** tercera pestaña "Mejoras" en la tienda. Datos en src/data/upgrades.json, consultas en src/systems/upgrades.ts y la compra, `buyUpgrade()`, en economy.ts con el resto de compras. `GameState.upgrades` guarda las compradas; las partidas antiguas lo cargan vacío. ← → recorren ahora las tres pestañas sin dar la vuelta.
+  - **Mochila grande:** `inventorySlots()` sustituye a `INVENTORY_SLOTS` en inventory.ts e InventoryScene. Con 30 casillas, el inventario usa una cuadrícula de 6×5 con casillas más pequeñas (`LAYOUTS` en InventoryScene). Se ajustaron HU-13 y HU-15 ("20 casillas, 30 con la Mochila grande").
+  - **Regadera grande:** al regar con éxito la parcela de delante, `workPlot` riega también las de los lados (perpendiculares a la mirada, `sideTiles()`) que estén en el huerto, sembradas y sin regar. Solo se gasta un riego.
+  - **Caña buena:** `fishingTimes()` da la espera hasta "¡Pica!" y el tiempo para pulsar E. Para los tests, `GameScene.getFishingTimer()` devuelve la espera en curso.
+  - Orden de las comprobaciones al comprar: horario, ya comprada ("Ya tienes esta mejora") y dinero.
+  - Iconos: la Mochila grande usa el del Paquete (Bag), y la Regadera y la Caña, los suyos.
+  - Tarea del día 4 (HU-63): "Compra una mejora en la tienda" (evento "upgrade").
+- Gráficos: el fogón y los iconos de los platos se dibujan en tools/generar-sprites.mjs. Están en credits.json y en CREDITOS.md, que ahora incluyen también los efectos de los diálogos.
+- En los tests: `NEXT_TO_STOVE`, `cookView()` y `fishingTimer()` en helpers.ts. La partida de ejemplo tiene `upgrades: []`.
+
+### Platos por encargo, partida de práctica y test de la ceremonia (HU-86, HU-61 y HU-66)
+
+- **HU-86 (historia nueva, decisión del autor):** dos misiones nuevas en missions.json, que se han añadido también a la lista de HU-72:
+  - `mision-13`, día 5, Bruno: 1 Sopa de setas, 60 monedas.
+  - `mision-14`, día 6, Tomás: 1 Carpa asada, 90 monedas.
+
+  Los pedidos del tablón de los días 5 y 6 (y 11 y 12) ahora piden platos: "Sopa para el comedor" (1 Sopa de setas, 70) y "Guiso para la feria" (1 Guiso de calabaza, 200). El Guiso compite con el concurso de la cosecha por la Calabaza: es una decisión del jugador.
+- **Partida de práctica "Día 5: cocina y mejoras" (HU-61, escenario 5):** en la casa, con los ingredientes de las cuatro recetas y 400 monedas. Las partidas de practice.json admiten ahora su propio `money`. Con 9 opciones, PracticeScene las separa 42 px en vez de 46.
+- **Test intermitente de HU-66 (escenario 3):** buscaba "Premio: 100 monedas" después de que se escribiera entera la línea siguiente, que tarda más que los 2 s del mensaje. Ahora vigila el mensaje dentro del navegador mientras avanza el diálogo (`watchForText` y `textWasShown` en helpers.ts). Comprueba lo mismo que antes.
+

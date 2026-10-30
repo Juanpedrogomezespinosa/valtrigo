@@ -8,7 +8,7 @@ Criterios de aceptación:
 
 - Al pulsar I se abre el inventario y al pulsar I o Escape se cierra.
 - Cada objeto muestra su icono, su nombre y su cantidad.
-- El inventario tiene 20 casillas; las casillas libres se muestran vacías.
+- El inventario tiene 20 casillas (30 con la Mochila grande, HU-85); las casillas libres se muestran vacías.
 - Con el inventario abierto, el personaje no se mueve.
 Escenario 1: Abrir el inventario con objetos
 

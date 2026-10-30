@@ -39,8 +39,8 @@ export class BootScene extends Phaser.Scene {
     this.load.spritesheet('campanas', 'assets/sprites/campanas.png', { frameWidth: 16, frameHeight: 16 });
     this.load.image('caja', 'assets/sprites/caja.png');
     this.load.image('marca', 'assets/sprites/marca.png');
-    // Puntos del bosque (HU-50), páginas del diario (HU-55), mecanismo del reloj (HU-56) y feria (HU-58).
-    for (const sprite of ['setas', 'arbusto-moras', 'tocon', 'pagina', 'mecanismo', 'guirnalda', 'poste-guirnalda', 'puesto-cosecha', 'puesto-pesca', 'escenario', 'podio']) {
+    // Puntos del bosque (HU-50), páginas del diario (HU-55), mecanismo del reloj (HU-56), feria (HU-58) y fogón (HU-84).
+    for (const sprite of ['setas', 'arbusto-moras', 'tocon', 'pagina', 'mecanismo', 'guirnalda', 'poste-guirnalda', 'puesto-cosecha', 'puesto-pesca', 'escenario', 'podio', 'fogon']) {
       this.load.image(sprite, `assets/sprites/${sprite}.png`);
     }
     // Iconos de la interfaz (HU-80).

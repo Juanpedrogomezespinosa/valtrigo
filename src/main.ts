@@ -19,6 +19,7 @@ import { MechanismScene } from './scenes/MechanismScene';
 import { PauseScene } from './scenes/PauseScene';
 import { PracticeScene } from './scenes/PracticeScene';
 import { ItemChoiceScene } from './scenes/ItemChoiceScene';
+import { CookScene } from './scenes/CookScene';
 import { getAudioState } from './systems/audio';
 import { getGameState, isGameInProgress } from './systems/gameState';
 import { setRandomValues } from './systems/random';
@@ -68,6 +69,7 @@ const game = new Phaser.Game({
     ShopScene,
     ItemChoiceScene,
     MechanismScene,
+    CookScene,
     PauseScene,
     HudScene,
     DaySummaryScene,

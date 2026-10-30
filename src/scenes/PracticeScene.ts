@@ -27,7 +27,8 @@ export class PracticeScene extends Phaser.Scene {
       {
         x: this.scale.width / 2 - 160,
         y: 140,
-        spacing: 46,
+        // Con 8 partidas y "Volver", las opciones van más juntas que en el menú principal para que quepan.
+        spacing: 42,
         onActivate: (label) => (label === BACK ? this.back() : this.start(label)),
       },
     );

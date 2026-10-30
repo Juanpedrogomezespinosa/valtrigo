@@ -1,37 +1,47 @@
 import Phaser from 'phaser';
 import { COLORS, FONT_FAMILY, MESSAGE_MS } from '../config';
-import { buy, buyPrice, sellOne, sellPrice, SHOP_ITEMS, type BuyResult, type SellResult } from '../systems/economy';
+import { buy, buyPrice, buyUpgrade, sellOne, sellPrice, SHOP_ITEMS, type BuyResult, type SellResult, type UpgradeResult } from '../systems/economy';
 import { getSlots, ITEMS, type ItemId } from '../systems/inventory';
 import { playEffect } from '../systems/audio';
+import { hasUpgrade, UPGRADE_TEXTS, UPGRADES } from '../systems/upgrades';
 import { onConfirmKeys } from '../ui/confirmKeys';
 import { showMessage } from '../ui/message';
 import { addTitle } from '../ui/title';
 import type { OverlaySceneData } from './InventoryScene';
 
-type Tab = 'Comprar' | 'Vender';
-const TABS: Tab[] = ['Comprar', 'Vender'];
+type Tab = 'Comprar' | 'Vender' | 'Mejoras';
+const TABS: Tab[] = ['Comprar', 'Vender', 'Mejoras'];
+// Distancia entre los títulos de las pestañas.
+const TAB_GAP = 180;
 
 const LIST_LEFT = 180;
 const LIST_TOP = 170;
 const ROW_HEIGHT = 44;
 const VISIBLE_ROWS = 7;
 
-const MESSAGES: Partial<Record<BuyResult | SellResult, string>> = {
+const MESSAGES: Partial<Record<BuyResult | SellResult | UpgradeResult, string>> = {
   'shop-closed': 'La tienda está cerrada',
   'no-money': 'Dinero insuficiente',
   'inventory-full': 'Inventario lleno',
   'quest-item': 'Este objeto no se puede vender',
+  'already-bought': UPGRADE_TEXTS.alreadyBought,
 };
 
+// Una fila de la lista: un objeto (Comprar y Vender) o una mejora (Mejoras, HU-85).
 interface Row {
-  item: ItemId;
+  id: string;
+  name: string;
+  icon: string;
   quantity?: number;
   price: number;
+  // Solo en las mejoras: si ya se ha comprado.
+  bought?: boolean;
 }
 
 // Tienda (HU-17 y HU-18). Se abre al hablar con la vendedora, encima de la partida.
 // Como el inventario, no detiene el tiempo y el personaje no se mueve mientras está abierta.
-// - ← → cambian entre "Comprar" y "Vender"; ↑ ↓ eligen un objeto; E o Enter compran o venden una unidad.
+// - ← → cambian entre "Comprar", "Vender" y "Mejoras" (HU-85); ↑ ↓ eligen un objeto; E o Enter compran o venden
+//   una unidad, o compran la mejora.
 // - Escape cierra la tienda.
 export class ShopScene extends Phaser.Scene {
   private onClose!: () => void;
@@ -58,7 +68,7 @@ export class ShopScene extends Phaser.Scene {
     addTitle(this, 'Tienda', 60);
 
     this.tabTexts = TABS.map((tab, index) =>
-      this.add.text(width / 2 + (index === 0 ? -90 : 90), 115, tab, { fontFamily: FONT_FAMILY, fontSize: '26px' }).setOrigin(0.5),
+      this.add.text(width / 2 + (index - 1) * TAB_GAP, 115, tab, { fontFamily: FONT_FAMILY, fontSize: '26px' }).setOrigin(0.5),
     );
 
     this.rowTexts = Array.from({ length: VISIBLE_ROWS }, (_, index) => {
@@ -79,7 +89,7 @@ export class ShopScene extends Phaser.Scene {
       .setOrigin(0.5);
 
     const keyboard = this.input.keyboard!;
-    keyboard.on('keydown-LEFT', () => this.switchTab(0));
+    keyboard.on('keydown-LEFT', () => this.switchTab(-1));
     keyboard.on('keydown-RIGHT', () => this.switchTab(1));
     keyboard.on('keydown-UP', () => this.move(-1));
     keyboard.on('keydown-DOWN', () => this.move(1));
@@ -90,32 +100,45 @@ export class ShopScene extends Phaser.Scene {
   }
 
   // Estado de la tienda, para los tests.
-  getState(): { tab: Tab; selected: number; rows: { item: string; name: string; quantity?: number; price: number; icon: string }[] } {
+  getState(): {
+    tab: Tab;
+    selected: number;
+    rows: { item: string; name: string; quantity?: number; price: number; icon: string; bought?: boolean }[];
+  } {
     return {
       tab: this.tab,
       selected: this.selected,
-      rows: this.rows().map((row) => ({
-        ...row,
-        name: ITEMS[row.item].name,
-        icon: `objeto-${row.item}`,
-      })),
+      rows: this.rows().map(({ id, ...row }) => ({ item: id, ...row })),
     };
   }
 
   // Comprar: el catálogo con su precio. Vender: el inventario con lo que se recibe por unidad.
+  // Mejoras: las mejoras con su precio y si ya se han comprado.
   private rows(): Row[] {
+    const itemRow = (item: ItemId) => ({ id: item, name: ITEMS[item].name, icon: `objeto-${item}` });
     if (this.tab === 'Comprar') {
-      return SHOP_ITEMS.map((item) => ({ item, price: buyPrice(item) }));
+      return SHOP_ITEMS.map((item) => ({ ...itemRow(item), price: buyPrice(item) }));
+    }
+    if (this.tab === 'Mejoras') {
+      return UPGRADES.map((upgrade) => ({
+        id: upgrade.id,
+        name: upgrade.name,
+        icon: upgrade.icon,
+        price: upgrade.price,
+        bought: hasUpgrade(upgrade.id),
+      }));
     }
     return getSlots().map((slot) => ({
-      item: slot.item as ItemId,
+      ...itemRow(slot.item as ItemId),
       quantity: slot.quantity,
       price: sellPrice(slot.item as ItemId),
     }));
   }
 
-  private switchTab(index: number): void {
-    if (this.tab !== TABS[index]) {
+  // Cambia a la pestaña de la izquierda (-1) o de la derecha (1). En los extremos no hace nada.
+  private switchTab(delta: number): void {
+    const index = TABS.indexOf(this.tab) + delta;
+    if (index >= 0 && index < TABS.length) {
       this.tab = TABS[index];
       this.selected = 0;
       playEffect(this, 'menuNavigate');
@@ -138,13 +161,14 @@ export class ShopScene extends Phaser.Scene {
     if (!row) {
       return;
     }
-    const result = this.tab === 'Comprar' ? buy(row.item) : sellOne(this.selected);
+    const result =
+      this.tab === 'Comprar' ? buy(row.id as ItemId) : this.tab === 'Mejoras' ? buyUpgrade(row.id) : sellOne(this.selected);
     const message = MESSAGES[result];
     if (message) {
       showMessage(this, message, MESSAGE_MS);
     } else {
       // HU-32: efecto de compra o de venta.
-      playEffect(this, this.tab === 'Comprar' ? 'buy' : 'sell');
+      playEffect(this, this.tab === 'Vender' ? 'sell' : 'buy');
     }
     // Si se vendió la última unidad de la última casilla, la selección sube.
     this.selected = Math.min(this.selected, Math.max(0, this.rows().length - 1));
@@ -168,10 +192,10 @@ export class ShopScene extends Phaser.Scene {
     this.rowTexts.forEach((view, index) => {
       const row = rows[first + index];
       view.icon.setVisible(!!row);
-      view.name.setText(row ? `${ITEMS[row.item].name}${row.quantity ? ` x${row.quantity}` : ''}` : '');
-      view.price.setText(row ? `${row.price} monedas` : '');
+      view.name.setText(row ? `${row.name}${row.quantity ? ` x${row.quantity}` : ''}` : '');
+      view.price.setText(row ? (row.bought ? UPGRADE_TEXTS.bought : `${row.price} monedas`) : '');
       if (row) {
-        view.icon.setTexture(`objeto-${row.item}`);
+        view.icon.setTexture(row.icon);
       }
     });
 

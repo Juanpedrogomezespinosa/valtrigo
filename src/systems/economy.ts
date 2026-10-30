@@ -4,6 +4,7 @@ import { toMinutes } from './time';
 import { addItem, canAdd, getSlots, ITEMS, removeItem, type ItemId } from './inventory';
 import { recordSale } from './quests';
 import { recordEvent } from './tasks';
+import { hasUpgrade, UPGRADES } from './upgrades';
 
 // Tienda (HU-17 y HU-18). Todo cambio de dinero por compras y ventas pasa por aquí.
 // - Precios de compra en src/data/items.json (`price`). Al vender se recibe el 50 %, salvo los objetos que
@@ -66,4 +67,25 @@ export function sellOne(slotIndex: number): SellResult {
   state.dayStats.moneyEarned += sellPrice(item); // HU-39
   recordSale(item, 1);
   return 'sold';
+}
+
+export type UpgradeResult = 'bought' | 'shop-closed' | 'already-bought' | 'no-money';
+
+// HU-85: compra una mejora. Cada una se compra una sola vez y no ocupa inventario.
+export function buyUpgrade(id: string): UpgradeResult {
+  const state = getGameState();
+  const upgrade = UPGRADES.find((candidate) => candidate.id === id)!;
+  if (!isShopOpen()) {
+    return 'shop-closed';
+  }
+  if (hasUpgrade(id)) {
+    return 'already-bought';
+  }
+  if (state.money < upgrade.price) {
+    return 'no-money';
+  }
+  state.money -= upgrade.price;
+  state.upgrades.push(id);
+  recordEvent('upgrade'); // HU-63
+  return 'bought';
 }

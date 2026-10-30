@@ -7,9 +7,11 @@ import { findMapPoint, getProperty, pointTile, type ZoneId } from './zones';
 
 // Partidas de práctica (HU-61). Datos en src/data/practice.json: cada partida es una partida nueva con los
 // cambios indicados (día, zona y punto del mapa donde empieza, encargos, inventario, cofres, huerto...).
+// Todas empiezan con el mismo dinero, salvo las que indican el suyo (`money`).
 // Empieza a la hora a la que empieza su día en el juego y no toca la partida guardada.
 
 type PracticeGame = (typeof practice.games)[number] & {
+  money?: number;
   activeQuests?: string[];
   openedChests?: string[];
   pickedUpItems?: string[];
@@ -34,7 +36,7 @@ export function createPracticeState(scene: Phaser.Scene, title: string): { state
   const state: GameState = {
     ...createNewGameState(scene),
     playerName: practice.name,
-    money: practice.money,
+    money: game.money ?? practice.money,
     day: game.day,
     minutes: startOfDay(game.day),
     zone: game.zone as ZoneId,

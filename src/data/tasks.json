@@ -33,11 +33,13 @@
   { "day": 4, "text": "Vuelve a hablar con la vendedora", "done": { "questCompleted": "encargo-3" } },
   { "day": 4, "text": "Recoge tu primera cosecha", "done": { "event": "harvest" } },
   { "day": 4, "text": "Visita el barrio, al oeste de la plaza", "done": { "event": "visit:barrio" } },
+  { "day": 4, "text": "Compra una mejora en la tienda", "done": { "event": "upgrade" } },
 
   { "day": 5, "text": "Entra en la torre del reloj", "done": { "event": "visit:torre" } },
   { "day": 5, "text": "Habla con la relojera", "done": { "event": "talk:relojera" } },
   { "day": 5, "text": "Encuentra el cofre de la torre", "done": { "chestOpened": "cofre-2" } },
   { "day": 5, "text": "Encuentra una página del diario de la relojera", "done": { "event": "page" } },
+  { "day": 5, "text": "Cocina un plato en el fogón de tu casa", "done": { "event": "cook" } },
 
   { "day": 6, "text": "Coloca las tres piezas en el mecanismo del reloj", "done": { "questCompleted": "encargo-4" } },
   { "day": 6, "text": "Lleva 2 Manzanas al granjero", "done": { "questCompleted": "encargo-5" } },

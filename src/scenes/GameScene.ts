@@ -1,9 +1,6 @@
 import Phaser from 'phaser';
 import {
   COLORS,
-  FISH_BITE_MAX_MS,
-  FISH_BITE_MIN_MS,
-  FISH_REACTION_MS,
   FONT_FAMILY,
   MESSAGE_MS,
   SLEEP_FADE_MS,
@@ -79,6 +76,7 @@ import {
 import { randomInt } from '../systems/random';
 import { spendEnergy, type WorkAction } from '../systems/energy';
 import { isShopOpen } from '../systems/economy';
+import { fishingTimes, watersSides } from '../systems/upgrades';
 import { writeSave } from '../systems/save';
 import { playEffect, playZoneMusic } from '../systems/audio';
 import { isNpcInZone } from '../systems/schedules';
@@ -159,6 +157,7 @@ interface Interactable {
     | 'fuente'
     | 'campana'
     | 'mecanismo'
+    | 'fogon'
     | 'pagina'
     | 'puesto';
   id: string;
@@ -300,6 +299,7 @@ export class GameScene extends Phaser.Scene {
       if (object.name === 'tablon') this.addNoticeBoard(object);
       if (object.name === 'fuente') this.addFountain(object);
       if (object.name === 'mecanismo') this.addMechanism(object);
+      if (object.name === 'fogon') this.addStove(object);
       if (object.name === 'pagina') this.addDiaryPage(object);
       if (object.name === 'losa') this.addSlab(object);
       if (object.name === 'campana') this.addBell(object);
@@ -610,7 +610,7 @@ export class GameScene extends Phaser.Scene {
     this.sleeping = true;
     this.player.stand();
     this.indicator.setVisible(false);
-    for (const key of ['DialogScene', 'InventoryScene', 'ObjectivesScene', 'ShopScene', 'ItemChoiceScene', 'MechanismScene']) {
+    for (const key of ['DialogScene', 'InventoryScene', 'ObjectivesScene', 'ShopScene', 'ItemChoiceScene', 'MechanismScene', 'CookScene']) {
       this.scene.stop(key);
     }
     this.stopFishing();
@@ -627,7 +627,7 @@ export class GameScene extends Phaser.Scene {
   // HU-13 (I) y HU-21 (O): inventario y lista de objetivos. Mientras están abiertos el personaje
   // no se mueve, pero el tiempo sigue (decisión del autor).
   private openOverlay(
-    sceneKey: 'InventoryScene' | 'ObjectivesScene' | 'ShopScene' | 'ItemChoiceScene' | 'MechanismScene',
+    sceneKey: 'InventoryScene' | 'ObjectivesScene' | 'ShopScene' | 'ItemChoiceScene' | 'MechanismScene' | 'CookScene',
     extra: object = {},
   ): void {
     if (this.isBusy()) {
@@ -1160,10 +1160,28 @@ export class GameScene extends Phaser.Scene {
         showMessage(hud, 'Necesitas una Regadera', MESSAGE_MS, 'top');
       } else if (this.work('water')) {
         water(tile);
+        // HU-85: con la Regadera grande también se riegan las parcelas de los lados, con el mismo gasto.
+        if (watersSides()) {
+          for (const side of this.sideTiles(tile)) {
+            const sidePlot = getPlot(side);
+            if (this.garden!.contains(side.x + 0.5, side.y + 0.5) && sidePlot.seed && !sidePlot.watered) {
+              water(side);
+              this.refreshPlot(side);
+            }
+          }
+        }
         recordEvent('water'); // HU-63
       }
     }
     this.refreshPlot(tile);
+  }
+
+  // Las dos casillas de los lados de otra, vistas desde el personaje (HU-85).
+  private sideTiles(tile: { x: number; y: number }): { x: number; y: number }[] {
+    const vertical = this.player.facing === 'up' || this.player.facing === 'down';
+    return vertical
+      ? [{ x: tile.x - 1, y: tile.y }, { x: tile.x + 1, y: tile.y }]
+      : [{ x: tile.x, y: tile.y - 1 }, { x: tile.x, y: tile.y + 1 }];
   }
 
   // HU-45: el manzano es un obstáculo (su tronco). Con fruta, E recoge la Manzana; sin fruta no hay indicador.
@@ -1526,6 +1544,20 @@ export class GameScene extends Phaser.Scene {
     this.openOverlay('MechanismScene', data);
   }
 
+  // HU-84: el fogón de la casa es un obstáculo. E abre la pantalla de las recetas.
+  private addStove(object: MapObject): void {
+    const area = tileArea(object);
+    const sprite = this.physics.add.staticImage(area.centerX, area.centerY, 'fogon');
+    this.physics.add.collider(this.player, sprite);
+    this.interactables.push({
+      kind: 'fogon',
+      id: 'fogon',
+      area,
+      isAvailable: () => true,
+      interact: () => this.openOverlay('CookScene'),
+    });
+  }
+
   // HU-55: páginas del diario de la relojera, en el suelo. Al recogerlas desaparecen y no ocupan inventario.
   private addDiaryPage(object: MapObject): void {
     const id = getProperty(object, 'id') as string;
@@ -1865,8 +1897,8 @@ export class GameScene extends Phaser.Scene {
     };
   }
 
-  // Lanza la caña (3 de energía). "¡Pica!" aparece entre 2 y 5 segundos después. Los temporizadores son
-  // del reloj de la escena: con la pausa abierta se detienen y la pesca sigue al reanudar.
+  // Lanza la caña. "¡Pica!" aparece entre 2 y 5 segundos después (entre 1 y 3 con la Caña buena, HU-85). Los
+  // temporizadores son del reloj de la escena: con la pausa abierta se detienen y la pesca sigue al reanudar.
   private castRod(tile: { x: number; y: number }): void {
     if (countItem('cana-de-pescar') === 0) {
       showMessage(this.scene.get('HudScene'), 'Necesitas una Caña de pescar', MESSAGE_MS, 'top');
@@ -1886,17 +1918,18 @@ export class GameScene extends Phaser.Scene {
     this.fishing = {
       biting: false,
       bobber,
-      timer: this.time.delayedCall(randomInt(FISH_BITE_MIN_MS, FISH_BITE_MAX_MS), () => this.bite()),
+      timer: this.time.delayedCall(randomInt(fishingTimes().biteMinMs, fishingTimes().biteMaxMs), () => this.bite()),
     };
   }
 
-  // "¡Pica!": hay 1 segundo para pulsar E. Si no, el pez se escapa.
+  // "¡Pica!": hay 1 segundo para pulsar E (2 con la Caña buena, HU-85). Si no, el pez se escapa.
   private bite(): void {
     if (!this.fishing) return;
     this.fishing.biting = true;
     this.fishing.bobber.setY(this.fishing.bobber.y + 2);
-    showMessage(this.scene.get('HudScene'), '¡Pica!', FISH_REACTION_MS, 'top');
-    this.fishing.timer = this.time.delayedCall(FISH_REACTION_MS, () => {
+    const { reactionMs } = fishingTimes();
+    showMessage(this.scene.get('HudScene'), '¡Pica!', reactionMs, 'top');
+    this.fishing.timer = this.time.delayedCall(reactionMs, () => {
       this.stopFishing();
       showMessage(this.scene.get('HudScene'), 'Se ha escapado', MESSAGE_MS, 'top');
     });
@@ -1934,6 +1967,12 @@ export class GameScene extends Phaser.Scene {
 
   isFishing(): boolean {
     return this.fishing !== null;
+  }
+
+  // Para los tests de HU-85: si el pez ya ha picado y cuánto dura la espera actual, en milisegundos (hasta
+  // "¡Pica!" o, después, el tiempo para pulsar E). Null si no se está pescando.
+  getFishingTimer(): { biting: boolean; delayMs: number } | null {
+    return this.fishing ? { biting: this.fishing.biting, delayMs: this.fishing.timer.delay } : null;
   }
 
   getLastCatch(): Catch | null {

@@ -63,6 +63,7 @@ export function readSave(): GameState | null {
         missionProgress: state.missionProgress ?? [],
         fountainDay: state.fountainDay ?? null,
         solvedPuzzles: state.solvedPuzzles ?? [],
+        upgrades: state.upgrades ?? [],
       }
     : null;
 }

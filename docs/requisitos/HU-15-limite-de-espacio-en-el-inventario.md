@@ -6,7 +6,7 @@ Como jugador, quiero que el inventario tenga un límite de espacios para tener q
 
 Criterios de aceptación:
 
-- El inventario tiene 20 casillas.
+- El inventario tiene 20 casillas (30 con la Mochila grande, HU-85).
 - Cada casilla admite hasta 99 unidades del mismo objeto. Al llegar a 99, el resto ocupa una casilla nueva.
 - Si no hay casillas libres ni espacio parcial del mismo objeto, el objeto no se recoge y aparece el mensaje “Inventario lleno”.
 Escenario 1: Inventario completo

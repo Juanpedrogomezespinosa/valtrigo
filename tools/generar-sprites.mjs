@@ -9,6 +9,7 @@
 // - Los iconos de la interfaz (HU-80): sol, luna, moneda y rayo (energía), en public/assets/sprites/iconos/.
 // - Los puzles: losas.png (HU-77, apagada y encendida), campanas.png (HU-78, grande, mediana y pequeña), caja.png y
 //   marca.png (HU-79).
+// - La cocina (HU-84): fogon.png y los iconos de los cuatro platos en public/assets/sprites/objetos/.
 // Uso: node tools/generar-sprites.mjs
 //
 // cultivos.png: casillas de 16×16, de izquierda a derecha:
@@ -48,6 +49,7 @@ const PALETTE = {
   q: [150, 150, 162], // piedra
   Q: [112, 112, 126], // piedra oscura
   z: [255, 236, 140], // brillo de las losas
+  e: [204, 146, 84], // caldo
 };
 
 const SOIL = [
@@ -538,6 +540,108 @@ function mark() {
   );
 }
 
+// --- Cocina (HU-84) ---
+
+// Fogón de hierro: dos fuegos arriba y la puerta del horno con las brasas encendidas.
+const STOVE = [
+  '................',
+  '.oooooooooooooo.',
+  '.oQQQQQQQQQQQQo.',
+  '.oqqqqqqqqqqqqo.',
+  '.oqooooqqooooqo.',
+  '.oqoQQoqqoQQoqo.',
+  '.oqooooqqooooqo.',
+  '.oqqqqqqqqqqqqo.',
+  '.oooooooooooooo.',
+  '.oqqqqqqqqqqqqo.',
+  '.oqqooooooooqqo.',
+  '.oqqoxyyyyxoqqo.',
+  '.oqqoxxyyxxoqqo.',
+  '.oqqooooooooqqo.',
+  '.oooooooooooooo.',
+  '..oo........oo..',
+];
+
+// Cuenco de sopa con trozos de seta, humeante.
+const SOUP_ICON = [
+  '................',
+  '......c...c.....',
+  '.....c...c......',
+  '......c...c.....',
+  '................',
+  '..oooooooooooo..',
+  '.oeeweeeeweeeeo.',
+  '.oeeBeeeweeeBeo.',
+  '.owwwwwwwwwwwwo.',
+  '..owwwwwwwwwwo..',
+  '...owwwwwwwwo...',
+  '....oooooooo....',
+  '................',
+  '................',
+  '................',
+  '................',
+];
+
+// Tarta de moras sobre un plato.
+const PIE_ICON = [
+  '................',
+  '................',
+  '................',
+  '................',
+  '....oooooooo....',
+  '..oohhhhhhhhoo..',
+  '.ohmmlmmmmlmmho.',
+  '.ohmMmmlmmMmmho.',
+  '.ohhmmmmMmmmhho.',
+  '.oohhhhhhhhhhoo.',
+  '.owwwwwwwwwwwwo.',
+  '..oooooooooooo..',
+  '................',
+  '................',
+  '................',
+  '................',
+];
+
+// Carpa asada sobre un plato.
+const GRILLED_CARP_ICON = [
+  '................',
+  '................',
+  '................',
+  '................',
+  '................',
+  '................',
+  '....oooooo...oo.',
+  '...okkkkkko.oKo.',
+  '..okoKkkKkkooKo.',
+  '..okkkKkkKkkkKo.',
+  '...okkkkkkko.oo.',
+  '....ooooooooo...',
+  '.owwwwwwwwwwwwo.',
+  '..oooooooooooo..',
+  '................',
+  '................',
+];
+
+// Olla de guiso de calabaza, humeante.
+const STEW_ICON = [
+  '................',
+  '................',
+  '......c..c......',
+  '.....c..c.......',
+  '................',
+  '.oooooooooooooo.',
+  '.oqkkKkkgkKkkqo.',
+  'ooQQQQQQQQQQQQoo',
+  '.oqqqqqqqqqqqqo.',
+  '.oqqqqqqqqqqqqo.',
+  '.oQqqqqqqqqqqQo.',
+  '..oQQQQQQQQQQo..',
+  '...oooooooooo...',
+  '................',
+  '................',
+  '................',
+];
+
 function pixels(drawing) {
   if (drawing.length % 16 !== 0 || drawing.some((row) => row.length % 16 !== 0 || row.length !== drawing[0].length)) {
     throw new Error('Cada dibujo debe medir un múltiplo de 16 de ancho y de alto');
@@ -610,6 +714,11 @@ const files = {
   [`${SPRITES_DIR}/campanas.png`]: strip([bell(14), bell(10), bell(7)]),
   [`${SPRITES_DIR}/caja.png`]: strip([crate()]),
   [`${SPRITES_DIR}/marca.png`]: strip([mark()]),
+  [`${SPRITES_DIR}/fogon.png`]: strip([STOVE]),
+  [`${SPRITES_DIR}/objetos/sopa-de-setas.png`]: strip([SOUP_ICON]),
+  [`${SPRITES_DIR}/objetos/tarta-de-moras.png`]: strip([PIE_ICON]),
+  [`${SPRITES_DIR}/objetos/carpa-asada.png`]: strip([GRILLED_CARP_ICON]),
+  [`${SPRITES_DIR}/objetos/guiso-de-calabaza.png`]: strip([STEW_ICON]),
   [`${SPRITES_DIR}/iconos/sol.png`]: strip([sun()]),
   [`${SPRITES_DIR}/iconos/luna.png`]: strip([moon()]),
   [`${SPRITES_DIR}/iconos/moneda.png`]: strip([coin()]),
