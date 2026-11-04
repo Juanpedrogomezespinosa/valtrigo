@@ -524,3 +524,10 @@ Petición del autor: pescar era solo esperar. Decisiones tomadas en su ausencia,
 
 - El alumnado solo tiene las historias y el juego (ni el código ni los tests), así que las historias deben describir el juego tal como es. Se repasaron las 87 contra los datos de src/data/ y se actualizaron las que se habían quedado atrás al ampliar el juego: HU-08 (10 zonas), HU-10 (qué NPC hay y que miran hacia abajo, que es lo que justifica B-29), HU-17 (la vendedora), HU-31 (9 pistas), HU-40 (remite a HU-71), HU-52 y HU-54 (pedidos de los días 5 y 6 de HU-86), HU-56 (el orden se comprueba con la tercera pieza), HU-63 (tareas de los días 4 y 5) y HU-69 (el barrio). historias.csv lleva los mismos cambios.
 - Si una fase nueva cambia algo que ya describe una historia anterior, hay que actualizar también esa historia, no solo la nueva.
+
+### Importación en Jira (CSV por sprint)
+
+- `python3 tools/generar-jira.py` genera docs/jira/historias-sprint-1.csv, -2 y -3 a partir de docs/requisitos/: wiki markup de Jira (h2., h3., listas con * y **, Dado/Cuando/Entonces/Y en negrita, `[ ] { } !` escapados), sin repetir el título en la descripción y con la columna Tipo de actividad (Historia) y la columna Etiquetas (sprint-N, que se asigna a Labels). La columna ID no se importa: Jira la propone como Issue Key y chocaría con la clave del espacio. Hay que volver a ejecutarlo si cambia una historia.
+- Reparto (decisión del autor): 29 historias por sprint y los bugs sembrados 10, 11 y 11, con 5 fáciles en cada uno. Sprint 1: menús, movimiento, zonas, NPC, encargos, hora, pausa, introducción, nombre y aspecto. Sprint 2: inventario, tienda, dormir, granja, energía, pesca, bosque, tablón, cocina e interfaz. Sprint 3: sonido y opciones, créditos, legibilidad, misterio, feria, barrio, vecinos, misiones, fuente, puzles, pantalla completa y mejoras. La lista exacta está en `SPRINTS` del script.
+- Las filas van en orden inverso (la última historia primero), porque Jira mostraba al revés el orden del archivo en To Do.
+- Los sprints se asignan después de importar: en el backlog, buscar `labels = sprint-N`, seleccionar todo y Bulk change → Edit → Sprint.

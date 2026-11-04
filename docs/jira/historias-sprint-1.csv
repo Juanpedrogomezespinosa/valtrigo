@@ -1,0 +1,935 @@
+﻿"ID","Tipo de actividad","Resumen","Descripción","Criterios de aceptación","Etiquetas"
+"HU-68","Historia","HU-68. Aspecto del personaje","Como jugador, quiero elegir el aspecto de mi personaje para sentir que es mío.
+
+h2. Criterios de aceptación
+* Al empezar una partida nueva, después de elegir el nombre (HU-67), aparece la pantalla “¿Cómo eres?” con tres opciones: “Género” (Hombre o Mujer), “Piel” (Clara, Media u Oscura) y “Pelo” (Castaño, Negro, Pelirrojo o Rubio).
+* Al abrir la pantalla están elegidos Hombre, piel Media y pelo Pelirrojo.
+* Las flechas arriba y abajo eligen la opción, y las flechas izquierda y derecha cambian su valor. Se detienen en el primer valor y en el último.
+* Una vista previa grande muestra al personaje con el aspecto elegido. Cambia al momento con cada valor y gira sobre sí mismo (abajo, izquierda, arriba y derecha), mirando un segundo hacia cada lado.
+* Enter confirma el aspecto y empieza la partida. El aspecto se guarda con la partida.
+* El personaje tiene el aspecto elegido en todas las zonas y en el podio de la ceremonia (HU-66).
+* Los textos que se dirigen al jugador concuerdan con su género. Por ejemplo, la vendedora dice “¡Bienvenida a la tienda\!” y, sin energía, aparece “Estás demasiado cansada” (HU-47).
+* Las partidas guardadas antes de esta historia y las partidas de práctica (HU-61) tienen el aspecto inicial: Hombre, piel Media y pelo Pelirrojo.
+
+h2. Escenarios
+
+h3. Escenario 1: Elegir el aspecto
+* *Dado* que el jugador acaba de elegir su nombre
+* *Cuando* elige Mujer, piel Clara y pelo Rubio y pulsa Enter
+* *Entonces* empieza la partida
+* *Y* el personaje es una mujer de piel clara y pelo rubio
+
+h3. Escenario 2: Aspecto inicial
+* *Dado* que el jugador acaba de elegir su nombre
+* *Cuando* aparece la pantalla “¿Cómo eres?”
+* *Entonces* están elegidos Hombre, piel Media y pelo Pelirrojo
+
+h3. Escenario 3: Vista previa
+* *Dado* que la pantalla “¿Cómo eres?” está abierta
+* *Cuando* el jugador cambia el pelo a Negro
+* *Entonces* la vista previa muestra al personaje con el pelo negro
+
+h3. Escenario 4: Aspecto guardado
+* *Dado* que hay una partida guardada con una mujer de piel Oscura y pelo Castaño
+* *Cuando* el jugador continúa la partida
+* *Entonces* el personaje es una mujer de piel oscura y pelo castaño
+
+h3. Escenario 5: Textos según el género
+* *Dado* que el personaje es una mujer y tiene 2 de energía
+* *Cuando* intenta cavar una parcela
+* *Entonces* aparece “Estás demasiado cansada”","* Al empezar una partida nueva, después de elegir el nombre (HU-67), aparece la pantalla “¿Cómo eres?” con tres opciones: “Género” (Hombre o Mujer), “Piel” (Clara, Media u Oscura) y “Pelo” (Castaño, Negro, Pelirrojo o Rubio).
+* Al abrir la pantalla están elegidos Hombre, piel Media y pelo Pelirrojo.
+* Las flechas arriba y abajo eligen la opción, y las flechas izquierda y derecha cambian su valor. Se detienen en el primer valor y en el último.
+* Una vista previa grande muestra al personaje con el aspecto elegido. Cambia al momento con cada valor y gira sobre sí mismo (abajo, izquierda, arriba y derecha), mirando un segundo hacia cada lado.
+* Enter confirma el aspecto y empieza la partida. El aspecto se guarda con la partida.
+* El personaje tiene el aspecto elegido en todas las zonas y en el podio de la ceremonia (HU-66).
+* Los textos que se dirigen al jugador concuerdan con su género. Por ejemplo, la vendedora dice “¡Bienvenida a la tienda\!” y, sin energía, aparece “Estás demasiado cansada” (HU-47).
+* Las partidas guardadas antes de esta historia y las partidas de práctica (HU-61) tienen el aspecto inicial: Hombre, piel Media y pelo Pelirrojo.","sprint-1"
+"HU-67","Historia","HU-67. Nombre del jugador","Como jugador, quiero elegir el nombre de mi personaje para que el pueblo me llame por mi nombre.
+
+h2. Criterios de aceptación
+* Al empezar una partida nueva, después de la introducción (HU-62), aparece la pantalla “¿Cómo te llamas?”, con un cuadro en el que se escribe el nombre con el teclado.
+* El nombre admite letras (también con tilde, ñ y ü) y espacios, hasta 12 caracteres. Retroceso borra el último carácter y Enter lo confirma.
+* Con el nombre vacío, Enter no hace nada.
+* Al confirmar el nombre se pasa a elegir el aspecto del personaje (HU-68). El nombre se guarda con la partida.
+* El nombre aparece en el podio de la ceremonia (HU-66) y en el discurso del alcalde.
+
+h2. Escenarios
+
+h3. Escenario 1: Elegir el nombre
+* *Dado* que el jugador acaba de pasar la introducción
+* *Cuando* escribe “Juan” y pulsa Enter
+* *Entonces* aparece la pantalla del aspecto (HU-68)
+* *Y* el nombre del jugador es “Juan”
+
+h3. Escenario 2: Nombre demasiado largo
+* *Dado* que la pantalla del nombre está abierta
+* *Cuando* el jugador escribe “Maximilianoooo”
+* *Entonces* el nombre queda en “Maximilianoo”, con 12 caracteres
+
+h3. Escenario 3: Nombre vacío
+* *Dado* que la pantalla del nombre está abierta y el nombre está vacío
+* *Cuando* el jugador pulsa Enter
+* *Entonces* sigue en la pantalla del nombre
+
+h3. Escenario 4: Nombre en el podio
+* *Dado* que el jugador se llama “Juan” y presentó una Calabaza de 12 kg al concurso de la cosecha
+* *Cuando* el alcalde anuncia el concurso de la cosecha
+* *Entonces* dice “Concurso de la cosecha. Primer puesto: Juan, con una Calabaza de 12 kg.”","* Al empezar una partida nueva, después de la introducción (HU-62), aparece la pantalla “¿Cómo te llamas?”, con un cuadro en el que se escribe el nombre con el teclado.
+* El nombre admite letras (también con tilde, ñ y ü) y espacios, hasta 12 caracteres. Retroceso borra el último carácter y Enter lo confirma.
+* Con el nombre vacío, Enter no hace nada.
+* Al confirmar el nombre se pasa a elegir el aspecto del personaje (HU-68). El nombre se guarda con la partida.
+* El nombre aparece en el podio de la ceremonia (HU-66) y en el discurso del alcalde.","sprint-1"
+"HU-65","Historia","HU-65. Aviso al recibir un objeto","Como jugador, quiero un aviso cuando alguien me da un objeto para saber qué he recibido y de quién.
+
+h2. Criterios de aceptación
+* Cuando un NPC da un objeto al jugador (la Carta del alcalde o la recompensa de un encargo), al terminar de hablar aparece durante 2 segundos el mensaje “Recibiste \[objeto\] de parte de \[NPC\]”, por ejemplo “Recibiste Manzana de parte del alcalde”.
+* Si son varias unidades, el mensaje dice cuántas: “Recibiste 2 Manzanas de parte de la relojera”.
+* Los objetos de cofres, los del suelo y los comprados no muestran este mensaje.
+* Si a la vez aparece otro mensaje, como “Encargo completado”, se ven los dos, uno debajo del otro.
+
+h2. Escenarios
+
+h3. Escenario 1: La carta
+* *Dado* que el jugador tiene activo el encargo “Entregar la Carta del alcalde”
+* *Cuando* habla con la vendedora y ella le da la carta
+* *Entonces* aparece el mensaje “Recibiste Carta del alcalde de parte de la vendedora”
+
+h3. Escenario 2: Recompensa de un encargo
+* *Dado* que el jugador tiene la Carta del alcalde y el encargo “Entregar la Carta del alcalde” activo
+* *Cuando* habla con el alcalde y completa el encargo
+* *Entonces* aparecen los mensajes “Encargo completado” y “Recibiste Manzana de parte del alcalde”
+
+h3. Escenario 3: Varias unidades
+* *Dado* que el jugador completa el encargo “Las piezas del reloj”
+* *Cuando* la relojera le da la recompensa
+* *Entonces* aparece el mensaje “Recibiste 2 Manzanas de parte de la relojera”
+
+h3. Escenario 4: Objetos comprados
+* *Dado* que el jugador está en la tienda
+* *Cuando* compra una Pala
+* *Entonces* no aparece ningún mensaje “Recibiste”","* Cuando un NPC da un objeto al jugador (la Carta del alcalde o la recompensa de un encargo), al terminar de hablar aparece durante 2 segundos el mensaje “Recibiste \[objeto\] de parte de \[NPC\]”, por ejemplo “Recibiste Manzana de parte del alcalde”.
+* Si son varias unidades, el mensaje dice cuántas: “Recibiste 2 Manzanas de parte de la relojera”.
+* Los objetos de cofres, los del suelo y los comprados no muestran este mensaje.
+* Si a la vez aparece otro mensaje, como “Encargo completado”, se ven los dos, uno debajo del otro.","sprint-1"
+"HU-63","Historia","HU-63. Tareas del día","Como jugador, quiero una lista de tareas para cada día para saber qué hacer a continuación y no quedarme atascado.
+
+h2. Criterios de aceptación
+* La lista de objetivos (O) tiene el apartado “Tareas de hoy (día N)” con las tareas del día. Cada tarea aparece marcada (☑) cuando está hecha y sin marcar (☐) cuando no.
+* Las tareas de cada día siguen la historia del juego. Día 1: hablar con el alcalde, aceptar su encargo, recoger la carta en la tienda, entregársela y comprar Semillas y una Regadera. Día 2: ir a la granja, hablar con el granjero, llevarle las Semillas, recoger la Pala, buscar el cofre del granero y cavar, sembrar y regar una parcela del huerto. Día 3: ir al lago, encontrar el cofre del lago, regar los cultivos, pescar un pez, ir al bosque y recoger setas o moras. Día 4: aceptar y completar “Día de mercado”, recoger la primera cosecha, visitar el barrio y comprar una mejora en la tienda. Día 5: entrar en la torre, hablar con la relojera, encontrar el cofre de la torre y una página del diario, y cocinar un plato. Día 6: colocar las piezas en el mecanismo del reloj y llevar las Manzanas al granjero. Día 7: participar en los concursos de la cosecha y de pesca antes de las 17:00, ir a la ceremonia de las 18:00 y escuchar el discurso del alcalde.
+* Las tareas que consisten en hacer algo ese día (hablar con alguien, ir a una zona, comprar o leer un cartel) solo aparecen en su día y se marcan al hacerlas ese día.
+* Las tareas de encargos, objetos y cofres que siguen pendientes de días anteriores también aparecen, hasta que se hacen.
+* Si no hay ninguna tarea para hoy, aparece “No hay tareas para hoy”.
+
+h2. Escenarios
+
+h3. Escenario 1: Ver las tareas del día
+* *Dado* que es el día 1 y el jugador acaba de empezar
+* *Cuando* pulsa O
+* *Entonces* aparece “Tareas de hoy (día 1)”
+* *Y* aparece “☐ Habla con el alcalde en la plaza”
+
+h3. Escenario 2: Tarea hecha
+* *Dado* que es el día 1
+* *Cuando* el jugador habla con el alcalde y pulsa O
+* *Entonces* aparece “☑ Habla con el alcalde en la plaza”
+
+h3. Escenario 3: Tarea pendiente de un día anterior
+* *Dado* que es el día 3 y el encargo “Semillas para la cosecha” no está completado
+* *Cuando* el jugador pulsa O
+* *Entonces* aparece “☐ Lleva 3 Semillas al granjero”
+
+h3. Escenario 4: Tareas que solo son de su día
+* *Dado* que es el día 2 y el día 1 el jugador no compró Semillas
+* *Cuando* pulsa O
+* *Entonces* no aparece la tarea “Compra Semillas en la tienda”
+
+h3. Escenario 5: Sin tareas
+* *Dado* que es el día 8 y todas las tareas de días anteriores están hechas
+* *Cuando* el jugador pulsa O
+* *Entonces* aparece “No hay tareas para hoy”","* La lista de objetivos (O) tiene el apartado “Tareas de hoy (día N)” con las tareas del día. Cada tarea aparece marcada (☑) cuando está hecha y sin marcar (☐) cuando no.
+* Las tareas de cada día siguen la historia del juego. Día 1: hablar con el alcalde, aceptar su encargo, recoger la carta en la tienda, entregársela y comprar Semillas y una Regadera. Día 2: ir a la granja, hablar con el granjero, llevarle las Semillas, recoger la Pala, buscar el cofre del granero y cavar, sembrar y regar una parcela del huerto. Día 3: ir al lago, encontrar el cofre del lago, regar los cultivos, pescar un pez, ir al bosque y recoger setas o moras. Día 4: aceptar y completar “Día de mercado”, recoger la primera cosecha, visitar el barrio y comprar una mejora en la tienda. Día 5: entrar en la torre, hablar con la relojera, encontrar el cofre de la torre y una página del diario, y cocinar un plato. Día 6: colocar las piezas en el mecanismo del reloj y llevar las Manzanas al granjero. Día 7: participar en los concursos de la cosecha y de pesca antes de las 17:00, ir a la ceremonia de las 18:00 y escuchar el discurso del alcalde.
+* Las tareas que consisten en hacer algo ese día (hablar con alguien, ir a una zona, comprar o leer un cartel) solo aparecen en su día y se marcan al hacerlas ese día.
+* Las tareas de encargos, objetos y cofres que siguen pendientes de días anteriores también aparecen, hasta que se hacen.
+* Si no hay ninguna tarea para hoy, aparece “No hay tareas para hoy”.","sprint-1"
+"HU-62","Historia","HU-62. Introducción al empezar","Como jugador, quiero una pequeña introducción al empezar una partida nueva para saber quién soy y qué hago en Valtrigo.
+
+h2. Criterios de aceptación
+* Al empezar una partida nueva, antes de cargar la zona inicial, aparece la introducción: varias pantallas de texto que cuentan quién es el jugador, por qué llega a Valtrigo y que la torre del reloj se ha parado.
+* Cada pantalla se pasa con E. Al pasar la última, se eligen el nombre del jugador (HU-67) y su aspecto (HU-68) y empieza la partida.
+* Escape salta la introducción y pasa directamente a elegir el nombre (HU-67).
+* Mientras se muestra la introducción, el reloj del juego no avanza.
+* “Continuar” carga la partida guardada sin mostrar la introducción.
+
+h2. Escenarios
+
+h3. Escenario 1: Ver la introducción
+* *Dado* que el jugador está en el menú principal
+* *Cuando* pulsa “Nueva partida”
+* *Entonces* aparece la primera pantalla de la introducción
+
+h3. Escenario 2: Pasar las pantallas
+* *Dado* que la introducción está visible
+* *Cuando* el jugador pulsa E en cada pantalla y, después, escribe su nombre y confirma su aspecto
+* *Entonces* se carga la zona inicial
+* *Y* el reloj marca día 1 a las 08:00
+
+h3. Escenario 3: Saltar la introducción
+* *Dado* que la introducción está visible
+* *Cuando* el jugador pulsa Escape
+* *Entonces* aparece la pantalla del nombre (HU-67)
+* *Y*, al escribir su nombre y confirmar su aspecto, se carga la zona inicial en el día 1 a las 08:00
+
+h3. Escenario 4: Continuar sin introducción
+* *Dado* que existe una partida guardada
+* *Cuando* el jugador pulsa “Continuar”
+* *Entonces* se carga la partida guardada sin mostrar la introducción","* Al empezar una partida nueva, antes de cargar la zona inicial, aparece la introducción: varias pantallas de texto que cuentan quién es el jugador, por qué llega a Valtrigo y que la torre del reloj se ha parado.
+* Cada pantalla se pasa con E. Al pasar la última, se eligen el nombre del jugador (HU-67) y su aspecto (HU-68) y empieza la partida.
+* Escape salta la introducción y pasa directamente a elegir el nombre (HU-67).
+* Mientras se muestra la introducción, el reloj del juego no avanza.
+* “Continuar” carga la partida guardada sin mostrar la introducción.","sprint-1"
+"HU-61","Historia","HU-61. Partidas de práctica","Como jugador, quiero empezar partidas preparadas en momentos concretos de la historia para probar el juego sin tener que jugar desde el principio.
+
+h2. Criterios de aceptación
+* La opción “Partidas de práctica” del menú principal abre la lista de partidas preparadas. Escape o “Volver” regresan al menú con “Partidas de práctica” seleccionada.
+* Partidas: “Día 2: la granja” (en la granja, con Pala, Regadera y 5 Semillas), “Día 3: el lago” (en el lago, con Caña de pescar), “Día 4: día de mercado” (en la granja, con Pala, Regadera y 4 Nabos listos en el huerto), “Día 5: la torre” (en la plaza, con las piezas de la granja y del lago), “Día 5: cocina y mejoras” (en la casa del jugador, con los ingredientes de las cuatro recetas de HU-84 y 400 monedas para las mejoras de HU-85), “Día 6: la reparación” (en la torre, con las tres piezas y el encargo 4 activo), “Día 7: la feria” (en la plaza, con una Calabaza y una Caña de pescar para los concursos) e “Inventario lleno” (día 1 en la plaza, con las 20 casillas ocupadas).
+* Cada partida empieza a la hora a la que empieza su día en el juego (06:00; el día 1, a las 08:00, HU-62; el día 7, a las 12:00, HU-58), con los encargos anteriores completados y 150 monedas (400 en “Día 5: cocina y mejoras”). El jugador se llama “Forastero” y tiene el aspecto inicial (HU-68).
+* Empezar una partida de práctica no modifica la partida guardada. Se guarda igual que cualquier partida (al dormir o desde la pausa).
+
+h2. Escenarios
+
+h3. Escenario 1: Abrir la lista
+* *Dado* que el menú principal está abierto
+* *Cuando* el jugador activa “Partidas de práctica”
+* *Entonces* aparece la lista de partidas preparadas
+
+h3. Escenario 2: Empezar una partida preparada
+* *Dado* que la lista de partidas de práctica está abierta
+* *Cuando* el jugador elige “Día 5: la torre”
+* *Entonces* la partida empieza el día 5 a las 06:00 en la plaza
+* *Y* el inventario tiene el Engranaje de cobre y el Muelle de plata
+
+h3. Escenario 3: La partida guardada no cambia
+* *Dado* que existe una partida guardada
+* *Cuando* el jugador empieza una partida de práctica
+* *Entonces* la partida guardada no cambia
+
+h3. Escenario 4: Volver
+* *Dado* que la lista de partidas de práctica está abierta
+* *Cuando* el jugador pulsa Escape
+* *Entonces* regresa al menú principal con “Partidas de práctica” seleccionada
+
+h3. Escenario 5: Cocina y mejoras
+* *Dado* que la lista de partidas de práctica está abierta
+* *Cuando* el jugador elige “Día 5: cocina y mejoras”
+* *Entonces* la partida empieza el día 5 a las 06:00 en la casa del jugador, con 400 monedas
+* *Y* el inventario tiene los ingredientes de las cuatro recetas: 3 Setas, 2 Nabos, 3 Moras, 1 Manzana, 1 Carpa, 1 Zanahoria y 1 Calabaza","* La opción “Partidas de práctica” del menú principal abre la lista de partidas preparadas. Escape o “Volver” regresan al menú con “Partidas de práctica” seleccionada.
+* Partidas: “Día 2: la granja” (en la granja, con Pala, Regadera y 5 Semillas), “Día 3: el lago” (en el lago, con Caña de pescar), “Día 4: día de mercado” (en la granja, con Pala, Regadera y 4 Nabos listos en el huerto), “Día 5: la torre” (en la plaza, con las piezas de la granja y del lago), “Día 5: cocina y mejoras” (en la casa del jugador, con los ingredientes de las cuatro recetas de HU-84 y 400 monedas para las mejoras de HU-85), “Día 6: la reparación” (en la torre, con las tres piezas y el encargo 4 activo), “Día 7: la feria” (en la plaza, con una Calabaza y una Caña de pescar para los concursos) e “Inventario lleno” (día 1 en la plaza, con las 20 casillas ocupadas).
+* Cada partida empieza a la hora a la que empieza su día en el juego (06:00; el día 1, a las 08:00, HU-62; el día 7, a las 12:00, HU-58), con los encargos anteriores completados y 150 monedas (400 en “Día 5: cocina y mejoras”). El jugador se llama “Forastero” y tiene el aspecto inicial (HU-68).
+* Empezar una partida de práctica no modifica la partida guardada. Se guarda igual que cualquier partida (al dormir o desde la pausa).","sprint-1"
+"HU-57","Historia","HU-57. Torre cerrada hasta el día 5","Como jugador, quiero que la torre se abra a mitad de semana para que la historia se descubra poco a poco.
+
+h2. Criterios de aceptación
+* Antes del día 5, al caminar hacia la puerta de la torre aparece un cuadro de diálogo con el texto “La torre está cerrada” y no se cambia de zona. El cuadro se cierra con E.
+* Desde el día 5, la puerta funciona como las demás (HU-08), a cualquier hora.
+
+h2. Escenarios
+
+h3. Escenario 1: Antes del día 5
+* *Dado* que es el día 4
+* *Cuando* el jugador camina hacia la puerta de la torre
+* *Entonces* aparece el cuadro de diálogo “La torre está cerrada”
+* *Y* el jugador sigue en la plaza
+
+h3. Escenario 2: Cerrar el aviso
+* *Dado* que el cuadro de diálogo “La torre está cerrada” está visible
+* *Cuando* el jugador pulsa E
+* *Entonces* el cuadro se cierra y el jugador puede moverse
+
+h3. Escenario 3: Desde el día 5
+* *Dado* que es el día 5
+* *Cuando* el jugador camina hacia la puerta de la torre
+* *Entonces* entra en la torre","* Antes del día 5, al caminar hacia la puerta de la torre aparece un cuadro de diálogo con el texto “La torre está cerrada” y no se cambia de zona. El cuadro se cierra con E.
+* Desde el día 5, la puerta funciona como las demás (HU-08), a cualquier hora.","sprint-1"
+"HU-51","Historia","HU-51. Nueva zona: el Bosque","Como jugador, quiero explorar un bosque junto al lago para tener más sitios que descubrir.
+
+h2. Criterios de aceptación
+* El bosque es una zona nueva conectada con el lago por un camino en el borde oeste del lago.
+* El bosque tiene su propia música, que entra al llegar como en las demás zonas (HU-31).
+* El cambio de zona funciona como el resto de puertas (HU-08).
+
+h2. Escenarios
+
+h3. Escenario 1: Entrar al bosque
+* *Dado* que el jugador está en el lago
+* *Cuando* camina por el camino del oeste
+* *Entonces* aparece en el bosque, junto a la salida hacia el lago
+* *Y* suena la música del bosque
+
+h3. Escenario 2: Volver al lago
+* *Dado* que el jugador está en el bosque
+* *Cuando* camina por la salida hacia el lago
+* *Entonces* aparece en el lago, junto al camino del bosque","* El bosque es una zona nueva conectada con el lago por un camino en el borde oeste del lago.
+* El bosque tiene su propia música, que entra al llegar como en las demás zonas (HU-31).
+* El cambio de zona funciona como el resto de puertas (HU-08).","sprint-1"
+"HU-40","Historia","HU-40. Horario de los NPC","Como jugador, quiero que los NPC sigan un horario para que el pueblo parezca vivo.
+
+h2. Criterios de aceptación
+* Horarios: el alcalde está en la plaza de 08:00 a 20:00. El granjero está en la granja de 06:00 a 17:00 y en el lago de 17:00 a 21:00. La relojera está en la torre de 09:00 a 22:00. La vendedora está en la tienda, que solo se puede visitar en su horario (HU-17).
+* Fuera de su horario, el NPC no está en ninguna zona. Los horarios de los vecinos están en HU-71.
+* El NPC aparece o desaparece al llegar la hora, aunque el jugador esté en la zona. Si el jugador está hablando con él, se queda hasta que se cierra el diálogo.
+* Un NPC que no está no bloquea el paso. Si al llegar su hora el jugador está en su sitio, el NPC aparece cuando el jugador se aparta, y el jugador puede moverse en todo momento.
+
+h2. Escenarios
+
+h3. Escenario 1: Dentro del horario
+* *Dado* que son las 10:00
+* *Cuando* el jugador entra en la plaza
+* *Entonces* el alcalde está en la plaza
+
+h3. Escenario 2: Fuera del horario
+* *Dado* que son las 21:00
+* *Cuando* el jugador entra en la plaza
+* *Entonces* el alcalde no está en la plaza
+
+h3. Escenario 3: Cambio de zona del granjero
+* *Dado* que son las 17:30
+* *Cuando* el jugador entra en el lago
+* *Entonces* el granjero está en el lago
+* *Y* no está en la granja
+
+h3. Escenario 4: Llega la hora con el jugador en la zona
+* *Dado* que son las 19:59 y el jugador está en la plaza sin hablar con el alcalde
+* *Cuando* el reloj llega a las 20:00
+* *Entonces* el alcalde desaparece de la plaza
+
+h3. Escenario 5: Llega la hora durante un diálogo
+* *Dado* que son las 19:59 y el jugador está hablando con el alcalde
+* *Cuando* el reloj llega a las 20:00
+* *Entonces* el diálogo continúa
+* *Y* el alcalde desaparece al cerrarse el diálogo
+
+h3. Escenario 6: Un NPC ausente no bloquea el paso
+* *Dado* que son las 21:00 y el alcalde no está en la plaza
+* *Cuando* el jugador camina por el sitio del alcalde
+* *Entonces* lo atraviesa sin quedarse bloqueado
+
+h3. Escenario 7: Llega la hora con el jugador en el sitio del NPC
+* *Dado* que son las 07:59 y el jugador está en el sitio del alcalde
+* *Cuando* el reloj llega a las 08:00
+* *Entonces* el alcalde no aparece hasta que el jugador se aparta
+* *Y* el jugador puede moverse y, después de hablar con el alcalde, sigue pudiendo moverse","* Horarios: el alcalde está en la plaza de 08:00 a 20:00. El granjero está en la granja de 06:00 a 17:00 y en el lago de 17:00 a 21:00. La relojera está en la torre de 09:00 a 22:00. La vendedora está en la tienda, que solo se puede visitar en su horario (HU-17).
+* Fuera de su horario, el NPC no está en ninguna zona. Los horarios de los vecinos están en HU-71.
+* El NPC aparece o desaparece al llegar la hora, aunque el jugador esté en la zona. Si el jugador está hablando con él, se queda hasta que se cierra el diálogo.
+* Un NPC que no está no bloquea el paso. Si al llegar su hora el jugador está en su sitio, el NPC aparece cuando el jugador se aparta, y el jugador puede moverse en todo momento.","sprint-1"
+"HU-38","Historia","HU-38. Encargos principales por día","Como jugador, quiero que los encargos principales lleguen a lo largo de la semana para que la historia avance día a día.
+
+h2. Criterios de aceptación
+* Cada encargo principal se ofrece a partir de su día: “Entregar la Carta del alcalde” el día 1, “Semillas para la cosecha” el día 2, “Día de mercado” el día 4, “Las piezas del reloj” y “Manzanas para la feria” el día 6 y “La feria de Valtrigo” el día 7.
+* Un encargo se ofrece si ha llegado su día y están completados todos los anteriores. Si su día ya ha pasado, se sigue ofreciendo.
+* Si su día aún no ha llegado, el NPC dice su diálogo normal, sin ofrecer el encargo.
+
+h2. Escenarios
+
+h3. Escenario 1: Antes de su día
+* *Dado* que es el día 1 y el encargo “Entregar la Carta del alcalde” está completado
+* *Cuando* el jugador habla con el granjero
+* *Entonces* el granjero no ofrece el encargo “Semillas para la cosecha”
+
+h3. Escenario 2: El día del encargo
+* *Dado* que es el día 2 y el encargo “Entregar la Carta del alcalde” está completado
+* *Cuando* el jugador habla con el granjero
+* *Entonces* el granjero ofrece el encargo “Semillas para la cosecha”
+
+h3. Escenario 3: Después de su día
+* *Dado* que es el día 3, el encargo “Entregar la Carta del alcalde” está completado y el jugador no ha aceptado el encargo “Semillas para la cosecha”
+* *Cuando* el jugador habla con el granjero
+* *Entonces* el granjero ofrece el encargo “Semillas para la cosecha”
+
+h3. Escenario 4: Encargo anterior sin completar
+* *Dado* que es el día 4 y el encargo “Semillas para la cosecha” no está completado
+* *Cuando* el jugador habla con la vendedora
+* *Entonces* la vendedora no ofrece el encargo “Día de mercado”","* Cada encargo principal se ofrece a partir de su día: “Entregar la Carta del alcalde” el día 1, “Semillas para la cosecha” el día 2, “Día de mercado” el día 4, “Las piezas del reloj” y “Manzanas para la feria” el día 6 y “La feria de Valtrigo” el día 7.
+* Un encargo se ofrece si ha llegado su día y están completados todos los anteriores. Si su día ya ha pasado, se sigue ofreciendo.
+* Si su día aún no ha llegado, el NPC dice su diálogo normal, sin ofrecer el encargo.","sprint-1"
+"HU-37","Historia","HU-37. Final del juego","Como jugador, quiero ver un final al completar la historia para saber que he terminado el juego.
+
+h2. Criterios de aceptación
+* Al completar el último encargo (“La feria de Valtrigo”), cuando se cierra el diálogo del alcalde (el discurso de la ceremonia, HU-66, o su diálogo si se completa después de la feria) aparece el mensaje de final.
+* El mensaje de final se cierra con E y el jugador puede seguir jugando en el pueblo.
+* El mensaje de final solo aparece una vez.
+
+h2. Escenarios
+
+h3. Escenario 1: Ver el final
+* *Dado* que el jugador tiene activo el encargo “La feria de Valtrigo”
+* *Cuando* habla con el alcalde y se cierra su diálogo
+* *Entonces* aparece el mensaje de final
+
+h3. Escenario 2: Seguir jugando
+* *Dado* que el mensaje de final está visible
+* *Cuando* el jugador lo cierra con E
+* *Entonces* puede moverse por el pueblo con normalidad
+
+h3. Escenario 3: Solo una vez
+* *Dado* que el jugador ya ha completado el último encargo
+* *Cuando* vuelve a hablar con el alcalde
+* *Entonces* no aparece el mensaje de final","* Al completar el último encargo (“La feria de Valtrigo”), cuando se cierra el diálogo del alcalde (el discurso de la ceremonia, HU-66, o su diálogo si se completa después de la feria) aparece el mensaje de final.
+* El mensaje de final se cierra con E y el jugador puede seguir jugando en el pueblo.
+* El mensaje de final solo aparece una vez.","sprint-1"
+"HU-27","Historia","HU-27. Reanudar desde la pausa","Como jugador, quiero reanudar la partida desde el menú de pausa para seguir donde lo dejé.
+
+h2. Criterios de aceptación
+* Al pulsar “Continuar” o volver a pulsar Escape, el juego se reanuda.
+* Al reanudar, el personaje y el reloj siguen en el mismo punto en que se pausó.
+
+h2. Escenarios
+
+h3. Escenario 1: Reanudar con el botón
+* *Dado* que el menú de pausa está abierto
+* *Cuando* el jugador pulsa “Continuar”
+* *Entonces* el menú de pausa se cierra y el juego continúa
+
+h3. Escenario 2: Reanudar con Escape
+* *Dado* que el menú de pausa está abierto
+* *Cuando* el jugador vuelve a pulsar Escape
+* *Entonces* el menú de pausa se cierra y el juego continúa
+
+h3. Escenario 3: Misma posición y hora
+* *Dado* que el personaje está junto a un NPC a las 10:00 y el jugador abre la pausa
+* *Cuando* el jugador reanuda la partida
+* *Entonces* el personaje sigue junto al NPC
+* *Y* el reloj marca las 10:00 y continúa avanzando","* Al pulsar “Continuar” o volver a pulsar Escape, el juego se reanuda.
+* Al reanudar, el personaje y el reloj siguen en el mismo punto en que se pausó.","sprint-1"
+"HU-26","Historia","HU-26. Abrir el menú de pausa","Como jugador, quiero pausar el juego para descansar o cambiar ajustes sin perder el progreso.
+
+h2. Criterios de aceptación
+* Al pulsar Escape durante la partida se abre el menú de pausa y el juego se detiene.
+* El menú de pausa muestra las opciones “Continuar”, “Opciones”, “Guardar partida” y “Salir al menú principal”.
+* Con el menú de pausa abierto, el personaje no se mueve y no se abren diálogos.
+
+h2. Escenarios
+
+h3. Escenario 1: Abrir la pausa
+* *Dado* que hay una partida en curso
+* *Cuando* el jugador pulsa Escape
+* *Entonces* se abre el menú de pausa con sus cuatro opciones
+* *Y* el juego se detiene
+
+h3. Escenario 2: Guardar desde la pausa
+* *Dado* que el menú de pausa está abierto
+* *Cuando* el jugador pulsa “Guardar partida”
+* *Entonces* aparece el mensaje “Partida guardada” durante 2 segundos
+
+h3. Escenario 3: Salir al menú principal sin guardar
+* *Dado* que el menú de pausa está abierto y la partida tiene cambios sin guardar
+* *Cuando* el jugador pulsa “Salir al menú principal”
+* *Entonces* aparece el mensaje “¿Salir sin guardar? Se perderá el progreso no guardado” con “Sí” y “No”
+* *Y* si pulsa “Sí”, vuelve al menú principal","* Al pulsar Escape durante la partida se abre el menú de pausa y el juego se detiene.
+* El menú de pausa muestra las opciones “Continuar”, “Opciones”, “Guardar partida” y “Salir al menú principal”.
+* Con el menú de pausa abierto, el personaje no se mueve y no se abren diálogos.","sprint-1"
+"HU-23","Historia","HU-23. Ciclo día y noche","Como jugador, quiero que el juego tenga día y noche para sentir el paso del tiempo.
+
+h2. Criterios de aceptación
+* Entre las 20:00 y las 21:00 la pantalla se oscurece de forma gradual.
+* A partir de las 06:00 la luz vuelve a la normalidad de forma gradual durante una hora.
+* La oscuridad no impide leer la interfaz: día, hora, dinero y energía siguen visibles.
+
+h2. Escenarios
+
+h3. Escenario 1: Atardecer
+* *Dado* que son las 20:00
+* *Cuando* pasan 30 minutos de juego
+* *Entonces* la pantalla está a mitad del oscurecimiento
+
+h3. Escenario 2: Antes del atardecer
+* *Dado* que son las 19:59
+* *Cuando* el jugador mira la pantalla
+* *Entonces* la luz es normal
+
+h3. Escenario 3: Interfaz en la oscuridad
+* *Dado* que la pantalla está completamente oscura
+* *Cuando* el jugador mira la interfaz
+* *Entonces* el día, la hora, el dinero y la energía siguen legibles
+
+h3. Escenario 4: Amanecer
+* *Dado* que son las 06:00 y la pantalla está oscura
+* *Cuando* pasa 1 hora de juego
+* *Entonces* la luz es normal","* Entre las 20:00 y las 21:00 la pantalla se oscurece de forma gradual.
+* A partir de las 06:00 la luz vuelve a la normalidad de forma gradual durante una hora.
+* La oscuridad no impide leer la interfaz: día, hora, dinero y energía siguen visibles.","sprint-1"
+"HU-22","Historia","HU-22. Ver el día y la hora","Como jugador, quiero ver el día y la hora actual para planificar mis actividades.
+
+h2. Criterios de aceptación
+* La interfaz muestra “Día N” y la hora en formato HH:MM en la esquina superior izquierda.
+* La hora avanza 1 minuto de juego por cada segundo real.
+* Con el menú de pausa abierto, la hora no avanza.
+
+h2. Escenarios
+
+h3. Escenario 1: Hora inicial
+* *Dado* que el jugador empieza una partida nueva
+* *Cuando* mira la interfaz
+* *Entonces* aparece “Día 1” y “08:00”
+
+h3. Escenario 2: Avance del tiempo
+* *Dado* que son las 06:00
+* *Cuando* pasan 60 segundos reales
+* *Entonces* la hora es 07:00
+
+h3. Escenario 3: Pausa
+* *Dado* que el menú de pausa está abierto a las 10:00
+* *Cuando* pasan 30 segundos reales
+* *Entonces* la hora sigue siendo 10:00
+
+h3. Escenario 4: Medianoche
+* *Dado* que son las 23:59 y el jugador no ha dormido
+* *Cuando* pasa 1 segundo real
+* *Entonces* el personaje se duerme automáticamente
+* *Y* se inicia el día siguiente a las 06:00","* La interfaz muestra “Día N” y la hora en formato HH:MM en la esquina superior izquierda.
+* La hora avanza 1 minuto de juego por cada segundo real.
+* Con el menú de pausa abierto, la hora no avanza.","sprint-1"
+"HU-21","Historia","HU-21. Ver la lista de objetivos","Como jugador, quiero consultar mis objetivos activos para saber qué hacer después.
+
+h2. Criterios de aceptación
+* Al pulsar O se muestra la lista de encargos activos. Al pulsar O o Escape se cierra.
+* Cada encargo muestra su nombre, su descripción y el NPC que lo encargó.
+* La lista muestra primero el encargo principal y después los pedidos del tablón, que aparecen como encargados por el “Tablón de anuncios”.
+* Si no hay encargos ni pedidos activos, aparece el mensaje “No tienes encargos activos”.
+* La lista tiene también el apartado “Misiones”, con las misiones secundarias activas (HU-72), y el apartado “Notas”, con las páginas del diario (HU-55).
+* La lista tiene también el apartado “Tareas de hoy”, con las tareas del día (HU-63).
+
+h2. Escenarios
+
+h3. Escenario 1: Ver un encargo activo
+* *Dado* que el jugador tiene activo el encargo “Entregar la Carta del alcalde”
+* *Cuando* pulsa O
+* *Entonces* aparece el encargo con su nombre, su descripción y el alcalde como NPC que lo encargó
+
+h3. Escenario 2: Sin encargos activos
+* *Dado* que el jugador no tiene encargos activos
+* *Cuando* pulsa O
+* *Entonces* aparece el mensaje “No tienes encargos activos”
+
+h3. Escenario 3: Encargo completado
+* *Dado* que el encargo “Entregar la Carta del alcalde” se ha completado
+* *Cuando* el jugador pulsa O
+* *Entonces* el encargo no aparece en la lista","* Al pulsar O se muestra la lista de encargos activos. Al pulsar O o Escape se cierra.
+* Cada encargo muestra su nombre, su descripción y el NPC que lo encargó.
+* La lista muestra primero el encargo principal y después los pedidos del tablón, que aparecen como encargados por el “Tablón de anuncios”.
+* Si no hay encargos ni pedidos activos, aparece el mensaje “No tienes encargos activos”.
+* La lista tiene también el apartado “Misiones”, con las misiones secundarias activas (HU-72), y el apartado “Notas”, con las páginas del diario (HU-55).
+* La lista tiene también el apartado “Tareas de hoy”, con las tareas del día (HU-63).","sprint-1"
+"HU-20","Historia","HU-20. Completar un encargo","Como jugador, quiero completar encargos y recibir recompensas para avanzar en la historia.
+
+h2. Criterios de aceptación
+* Un encargo se completa cuando se cumplen sus condiciones.
+* Al completarlo se entregan las recompensas en monedas y en objetos y, cuando el NPC termina de hablar, aparece el mensaje “Encargo completado”.
+* Un encargo completado no se puede reclamar otra vez.
+
+h2. Escenarios
+
+h3. Escenario 1: Completar el encargo
+* *Dado* que el jugador tiene activo el encargo “Entregar la Carta del alcalde” y tiene la Carta del alcalde
+* *Cuando* habla con el alcalde y entrega la carta
+* *Entonces* aparece el mensaje “Encargo completado”
+* *Y* el jugador recibe 50 monedas y 1 Manzana
+* *Y* la Carta del alcalde desaparece del inventario
+
+h3. Escenario 2: Reclamar un encargo ya completado
+* *Dado* que el encargo “Entregar la Carta del alcalde” ya está completado
+* *Cuando* el jugador vuelve a hablar con el alcalde
+* *Entonces* no se entrega ninguna recompensa
+
+h3. Escenario 3: Inventario lleno al completar
+* *Dado* que el inventario está completo
+* *Cuando* el jugador completa el encargo que da una Manzana
+* *Entonces* aparece el mensaje “Inventario lleno”
+* *Y* el encargo no se marca como completado","* Un encargo se completa cuando se cumplen sus condiciones.
+* Al completarlo se entregan las recompensas en monedas y en objetos y, cuando el NPC termina de hablar, aparece el mensaje “Encargo completado”.
+* Un encargo completado no se puede reclamar otra vez.","sprint-1"
+"HU-19","Historia","HU-19. Aceptar un encargo","Como jugador, quiero aceptar encargos de los NPC para tener objetivos claros.
+
+h2. Criterios de aceptación
+* Los NPC con encargo ofrecen el encargo en su diálogo con las opciones “Aceptar” y “Rechazar”.
+* Al aceptar, el encargo aparece en la lista de objetivos.
+* El jugador solo puede tener un encargo principal activo a la vez. Los pedidos del tablón no cuentan (HU-53).
+
+h2. Escenarios
+
+h3. Escenario 1: Aceptar un encargo
+* *Dado* que el jugador no tiene ningún encargo activo
+* *Y* el NPC ofrece el encargo “Entregar la Carta del alcalde”
+* *Cuando* el jugador pulsa “Aceptar”
+* *Entonces* el encargo aparece en la lista de objetivos
+* *Y* el NPC muestra su diálogo de encargo en curso
+
+h3. Escenario 2: Rechazar un encargo
+* *Dado* que el NPC ofrece el encargo “Entregar la Carta del alcalde”
+* *Cuando* el jugador pulsa “Rechazar”
+* *Entonces* el encargo no aparece en la lista de objetivos
+* *Y* al volver a hablar con el NPC, vuelve a ofrecer el encargo
+
+h3. Escenario 3: Encargo activo en curso
+* *Dado* que el jugador tiene activo el encargo “Entregar la Carta del alcalde”
+* *Cuando* habla con otro NPC que tiene un encargo
+* *Entonces* el NPC muestra el mensaje “Termina tu encargo actual primero”
+* *Y* no ofrece su encargo","* Los NPC con encargo ofrecen el encargo en su diálogo con las opciones “Aceptar” y “Rechazar”.
+* Al aceptar, el encargo aparece en la lista de objetivos.
+* El jugador solo puede tener un encargo principal activo a la vez. Los pedidos del tablón no cuentan (HU-53).","sprint-1"
+"HU-11","Historia","HU-11. Diálogos distintos según el progreso","Como jugador, quiero que los NPC cambien lo que dicen según mi progreso para sentir que el mundo reacciona.
+
+h2. Criterios de aceptación
+* Cada NPC con encargos muestra un diálogo distinto según el estado de su encargo activo: antes de aceptarlo, en curso o completado.
+* Si un NPC tiene varios encargos, ofrece el siguiente solo cuando el anterior está completado, respetando el orden de los encargos.
+* El diálogo cambia según el estado del encargo. Además, un encargo solo se ofrece a partir de su día (HU-38).
+* Con el reloj de la torre reparado (encargo “Las piezas del reloj” completado), un NPC que no tiene nada que decir sobre sus encargos comenta que el reloj vuelve a funcionar.
+
+h2. Escenarios
+
+h3. Escenario 1: Antes de aceptar el encargo
+* *Dado* que el jugador no ha aceptado el encargo del NPC
+* *Cuando* el jugador habla con el NPC
+* *Entonces* el NPC ofrece el encargo y el jugador puede aceptarlo o rechazarlo
+
+h3. Escenario 2: Encargo activo
+* *Dado* que el jugador ha aceptado el encargo y aún no lo ha completado
+* *Cuando* habla con el NPC
+* *Entonces* el NPC recuerda el encargo y muestra un diálogo de seguimiento
+
+h3. Escenario 3: Encargo completado
+* *Dado* que el jugador ha completado el encargo
+* *Cuando* habla con el NPC
+* *Entonces* el NPC muestra un diálogo de agradecimiento distinto a los anteriores
+
+h3. Escenario 4: Siguiente encargo del mismo NPC
+* *Dado* que el NPC tiene un segundo encargo y el primero ya está completado
+* *Cuando* el jugador habla con el NPC
+* *Entonces* el NPC ofrece el segundo encargo
+
+h3. Escenario 5: Reloj reparado
+* *Dado* que el encargo “Las piezas del reloj” está completado
+* *Y* el alcalde no tiene ningún encargo que ofrecer
+* *Cuando* el jugador habla con el alcalde
+* *Entonces* el alcalde comenta que el reloj vuelve a funcionar","* Cada NPC con encargos muestra un diálogo distinto según el estado de su encargo activo: antes de aceptarlo, en curso o completado.
+* Si un NPC tiene varios encargos, ofrece el siguiente solo cuando el anterior está completado, respetando el orden de los encargos.
+* El diálogo cambia según el estado del encargo. Además, un encargo solo se ofrece a partir de su día (HU-38).
+* Con el reloj de la torre reparado (encargo “Las piezas del reloj” completado), un NPC que no tiene nada que decir sobre sus encargos comenta que el reloj vuelve a funcionar.","sprint-1"
+"HU-10","Historia","HU-10. Interactuar con personajes (NPC)","Como jugador, quiero hablar con los habitantes del pueblo para conocer la historia y recibir encargos.
+
+h2. Criterios de aceptación
+* En el pueblo están el alcalde, la vendedora, la relojera y el granjero, además de los vecinos (HU-71) y, el día de la feria, Pedro (HU-58). Al estar a menos de una casilla de un NPC aparece el indicador “E”.
+* Los NPC están quietos y miran hacia abajo.
+* Al pulsar E, el NPC muestra su diálogo con su retrato y el texto aparece letra a letra.
+* Pulsar E durante la escritura muestra el texto completo; pulsar E de nuevo avanza a la siguiente línea.
+* El diálogo se cierra al terminar la última línea y el jugador puede moverse de nuevo.
+
+h2. Escenarios
+
+h3. Escenario 1: Iniciar un diálogo
+* *Dado* que el jugador está junto a un NPC
+* *Cuando* pulsa E
+* *Entonces* aparece el retrato del NPC y su diálogo
+* *Y* el texto se escribe letra a letra
+
+h3. Escenario 2: Mostrar el texto completo
+* *Dado* que un diálogo se está escribiendo
+* *Cuando* el jugador pulsa E
+* *Entonces* se muestra el texto completo de la línea
+* *Y* al pulsar E de nuevo, aparece la siguiente línea
+
+h3. Escenario 3: Cerrar el diálogo
+* *Dado* que el jugador está en la última línea del diálogo
+* *Cuando* pulsa E
+* *Entonces* el diálogo se cierra
+* *Y* el personaje puede moverse de nuevo
+
+h3. Escenario 4: Fuera de alcance
+* *Dado* que el jugador está a tres casillas de un NPC
+* *Cuando* pulsa E
+* *Entonces* no aparece ningún diálogo","* En el pueblo están el alcalde, la vendedora, la relojera y el granjero, además de los vecinos (HU-71) y, el día de la feria, Pedro (HU-58). Al estar a menos de una casilla de un NPC aparece el indicador “E”.
+* Los NPC están quietos y miran hacia abajo.
+* Al pulsar E, el NPC muestra su diálogo con su retrato y el texto aparece letra a letra.
+* Pulsar E durante la escritura muestra el texto completo; pulsar E de nuevo avanza a la siguiente línea.
+* El diálogo se cierra al terminar la última línea y el jugador puede moverse de nuevo.","sprint-1"
+"HU-09","Historia","HU-09. Cámara que sigue al personaje","Como jugador, quiero que la cámara siga al personaje para ver siempre su entorno.
+
+h2. Criterios de aceptación
+* La cámara mantiene al personaje centrado en la pantalla mientras se mueve.
+* La cámara no muestra espacios fuera del mapa: se detiene en los bordes.
+* Si la zona es más pequeña que la pantalla, la cámara no se mueve y muestra la zona completa, centrada.
+
+h2. Escenarios
+
+h3. Escenario 1: Seguimiento en una zona grande
+* *Dado* que el personaje está en el centro de una zona más grande que la pantalla
+* *Cuando* camina hacia la derecha
+* *Entonces* la cámara se desplaza con el personaje y lo mantiene centrado
+
+h3. Escenario 2: Borde del mapa
+* *Dado* que el personaje está a dos casillas del borde izquierdo de la zona
+* *Cuando* camina hacia el borde
+* *Entonces* la cámara se detiene en el borde
+* *Y* no se muestra ningún espacio vacío fuera del mapa
+
+h3. Escenario 3: Zona más pequeña que la pantalla
+* *Dado* que el jugador está dentro de la casa del jugador
+* *Cuando* el personaje se mueve por la casa
+* *Entonces* la cámara no se mueve
+* *Y* la casa se muestra completa y centrada
+
+h3. Escenario 4: Cambio de zona
+* *Dado* que el personaje cruza una puerta
+* *Cuando* termina el fundido a negro
+* *Entonces* la cámara ya está centrada en la nueva zona","* La cámara mantiene al personaje centrado en la pantalla mientras se mueve.
+* La cámara no muestra espacios fuera del mapa: se detiene en los bordes.
+* Si la zona es más pequeña que la pantalla, la cámara no se mueve y muestra la zona completa, centrada.","sprint-1"
+"HU-08","Historia","HU-08. Cambiar de zona","Como jugador, quiero entrar a edificios y cambiar de zona para explorar el pueblo.
+
+h2. Criterios de aceptación
+* El juego tiene 10 zonas conectadas por puertas: plaza, casa del jugador, tienda, granja, lago, torre, bosque (HU-51), barrio, casa de Tomás y Pablo y casa de Lucía (HU-70).
+* Al cruzar una puerta, la pantalla se funde a negro en 0,5 segundos y el personaje aparece junto a la puerta de la zona de destino.
+* Durante la transición no se puede mover al personaje.
+
+h2. Escenarios
+
+h3. Escenario 1: Entrar a la tienda
+* *Dado* que el jugador está frente a la puerta de la tienda del pueblo
+* *Cuando* camina sobre la puerta
+* *Entonces* la pantalla se funde a negro en 0,5 segundos
+* *Y* el personaje aparece en el interior de la tienda, junto a la puerta de salida
+
+h3. Escenario 2: Salir de la tienda
+* *Dado* que el jugador está dentro de la tienda
+* *Cuando* camina sobre la puerta de salida
+* *Entonces* vuelve a la zona exterior junto a la puerta de la tienda
+
+h3. Escenario 3: Transición en curso
+* *Dado* que una transición de zona está en curso
+* *Cuando* el jugador pulsa las flechas
+* *Entonces* el personaje no se mueve hasta que termina el fundido","* El juego tiene 10 zonas conectadas por puertas: plaza, casa del jugador, tienda, granja, lago, torre, bosque (HU-51), barrio, casa de Tomás y Pablo y casa de Lucía (HU-70).
+* Al cruzar una puerta, la pantalla se funde a negro en 0,5 segundos y el personaje aparece junto a la puerta de la zona de destino.
+* Durante la transición no se puede mover al personaje.","sprint-1"
+"HU-07","Historia","HU-07. Colisiones con obstáculos","Como jugador, quiero que el personaje no atraviese árboles, casas, agua ni NPC para que el mundo se sienta sólido.
+
+h2. Criterios de aceptación
+* Árboles, casas, muros, mobiliario, agua y NPC son obstáculos.
+* El personaje se detiene junto al obstáculo y nunca se superpone con él.
+* Si una dirección está bloqueada y otra libre, el personaje se mueve en la libre.
+* Si el personaje choca por muy poco (6 píxeles o menos) con la esquina de un hueco, se desliza de lado hasta quedar alineado con él y pasa. Así se entra por huecos de una casilla sin tener que llegar perfectamente alineado.
+
+h2. Escenarios
+
+h3. Escenario 1: Árbol
+* *Dado* que hay un árbol a la derecha del personaje
+* *Cuando* el jugador camina hacia la derecha
+* *Entonces* el personaje se detiene junto al árbol
+
+h3. Escenario 2: Agua
+* *Dado* que hay un lago frente al personaje
+* *Cuando* el jugador camina hacia el agua
+* *Entonces* el personaje se detiene en la orilla
+
+h3. Escenario 3: Dirección libre con otra bloqueada
+* *Dado* que hay un muro encima del personaje y espacio libre a su derecha
+* *Cuando* el jugador pulsa arriba y derecha a la vez
+* *Entonces* el personaje se mueve a la derecha
+
+h3. Escenario 4: NPC en el camino
+* *Dado* que un NPC está en el camino del personaje
+* *Cuando* el jugador camina hacia el NPC
+* *Entonces* el personaje se detiene junto al NPC
+
+h3. Escenario 5: Hueco estrecho
+* *Dado* que el personaje está delante de la entrada del cercado del granero, que mide una casilla, desviado 5 píxeles hacia un lado
+* *Cuando* el jugador camina hacia la entrada
+* *Entonces* el personaje se desliza hasta alinearse con la entrada
+* *Y* entra en el cercado","* Árboles, casas, muros, mobiliario, agua y NPC son obstáculos.
+* El personaje se detiene junto al obstáculo y nunca se superpone con él.
+* Si una dirección está bloqueada y otra libre, el personaje se mueve en la libre.
+* Si el personaje choca por muy poco (6 píxeles o menos) con la esquina de un hueco, se desliza de lado hasta quedar alineado con él y pasa. Así se entra por huecos de una casilla sin tener que llegar perfectamente alineado.","sprint-1"
+"HU-06","Historia","HU-06. Mover al personaje con el teclado","Como jugador, quiero mover a mi personaje con las flechas o WASD para explorar el mundo.
+
+h2. Criterios de aceptación
+* El personaje se mueve en cuatro direcciones (arriba, abajo, izquierda y derecha) con las flechas y con WASD.
+* El personaje se mueve a velocidad constante y mira en la dirección del movimiento.
+* Si se pulsan dos direcciones a la vez, el personaje se mueve en la última pulsada, sin diagonales.
+* Con el menú de pausa abierto, el personaje no se mueve.
+
+h2. Escenarios
+
+h3. Escenario 1: Movimiento con las flechas
+* *Dado* que el jugador está en una zona sin obstáculos
+* *Cuando* mantiene pulsada la flecha derecha durante 1 segundo
+* *Entonces* el personaje se desplaza hacia la derecha a velocidad constante
+* *Y* mira hacia la derecha
+
+h3. Escenario 2: Movimiento con WASD
+* *Dado* que el jugador está en una zona sin obstáculos
+* *Cuando* pulsa la tecla W
+* *Entonces* el personaje se desplaza hacia arriba
+* *Y* mira hacia arriba
+
+h3. Escenario 3: Dos direcciones a la vez
+* *Dado* que el jugador está en una zona sin obstáculos
+* *Cuando* pulsa la flecha arriba y, sin soltarla, la flecha derecha
+* *Entonces* el personaje se mueve hacia la derecha
+
+h3. Escenario 4: Movimiento bloqueado en pausa
+* *Dado* que el menú de pausa está abierto
+* *Cuando* el jugador pulsa la flecha derecha
+* *Entonces* el personaje no se mueve","* El personaje se mueve en cuatro direcciones (arriba, abajo, izquierda y derecha) con las flechas y con WASD.
+* El personaje se mueve a velocidad constante y mira en la dirección del movimiento.
+* Si se pulsan dos direcciones a la vez, el personaje se mueve en la última pulsada, sin diagonales.
+* Con el menú de pausa abierto, el personaje no se mueve.","sprint-1"
+"HU-05","Historia","HU-05. Salir del juego","Como jugador, quiero salir del juego desde el menú principal para cerrar la partida cuando termine.
+
+h2. Criterios de aceptación
+* Al pulsar “Salir” aparece el mensaje “¿Salir del juego?” con los botones “Sí” y “No”.
+* “Sí” cierra el juego y “No” vuelve al menú principal con “Salir” seleccionada.
+* Salir no borra la partida guardada.
+
+h2. Escenarios
+
+h3. Escenario 1: Confirmar la salida
+* *Dado* que el jugador está en el menú principal
+* *Cuando* pulsa “Salir” y después “Sí”
+* *Entonces* el juego se cierra
+
+h3. Escenario 2: Cancelar la salida
+* *Dado* que el jugador está en el menú principal
+* *Cuando* pulsa “Salir” y después “No”
+* *Entonces* vuelve al menú principal
+* *Y* “Salir” queda seleccionada
+
+h3. Escenario 3: La partida guardada se mantiene
+* *Dado* que existe una partida guardada
+* *Cuando* el jugador sale del juego desde el menú principal
+* *Entonces* al volver a abrir el juego “Continuar” sigue activa","* Al pulsar “Salir” aparece el mensaje “¿Salir del juego?” con los botones “Sí” y “No”.
+* “Sí” cierra el juego y “No” vuelve al menú principal con “Salir” seleccionada.
+* Salir no borra la partida guardada.","sprint-1"
+"HU-04","Historia","HU-04. Guardar partida desde el menú principal","Como jugador, quiero guardar mi partida para poder retomarla más tarde.
+
+h2. Criterios de aceptación
+* “Guardar partida” está desactivada en el menú principal si no hay partida en curso.
+* Al guardar, se sobrescribe la única partida guardada.
+* Al guardar aparece el mensaje “Partida guardada” durante 2 segundos.
+
+h2. Escenarios
+
+h3. Escenario 1: Guardar una partida en curso
+* *Dado* que el jugador tiene una partida en curso
+* *Cuando* pulsa “Guardar partida” desde el menú de pausa
+* *Entonces* aparece el mensaje “Partida guardada” durante 2 segundos
+* *Y* la partida guardada refleja el estado actual del juego
+
+h3. Escenario 2: Guardar desactivado sin partida en curso
+* *Dado* que no hay ninguna partida en curso
+* *Cuando* el jugador abre el menú principal
+* *Entonces* “Guardar partida” aparece desactivada
+
+h3. Escenario 3: Sobrescribir la partida guardada
+* *Dado* que existe una partida guardada del día 2
+* *Cuando* el jugador guarda la partida en el día 4
+* *Entonces* la partida del día 2 se reemplaza por la del día 4","* “Guardar partida” está desactivada en el menú principal si no hay partida en curso.
+* Al guardar, se sobrescribe la única partida guardada.
+* Al guardar aparece el mensaje “Partida guardada” durante 2 segundos.","sprint-1"
+"HU-03","Historia","HU-03. Continuar una partida guardada","Como jugador, quiero continuar mi última partida para no perder mi progreso.
+
+h2. Criterios de aceptación
+* “Continuar” carga la partida guardada directamente, sin mostrar selector.
+* Se restauran zona, posición, día, hora, dinero, energía, inventario, encargos activos y cofres abiertos.
+
+h2. Escenarios
+
+h3. Escenario 1: Continuar una partida guardada
+* *Dado* que existe una partida guardada en la casa del jugador, en el día 3 a las 14:00, con 250 monedas
+* *Cuando* el jugador pulsa “Continuar”
+* *Entonces* se carga la casa del jugador en la posición guardada
+* *Y* el reloj marca día 3 a las 14:00 y el dinero es 250 monedas
+
+h3. Escenario 2: Los cofres abiertos se mantienen
+* *Dado* que el jugador abrió el cofre 1 antes de guardar
+* *Cuando* el jugador pulsa “Continuar”
+* *Entonces* el cofre 1 aparece vacío
+* *Y* no se puede volver a abrir
+
+h3. Escenario 3: Sin partida guardada
+* *Dado* que no existe ninguna partida guardada
+* *Cuando* el jugador abre el menú principal
+* *Entonces* “Continuar” aparece desactivada","* “Continuar” carga la partida guardada directamente, sin mostrar selector.
+* Se restauran zona, posición, día, hora, dinero, energía, inventario, encargos activos y cofres abiertos.","sprint-1"
+"HU-02","Historia","HU-02. Empezar una nueva partida","Como jugador, quiero empezar una partida nueva para jugar desde el principio.
+
+h2. Criterios de aceptación
+* Al pulsar “Nueva partida”, después de la introducción (HU-62) de elegir el nombre (HU-67) y de elegir el aspecto (HU-68), se carga la zona inicial (exterior del pueblo) con el personaje en su posición de inicio.
+* Si existe una partida guardada, se pide confirmación antes de sobrescribirla.
+* La partida nueva empieza con día 1 a las 08:00, 100 monedas, energía al máximo (100) e inventario vacío.
+
+h2. Escenarios
+
+h3. Escenario 1: Nueva partida sin partida guardada
+* *Dado* que no existe ninguna partida guardada
+* *Cuando* el jugador pulsa “Nueva partida”
+* *Entonces* se carga la zona inicial con el personaje en su posición de inicio
+* *Y* el reloj marca día 1 a las 08:00
+
+h3. Escenario 2: Confirmación al sobrescribir
+* *Dado* que existe una partida guardada
+* *Cuando* el jugador pulsa “Nueva partida”
+* *Entonces* aparece el mensaje “¿Sobrescribir la partida guardada?” con los botones “Sí” y “No”
+* *Y* si pulsa “No”, vuelve al menú principal sin cambios
+
+h3. Escenario 3: Confirmar la sobrescritura
+* *Dado* que existe una partida guardada del día 4
+* *Cuando* el jugador pulsa “Nueva partida” y después “Sí”
+* *Entonces* la partida anterior se reemplaza por la nueva
+* *Y* se carga la zona inicial en el día 1 a las 08:00
+
+h3. Escenario 4: Datos iniciales
+* *Dado* que el jugador acaba de iniciar una partida nueva
+* *Cuando* consulta su dinero, su energía y su inventario
+* *Entonces* tiene 100 monedas y 100 puntos de energía
+* *Y* su inventario está vacío","* Al pulsar “Nueva partida”, después de la introducción (HU-62) de elegir el nombre (HU-67) y de elegir el aspecto (HU-68), se carga la zona inicial (exterior del pueblo) con el personaje en su posición de inicio.
+* Si existe una partida guardada, se pide confirmación antes de sobrescribirla.
+* La partida nueva empieza con día 1 a las 08:00, 100 monedas, energía al máximo (100) e inventario vacío.","sprint-1"
+"HU-01","Historia","HU-01. Ver el menú principal al abrir el juego","Como jugador, quiero ver un menú principal al abrir el juego para elegir qué hacer.
+
+h2. Criterios de aceptación
+* Al abrir el juego suena la música propia del menú principal.
+* El menú muestra las opciones “Nueva partida”, “Continuar”, “Partidas de práctica”, “Guardar partida”, “Opciones”, “Créditos” y “Salir”, en ese orden.
+* “Continuar” solo está activa si existe una partida guardada.
+* “Guardar partida” está desactivada si no hay partida en curso.
+
+h2. Escenarios
+
+h3. Escenario 1: Primera apertura del juego
+* *Dado* que el jugador abre el juego por primera vez
+* *Cuando* se carga el menú principal
+* *Entonces* suena la música del menú
+* *Y* aparecen las opciones “Nueva partida”, “Continuar”, “Partidas de práctica”, “Guardar partida”, “Opciones”, “Créditos” y “Salir”
+* *Y* “Continuar” y “Guardar partida” aparecen desactivadas
+
+h3. Escenario 2: Con partida guardada
+* *Dado* que existe una partida guardada
+* *Cuando* el jugador abre el juego
+* *Entonces* “Continuar” aparece activa
+
+h3. Escenario 3: Navegación con teclado
+* *Dado* que el menú principal está abierto
+* *Cuando* el jugador pulsa la flecha arriba o abajo
+* *Entonces* la selección pasa a la opción anterior o siguiente, sin saltar ninguna
+* *Y* al pulsar Enter se activa la opción seleccionada
+
+h3. Escenario 4: Opción desactivada
+* *Dado* que no existe ninguna partida guardada
+* *Cuando* el jugador selecciona “Continuar” y pulsa Enter
+* *Entonces* no ocurre nada y la selección se mantiene en “Continuar”
+
+h3. Escenario 5: Volver desde Opciones
+* *Dado* que el jugador ha abierto “Opciones” desde el menú principal
+* *Cuando* pulsa “Volver” o Escape
+* *Entonces* regresa al menú principal con “Opciones” seleccionada","* Al abrir el juego suena la música propia del menú principal.
+* El menú muestra las opciones “Nueva partida”, “Continuar”, “Partidas de práctica”, “Guardar partida”, “Opciones”, “Créditos” y “Salir”, en ese orden.
+* “Continuar” solo está activa si existe una partida guardada.
+* “Guardar partida” está desactivada si no hay partida en curso.","sprint-1"

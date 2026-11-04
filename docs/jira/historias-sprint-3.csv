@@ -1,0 +1,1233 @@
+﻿"ID","Tipo de actividad","Resumen","Descripción","Criterios de aceptación","Etiquetas"
+"HU-86","Historia","HU-86. Platos por encargo","Como jugador, quiero que los vecinos y el tablón me pidan platos cocinados para que cocinar (HU-84) tenga más sentido.
+
+h2. Criterios de aceptación
+* Dos vecinos ofrecen misiones secundarias (HU-72) que piden un plato:
+** Día 5, Bruno, “Algo caliente para el bosque”: entregarle 1 Sopa de setas. 60 monedas.
+** Día 6, Tomás, “La cena de Tomás”: entregarle 1 Carpa asada. 90 monedas.
+* El tablón de anuncios (HU-52) pide platos los días 5 y 6 (y los días 11 y 12, cuando se repiten los pedidos):
+** Día 5, “Sopa para el comedor”: 1 Sopa de setas. Recompensa: 70 monedas.
+** Día 6, “Guiso para la feria”: 1 Guiso de calabaza. Recompensa: 200 monedas.
+* Estos pedidos y misiones funcionan igual que los demás: se aceptan, se entregan y se cobran como dicen HU-52 a HU-54 y HU-72 a HU-74.
+
+h2. Escenarios
+
+h3. Escenario 1: Misión de un plato
+* *Dado* que es el día 5, el jugador tiene 1 Sopa de setas y habla con Bruno
+* *Cuando* acepta “Algo caliente para el bosque” y vuelve a hablar con él
+* *Entonces* aparece el mensaje “Misión completada”
+* *Y* el jugador pierde la Sopa de setas y recibe 60 monedas
+
+h3. Escenario 2: Pedido de un plato en el tablón
+* *Dado* que es el día 6 y el jugador está junto al tablón
+* *Cuando* pulsa E
+* *Entonces* aparece el pedido “Guiso para la feria”, que pide 1 Guiso de calabaza
+
+h3. Escenario 3: Entregar un pedido de un plato
+* *Dado* que el jugador tiene activo el pedido del día 5 y 1 Sopa de setas
+* *Cuando* pulsa E junto al tablón
+* *Entonces* aparece el mensaje “Pedido completado”
+* *Y* el jugador pierde la Sopa de setas y recibe 70 monedas","* Dos vecinos ofrecen misiones secundarias (HU-72) que piden un plato:
+** Día 5, Bruno, “Algo caliente para el bosque”: entregarle 1 Sopa de setas. 60 monedas.
+** Día 6, Tomás, “La cena de Tomás”: entregarle 1 Carpa asada. 90 monedas.
+* El tablón de anuncios (HU-52) pide platos los días 5 y 6 (y los días 11 y 12, cuando se repiten los pedidos):
+** Día 5, “Sopa para el comedor”: 1 Sopa de setas. Recompensa: 70 monedas.
+** Día 6, “Guiso para la feria”: 1 Guiso de calabaza. Recompensa: 200 monedas.
+* Estos pedidos y misiones funcionan igual que los demás: se aceptan, se entregan y se cobran como dicen HU-52 a HU-54 y HU-72 a HU-74.","sprint-3"
+"HU-85","Historia","HU-85. Mejoras","Como jugador, quiero comprar mejoras en la tienda para trabajar mejor y tener algo en lo que gastar el dinero.
+
+h2. Criterios de aceptación
+* La tienda tiene una tercera pestaña, “Mejoras”, a la derecha de “Vender”. Muestra las mejoras con su precio, o “Comprada” si ya se tiene.
+* Hay tres mejoras:
+** Mochila grande (150 monedas): el inventario pasa de 20 a 30 casillas.
+** Regadera grande (120 monedas): al regar una parcela también se riegan las de sus dos lados, si están sembradas y sin regar. Se gasta la energía de un solo riego.
+** Caña buena (100 monedas): en el minijuego de pesca (HU-87), la zona verde es más grande: un 40 % de la barra en vez de un 28 %.
+* Cada mejora se compra una sola vez. E o Enter sobre una mejora comprada muestra “Ya tienes esta mejora” y no cobra nada.
+* Al comprar se comprueba el horario de la tienda (“La tienda está cerrada”) y el dinero (“Dinero insuficiente”). Una compra correcta reproduce el efecto de compra (HU-32).
+* Las mejoras no ocupan inventario, no se pueden vender y se guardan con la partida.
+* “Las dos parcelas de los lados” son las que están a la izquierda y a la derecha de la parcela regada, vistas desde el personaje.
+* El día 4, la lista de tareas (HU-63) incluye “Compra una mejora en la tienda”.
+
+h2. Escenarios
+
+h3. Escenario 1: Ver las mejoras
+* *Dado* que el jugador tiene la tienda abierta en “Vender”
+* *Cuando* pulsa la flecha derecha
+* *Entonces* aparece la pestaña “Mejoras” con la Mochila grande, la Regadera grande y la Caña buena y sus precios
+
+h3. Escenario 2: Comprar una mejora
+* *Dado* que el jugador tiene 200 monedas y está en la pestaña “Mejoras”
+* *Cuando* compra la Mochila grande
+* *Entonces* tiene 50 monedas
+* *Y* la Mochila grande aparece como “Comprada”
+
+h3. Escenario 3: Dinero insuficiente
+* *Dado* que el jugador tiene 50 monedas y está en la pestaña “Mejoras”
+* *Cuando* intenta comprar la Caña buena
+* *Entonces* aparece el mensaje “Dinero insuficiente”
+* *Y* sigue teniendo 50 monedas
+
+h3. Escenario 4: Mejora ya comprada
+* *Dado* que el jugador tiene la Caña buena y 200 monedas
+* *Cuando* intenta comprarla otra vez
+* *Entonces* aparece el mensaje “Ya tienes esta mejora”
+* *Y* sigue teniendo 200 monedas
+
+h3. Escenario 5: Mochila grande
+* *Dado* que el jugador tiene la Mochila grande y 20 casillas ocupadas
+* *Cuando* recoge un objeto nuevo
+* *Entonces* el objeto ocupa la casilla 21
+* *Y* el inventario muestra 30 casillas
+
+h3. Escenario 6: Regadera grande
+* *Dado* que el jugador tiene la Regadera grande y una Regadera, y tres parcelas seguidas sembradas y sin regar
+* *Cuando* riega la del medio
+* *Entonces* las tres parcelas quedan regadas
+* *Y* solo se gasta la energía de un riego
+
+h3. Escenario 7: Caña buena
+* *Dado* que el jugador tiene la Caña buena y una Caña de pescar
+* *Cuando* empieza el minijuego de pesca
+* *Entonces* la zona verde ocupa el 40 % de la barra","* La tienda tiene una tercera pestaña, “Mejoras”, a la derecha de “Vender”. Muestra las mejoras con su precio, o “Comprada” si ya se tiene.
+* Hay tres mejoras:
+** Mochila grande (150 monedas): el inventario pasa de 20 a 30 casillas.
+** Regadera grande (120 monedas): al regar una parcela también se riegan las de sus dos lados, si están sembradas y sin regar. Se gasta la energía de un solo riego.
+** Caña buena (100 monedas): en el minijuego de pesca (HU-87), la zona verde es más grande: un 40 % de la barra en vez de un 28 %.
+* Cada mejora se compra una sola vez. E o Enter sobre una mejora comprada muestra “Ya tienes esta mejora” y no cobra nada.
+* Al comprar se comprueba el horario de la tienda (“La tienda está cerrada”) y el dinero (“Dinero insuficiente”). Una compra correcta reproduce el efecto de compra (HU-32).
+* Las mejoras no ocupan inventario, no se pueden vender y se guardan con la partida.
+* “Las dos parcelas de los lados” son las que están a la izquierda y a la derecha de la parcela regada, vistas desde el personaje.
+* El día 4, la lista de tareas (HU-63) incluye “Compra una mejora en la tienda”.","sprint-3"
+"HU-83","Historia","HU-83. Pantalla completa","Como jugador, quiero jugar en pantalla completa para que no se vea nada del navegador.
+
+h2. Criterios de aceptación
+* La tecla F activa la pantalla completa y, al volver a pulsarla, la desactiva. Funciona en los menús y durante la partida, salvo en la pantalla del nombre (HU-67), donde la F es una letra.
+* En la pantalla de opciones hay una fila “Pantalla completa” con el valor “Sí” o “No”. Enter o un clic la activan o la desactivan.
+* En pantalla completa el juego ocupa toda la pantalla, sin ninguna parte del navegador, y se ve sin deformarse.
+* Escape también sale de la pantalla completa (lo hace el navegador). La fila de las opciones muestra siempre el estado real.
+* Al recargar la página, el juego empieza en la ventana del navegador: los navegadores solo permiten entrar en pantalla completa después de que el jugador pulse una tecla o haga clic.
+* La tabla de controles (HU-33) incluye “Pantalla completa: F”.
+
+h2. Escenarios
+
+h3. Escenario 1: Activar con F
+* *Dado* que el juego está en la ventana del navegador
+* *Cuando* el jugador pulsa F
+* *Entonces* el juego pasa a pantalla completa
+
+h3. Escenario 2: Desactivar con F
+* *Dado* que el juego está en pantalla completa
+* *Cuando* el jugador pulsa F
+* *Entonces* el juego vuelve a la ventana del navegador
+
+h3. Escenario 3: Desde las opciones
+* *Dado* que el jugador está en la pantalla de opciones con “Pantalla completa: No”
+* *Cuando* selecciona “Pantalla completa” y pulsa Enter
+* *Entonces* el juego pasa a pantalla completa
+* *Y* la fila muestra “Sí”
+
+h3. Escenario 4: La F en el nombre
+* *Dado* que el jugador está escribiendo su nombre
+* *Cuando* pulsa F
+* *Entonces* se escribe la letra “F”
+* *Y* el juego no pasa a pantalla completa
+
+h3. Escenario 5: Controles
+* *Dado* que el jugador abre el menú de opciones
+* *Cuando* consulta la tabla de controles
+* *Entonces* aparece “Pantalla completa” con la tecla “F”","* La tecla F activa la pantalla completa y, al volver a pulsarla, la desactiva. Funciona en los menús y durante la partida, salvo en la pantalla del nombre (HU-67), donde la F es una letra.
+* En la pantalla de opciones hay una fila “Pantalla completa” con el valor “Sí” o “No”. Enter o un clic la activan o la desactivan.
+* En pantalla completa el juego ocupa toda la pantalla, sin ninguna parte del navegador, y se ve sin deformarse.
+* Escape también sale de la pantalla completa (lo hace el navegador). La fila de las opciones muestra siempre el estado real.
+* Al recargar la página, el juego empieza en la ventana del navegador: los navegadores solo permiten entrar en pantalla completa después de que el jugador pulse una tecla o haga clic.
+* La tabla de controles (HU-33) incluye “Pantalla completa: F”.","sprint-3"
+"HU-79","Historia","HU-79. Las cajas del granero","Como jugador, quiero ordenar las cajas del corral del granero para ayudar al granjero.
+
+h2. Criterios de aceptación
+* En la granja, junto al granero, hay un corral vallado con dos cajas y dos marcas en el suelo.
+* Al caminar contra una caja, el personaje la empuja una casilla en esa dirección, si la casilla de detrás está libre (sin obstáculos, sin otra caja y dentro del corral). Si no, la caja no se mueve.
+* Las cajas no se pueden arrastrar: solo empujar.
+* Cuando las dos cajas están sobre las dos marcas, aparece “Las cajas están en su sitio” y el jugador recibe 50 monedas y 3 Semillas de zanahoria. Si las Semillas no caben en el inventario, aparece “Inventario lleno” y la última caja no se mueve.
+* Junto al corral hay un cartel: “Pon cada caja sobre una marca. Si te atascas, sal de la granja y vuelve: las cajas volverán a su sitio.”
+* Si el jugador sale de la granja sin resolverlo, las cajas vuelven a su posición inicial.
+* Una vez resuelto, las cajas se quedan sobre las marcas y no se pueden mover. Solo se resuelve una vez.
+
+h2. Escenarios
+
+h3. Escenario 1: Empujar una caja
+* *Dado* que el jugador está junto a una caja y la casilla de detrás está libre
+* *Cuando* camina contra la caja
+* *Entonces* la caja avanza una casilla en esa dirección
+
+h3. Escenario 2: Caja bloqueada
+* *Dado* que detrás de la caja hay una valla
+* *Cuando* el jugador camina contra la caja
+* *Entonces* la caja no se mueve
+
+h3. Escenario 3: Resolver el acertijo
+* *Dado* que una caja ya está sobre su marca y el jugador tiene 100 monedas
+* *Cuando* empuja la otra caja sobre la marca libre
+* *Entonces* aparece “Las cajas están en su sitio”
+* *Y* el jugador tiene 150 monedas y 3 Semillas de zanahoria
+
+h3. Escenario 4: Volver a empezar
+* *Dado* que el jugador ha movido una caja sin resolver el acertijo
+* *Cuando* sale de la granja y vuelve
+* *Entonces* las cajas están en su posición inicial","* En la granja, junto al granero, hay un corral vallado con dos cajas y dos marcas en el suelo.
+* Al caminar contra una caja, el personaje la empuja una casilla en esa dirección, si la casilla de detrás está libre (sin obstáculos, sin otra caja y dentro del corral). Si no, la caja no se mueve.
+* Las cajas no se pueden arrastrar: solo empujar.
+* Cuando las dos cajas están sobre las dos marcas, aparece “Las cajas están en su sitio” y el jugador recibe 50 monedas y 3 Semillas de zanahoria. Si las Semillas no caben en el inventario, aparece “Inventario lleno” y la última caja no se mueve.
+* Junto al corral hay un cartel: “Pon cada caja sobre una marca. Si te atascas, sal de la granja y vuelve: las cajas volverán a su sitio.”
+* Si el jugador sale de la granja sin resolverlo, las cajas vuelven a su posición inicial.
+* Una vez resuelto, las cajas se quedan sobre las marcas y no se pueden mover. Solo se resuelve una vez.","sprint-3"
+"HU-78","Historia","HU-78. Las campanas de la torre","Como jugador, quiero tocar las campanas de la torre en el orden correcto para descubrir la melodía de la relojera.
+
+h2. Criterios de aceptación
+* En la torre hay tres campanas de distinto tamaño: grande, mediana y pequeña. Al pulsar E junto a una, suena (cada una con su nota: la grande es la más grave y la pequeña la más aguda).
+* En la pared de la torre hay una partitura que se lee con E, como un cartel: “La melodía empieza grave, sube hasta lo más agudo y termina en el medio.” El orden correcto es grande, pequeña y mediana.
+* Las campanas recuerdan las tres últimas que se han tocado. Si son grande, pequeña y mediana, en ese orden, aparece “Suena la melodía de la relojera” y el jugador recibe 80 monedas.
+* Si se tocan tres campanas en otro orden, aparece “Las campanas desafinan” y se empieza de nuevo.
+* La melodía solo da la recompensa una vez. Después, las campanas siguen sonando al tocarlas, pero no pasa nada más.
+* Si el jugador sale de la torre a medias, se empieza de nuevo.
+
+h2. Escenarios
+
+h3. Escenario 1: Tocar una campana
+* *Dado* que el jugador está junto a la campana grande
+* *Cuando* pulsa E
+* *Entonces* suena la nota de la campana grande
+
+h3. Escenario 2: Orden correcto
+* *Dado* que el jugador tiene 100 monedas
+* *Cuando* toca la campana grande, la pequeña y la mediana, en ese orden
+* *Entonces* aparece “Suena la melodía de la relojera”
+* *Y* el jugador tiene 180 monedas
+
+h3. Escenario 3: Orden incorrecto
+* *Dado* que el jugador no ha tocado ninguna campana
+* *Cuando* toca la mediana, la grande y la pequeña
+* *Entonces* aparece “Las campanas desafinan”
+* *Y* el dinero no cambia
+
+h3. Escenario 4: Una sola vez
+* *Dado* que el jugador ya ha tocado la melodía
+* *Cuando* la vuelve a tocar
+* *Entonces* no aparece ningún mensaje y el dinero no cambia","* En la torre hay tres campanas de distinto tamaño: grande, mediana y pequeña. Al pulsar E junto a una, suena (cada una con su nota: la grande es la más grave y la pequeña la más aguda).
+* En la pared de la torre hay una partitura que se lee con E, como un cartel: “La melodía empieza grave, sube hasta lo más agudo y termina en el medio.” El orden correcto es grande, pequeña y mediana.
+* Las campanas recuerdan las tres últimas que se han tocado. Si son grande, pequeña y mediana, en ese orden, aparece “Suena la melodía de la relojera” y el jugador recibe 80 monedas.
+* Si se tocan tres campanas en otro orden, aparece “Las campanas desafinan” y se empieza de nuevo.
+* La melodía solo da la recompensa una vez. Después, las campanas siguen sonando al tocarlas, pero no pasa nada más.
+* Si el jugador sale de la torre a medias, se empieza de nuevo.","sprint-3"
+"HU-77","Historia","HU-77. Las losas del bosque","Como jugador, quiero resolver un acertijo escondido en el bosque para descubrir sus secretos.
+
+h2. Criterios de aceptación
+* En un claro escondido del bosque, al que se llega por un sendero desde el camino principal, hay 9 losas de piedra en una cuadrícula de 3×3.
+* Junto a las losas hay un cartel: “Pisa todas las piedras, pero ninguna dos veces.”
+* Al pisar una losa apagada, se enciende.
+* Al pisar una losa que ya estaba encendida, todas se apagan y aparece “Las losas se apagan”.
+* Al encenderse las 9, aparece “Las losas brillan” y el jugador recibe 60 monedas y 2 Semillas de calabaza. Si las Semillas no caben en el inventario, aparece “Inventario lleno” y la última losa no se enciende: se puede volver a pisar cuando haya sitio.
+* Una vez resuelto, las losas se quedan encendidas para siempre y pisarlas no hace nada. El acertijo solo se puede resolver una vez.
+* Si el jugador sale del bosque sin resolverlo, las losas se apagan.
+
+h2. Escenarios
+
+h3. Escenario 1: Encender una losa
+* *Dado* que todas las losas están apagadas
+* *Cuando* el jugador pisa una losa
+* *Entonces* esa losa se enciende
+
+h3. Escenario 2: Pisar una losa encendida
+* *Dado* que hay 3 losas encendidas
+* *Cuando* el jugador vuelve a pisar una de ellas
+* *Entonces* todas las losas se apagan
+* *Y* aparece “Las losas se apagan”
+
+h3. Escenario 3: Resolver el acertijo
+* *Dado* que hay 8 losas encendidas y el jugador tiene 100 monedas
+* *Cuando* pisa la que falta
+* *Entonces* aparece “Las losas brillan”
+* *Y* el jugador tiene 160 monedas y 2 Semillas de calabaza
+
+h3. Escenario 4: Acertijo resuelto
+* *Dado* que el acertijo ya está resuelto
+* *Cuando* el jugador vuelve a pisar una losa
+* *Entonces* las losas siguen encendidas y no recibe nada más
+
+h3. Escenario 5: Salir del bosque
+* *Dado* que hay 4 losas encendidas
+* *Cuando* el jugador sale del bosque y vuelve
+* *Entonces* todas las losas están apagadas","* En un claro escondido del bosque, al que se llega por un sendero desde el camino principal, hay 9 losas de piedra en una cuadrícula de 3×3.
+* Junto a las losas hay un cartel: “Pisa todas las piedras, pero ninguna dos veces.”
+* Al pisar una losa apagada, se enciende.
+* Al pisar una losa que ya estaba encendida, todas se apagan y aparece “Las losas se apagan”.
+* Al encenderse las 9, aparece “Las losas brillan” y el jugador recibe 60 monedas y 2 Semillas de calabaza. Si las Semillas no caben en el inventario, aparece “Inventario lleno” y la última losa no se enciende: se puede volver a pisar cuando haya sitio.
+* Una vez resuelto, las losas se quedan encendidas para siempre y pisarlas no hace nada. El acertijo solo se puede resolver una vez.
+* Si el jugador sale del bosque sin resolverlo, las losas se apagan.","sprint-3"
+"HU-75","Historia","HU-75. La fuente de la plaza","Como jugador, quiero usar la fuente de la plaza para recuperar algo de energía y recibir pistas cuando me atasco.
+
+h2. Criterios de aceptación
+* Al pulsar E junto a la fuente de la plaza aparece el cuadro “Fuente” con las opciones “Beber”, “Echar una moneda” y “Nada”.
+* “Beber” recupera 15 puntos de energía, sin pasar de 100, y aparece “Te sientes con más energía”. Solo se puede beber una vez al día: la segunda vez aparece “Ya has bebido hoy” y la energía no cambia.
+* “Echar una moneda” cuesta 5 monedas y da una pista. Sin 5 monedas aparece “No tienes monedas suficientes” y no se da la pista.
+* La pista es la primera de la lista que todavía sirve (lo que indica aún no se ha hecho):
+*# El cofre del granero está sin abrir: “Detrás del granero hay algo que brilla.”
+*# La Pala sigue en la granja: “El granjero siempre pierde la pala cerca del granero.”
+*# El cofre del lago está sin abrir: “Al suroeste del lago, entre los árboles, se abre un sendero.”
+*# El cofre de la torre está sin abrir (a partir del día 5): “En la torre hay un almacén que nadie usa.”
+*# Falta alguna página del diario: “La relojera escribía mucho. Busca en las esquinas del pueblo.”
+*# Si no queda ninguna: “La fuente no tiene nada más que contarte.”
+* Echar una moneda se puede repetir las veces que se quiera; cada vez cuesta 5 monedas.
+* “Nada” cierra el cuadro sin hacer nada.
+* Las tres opciones se ven completas y separadas, sin montarse unas sobre otras.
+* La fuente es un obstáculo (HU-07).
+
+h2. Escenarios
+
+h3. Escenario 1: Beber
+* *Dado* que el jugador tiene 60 puntos de energía y hoy no ha bebido
+* *Cuando* elige “Beber”
+* *Entonces* la energía sube a 75
+* *Y* aparece “Te sientes con más energía”
+
+h3. Escenario 2: Beber dos veces el mismo día
+* *Dado* que el jugador ya ha bebido hoy y tiene 75 puntos de energía
+* *Cuando* vuelve a elegir “Beber”
+* *Entonces* aparece “Ya has bebido hoy”
+* *Y* la energía sigue en 75
+
+h3. Escenario 3: Al día siguiente
+* *Dado* que el jugador bebió ayer
+* *Cuando* elige “Beber”
+* *Entonces* recupera 15 puntos de energía
+
+h3. Escenario 4: Echar una moneda
+* *Dado* que el jugador tiene 20 monedas y no ha abierto el cofre del granero
+* *Cuando* elige “Echar una moneda”
+* *Entonces* tiene 15 monedas
+* *Y* aparece la pista “Detrás del granero hay algo que brilla.”
+
+h3. Escenario 5: Sin monedas
+* *Dado* que el jugador tiene 3 monedas
+* *Cuando* elige “Echar una moneda”
+* *Entonces* aparece “No tienes monedas suficientes”
+* *Y* sigue teniendo 3 monedas
+
+h3. Escenario 6: Pista siguiente
+* *Dado* que el cofre del granero ya está abierto y la Pala recogida
+* *Cuando* el jugador echa una moneda
+* *Entonces* aparece la pista “Al suroeste del lago, entre los árboles, se abre un sendero.”
+
+h3. Escenario 7: Opciones legibles
+* *Dado* que el jugador está junto a la fuente
+* *Cuando* pulsa E
+* *Entonces* “Beber”, “Echar una moneda” y “Nada” se ven separadas, sin solaparse, también al cambiar la opción seleccionada","* Al pulsar E junto a la fuente de la plaza aparece el cuadro “Fuente” con las opciones “Beber”, “Echar una moneda” y “Nada”.
+* “Beber” recupera 15 puntos de energía, sin pasar de 100, y aparece “Te sientes con más energía”. Solo se puede beber una vez al día: la segunda vez aparece “Ya has bebido hoy” y la energía no cambia.
+* “Echar una moneda” cuesta 5 monedas y da una pista. Sin 5 monedas aparece “No tienes monedas suficientes” y no se da la pista.
+* La pista es la primera de la lista que todavía sirve (lo que indica aún no se ha hecho):
+*# El cofre del granero está sin abrir: “Detrás del granero hay algo que brilla.”
+*# La Pala sigue en la granja: “El granjero siempre pierde la pala cerca del granero.”
+*# El cofre del lago está sin abrir: “Al suroeste del lago, entre los árboles, se abre un sendero.”
+*# El cofre de la torre está sin abrir (a partir del día 5): “En la torre hay un almacén que nadie usa.”
+*# Falta alguna página del diario: “La relojera escribía mucho. Busca en las esquinas del pueblo.”
+*# Si no queda ninguna: “La fuente no tiene nada más que contarte.”
+* Echar una moneda se puede repetir las veces que se quiera; cada vez cuesta 5 monedas.
+* “Nada” cierra el cuadro sin hacer nada.
+* Las tres opciones se ven completas y separadas, sin montarse unas sobre otras.
+* La fuente es un obstáculo (HU-07).","sprint-3"
+"HU-74","Historia","HU-74. Misiones con hora límite","Como jugador, quiero que algunas misiones tengan prisa para tener que organizar el día.
+
+h2. Criterios de aceptación
+* Algunas misiones (HU-72) tienen una hora límite: hay que completarlas antes de esa hora del mismo día en que se aceptan.
+* Después de su hora límite, el vecino ya no ofrece esa misión ese día. La vuelve a ofrecer al día siguiente.
+* En la lista de objetivos, la misión muestra “Antes de las \[hora\]”.
+* Al llegar la hora límite sin completarla, aparece “Misión fallida: \[nombre\]” y la misión deja de estar activa. Si se recibió un objeto de misión, desaparece del inventario.
+* Una misión fallida se vuelve a ofrecer al día siguiente.
+* Si el día termina (al dormir o a medianoche) con una misión con hora límite activa, la misión falla.
+
+h2. Escenarios
+
+h3. Escenario 1: Hora límite en la lista
+* *Dado* que el jugador acepta “Una trucha para Rosa” el día 3
+* *Cuando* abre la lista de objetivos
+* *Entonces* la misión muestra “Antes de las 12:00”
+
+h3. Escenario 2: Completar a tiempo
+* *Dado* que “Una trucha para Rosa” está activa, son las 11:30 y el jugador tiene una Trucha
+* *Cuando* habla con Rosa
+* *Entonces* aparece “Misión completada”
+
+h3. Escenario 3: Misión fallida
+* *Dado* que “Una trucha para Rosa” está activa y son las 11:59
+* *Cuando* el reloj llega a las 12:00
+* *Entonces* aparece “Misión fallida: Una trucha para Rosa”
+* *Y* la misión ya no está en la lista de objetivos
+
+h3. Escenario 4: Objeto de misión al fallar
+* *Dado* que “Paquete urgente” está activa y el jugador tiene el Paquete
+* *Cuando* el reloj llega a las 15:00
+* *Entonces* el Paquete desaparece del inventario
+
+h3. Escenario 5: Fuera de hora
+* *Dado* que es el día 3 a las 13:00 y el jugador no ha aceptado “Una trucha para Rosa”
+* *Cuando* habla con Rosa
+* *Entonces* Rosa no ofrece la misión
+
+h3. Escenario 6: Otra oportunidad
+* *Dado* que “Una trucha para Rosa” falló el día 3
+* *Cuando* el jugador habla con Rosa el día 4 antes de las 12:00
+* *Entonces* Rosa vuelve a ofrecer la misión","* Algunas misiones (HU-72) tienen una hora límite: hay que completarlas antes de esa hora del mismo día en que se aceptan.
+* Después de su hora límite, el vecino ya no ofrece esa misión ese día. La vuelve a ofrecer al día siguiente.
+* En la lista de objetivos, la misión muestra “Antes de las \[hora\]”.
+* Al llegar la hora límite sin completarla, aparece “Misión fallida: \[nombre\]” y la misión deja de estar activa. Si se recibió un objeto de misión, desaparece del inventario.
+* Una misión fallida se vuelve a ofrecer al día siguiente.
+* Si el día termina (al dormir o a medianoche) con una misión con hora límite activa, la misión falla.","sprint-3"
+"HU-73","Historia","HU-73. Indicadores sobre los NPC","Como jugador, quiero ver sobre los personajes si tienen algo para mí para saber con quién hablar.
+
+h2. Criterios de aceptación
+* Sobre un NPC aparece “\!” si al hablar con él ofrecería un encargo principal o una misión.
+* Sobre un NPC aparece “?” si tiene un encargo o una misión activa que se puede completar al hablar con él (por ejemplo, el jugador ya tiene los objetos pedidos, o es el destinatario de un recado). También aparece “?” sobre Bigotes mientras hay que encontrarlo.
+* Si se dan las dos cosas, aparece “?”.
+* Sin nada de eso, no aparece ningún indicador.
+* El indicador cambia en cuanto cambia la situación (al aceptar, al recoger los objetos, al completar...).
+* El indicador no tapa el “E” de HU-10: cuando el jugador está a tiro, se ve el “E” en su lugar.
+
+h2. Escenarios
+
+h3. Escenario 1: Encargo para ofrecer
+* *Dado* que es el día 1 y el encargo “Entregar la Carta del alcalde” no se ha aceptado
+* *Cuando* el jugador mira al alcalde
+* *Entonces* aparece “\!” sobre el alcalde
+
+h3. Escenario 2: Misión lista para entregar
+* *Dado* que “Leña para el invierno” está activa y el jugador tiene 3 Leñas
+* *Cuando* mira a Bruno
+* *Entonces* aparece “?” sobre Bruno
+
+h3. Escenario 3: Misión sin terminar
+* *Dado* que “Leña para el invierno” está activa y el jugador tiene 1 Leña
+* *Cuando* mira a Bruno
+* *Entonces* no aparece ningún indicador sobre Bruno
+
+h3. Escenario 4: Destinatario de un recado
+* *Dado* que “Un recado para el alcalde” está activa
+* *Cuando* el jugador mira al alcalde
+* *Entonces* aparece “?” sobre el alcalde
+
+h3. Escenario 5: Sin nada que ofrecer
+* *Dado* que el jugador ya ha completado “Leña para el invierno”
+* *Cuando* mira a Bruno
+* *Entonces* no aparece ningún indicador sobre Bruno","* Sobre un NPC aparece “\!” si al hablar con él ofrecería un encargo principal o una misión.
+* Sobre un NPC aparece “?” si tiene un encargo o una misión activa que se puede completar al hablar con él (por ejemplo, el jugador ya tiene los objetos pedidos, o es el destinatario de un recado). También aparece “?” sobre Bigotes mientras hay que encontrarlo.
+* Si se dan las dos cosas, aparece “?”.
+* Sin nada de eso, no aparece ningún indicador.
+* El indicador cambia en cuanto cambia la situación (al aceptar, al recoger los objetos, al completar...).
+* El indicador no tapa el “E” de HU-10: cuando el jugador está a tiro, se ve el “E” en su lugar.","sprint-3"
+"HU-72","Historia","HU-72. Misiones secundarias","Como jugador, quiero ayudar a los vecinos con pequeñas misiones para ganar dinero y conocer mejor el pueblo.
+
+h2. Criterios de aceptación
+* Los vecinos ofrecen misiones secundarias al hablar con ellos, con las opciones “Aceptar” y “Rechazar”, como los encargos (HU-19). Al rechazar, la volverán a ofrecer la próxima vez.
+* Cada misión se ofrece a partir de su día y solo se puede completar una vez.
+* Se pueden tener hasta 3 misiones activas a la vez. Son independientes del encargo principal y de los pedidos del tablón (HU-53): ni los bloquean ni se bloquean por ellos.
+* Con 3 misiones activas, un vecino que tenga una misión que ofrecer dice “Ya tienes 3 misiones activas” y no la ofrece.
+* Si el vecino tiene algo que decir del encargo principal (ofrecerlo, su seguimiento o completarlo), eso va primero: la misión se ofrece la siguiente vez que se hable con él.
+* Tipos de misión:
+** Entregar objetos al vecino que la encargó.
+** Llevar un objeto de misión a otro vecino: el objeto se recibe al aceptar (con el aviso de HU-65) y no se puede vender. Si no cabe en el inventario, aparece “Inventario lleno” y la misión no se acepta. La misión se completa al hablar con el destinatario.
+** Dar un recado: se completa al hablar con el vecino indicado.
+** Encontrar a Bigotes: mientras la misión está activa, Bigotes está en la granja, junto al manzano. Al hablar con él vuelve al barrio y la misión se completa al hablar con Pablo.
+* Al completar una misión aparece “Misión completada”, se entregan los objetos pedidos y se cobra la recompensa. Si la recompensa no cabe en el inventario, aparece “Inventario lleno” y la misión sigue activa (como HU-20).
+* Las recompensas suman a las monedas ganadas del día (HU-39).
+* La lista de objetivos (HU-21) tiene un apartado nuevo, “Misiones”, entre “Encargos” y “Notas”: el nombre de cada misión activa, su descripción y “Encargada por: \[vecino\]”, o “No tienes misiones activas”.
+* Las misiones (día, vecino, tipo y recompensa):
+*# Día 1, Marta, “Una carta para Tomás”: llevar la Carta para Tomás a Tomás. 20 monedas.
+*# Día 1, Pablo, “¿Dónde está Bigotes?”: encontrar a Bigotes. 2 Manzanas.
+*# Día 2, Lucía, “Semillas para Lucía”: entregarle 2 Semillas. 1 Semilla de calabaza.
+*# Día 2, Elena, “Manzanas para la tarta”: entregarle 2 Manzanas antes de las 18:00 (HU-74). 30 monedas.
+*# Día 3, Rosa, “Una trucha para Rosa”: entregarle 1 Trucha antes de las 12:00 (HU-74). 40 monedas.
+*# Día 3, Bruno, “Leña para el invierno”: entregarle 3 Leñas. 45 monedas.
+*# Día 3, Fran, “Setas para la cena”: entregarle 3 Setas. 25 monedas.
+*# Día 4, Tomás, “Un recado para el alcalde”: hablar con el alcalde. 20 monedas.
+*# Día 4, Marta, “Paquete urgente”: llevar el Paquete a Bruno antes de las 15:00 (HU-74). 35 monedas.
+*# Día 5, Pablo, “El siluro gigante”: entregarle 1 Siluro. 60 monedas.
+*# Día 5, Lucía, “Zanahorias para Lucía”: entregarle 2 Zanahorias. 50 monedas.
+*# Día 6, Elena, “Mermelada de moras”: entregarle 4 Moras antes de las 13:00 (HU-74). 30 monedas.
+*# Día 5, Bruno, “Algo caliente para el bosque”: entregarle 1 Sopa de setas (HU-86). 60 monedas.
+*# Día 6, Tomás, “La cena de Tomás”: entregarle 1 Carpa asada (HU-86). 90 monedas.
+
+h2. Escenarios
+
+h3. Escenario 1: Aceptar una misión
+* *Dado* que es el día 3 y el jugador habla con Bruno
+* *Cuando* elige “Aceptar”
+* *Entonces* “Leña para el invierno” aparece en el apartado “Misiones” de la lista de objetivos
+
+h3. Escenario 2: Completar una misión
+* *Dado* que “Leña para el invierno” está activa y el jugador tiene 3 Leñas y 100 monedas
+* *Cuando* habla con Bruno
+* *Entonces* aparece “Misión completada”
+* *Y* el jugador tiene 145 monedas y ninguna Leña
+
+h3. Escenario 3: Límite de misiones
+* *Dado* que el jugador tiene 3 misiones activas
+* *Cuando* habla con un vecino que tiene una misión que ofrecer
+* *Entonces* el vecino dice “Ya tienes 3 misiones activas”
+
+h3. Escenario 4: Misión y encargo a la vez
+* *Dado* que el encargo principal “Semillas para la cosecha” está activo
+* *Cuando* el jugador acepta “Semillas para Lucía”
+* *Entonces* las dos aparecen en la lista de objetivos
+
+h3. Escenario 5: Llevar un objeto a otro vecino
+* *Dado* que el jugador acepta “Una carta para Tomás”
+* *Cuando* habla con Tomás
+* *Entonces* aparece “Misión completada”
+* *Y* la Carta para Tomás ya no está en el inventario
+
+h3. Escenario 6: Encontrar a Bigotes
+* *Dado* que “¿Dónde está Bigotes?” está activa
+* *Cuando* el jugador habla con Bigotes junto al manzano y después con Pablo
+* *Entonces* aparece “Misión completada”
+
+h3. Escenario 7: Recompensa que no cabe
+* *Dado* que el inventario está lleno y “¿Dónde está Bigotes?” está activa
+* *Cuando* el jugador habla con Bigotes y después con Pablo
+* *Entonces* aparece “Inventario lleno”
+* *Y* la misión sigue activa","* Los vecinos ofrecen misiones secundarias al hablar con ellos, con las opciones “Aceptar” y “Rechazar”, como los encargos (HU-19). Al rechazar, la volverán a ofrecer la próxima vez.
+* Cada misión se ofrece a partir de su día y solo se puede completar una vez.
+* Se pueden tener hasta 3 misiones activas a la vez. Son independientes del encargo principal y de los pedidos del tablón (HU-53): ni los bloquean ni se bloquean por ellos.
+* Con 3 misiones activas, un vecino que tenga una misión que ofrecer dice “Ya tienes 3 misiones activas” y no la ofrece.
+* Si el vecino tiene algo que decir del encargo principal (ofrecerlo, su seguimiento o completarlo), eso va primero: la misión se ofrece la siguiente vez que se hable con él.
+* Tipos de misión:
+** Entregar objetos al vecino que la encargó.
+** Llevar un objeto de misión a otro vecino: el objeto se recibe al aceptar (con el aviso de HU-65) y no se puede vender. Si no cabe en el inventario, aparece “Inventario lleno” y la misión no se acepta. La misión se completa al hablar con el destinatario.
+** Dar un recado: se completa al hablar con el vecino indicado.
+** Encontrar a Bigotes: mientras la misión está activa, Bigotes está en la granja, junto al manzano. Al hablar con él vuelve al barrio y la misión se completa al hablar con Pablo.
+* Al completar una misión aparece “Misión completada”, se entregan los objetos pedidos y se cobra la recompensa. Si la recompensa no cabe en el inventario, aparece “Inventario lleno” y la misión sigue activa (como HU-20).
+* Las recompensas suman a las monedas ganadas del día (HU-39).
+* La lista de objetivos (HU-21) tiene un apartado nuevo, “Misiones”, entre “Encargos” y “Notas”: el nombre de cada misión activa, su descripción y “Encargada por: \[vecino\]”, o “No tienes misiones activas”.
+* Las misiones (día, vecino, tipo y recompensa):
+*# Día 1, Marta, “Una carta para Tomás”: llevar la Carta para Tomás a Tomás. 20 monedas.
+*# Día 1, Pablo, “¿Dónde está Bigotes?”: encontrar a Bigotes. 2 Manzanas.
+*# Día 2, Lucía, “Semillas para Lucía”: entregarle 2 Semillas. 1 Semilla de calabaza.
+*# Día 2, Elena, “Manzanas para la tarta”: entregarle 2 Manzanas antes de las 18:00 (HU-74). 30 monedas.
+*# Día 3, Rosa, “Una trucha para Rosa”: entregarle 1 Trucha antes de las 12:00 (HU-74). 40 monedas.
+*# Día 3, Bruno, “Leña para el invierno”: entregarle 3 Leñas. 45 monedas.
+*# Día 3, Fran, “Setas para la cena”: entregarle 3 Setas. 25 monedas.
+*# Día 4, Tomás, “Un recado para el alcalde”: hablar con el alcalde. 20 monedas.
+*# Día 4, Marta, “Paquete urgente”: llevar el Paquete a Bruno antes de las 15:00 (HU-74). 35 monedas.
+*# Día 5, Pablo, “El siluro gigante”: entregarle 1 Siluro. 60 monedas.
+*# Día 5, Lucía, “Zanahorias para Lucía”: entregarle 2 Zanahorias. 50 monedas.
+*# Día 6, Elena, “Mermelada de moras”: entregarle 4 Moras antes de las 13:00 (HU-74). 30 monedas.
+*# Día 5, Bruno, “Algo caliente para el bosque”: entregarle 1 Sopa de setas (HU-86). 60 monedas.
+*# Día 6, Tomás, “La cena de Tomás”: entregarle 1 Carpa asada (HU-86). 90 monedas.","sprint-3"
+"HU-71","Historia","HU-71. Los vecinos","Como jugador, quiero encontrarme a los vecinos por el pueblo durante toda la semana para que Valtrigo parezca un pueblo de verdad.
+
+h2. Criterios de aceptación
+* Los seis vecinos de la feria (Rosa, Lucía, Tomás, Pablo, Fran y Elena) viven en el pueblo y siguen un horario por zonas del día 1 al día 6, como los NPC de HU-40.
+* Hay tres vecinos nuevos: Bruno, el leñador, que está en el bosque; Marta, la cartera, que recorre el pueblo; y Bigotes, el gato de Pablo.
+* Horarios del día 1 al día 6 (cada tramo va desde la primera hora hasta antes de la segunda; fuera de sus tramos, el vecino no está en ninguna zona):
+** Tomás: casa de Tomás y Pablo de 06:00 a 09:00, plaza de 09:00 a 13:00, barrio de 13:00 a 19:00 y casa de 19:00 a 23:00.
+** Pablo: casa de 07:00 a 09:00, barrio de 09:00 a 12:00, lago de 12:00 a 17:00, barrio de 17:00 a 20:00 y casa de 20:00 a 22:00.
+** Bigotes: barrio de 06:00 a 20:00 y casa de Tomás y Pablo de 20:00 a 24:00.
+** Lucía: barrio de 07:00 a 12:00, granja de 12:00 a 15:00 y casa de Lucía de 15:00 a 22:00.
+** Rosa: lago de 06:00 a 12:00 y plaza de 12:00 a 19:00.
+** Fran: plaza de 10:00 a 14:00 y barrio de 16:00 a 21:00.
+** Elena: barrio de 10:00 a 14:00 y plaza de 16:00 a 21:00.
+** Bruno: bosque de 07:00 a 19:00.
+** Marta: plaza de 08:00 a 10:00, barrio de 10:00 a 12:00, granja de 12:00 a 14:00, lago de 14:00 a 16:00 y plaza de 16:00 a 18:00.
+* El día 7 los seis vecinos de la feria siguen el horario de la feria (HU-58). Bruno sigue en el bosque, Bigotes en el barrio y Marta no reparte.
+* Cada vecino tiene su propio saludo al hablar con él (HU-10). Bigotes solo dice “¡Miau\!”.
+* El día de la feria, los seis vecinos de la feria dicen lo mismo que en la feria (HU-58), aunque tengan misiones secundarias sin hacer o activas (HU-72): ese día no las ofrecen ni hablan de ellas, y no tienen indicador encima (HU-73).
+
+h2. Escenarios
+
+h3. Escenario 1: Vecino en su sitio
+* *Dado* que es el día 2 a las 10:00
+* *Cuando* el jugador entra en la plaza
+* *Entonces* Tomás está en la plaza
+
+h3. Escenario 2: Vecino que cambia de zona
+* *Dado* que es el día 2 a las 14:00
+* *Cuando* el jugador entra en el barrio
+* *Entonces* Tomás está en el barrio
+* *Y* no está en la plaza
+
+h3. Escenario 3: Bruno en el bosque
+* *Dado* que es el día 3 a las 10:00
+* *Cuando* el jugador entra en el bosque
+* *Entonces* Bruno está en el bosque
+
+h3. Escenario 4: La ronda de Marta
+* *Dado* que es el día 2 a las 13:00
+* *Cuando* el jugador entra en la granja
+* *Entonces* Marta está en la granja
+
+h3. Escenario 5: Hablar con Bigotes
+* *Dado* que el jugador está junto a Bigotes
+* *Cuando* pulsa E
+* *Entonces* aparece el diálogo “¡Miau\!”
+
+h3. Escenario 6: Día de la feria
+* *Dado* que es el día 7 a las 13:00
+* *Cuando* el jugador entra en la plaza
+* *Entonces* los seis vecinos de la feria están en la plaza
+* *Y* Marta no está en ninguna zona
+
+h3. Escenario 7: Frase de la feria con misiones pendientes
+* *Dado* que es el día 7 y el jugador no ha hecho la misión de Fran ni las de Elena
+* *Cuando* habla con Fran
+* *Entonces* Fran dice “He venido por el networking, pero bueno... el futuro es ansiedad.”
+* *Y* no ofrece ninguna misión","* Los seis vecinos de la feria (Rosa, Lucía, Tomás, Pablo, Fran y Elena) viven en el pueblo y siguen un horario por zonas del día 1 al día 6, como los NPC de HU-40.
+* Hay tres vecinos nuevos: Bruno, el leñador, que está en el bosque; Marta, la cartera, que recorre el pueblo; y Bigotes, el gato de Pablo.
+* Horarios del día 1 al día 6 (cada tramo va desde la primera hora hasta antes de la segunda; fuera de sus tramos, el vecino no está en ninguna zona):
+** Tomás: casa de Tomás y Pablo de 06:00 a 09:00, plaza de 09:00 a 13:00, barrio de 13:00 a 19:00 y casa de 19:00 a 23:00.
+** Pablo: casa de 07:00 a 09:00, barrio de 09:00 a 12:00, lago de 12:00 a 17:00, barrio de 17:00 a 20:00 y casa de 20:00 a 22:00.
+** Bigotes: barrio de 06:00 a 20:00 y casa de Tomás y Pablo de 20:00 a 24:00.
+** Lucía: barrio de 07:00 a 12:00, granja de 12:00 a 15:00 y casa de Lucía de 15:00 a 22:00.
+** Rosa: lago de 06:00 a 12:00 y plaza de 12:00 a 19:00.
+** Fran: plaza de 10:00 a 14:00 y barrio de 16:00 a 21:00.
+** Elena: barrio de 10:00 a 14:00 y plaza de 16:00 a 21:00.
+** Bruno: bosque de 07:00 a 19:00.
+** Marta: plaza de 08:00 a 10:00, barrio de 10:00 a 12:00, granja de 12:00 a 14:00, lago de 14:00 a 16:00 y plaza de 16:00 a 18:00.
+* El día 7 los seis vecinos de la feria siguen el horario de la feria (HU-58). Bruno sigue en el bosque, Bigotes en el barrio y Marta no reparte.
+* Cada vecino tiene su propio saludo al hablar con él (HU-10). Bigotes solo dice “¡Miau\!”.
+* El día de la feria, los seis vecinos de la feria dicen lo mismo que en la feria (HU-58), aunque tengan misiones secundarias sin hacer o activas (HU-72): ese día no las ofrecen ni hablan de ellas, y no tienen indicador encima (HU-73).","sprint-3"
+"HU-70","Historia","HU-70. Nueva zona: el Barrio","Como jugador, quiero visitar el barrio donde viven los vecinos para conocer mejor el pueblo.
+
+h2. Criterios de aceptación
+* El barrio es una zona nueva conectada con la plaza por un camino en el borde oeste de la plaza.
+* En el barrio hay cinco casas: la de Tomás y Pablo, la de Lucía, la de Rosa, la de Fran y la de Elena. Cada una tiene un cartel con el nombre de quien vive en ella.
+* Se puede entrar en la casa de Tomás y Pablo y en la de Lucía. Cada una es una zona interior, con su puerta, como la casa del jugador.
+* Al caminar hacia la puerta de la casa de Rosa, la de Fran o la de Elena aparece el cuadro de diálogo “La puerta está cerrada” y no se cambia de zona (como las puertas cerradas de HU-57).
+* El barrio tiene su propia música, que entra al llegar como en las demás zonas (HU-31). Las dos casas usan la música de la casa del jugador.
+* El cambio de zona funciona como el resto de puertas (HU-08).
+
+h2. Escenarios
+
+h3. Escenario 1: Entrar al barrio
+* *Dado* que el jugador está en la plaza
+* *Cuando* camina por el camino del oeste
+* *Entonces* aparece en el barrio, junto a la salida hacia la plaza
+
+h3. Escenario 2: Volver a la plaza
+* *Dado* que el jugador está en el barrio
+* *Cuando* camina por el camino del este
+* *Entonces* aparece en la plaza, junto al camino del oeste
+
+h3. Escenario 3: Entrar en una casa
+* *Dado* que el jugador está en el barrio, delante de la casa de Lucía
+* *Cuando* camina hacia la puerta
+* *Entonces* aparece dentro de la casa de Lucía
+
+h3. Escenario 4: Casa cerrada
+* *Dado* que el jugador está en el barrio, delante de la casa de Rosa
+* *Cuando* camina hacia la puerta
+* *Entonces* aparece el cuadro “La puerta está cerrada”
+* *Y* el jugador sigue en el barrio
+
+h3. Escenario 5: Carteles de las casas
+* *Dado* que el jugador está junto al cartel de la casa de Tomás y Pablo
+* *Cuando* pulsa E
+* *Entonces* aparece el texto “Casa de Tomás y Pablo”","* El barrio es una zona nueva conectada con la plaza por un camino en el borde oeste de la plaza.
+* En el barrio hay cinco casas: la de Tomás y Pablo, la de Lucía, la de Rosa, la de Fran y la de Elena. Cada una tiene un cartel con el nombre de quien vive en ella.
+* Se puede entrar en la casa de Tomás y Pablo y en la de Lucía. Cada una es una zona interior, con su puerta, como la casa del jugador.
+* Al caminar hacia la puerta de la casa de Rosa, la de Fran o la de Elena aparece el cuadro de diálogo “La puerta está cerrada” y no se cambia de zona (como las puertas cerradas de HU-57).
+* El barrio tiene su propia música, que entra al llegar como en las demás zonas (HU-31). Las dos casas usan la música de la casa del jugador.
+* El cambio de zona funciona como el resto de puertas (HU-08).","sprint-3"
+"HU-69","Historia","HU-69. Árboles completos","Como jugador, quiero que los árboles se vean completos para que el mundo tenga un aspecto cuidado.
+
+h2. Criterios de aceptación
+* En las zonas exteriores (plaza, granja, lago, bosque y barrio) hay árboles altos, de dos casillas, y árboles pequeños, de una. Unos son verdes y otros otoñales.
+* Un árbol alto tiene la copa en la casilla de arriba y el tronco en la de abajo, y las dos partes son del mismo árbol: ningún árbol aparece cortado ni mezcla un árbol verde con uno otoñal.
+* Todas las casillas de un árbol, alto o pequeño, son obstáculos (HU-07).
+
+h2. Escenarios
+
+h3. Escenario 1: Árboles altos completos
+* *Dado* que el jugador está en una zona exterior
+* *Cuando* hay un árbol alto en pantalla
+* *Entonces* se ven su copa y su tronco, uno debajo del otro y del mismo color
+
+h3. Escenario 2: Ningún árbol cortado
+* *Dado* que el jugador está en una zona exterior
+* *Cuando* recorre la zona
+* *Entonces* no hay ninguna copa sin tronco ni ningún tronco sin copa
+
+h3. Escenario 3: Árboles sólidos
+* *Dado* que hay un árbol alto encima del personaje
+* *Cuando* el jugador camina hacia él
+* *Entonces* el personaje se detiene junto al tronco","* En las zonas exteriores (plaza, granja, lago, bosque y barrio) hay árboles altos, de dos casillas, y árboles pequeños, de una. Unos son verdes y otros otoñales.
+* Un árbol alto tiene la copa en la casilla de arriba y el tronco en la de abajo, y las dos partes son del mismo árbol: ningún árbol aparece cortado ni mezcla un árbol verde con uno otoñal.
+* Todas las casillas de un árbol, alto o pequeño, son obstáculos (HU-07).","sprint-3"
+"HU-66","Historia","HU-66. Ceremonia de la feria","Como jugador, quiero una ceremonia al final de la feria para ver quién gana los concursos y escuchar al alcalde.
+
+h2. Criterios de aceptación
+* La ceremonia empieza a las 18:00 del día 7 si el jugador está en la plaza o, si no, en cuanto entra en la plaza ese día. Si el jugador no va antes de que acabe el día, se la pierde.
+* Al empezar, el alcalde sube al escenario y los visitantes se colocan delante, como público. El jugador no se puede mover hasta que termina.
+* El alcalde anuncia en un cuadro de diálogo los tres primeros del concurso de la cosecha (HU-59) y después los del concurso de pesca (HU-60), llamando al jugador por su nombre (HU-67). Mientras anuncia cada concurso, los tres primeros aparecen en el podio.
+* Si el jugador queda entre los tres primeros de un concurso, cobra su premio y aparece el mensaje “Premio: \[cantidad\] monedas”.
+* Después, si el encargo “La feria de Valtrigo” está activo o es el siguiente que toca, el alcalde da su discurso desde el escenario y el encargo se completa (HU-20). Al terminar, aparece el mensaje de final (HU-37).
+* La ceremonia solo se celebra una vez.
+
+h2. Escenarios
+
+h3. Escenario 1: Empieza la ceremonia
+* *Dado* que es el día 7 a las 17:59 y el jugador está en la plaza
+* *Cuando* el reloj llega a las 18:00
+* *Entonces* el alcalde está en el escenario
+* *Y* aparece el diálogo de la ceremonia
+
+h3. Escenario 2: Llegar tarde
+* *Dado* que son las 19:00 del día 7 y la ceremonia no se ha celebrado
+* *Cuando* el jugador entra en la plaza
+* *Entonces* empieza la ceremonia
+
+h3. Escenario 3: Podio y premio
+* *Dado* que el jugador presentó una Calabaza de 12 kg al concurso de la cosecha
+* *Cuando* el alcalde anuncia el concurso de la cosecha
+* *Entonces* el jugador aparece en el primer puesto del podio, Lucía en el segundo y Tomás en el tercero
+* *Y* el jugador recibe 100 monedas
+
+h3. Escenario 4: Fuera del podio
+* *Dado* que el mejor pez del jugador en el concurso de pesca mide 30 cm
+* *Cuando* el alcalde anuncia el concurso de pesca
+* *Entonces* el podio es Rosa, Tomás y Pablo
+* *Y* el jugador no recibe premio
+
+h3. Escenario 5: Discurso final
+* *Dado* que el encargo “La feria de Valtrigo” está activo
+* *Cuando* termina el anuncio de los concursos
+* *Entonces* el alcalde da su discurso, aparece el mensaje “Encargo completado”
+* *Y* después aparece el mensaje de final","* La ceremonia empieza a las 18:00 del día 7 si el jugador está en la plaza o, si no, en cuanto entra en la plaza ese día. Si el jugador no va antes de que acabe el día, se la pierde.
+* Al empezar, el alcalde sube al escenario y los visitantes se colocan delante, como público. El jugador no se puede mover hasta que termina.
+* El alcalde anuncia en un cuadro de diálogo los tres primeros del concurso de la cosecha (HU-59) y después los del concurso de pesca (HU-60), llamando al jugador por su nombre (HU-67). Mientras anuncia cada concurso, los tres primeros aparecen en el podio.
+* Si el jugador queda entre los tres primeros de un concurso, cobra su premio y aparece el mensaje “Premio: \[cantidad\] monedas”.
+* Después, si el encargo “La feria de Valtrigo” está activo o es el siguiente que toca, el alcalde da su discurso desde el escenario y el encargo se completa (HU-20). Al terminar, aparece el mensaje de final (HU-37).
+* La ceremonia solo se celebra una vez.","sprint-3"
+"HU-64","Historia","HU-64. Horario de la relojera","Como jugador, quiero saber cuándo está la relojera en la torre para no ir a buscarla a una hora en la que no está.
+
+h2. Criterios de aceptación
+* La primera vez que el jugador entra en la torre del reloj, aparece un cuadro de diálogo con el texto “La relojera viene a la torre de 9:00 a 22:00”, con las horas de su horario (HU-40).
+* El cuadro se cierra con E y entonces el jugador puede moverse.
+* Las siguientes veces que entra en la torre no aparece, tampoco después de guardar y continuar la partida.
+
+h2. Escenarios
+
+h3. Escenario 1: Primera visita
+* *Dado* que es el día 5 y el jugador no ha entrado nunca en la torre
+* *Cuando* entra en la torre
+* *Entonces* aparece el cuadro de diálogo “La relojera viene a la torre de 9:00 a 22:00”
+
+h3. Escenario 2: Cerrar el aviso
+* *Dado* que el aviso del horario de la relojera está visible
+* *Cuando* el jugador pulsa E
+* *Entonces* el cuadro se cierra y el jugador puede moverse
+
+h3. Escenario 3: Visitas siguientes
+* *Dado* que el jugador ya ha entrado antes en la torre
+* *Cuando* vuelve a entrar
+* *Entonces* no aparece el aviso","* La primera vez que el jugador entra en la torre del reloj, aparece un cuadro de diálogo con el texto “La relojera viene a la torre de 9:00 a 22:00”, con las horas de su horario (HU-40).
+* El cuadro se cierra con E y entonces el jugador puede moverse.
+* Las siguientes veces que entra en la torre no aparece, tampoco después de guardar y continuar la partida.","sprint-3"
+"HU-60","Historia","HU-60. Concurso de pesca","Como jugador, quiero participar en el concurso de pesca de la feria para ganar un premio.
+
+h2. Criterios de aceptación
+* De 12:00 a 17:00 del día 7, al pulsar E junto al puesto de pesca aparece “¿Inscribirte en el concurso de pesca?” con “Sí” y “No”. Al elegir “Sí” aparece el cuadro de diálogo “Ve al lago y lanza la caña para empezar”.
+* El concurso empieza la primera vez que el jugador lanza la caña en el lago después de inscribirse. Dura 1 minuto y 30 segundos de tiempo real (90 minutos de juego), pero termina a las 17:00 como muy tarde. Cuenta el pez más grande pescado durante ese tiempo.
+* Durante el concurso, la interfaz muestra la cuenta atrás del tiempo que queda, “Concurso de pesca: 1:30”, que baja segundo a segundo.
+* Durante el concurso pican las tres especies (Trucha, Carpa y Siluro) al azar, sea la hora que sea.
+* Durante el concurso, pescar no gasta energía. Los peces pescados se quedan en el inventario.
+* Al terminar aparece “Concurso terminado: tu mejor pez mide N cm” o, si no ha pescado nada, “Concurso terminado: no has pescado nada”.
+* Compiten también tres vecinos con resultados fijos: Rosa (62 cm), Tomás (48 cm) y Pablo (35 cm). Gana el pez más grande. En caso de empate, queda por delante el vecino.
+* Los tres primeros se anuncian en la ceremonia (HU-66). Premios para el jugador: 1.º 100 monedas, 2.º 50 y 3.º 20.
+* Solo se puede participar una vez por partida. Después, el puesto muestra “Ya has participado”. Después de las 17:00, el puesto muestra “El concurso ya ha terminado”.
+
+h2. Escenarios
+
+h3. Escenario 1: Inscribirse
+* *Dado* que es el día 7 a las 13:00
+* *Cuando* el jugador pulsa E junto al puesto de pesca y elige “Sí”
+* *Entonces* aparece el cuadro de diálogo “Ve al lago y lanza la caña para empezar”
+* *Y* la cuenta atrás aún no ha empezado
+
+h3. Escenario 2: Empezar en el lago
+* *Dado* que el jugador se ha inscrito en el concurso de pesca
+* *Cuando* lanza la caña en el lago
+* *Entonces* empieza el concurso y aparece “Concurso de pesca: 1:30”
+
+h3. Escenario 3: Mejor pez
+* *Dado* que el concurso de pesca está en marcha
+* *Y* el jugador pesca una Carpa de 30 cm y una Trucha de 45 cm
+* *Cuando* termina el concurso
+* *Entonces* aparece “Concurso terminado: tu mejor pez mide 45 cm”
+
+h3. Escenario 4: Sin peces
+* *Dado* que el concurso de pesca está en marcha y el jugador no pesca nada
+* *Cuando* termina el concurso
+* *Entonces* aparece “Concurso terminado: no has pescado nada”
+
+h3. Escenario 5: Duración
+* *Dado* que el jugador empieza el concurso a las 13:00
+* *Cuando* pasan 1 minuto y 30 segundos de tiempo real
+* *Entonces* el concurso termina a las 14:30
+
+h3. Escenario 6: Cuenta atrás
+* *Dado* que el concurso de pesca acaba de empezar
+* *Cuando* pasan 10 segundos
+* *Entonces* aparece “Concurso de pesca: 1:20”
+
+h3. Escenario 7: Todas las especies
+* *Dado* que el concurso de pesca está en marcha a las 15:00
+* *Cuando* el jugador pesca varios peces
+* *Entonces* pueden salir Truchas, Carpas y Siluros
+
+h3. Escenario 8: Fin a las 17:00
+* *Dado* que el concurso de pesca empezó a las 16:30
+* *Cuando* el reloj llega a las 17:00
+* *Entonces* el concurso termina
+
+h3. Escenario 9: Solo una vez
+* *Dado* que el jugador ya ha participado en el concurso de pesca
+* *Cuando* pulsa E junto al puesto
+* *Entonces* aparece el mensaje “Ya has participado”","* De 12:00 a 17:00 del día 7, al pulsar E junto al puesto de pesca aparece “¿Inscribirte en el concurso de pesca?” con “Sí” y “No”. Al elegir “Sí” aparece el cuadro de diálogo “Ve al lago y lanza la caña para empezar”.
+* El concurso empieza la primera vez que el jugador lanza la caña en el lago después de inscribirse. Dura 1 minuto y 30 segundos de tiempo real (90 minutos de juego), pero termina a las 17:00 como muy tarde. Cuenta el pez más grande pescado durante ese tiempo.
+* Durante el concurso, la interfaz muestra la cuenta atrás del tiempo que queda, “Concurso de pesca: 1:30”, que baja segundo a segundo.
+* Durante el concurso pican las tres especies (Trucha, Carpa y Siluro) al azar, sea la hora que sea.
+* Durante el concurso, pescar no gasta energía. Los peces pescados se quedan en el inventario.
+* Al terminar aparece “Concurso terminado: tu mejor pez mide N cm” o, si no ha pescado nada, “Concurso terminado: no has pescado nada”.
+* Compiten también tres vecinos con resultados fijos: Rosa (62 cm), Tomás (48 cm) y Pablo (35 cm). Gana el pez más grande. En caso de empate, queda por delante el vecino.
+* Los tres primeros se anuncian en la ceremonia (HU-66). Premios para el jugador: 1.º 100 monedas, 2.º 50 y 3.º 20.
+* Solo se puede participar una vez por partida. Después, el puesto muestra “Ya has participado”. Después de las 17:00, el puesto muestra “El concurso ya ha terminado”.","sprint-3"
+"HU-59","Historia","HU-59. Concurso de la cosecha","Como jugador, quiero presentar mi mejor cosecha en la feria para ganar un premio.
+
+h2. Criterios de aceptación
+* De 12:00 a 17:00 del día 7, al pulsar E junto al puesto de la cosecha aparece la lista de cosechas del inventario. Al elegir una, se entrega y aparece el mensaje “Has presentado \[cosecha\] de \[peso\] kg. Resultados en la ceremonia de las 18:00”.
+* Cada cosecha presentada pesa un número de kilos al azar dentro de su rango: Nabo de 1 a 3, Zanahoria de 2 a 5 y Calabaza de 6 a 15.
+* Compiten también tres vecinos con resultados fijos: Lucía (Calabaza de 11 kg), Tomás (Zanahoria de 4 kg) y Pablo (Nabo de 2 kg). Gana la cosecha más pesada. En caso de empate, queda por delante el vecino.
+* Los tres primeros se anuncian en la ceremonia (HU-66). Premios para el jugador: 1.º 100 monedas, 2.º 50 y 3.º 20.
+* Solo se puede participar una vez por partida. Después, el puesto muestra “Ya has participado”.
+* Sin cosechas aparece el mensaje “Necesitas una cosecha para participar”.
+* Después de las 17:00, el puesto muestra “El concurso ya ha terminado”.
+
+h2. Escenarios
+
+h3. Escenario 1: Participar
+* *Dado* que es el día 7 a las 13:00 y el jugador tiene una Calabaza
+* *Cuando* la presenta en el puesto de la cosecha
+* *Entonces* la Calabaza desaparece del inventario
+* *Y* aparece el mensaje “Has presentado una Calabaza de \[peso\] kg. Resultados en la ceremonia de las 18:00”, con un peso entre 6 y 15
+
+h3. Escenario 2: Solo una vez
+* *Dado* que el jugador ya ha participado en el concurso de la cosecha
+* *Cuando* pulsa E junto al puesto
+* *Entonces* aparece el mensaje “Ya has participado”
+
+h3. Escenario 3: Sin cosechas
+* *Dado* que el jugador no tiene cosechas
+* *Cuando* pulsa E junto al puesto de la cosecha
+* *Entonces* aparece el mensaje “Necesitas una cosecha para participar”
+
+h3. Escenario 4: Concurso terminado
+* *Dado* que es el día 7 a las 17:30 y el jugador tiene una Calabaza
+* *Cuando* pulsa E junto al puesto de la cosecha
+* *Entonces* aparece el mensaje “El concurso ya ha terminado”
+* *Y* la Calabaza sigue en el inventario","* De 12:00 a 17:00 del día 7, al pulsar E junto al puesto de la cosecha aparece la lista de cosechas del inventario. Al elegir una, se entrega y aparece el mensaje “Has presentado \[cosecha\] de \[peso\] kg. Resultados en la ceremonia de las 18:00”.
+* Cada cosecha presentada pesa un número de kilos al azar dentro de su rango: Nabo de 1 a 3, Zanahoria de 2 a 5 y Calabaza de 6 a 15.
+* Compiten también tres vecinos con resultados fijos: Lucía (Calabaza de 11 kg), Tomás (Zanahoria de 4 kg) y Pablo (Nabo de 2 kg). Gana la cosecha más pesada. En caso de empate, queda por delante el vecino.
+* Los tres primeros se anuncian en la ceremonia (HU-66). Premios para el jugador: 1.º 100 monedas, 2.º 50 y 3.º 20.
+* Solo se puede participar una vez por partida. Después, el puesto muestra “Ya has participado”.
+* Sin cosechas aparece el mensaje “Necesitas una cosecha para participar”.
+* Después de las 17:00, el puesto muestra “El concurso ya ha terminado”.","sprint-3"
+"HU-58","Historia","HU-58. La feria","Como jugador, quiero que el pueblo celebre la feria para sentir que mi trabajo ha servido.
+
+h2. Criterios de aceptación
+* La feria se celebra en la plaza el día 7. Es festivo: ese día el jugador se despierta a las 12:00 y la feria ya está montada.
+* Durante la feria, la plaza tiene guirnaldas, sujetas por un poste de madera en cada extremo, dos puestos (el de la cosecha, HU-59, y el de pesca, HU-60), un escenario y un podio para la ceremonia (HU-66).
+* El día 7, a partir de las 12:00, hay siete visitantes en la plaza: Rosa, Lucía, Tomás, Pablo, Fran, Elena y Pedro. Cada uno tiene un diálogo sencillo al pulsar E junto a él. Fran dice “He venido por el networking, pero bueno... el futuro es ansiedad.” y Elena “He venido porque me han prometido que después pondrán margarita frozen.”.
+* Pedro es un visitante de fuera del pueblo: solo aparece en la feria, el día 7. Tiene la piel clara y morena, el pelo negro y un polo de rayas horizontales verdes y azules. Su diálogo tiene dos ventanas: “¡¡He venido por la comida gratis\!\!” y, en la segunda, “¡¡¿Dónde está la comida?\!\!”.
+* Los concursos admiten participantes de 12:00 a 17:00. A las 17:00 aparece el mensaje “Los concursos han terminado. Ceremonia a las 18:00 en la plaza”.
+* Los postes de las guirnaldas, los puestos, el escenario y el podio son obstáculos.
+* Antes y después del día 7, la plaza tiene su aspecto normal: no hay guirnaldas, puestos, escenario ni podio. Los vecinos están donde marque su horario (HU-71).
+* Pasado el día 7, el encargo “La feria de Valtrigo” se puede seguir completando al hablar con el alcalde, aunque ya no haya feria.
+
+h2. Escenarios
+
+h3. Escenario 1: Día de feria
+* *Dado* que es el día 7
+* *Cuando* el jugador entra en la plaza
+* *Entonces* la plaza tiene guirnaldas, los puestos de la cosecha y de pesca, el escenario y el podio
+* *Y* están los siete visitantes
+
+h3. Escenario 2: Antes de la feria
+* *Dado* que es el día 6
+* *Cuando* el jugador entra en la plaza
+* *Entonces* no hay guirnaldas, puestos, escenario ni podio
+
+h3. Escenario 3: Después de la feria
+* *Dado* que es el día 8
+* *Cuando* el jugador entra en la plaza
+* *Entonces* no hay guirnaldas, puestos, escenario ni podio
+
+h3. Escenario 4: Encargo final después de la feria
+* *Dado* que es el día 8 y el encargo “La feria de Valtrigo” está activo
+* *Cuando* el jugador habla con el alcalde
+* *Entonces* aparece el mensaje “Encargo completado”
+
+h3. Escenario 5: Despertar el día de la feria
+* *Dado* que es el día 6 y el jugador está junto a la cama
+* *Cuando* duerme y cierra el resumen del día
+* *Entonces* el reloj marca el día 7 a las 12:00
+
+h3. Escenario 6: Hablar con un visitante
+* *Dado* que es el día 7 y el jugador está junto a Rosa
+* *Cuando* pulsa E
+* *Entonces* Rosa dice su diálogo de la feria
+
+h3. Escenario 7: Fin de los concursos
+* *Dado* que es el día 7 a las 16:59
+* *Cuando* el reloj llega a las 17:00
+* *Entonces* aparece el mensaje “Los concursos han terminado. Ceremonia a las 18:00 en la plaza”
+
+h3. Escenario 8: Postes de la guirnalda
+* *Dado* que es el día 7 y el jugador está en la plaza
+* *Cuando* camina hacia uno de los postes de la guirnalda
+* *Entonces* el personaje se detiene junto al poste
+* *Y* hay un poste en cada extremo de la guirnalda
+
+h3. Escenario 9: Hablar con Pedro
+* *Dado* que es el día 7 y el jugador está junto a Pedro
+* *Cuando* pulsa E
+* *Entonces* Pedro dice “¡¡He venido por la comida gratis\!\!”
+* *Y*, al pasar a la segunda ventana, dice “¡¡¿Dónde está la comida?\!\!”
+
+h3. Escenario 10: Pedro solo viene a la feria
+* *Dado* que es el día 6 a las 13:00
+* *Cuando* el jugador entra en la plaza
+* *Entonces* Pedro no está","* La feria se celebra en la plaza el día 7. Es festivo: ese día el jugador se despierta a las 12:00 y la feria ya está montada.
+* Durante la feria, la plaza tiene guirnaldas, sujetas por un poste de madera en cada extremo, dos puestos (el de la cosecha, HU-59, y el de pesca, HU-60), un escenario y un podio para la ceremonia (HU-66).
+* El día 7, a partir de las 12:00, hay siete visitantes en la plaza: Rosa, Lucía, Tomás, Pablo, Fran, Elena y Pedro. Cada uno tiene un diálogo sencillo al pulsar E junto a él. Fran dice “He venido por el networking, pero bueno... el futuro es ansiedad.” y Elena “He venido porque me han prometido que después pondrán margarita frozen.”.
+* Pedro es un visitante de fuera del pueblo: solo aparece en la feria, el día 7. Tiene la piel clara y morena, el pelo negro y un polo de rayas horizontales verdes y azules. Su diálogo tiene dos ventanas: “¡¡He venido por la comida gratis\!\!” y, en la segunda, “¡¡¿Dónde está la comida?\!\!”.
+* Los concursos admiten participantes de 12:00 a 17:00. A las 17:00 aparece el mensaje “Los concursos han terminado. Ceremonia a las 18:00 en la plaza”.
+* Los postes de las guirnaldas, los puestos, el escenario y el podio son obstáculos.
+* Antes y después del día 7, la plaza tiene su aspecto normal: no hay guirnaldas, puestos, escenario ni podio. Los vecinos están donde marque su horario (HU-71).
+* Pasado el día 7, el encargo “La feria de Valtrigo” se puede seguir completando al hablar con el alcalde, aunque ya no haya feria.","sprint-3"
+"HU-56","Historia","HU-56. Puzle del reloj","Como jugador, quiero colocar yo mismo las piezas en el reloj para repararlo.
+
+h2. Criterios de aceptación
+* El encargo “Las piezas del reloj” ya no se completa entregando las piezas a la relojera, sino colocándolas en el mecanismo del reloj, en la torre.
+* Al pulsar E junto al mecanismo, con el encargo activo y las tres piezas en el inventario, se elige qué pieza va en cada uno de sus tres huecos, de abajo arriba.
+* El orden correcto es Engranaje de cobre, Muelle de plata y Péndulo de oro. La relojera da la pista en su diálogo de encargo en curso: “primero lo que gira, luego lo que empuja y arriba lo que marca el compás”.
+* Con el orden correcto, las piezas salen del inventario, aparece el mensaje “Encargo completado” y se cobra la recompensa.
+* Con un orden incorrecto, aparece “El reloj no arranca” y las piezas siguen en el inventario. Se puede volver a intentar. El orden se comprueba al colocar la tercera pieza, no pieza a pieza.
+* Sin el encargo activo, el mecanismo muestra “Habla primero con la relojera”, aunque el jugador tenga las tres piezas.
+* Con el encargo activo pero sin las tres piezas, el mecanismo muestra “Faltan piezas”.
+
+h2. Escenarios
+
+h3. Escenario 1: Orden correcto
+* *Dado* que el encargo “Las piezas del reloj” está activo y el jugador tiene las tres piezas
+* *Cuando* coloca el Engranaje de cobre, el Muelle de plata y el Péndulo de oro, en ese orden
+* *Entonces* aparece el mensaje “Encargo completado”
+* *Y* el jugador recibe 100 monedas y 2 Manzanas
+* *Y* las tres piezas desaparecen del inventario
+
+h3. Escenario 2: Orden incorrecto
+* *Dado* que el encargo “Las piezas del reloj” está activo y el jugador tiene las tres piezas
+* *Cuando* coloca el Péndulo de oro en el primer hueco y después las otras dos piezas
+* *Entonces* aparece el mensaje “El reloj no arranca”
+* *Y* las tres piezas siguen en el inventario
+
+h3. Escenario 3: Faltan piezas
+* *Dado* que el encargo “Las piezas del reloj” está activo y el jugador solo tiene dos piezas
+* *Cuando* pulsa E junto al mecanismo
+* *Entonces* aparece el mensaje “Faltan piezas”
+
+h3. Escenario 4: Sin el encargo
+* *Dado* que el jugador tiene las tres piezas y el encargo “Las piezas del reloj” no está activo
+* *Cuando* pulsa E junto al mecanismo
+* *Entonces* aparece el mensaje “Habla primero con la relojera”
+* *Y* no se puede colocar ninguna pieza","* El encargo “Las piezas del reloj” ya no se completa entregando las piezas a la relojera, sino colocándolas en el mecanismo del reloj, en la torre.
+* Al pulsar E junto al mecanismo, con el encargo activo y las tres piezas en el inventario, se elige qué pieza va en cada uno de sus tres huecos, de abajo arriba.
+* El orden correcto es Engranaje de cobre, Muelle de plata y Péndulo de oro. La relojera da la pista en su diálogo de encargo en curso: “primero lo que gira, luego lo que empuja y arriba lo que marca el compás”.
+* Con el orden correcto, las piezas salen del inventario, aparece el mensaje “Encargo completado” y se cobra la recompensa.
+* Con un orden incorrecto, aparece “El reloj no arranca” y las piezas siguen en el inventario. Se puede volver a intentar. El orden se comprueba al colocar la tercera pieza, no pieza a pieza.
+* Sin el encargo activo, el mecanismo muestra “Habla primero con la relojera”, aunque el jugador tenga las tres piezas.
+* Con el encargo activo pero sin las tres piezas, el mecanismo muestra “Faltan piezas”.","sprint-3"
+"HU-55","Historia","HU-55. Páginas del diario","Como jugador, quiero encontrar páginas del diario de la relojera para descubrir por qué se paró el reloj.
+
+h2. Criterios de aceptación
+* Hay 5 páginas del diario escondidas: en la torre, en el bosque, en el lago, en la granja y en la plaza.
+* Al pulsar E junto a una página, se recoge, desaparece del mapa y aparece el mensaje “Has encontrado una página del diario”. Las páginas no ocupan sitio en el inventario.
+* La lista de objetivos (O) tiene los apartados “Encargos”, “Misiones” (HU-72) y “Notas”, que se cambian con ← →. “Notas” muestra las páginas en orden, con su texto. Las que faltan aparecen como “Página sin encontrar”.
+
+h2. Escenarios
+
+h3. Escenario 1: Encontrar una página
+* *Dado* que el jugador está junto a la página del lago
+* *Cuando* pulsa E
+* *Entonces* aparece el mensaje “Has encontrado una página del diario”
+* *Y* la página desaparece del mapa
+
+h3. Escenario 2: Leer las notas
+* *Dado* que el jugador ha encontrado la página 3
+* *Cuando* abre la lista de objetivos y pasa a “Notas”
+* *Entonces* aparece el texto de la página 3
+* *Y* las páginas 1, 2, 4 y 5 aparecen como “Página sin encontrar”","* Hay 5 páginas del diario escondidas: en la torre, en el bosque, en el lago, en la granja y en la plaza.
+* Al pulsar E junto a una página, se recoge, desaparece del mapa y aparece el mensaje “Has encontrado una página del diario”. Las páginas no ocupan sitio en el inventario.
+* La lista de objetivos (O) tiene los apartados “Encargos”, “Misiones” (HU-72) y “Notas”, que se cambian con ← →. “Notas” muestra las páginas en orden, con su texto. Las que faltan aparecen como “Página sin encontrar”.","sprint-3"
+"HU-36","Historia","HU-36. Texto legible","Como jugador, quiero que los textos sean legibles con buen contraste para jugar cómodamente.
+
+h2. Criterios de aceptación
+* El contraste entre el texto y el fondo es de al menos 4,5:1 en diálogos, menús y textos de interfaz.
+* El tamaño del texto es fijo y no se puede cambiar desde las opciones.
+* Todos los textos del juego están en español.
+
+h2. Escenarios
+
+h3. Escenario 1: Contraste en diálogos
+* *Dado* que se muestra un diálogo de un NPC
+* *Cuando* el texto aparece en pantalla
+* *Entonces* el contraste entre texto y fondo es de al menos 4,5:1
+
+h3. Escenario 2: Contraste en menús
+* *Dado* que el menú de pausa está abierto
+* *Cuando* el jugador mira las opciones
+* *Entonces* todos los textos cumplen un contraste de al menos 4,5:1
+
+h3. Escenario 3: Idioma
+* *Dado* que el jugador recorre cualquier pantalla del juego
+* *Cuando* lee los textos
+* *Entonces* todos están en español","* El contraste entre el texto y el fondo es de al menos 4,5:1 en diálogos, menús y textos de interfaz.
+* El tamaño del texto es fijo y no se puede cambiar desde las opciones.
+* Todos los textos del juego están en español.","sprint-3"
+"HU-35","Historia","HU-35. Pantalla de créditos","Como jugador, quiero ver los créditos del juego para conocer a quienes lo hicieron y los recursos usados.
+
+h2. Criterios de aceptación
+* La opción “Créditos” aparece en el menú principal.
+* Los créditos muestran el autor, Phaser y los recursos externos con su licencia.
+* Desde los créditos se vuelve al menú principal con “Volver” o con Escape.
+
+h2. Escenarios
+
+h3. Escenario 1: Abrir los créditos
+* *Dado* que el jugador está en el menú principal
+* *Cuando* pulsa “Créditos”
+* *Entonces* aparece la pantalla de créditos
+
+h3. Escenario 2: Contenido de los créditos
+* *Dado* que la pantalla de créditos está abierta
+* *Cuando* el jugador la lee
+* *Entonces* aparecen el autor, Phaser y la licencia de cada recurso externo
+
+h3. Escenario 3: Volver al menú
+* *Dado* que la pantalla de créditos está abierta
+* *Cuando* el jugador pulsa Escape
+* *Entonces* vuelve al menú principal con “Créditos” seleccionada","* La opción “Créditos” aparece en el menú principal.
+* Los créditos muestran el autor, Phaser y los recursos externos con su licencia.
+* Desde los créditos se vuelve al menú principal con “Volver” o con Escape.","sprint-3"
+"HU-34","Historia","HU-34. Guardar las opciones","Como jugador, quiero que mis ajustes de volumen se mantengan al volver a jugar para no tener que volver a ajustarlos cada vez que abro el juego.
+
+h2. Criterios de aceptación
+* Los ajustes de música, efectos y silencio se guardan en el navegador del jugador.
+* Al abrir el juego, se cargan los últimos ajustes guardados.
+
+h2. Escenarios
+
+h3. Escenario 1: Ajustes que se mantienen
+* *Dado* que el volumen de música está en 4 barras y el de efectos en 8 barras
+* *Cuando* el jugador cierra el juego y lo vuelve a abrir
+* *Entonces* el volumen de música es 4 barras y el de efectos es 8 barras
+
+h3. Escenario 2: Silencio que se mantiene
+* *Dado* que el sonido está silenciado
+* *Cuando* el jugador vuelve a abrir el juego
+* *Entonces* el sonido sigue silenciado
+
+h3. Escenario 3: Navegador sin almacenamiento
+* *Dado* que el navegador no permite guardar datos
+* *Cuando* el jugador cambia el volumen
+* *Entonces* el juego funciona con normalidad
+* *Y* los ajustes no se conservan al volver a abrir el juego","* Los ajustes de música, efectos y silencio se guardan en el navegador del jugador.
+* Al abrir el juego, se cargan los últimos ajustes guardados.","sprint-3"
+"HU-33","Historia","HU-33. Cambiar los controles","Como jugador, quiero ver la lista de controles en el menú de opciones para saber qué tecla hace cada cosa.
+
+h2. Criterios de aceptación
+* La pantalla de opciones muestra una tabla con cada acción y su tecla asignada: mover (flechas o WASD), correr (Mayús, HU-81), interactuar (E), inventario (I), objetivos (O), pausa (Escape), usar objeto (E o Enter, HU-82), pantalla completa (F, HU-83).
+* La tabla es de solo lectura: las teclas no se pueden cambiar.
+
+h2. Escenarios
+
+h3. Escenario 1: Consultar los controles
+* *Dado* que el jugador abre el menú de opciones
+* *Cuando* consulta la sección de controles
+* *Entonces* aparece una tabla con cada acción y su tecla
+
+h3. Escenario 2: Intentar cambiar una tecla
+* *Dado* que la tabla de controles está visible
+* *Cuando* el jugador pulsa sobre la tecla de “Interactuar”
+* *Entonces* no se modifica la tecla asignada
+
+h3. Escenario 3: Contenido completo
+* *Dado* que la tabla de controles está visible
+* *Cuando* el jugador la recorre
+* *Entonces* aparecen las ocho acciones de la lista","* La pantalla de opciones muestra una tabla con cada acción y su tecla asignada: mover (flechas o WASD), correr (Mayús, HU-81), interactuar (E), inventario (I), objetivos (O), pausa (Escape), usar objeto (E o Enter, HU-82), pantalla completa (F, HU-83).
+* La tabla es de solo lectura: las teclas no se pueden cambiar.","sprint-3"
+"HU-32","Historia","HU-32. Efectos de sonido en las acciones","Como jugador, quiero escuchar efectos al andar, recoger objetos y completar encargos para recibir feedback.
+
+h2. Criterios de aceptación
+* Las acciones principales reproducen su efecto de sonido: andar, abrir menús, comprar, vender, abrir cofres y completar encargos.
+* Los efectos de sonido se escuchan con el volumen de efectos configurado.
+* Al moverse entre las opciones de un menú suena un efecto de navegación.
+* Al activar una opción de un menú suena un efecto de confirmación. Las opciones desactivadas no reproducen ningún efecto.
+* En los cuadros de diálogo, mientras se escriben las letras suena un efecto breve y, al pulsar E para pasar al siguiente cuadro, suena otro efecto distinto.
+
+h2. Escenarios
+
+h3. Escenario 1: Andar
+* *Dado* que el personaje está en una zona sin obstáculos
+* *Cuando* el jugador se mueve
+* *Entonces* se reproduce el efecto de pasos
+
+h3. Escenario 2: Comprar
+* *Dado* que el jugador tiene dinero suficiente en la tienda
+* *Cuando* compra un objeto
+* *Entonces* se reproduce el efecto de compra
+
+h3. Escenario 3: Abrir un cofre
+* *Dado* que el jugador está junto a un cofre cerrado
+* *Cuando* lo abre
+* *Entonces* se reproduce el efecto de cofre
+
+h3. Escenario 4: Completar un encargo
+* *Dado* que el jugador completa un encargo
+* *Cuando* aparece el mensaje “Encargo completado”
+* *Entonces* se reproduce el efecto de encargo completado
+
+h3. Escenario 5: Navegar por un menú
+* *Dado* que el menú principal está abierto
+* *Cuando* el jugador pulsa la flecha abajo y la selección cambia de opción
+* *Entonces* se reproduce el efecto de navegación
+
+h3. Escenario 6: Activar una opción
+* *Dado* que el menú principal está abierto con ""Opciones"" seleccionada
+* *Cuando* el jugador pulsa Enter
+* *Entonces* se reproduce el efecto de confirmación
+* *Y* si la opción seleccionada está desactivada, no se reproduce ningún efecto
+
+h3. Escenario 7: Letras de un diálogo
+* *Dado* que el jugador está junto a un NPC
+* *Cuando* pulsa E y el NPC empieza a hablar
+* *Entonces*, mientras se escriben las letras, suena el efecto de las letras
+
+h3. Escenario 8: Siguiente cuadro de diálogo
+* *Dado* que un NPC está hablando y la línea ya se ha escrito entera
+* *Cuando* el jugador pulsa E para pasar al siguiente cuadro
+* *Entonces* suena el efecto del siguiente cuadro","* Las acciones principales reproducen su efecto de sonido: andar, abrir menús, comprar, vender, abrir cofres y completar encargos.
+* Los efectos de sonido se escuchan con el volumen de efectos configurado.
+* Al moverse entre las opciones de un menú suena un efecto de navegación.
+* Al activar una opción de un menú suena un efecto de confirmación. Las opciones desactivadas no reproducen ningún efecto.
+* En los cuadros de diálogo, mientras se escriben las letras suena un efecto breve y, al pulsar E para pasar al siguiente cuadro, suena otro efecto distinto.","sprint-3"
+"HU-31","Historia","HU-31. Música de fondo según la zona","Como jugador, quiero que cada zona tenga su música para distinguir los lugares.
+
+h2. Criterios de aceptación
+* El juego tiene 9 pistas de música: 1 para el menú principal y 1 para cada una de estas zonas: plaza, casa del jugador, tienda, granja, lago, torre, bosque y barrio. Las casas de Tomás y Pablo y de Lucía usan la de la casa del jugador (HU-70).
+* Al cambiar de zona, la música cambia a la de la nueva zona.
+* Si el jugador se mueve dentro de la misma zona, la música no se reinicia.
+
+h2. Escenarios
+
+h3. Escenario 1: Cambio de zona
+* *Dado* que el jugador está en la zona exterior del pueblo
+* *Cuando* entra en la tienda
+* *Entonces* la música cambia a la pista de la tienda
+
+h3. Escenario 2: Misma zona
+* *Dado* que el jugador está dentro de la tienda y la música de la tienda suena
+* *Cuando* se mueve por el interior de la tienda
+* *Entonces* la música no se reinicia
+
+h3. Escenario 3: Música del menú
+* *Dado* que el jugador abre el menú principal
+* *Cuando* se carga el menú
+* *Entonces* suena la pista del menú principal","* El juego tiene 9 pistas de música: 1 para el menú principal y 1 para cada una de estas zonas: plaza, casa del jugador, tienda, granja, lago, torre, bosque y barrio. Las casas de Tomás y Pablo y de Lucía usan la de la casa del jugador (HU-70).
+* Al cambiar de zona, la música cambia a la de la nueva zona.
+* Si el jugador se mueve dentro de la misma zona, la música no se reinicia.","sprint-3"
+"HU-30","Historia","HU-30. Silenciar todo el sonido","Como jugador, quiero silenciar todo el audio con un botón para jugar sin sonido.
+
+h2. Criterios de aceptación
+* El botón “Silenciar” está separado de los controles de volumen.
+* Con “Silenciar” activo no se escucha ni música ni efectos.
+* Los controles de volumen conservan sus valores mientras el sonido está silenciado.
+* El sonido solo se silencia con “Silenciar”. Pulsar una tecla que no es un control del juego, como Tab, no silencia el juego ni hace que deje de responder al teclado.
+
+h2. Escenarios
+
+h3. Escenario 1: Silenciar
+* *Dado* que el volumen de música está en 7 barras y el de efectos en 6 barras
+* *Cuando* el jugador activa “Silenciar”
+* *Entonces* no se escucha música ni efectos
+* *Y* los controles siguen marcando 7 y 6 barras
+
+h3. Escenario 2: Silencio al reanudar
+* *Dado* que el sonido está silenciado
+* *Cuando* el jugador reanuda la partida desde la pausa
+* *Entonces* el juego sigue sin sonido
+
+h3. Escenario 3: Recuperar el sonido
+* *Dado* que el sonido está silenciado con 7 y 6 barras
+* *Cuando* el jugador desactiva “Silenciar”
+* *Entonces* la música vuelve a sonar a 7 barras y los efectos a 6 barras
+
+h3. Escenario 4: Tecla Tab
+* *Dado* que el jugador está en la partida y se oye la música
+* *Cuando* pulsa Tab
+* *Entonces* la música sigue sonando
+* *Y* el juego sigue respondiendo al teclado","* El botón “Silenciar” está separado de los controles de volumen.
+* Con “Silenciar” activo no se escucha ni música ni efectos.
+* Los controles de volumen conservan sus valores mientras el sonido está silenciado.
+* El sonido solo se silencia con “Silenciar”. Pulsar una tecla que no es un control del juego, como Tab, no silencia el juego ni hace que deje de responder al teclado.","sprint-3"
+"HU-29","Historia","HU-29. Ajustar el volumen de los efectos","Como jugador, quiero ajustar los efectos de sonido por separado para ajustar el volumen de los efectos sin cambiar el de la música.
+
+h2. Criterios de aceptación
+* El volumen de efectos tiene 10 barras y es independiente del volumen de música.
+* Al soltar el control de efectos, suena un efecto de prueba con el nuevo volumen.
+
+h2. Escenarios
+
+h3. Escenario 1: Efectos independientes de la música
+* *Dado* que el volumen de música está en 5 barras y el de efectos en 5 barras
+* *Cuando* el jugador baja los efectos a 0 barras
+* *Entonces* la música sigue sonando a 5 barras
+* *Y* los efectos no se escuchan
+
+h3. Escenario 2: Efecto de prueba
+* *Dado* que el jugador está en el menú de opciones
+* *Cuando* suelta el control de efectos en 7 barras
+* *Entonces* suena el efecto de prueba a 7 barras","* El volumen de efectos tiene 10 barras y es independiente del volumen de música.
+* Al soltar el control de efectos, suena un efecto de prueba con el nuevo volumen.","sprint-3"
+"HU-28","Historia","HU-28. Ajustar el volumen de la música","Como jugador, quiero ajustar el volumen de la música para que no moleste.
+
+h2. Criterios de aceptación
+* El control de volumen musical tiene 10 barras, de 0 a 10.
+* El cambio de volumen se aplica al instante.
+* Con 0 barras no se escucha música.
+
+h2. Escenarios
+
+h3. Escenario 1: Subir el volumen
+* *Dado* que el volumen de música está en 5 barras
+* *Cuando* el jugador sube una barra
+* *Entonces* el volumen de música pasa a 6 barras
+* *Y* el cambio se escucha al instante
+
+h3. Escenario 2: Volumen en cero
+* *Dado* que el volumen de música está en 1 barra
+* *Cuando* el jugador baja a 0 barras
+* *Entonces* no se escucha música
+
+h3. Escenario 3: Límite máximo
+* *Dado* que el volumen de música está en 10 barras
+* *Cuando* el jugador intenta subir más
+* *Entonces* el volumen se mantiene en 10 barras","* El control de volumen musical tiene 10 barras, de 0 a 10.
+* El cambio de volumen se aplica al instante.
+* Con 0 barras no se escucha música.","sprint-3"

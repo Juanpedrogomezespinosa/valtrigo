@@ -1,0 +1,1098 @@
+﻿"ID","Tipo de actividad","Resumen","Descripción","Criterios de aceptación","Etiquetas"
+"HU-87","Historia","HU-87. Minijuego de pesca","Como jugador, quiero tener que luchar con el pez para sacarlo, para que pescar sea un reto y no solo esperar.
+
+h2. Criterios de aceptación
+* Al pulsar E con “¡Pica\!” en pantalla (HU-48) empieza el minijuego: aparece a la derecha del personaje una barra vertical con el pez, una zona verde y, al lado, un medidor de captura. Encima de la barra pone “Mantén E”.
+* Al empezar, la zona verde está centrada en el pez y el medidor está a un 30 %.
+* Mientras se mantiene pulsada E, la zona verde sube; al soltarla, baja. No sale de la barra.
+* Mientras el pez está dentro de la zona verde, el medidor se llena (un 25 % por segundo) y suena el carrete. Mientras está fuera, se vacía (un 15 % por segundo).
+* Si el medidor se llena, el pez va al inventario y aparece “Has pescado \[pez\] de \[tamaño\] cm” (HU-49). Si se vacía, aparece “Se ha escapado” y no se pesca nada.
+* Cada especie se mueve siempre igual:
+** la Carpa sube y baja despacio (la más fácil);
+** la Trucha sube y baja deprisa y con temblores;
+** el Siluro se queda quieto un momento y da tirones bruscos de un extremo a otro (la más difícil).
+* Durante el minijuego el personaje no se mueve. Una flecha recoge la caña y el pez se escapa. Escape abre la pausa: el minijuego se detiene y continúa al reanudar.
+* Si el pez no cabe en el inventario, aparece “Inventario lleno” y se pierde.
+* La pesca tiene sonidos (Ninja Adventure): al lanzar la caña, al picar, el carrete mientras el pez está en la zona, al pescar el pez y cuando se escapa (también si se tira demasiado pronto o no se pulsa E a tiempo).
+* En el concurso de pesca (HU-60) se pesca con el mismo minijuego.
+
+h2. Escenarios
+
+h3. Escenario 1: Empieza el minijuego
+* *Dado* que aparece “¡Pica\!”
+* *Cuando* el jugador pulsa E
+* *Entonces* aparece la barra del minijuego con el pez, la zona verde y el medidor al 30 %
+
+h3. Escenario 2: Subir y bajar la zona
+* *Dado* que el minijuego está en marcha
+* *Cuando* el jugador mantiene pulsada E
+* *Entonces* la zona verde sube
+* *Y* cuando la suelta, baja
+
+h3. Escenario 3: Pescar el pez
+* *Dado* que el minijuego está en marcha
+* *Cuando* el jugador mantiene el pez dentro de la zona verde hasta llenar el medidor
+* *Entonces* el pez va al inventario
+* *Y* aparece “Has pescado...”
+
+h3. Escenario 4: Se escapa
+* *Dado* que el minijuego está en marcha
+* *Cuando* el jugador no pulsa nada y el pez sale de la zona verde hasta vaciar el medidor
+* *Entonces* aparece “Se ha escapado”
+* *Y* el inventario no cambia
+
+h3. Escenario 5: Pausa
+* *Dado* que el minijuego está en marcha
+* *Cuando* el jugador pulsa Escape y espera
+* *Entonces* el medidor no cambia mientras la pausa está abierta
+* *Y* el minijuego continúa al reanudar
+
+h3. Escenario 6: Sonidos
+* *Dado* que el jugador pesca un pez
+* *Cuando* lanza la caña, pica el pez, lo mantiene en la zona y lo saca
+* *Entonces* suenan los efectos de lanzar, picar, carrete y pez pescado","* Al pulsar E con “¡Pica\!” en pantalla (HU-48) empieza el minijuego: aparece a la derecha del personaje una barra vertical con el pez, una zona verde y, al lado, un medidor de captura. Encima de la barra pone “Mantén E”.
+* Al empezar, la zona verde está centrada en el pez y el medidor está a un 30 %.
+* Mientras se mantiene pulsada E, la zona verde sube; al soltarla, baja. No sale de la barra.
+* Mientras el pez está dentro de la zona verde, el medidor se llena (un 25 % por segundo) y suena el carrete. Mientras está fuera, se vacía (un 15 % por segundo).
+* Si el medidor se llena, el pez va al inventario y aparece “Has pescado \[pez\] de \[tamaño\] cm” (HU-49). Si se vacía, aparece “Se ha escapado” y no se pesca nada.
+* Cada especie se mueve siempre igual:
+** la Carpa sube y baja despacio (la más fácil);
+** la Trucha sube y baja deprisa y con temblores;
+** el Siluro se queda quieto un momento y da tirones bruscos de un extremo a otro (la más difícil).
+* Durante el minijuego el personaje no se mueve. Una flecha recoge la caña y el pez se escapa. Escape abre la pausa: el minijuego se detiene y continúa al reanudar.
+* Si el pez no cabe en el inventario, aparece “Inventario lleno” y se pierde.
+* La pesca tiene sonidos (Ninja Adventure): al lanzar la caña, al picar, el carrete mientras el pez está en la zona, al pescar el pez y cuando se escapa (también si se tira demasiado pronto o no se pulsa E a tiempo).
+* En el concurso de pesca (HU-60) se pesca con el mismo minijuego.","sprint-2"
+"HU-84","Historia","HU-84. Cocinar","Como jugador, quiero cocinar platos con lo que cultivo, pesco y recojo para recuperar más energía y ganar más dinero.
+
+h2. Criterios de aceptación
+* En la casa del jugador hay un fogón, que es un obstáculo. Al pulsar E junto a él se abre la pantalla “Fogón” con las recetas.
+* Hay cuatro recetas. Cada una da un plato que se come desde el inventario o se vende en la tienda:
+** Sopa de setas: 2 Setas y 1 Nabo. Da 40 de energía y se vende por 45 monedas.
+** Tarta de moras: 3 Moras y 1 Manzana. Da 35 de energía y se vende por 50 monedas.
+** Carpa asada: 1 Carpa y 1 Zanahoria. Da 50 de energía y se vende por 80 monedas.
+** Guiso de calabaza: 1 Calabaza, 1 Nabo y 1 Seta. Da 80 de energía y se vende por 150 monedas.
+* La pantalla muestra cada receta con sus ingredientes y cuántos tiene el jugador de cada uno (por ejemplo, “Seta 1/2”). ↑ ↓ eligen la receta, E o Enter la cocinan y Escape cierra la pantalla.
+* Al cocinar se gastan los ingredientes, se recibe 1 plato y aparece el mensaje “Has cocinado \[plato\]”. La pantalla sigue abierta. Cocinar no gasta energía.
+* Si faltan ingredientes, aparece “Te faltan ingredientes” y no se gasta nada.
+* Si el plato no cabe en el inventario, contando las casillas que dejan libres los ingredientes, aparece “Inventario lleno” y no se gasta nada.
+* Como el inventario, la pantalla del fogón no detiene el tiempo y el personaje no se mueve mientras está abierta.
+* El día 5, la lista de tareas (HU-63) incluye “Cocina un plato en el fogón de tu casa”.
+
+h2. Escenarios
+
+h3. Escenario 1: Abrir el fogón
+* *Dado* que el jugador está junto al fogón de su casa
+* *Cuando* pulsa E
+* *Entonces* se abre la pantalla “Fogón” con las cuatro recetas
+
+h3. Escenario 2: Cocinar
+* *Dado* que el jugador tiene 2 Setas y 1 Nabo y tiene abierta la pantalla del fogón
+* *Cuando* elige “Sopa de setas” y pulsa E
+* *Entonces* pierde las 2 Setas y el Nabo
+* *Y* recibe 1 Sopa de setas
+* *Y* aparece el mensaje “Has cocinado Sopa de setas”
+
+h3. Escenario 3: Faltan ingredientes
+* *Dado* que el jugador tiene 1 Seta y 1 Nabo y tiene abierta la pantalla del fogón
+* *Cuando* elige “Sopa de setas” y pulsa E
+* *Entonces* aparece el mensaje “Te faltan ingredientes”
+* *Y* el inventario no cambia
+
+h3. Escenario 4: Inventario lleno
+* *Dado* que el jugador tiene las 20 casillas del inventario ocupadas, entre ellas una con 4 Moras y otra con 2 Manzanas
+* *Cuando* cocina “Tarta de moras”
+* *Entonces* aparece el mensaje “Inventario lleno”
+* *Y* el inventario no cambia
+
+h3. Escenario 5: Comer un plato
+* *Dado* que el jugador tiene 50 de energía y 1 Carpa asada
+* *Cuando* la usa desde el inventario
+* *Entonces* su energía es 100
+
+h3. Escenario 6: Vender un plato
+* *Dado* que el jugador tiene 1 Guiso de calabaza y la tienda está abierta
+* *Cuando* lo vende
+* *Entonces* recibe 150 monedas","* En la casa del jugador hay un fogón, que es un obstáculo. Al pulsar E junto a él se abre la pantalla “Fogón” con las recetas.
+* Hay cuatro recetas. Cada una da un plato que se come desde el inventario o se vende en la tienda:
+** Sopa de setas: 2 Setas y 1 Nabo. Da 40 de energía y se vende por 45 monedas.
+** Tarta de moras: 3 Moras y 1 Manzana. Da 35 de energía y se vende por 50 monedas.
+** Carpa asada: 1 Carpa y 1 Zanahoria. Da 50 de energía y se vende por 80 monedas.
+** Guiso de calabaza: 1 Calabaza, 1 Nabo y 1 Seta. Da 80 de energía y se vende por 150 monedas.
+* La pantalla muestra cada receta con sus ingredientes y cuántos tiene el jugador de cada uno (por ejemplo, “Seta 1/2”). ↑ ↓ eligen la receta, E o Enter la cocinan y Escape cierra la pantalla.
+* Al cocinar se gastan los ingredientes, se recibe 1 plato y aparece el mensaje “Has cocinado \[plato\]”. La pantalla sigue abierta. Cocinar no gasta energía.
+* Si faltan ingredientes, aparece “Te faltan ingredientes” y no se gasta nada.
+* Si el plato no cabe en el inventario, contando las casillas que dejan libres los ingredientes, aparece “Inventario lleno” y no se gasta nada.
+* Como el inventario, la pantalla del fogón no detiene el tiempo y el personaje no se mueve mientras está abierta.
+* El día 5, la lista de tareas (HU-63) incluye “Cocina un plato en el fogón de tu casa”.","sprint-2"
+"HU-82","Historia","HU-82. Confirmar con E","Como jugador, quiero hacer todas las acciones de la partida con la E para no tener que cambiar de tecla.
+
+h2. Criterios de aceptación
+* Durante la partida, todo lo que se confirma con Enter se confirma también con E: comprar y vender en la tienda, usar un objeto del inventario, “¿Dormir?” y “¿Inscribirte en el concurso de pesca?”, las opciones de los diálogos, colocar piezas en el mecanismo del reloj, elegir semilla o cosecha, y el menú de pausa con su cuadro de confirmación.
+* La E con la que se abre una pantalla no confirma nada en ella: para confirmar hay que volver a pulsarla.
+* Las ayudas de la parte de abajo de esas pantallas indican la E (por ejemplo, “E: colocar”).
+* En el menú principal, las opciones, la pantalla del nombre y la del aspecto se sigue confirmando con Enter (en el nombre, la E es una letra).
+* La tabla de controles (HU-33) muestra “Usar objeto: E o Enter”.
+
+h2. Escenarios
+
+h3. Escenario 1: Comprar con E
+* *Dado* que el jugador está en la tienda con la Pala seleccionada y 100 monedas
+* *Cuando* pulsa E
+* *Entonces* compra una Pala y le quedan 70 monedas
+
+h3. Escenario 2: Usar un objeto con E
+* *Dado* que el jugador tiene 60 puntos de energía y una Manzana seleccionada en el inventario
+* *Cuando* pulsa E
+* *Entonces* la energía sube a 75
+
+h3. Escenario 3: Dormir con E
+* *Dado* que el jugador está junto a la cama
+* *Cuando* pulsa E, elige “Sí” y vuelve a pulsar E
+* *Entonces* se duerme
+
+h3. Escenario 4: La E que abre no confirma
+* *Dado* que el jugador está junto a la cama
+* *Cuando* pulsa E
+* *Entonces* aparece “¿Dormir?” y sigue abierto
+
+h3. Escenario 5: Menú de pausa con E
+* *Dado* que el menú de pausa está abierto con “Continuar” seleccionado
+* *Cuando* el jugador pulsa E
+* *Entonces* la partida se reanuda","* Durante la partida, todo lo que se confirma con Enter se confirma también con E: comprar y vender en la tienda, usar un objeto del inventario, “¿Dormir?” y “¿Inscribirte en el concurso de pesca?”, las opciones de los diálogos, colocar piezas en el mecanismo del reloj, elegir semilla o cosecha, y el menú de pausa con su cuadro de confirmación.
+* La E con la que se abre una pantalla no confirma nada en ella: para confirmar hay que volver a pulsarla.
+* Las ayudas de la parte de abajo de esas pantallas indican la E (por ejemplo, “E: colocar”).
+* En el menú principal, las opciones, la pantalla del nombre y la del aspecto se sigue confirmando con Enter (en el nombre, la E es una letra).
+* La tabla de controles (HU-33) muestra “Usar objeto: E o Enter”.","sprint-2"
+"HU-81","Historia","HU-81. Correr","Como jugador, quiero correr para recorrer el pueblo más deprisa.
+
+h2. Criterios de aceptación
+* Al pulsar la tecla Mayús se activa correr y al volver a pulsarla se desactiva. No hace falta mantenerla pulsada.
+* Con correr activado, el personaje se mueve a 1,5 veces la velocidad normal (6 casillas por segundo). Con correr desactivado, anda a la velocidad normal (HU-06).
+* Pulsar Mayús no mueve al personaje.
+* Correr sigue activado al cambiar de zona. Al empezar o cargar una partida, el personaje anda.
+* Al correr, la animación y los pasos (HU-32) van 1,5 veces más rápido.
+* Correr gasta energía y no se puede correr con 10 puntos o menos (HU-76). Andar no gasta energía.
+* Al correr, las colisiones (HU-07), la ayuda en las esquinas y las puertas (HU-08) funcionan igual que al andar.
+* La tabla de controles (HU-33) incluye “Correr: Mayús”.
+
+h2. Escenarios
+
+h3. Escenario 1: Activar correr
+* *Dado* que el personaje está quieto en la plaza
+* *Cuando* el jugador pulsa Mayús una vez y después mantiene la flecha derecha
+* *Entonces* el personaje se mueve hacia la derecha a 1,5 veces la velocidad normal
+
+h3. Escenario 2: Desactivar correr
+* *Dado* que el personaje está corriendo hacia la derecha
+* *Cuando* el jugador vuelve a pulsar Mayús sin soltar la flecha
+* *Entonces* el personaje sigue moviéndose hacia la derecha a la velocidad normal
+
+h3. Escenario 3: Mayús no mueve
+* *Dado* que el personaje está quieto
+* *Cuando* el jugador pulsa Mayús
+* *Entonces* el personaje no se mueve
+
+h3. Escenario 4: Andar no gasta energía
+* *Dado* que el jugador tiene 50 puntos de energía y correr está desactivado
+* *Cuando* anda durante 2 segundos
+* *Entonces* sigue teniendo 50 puntos de energía
+
+h3. Escenario 5: Al cambiar de zona
+* *Dado* que correr está activado
+* *Cuando* el jugador cruza una puerta
+* *Entonces* en la nueva zona el personaje sigue corriendo
+
+h3. Escenario 6: Controles
+* *Dado* que el jugador abre el menú de opciones
+* *Cuando* consulta la tabla de controles
+* *Entonces* aparece “Correr” con la tecla “Mayús”","* Al pulsar la tecla Mayús se activa correr y al volver a pulsarla se desactiva. No hace falta mantenerla pulsada.
+* Con correr activado, el personaje se mueve a 1,5 veces la velocidad normal (6 casillas por segundo). Con correr desactivado, anda a la velocidad normal (HU-06).
+* Pulsar Mayús no mueve al personaje.
+* Correr sigue activado al cambiar de zona. Al empezar o cargar una partida, el personaje anda.
+* Al correr, la animación y los pasos (HU-32) van 1,5 veces más rápido.
+* Correr gasta energía y no se puede correr con 10 puntos o menos (HU-76). Andar no gasta energía.
+* Al correr, las colisiones (HU-07), la ayuda en las esquinas y las puertas (HU-08) funcionan igual que al andar.
+* La tabla de controles (HU-33) incluye “Correr: Mayús”.","sprint-2"
+"HU-80","Historia","HU-80. Interfaz con iconos","Como jugador, quiero una interfaz más clara y bonita para ver de un vistazo la hora, el dinero y la energía.
+
+h2. Criterios de aceptación
+* La interfaz de la partida se muestra en dos paneles con fondo oscuro y borde claro: el del día y la hora, arriba a la izquierda, y el del dinero y la energía, arriba a la derecha.
+* Delante del día aparece un sol de 06:00 a 19:59 y una luna de 20:00 a 05:59.
+* El dinero se muestra con el icono de una moneda seguido de la cantidad, por ejemplo “125” (HU-16).
+* La energía se muestra con el icono de un rayo, una barra y el texto “\[actual\]/100” (HU-14).
+* La barra de energía se llena en proporción a la energía actual. Es verde por encima de 50, amarilla de 26 a 50 y roja de 25 o menos.
+* La cuenta atrás del concurso de pesca (HU-60) aparece en un panel debajo del día y la hora.
+* Los textos de los paneles cumplen el contraste de HU-36.
+
+h2. Escenarios
+
+h3. Escenario 1: Sol de día
+* *Dado* que son las 10:00
+* *Cuando* el jugador mira la interfaz
+* *Entonces* aparece un sol delante del día
+
+h3. Escenario 2: Luna de noche
+* *Dado* que son las 21:00
+* *Cuando* el jugador mira la interfaz
+* *Entonces* aparece una luna delante del día
+
+h3. Escenario 3: Dinero con icono
+* *Dado* que el jugador empieza una partida nueva
+* *Cuando* mira la interfaz
+* *Entonces* aparece el icono de la moneda seguido de “100”
+
+h3. Escenario 4: Barra de energía verde
+* *Dado* que el jugador tiene 80 puntos de energía
+* *Cuando* mira la interfaz
+* *Entonces* la barra de energía está llena en un 80 % y es verde
+* *Y* aparece “80/100”
+
+h3. Escenario 5: Barra de energía amarilla
+* *Dado* que el jugador tiene 40 puntos de energía
+* *Cuando* mira la interfaz
+* *Entonces* la barra de energía está llena en un 40 % y es amarilla
+
+h3. Escenario 6: Barra de energía roja
+* *Dado* que el jugador tiene 20 puntos de energía
+* *Cuando* mira la interfaz
+* *Entonces* la barra de energía está llena en un 20 % y es roja
+
+h3. Escenario 7: Interfaz legible
+* *Dado* que el jugador está en la partida
+* *Cuando* mira la interfaz
+* *Entonces* el contraste entre los textos de los paneles y su fondo es de al menos 4,5:1","* La interfaz de la partida se muestra en dos paneles con fondo oscuro y borde claro: el del día y la hora, arriba a la izquierda, y el del dinero y la energía, arriba a la derecha.
+* Delante del día aparece un sol de 06:00 a 19:59 y una luna de 20:00 a 05:59.
+* El dinero se muestra con el icono de una moneda seguido de la cantidad, por ejemplo “125” (HU-16).
+* La energía se muestra con el icono de un rayo, una barra y el texto “\[actual\]/100” (HU-14).
+* La barra de energía se llena en proporción a la energía actual. Es verde por encima de 50, amarilla de 26 a 50 y roja de 25 o menos.
+* La cuenta atrás del concurso de pesca (HU-60) aparece en un panel debajo del día y la hora.
+* Los textos de los paneles cumplen el contraste de HU-36.","sprint-2"
+"HU-76","Historia","HU-76. Energía más exigente","Como jugador, quiero que la energía se gaste más deprisa para tener que elegir qué hago cada día, comer o descansar.
+
+h2. Criterios de aceptación
+* Los costes de energía de HU-46 se doblan: cavar 8, sembrar 2, regar 4, cosechar 2, pescar 6 cada vez que se lanza la caña (salvo durante el concurso de pesca, HU-60), talar 10 y recoger setas o moras 2.
+* Correr (HU-81) gasta 1 punto de energía por cada 3 segundos que el personaje se desplaza corriendo. Corriendo contra un obstáculo o quieto no gasta.
+* Con 10 puntos de energía o menos no se puede correr. Si el jugador estaba corriendo, el personaje pasa a andar y aparece “Estás demasiado cansado para correr” (o “cansada”, HU-68). Al pulsar Mayús con 10 o menos, aparece el mismo mensaje y sigue andando.
+* Andar, hablar, abrir cofres, comprar y vender siguen sin gastar energía.
+
+h2. Escenarios
+
+h3. Escenario 1: Cavar cuesta el doble
+* *Dado* que la energía es 50
+* *Cuando* el jugador cava una parcela
+* *Entonces* la energía es 42
+
+h3. Escenario 2: Correr gasta energía
+* *Dado* que la energía es 50 y correr está activado
+* *Cuando* el personaje corre durante 6 segundos sin chocar
+* *Entonces* la energía es 48
+
+h3. Escenario 3: Correr sin moverse no gasta
+* *Dado* que la energía es 50 y correr está activado
+* *Cuando* el personaje está quieto durante 6 segundos
+* *Entonces* la energía sigue en 50
+
+h3. Escenario 4: Demasiado cansado para correr
+* *Dado* que la energía es 11 y el personaje está corriendo
+* *Cuando* la energía baja a 10
+* *Entonces* el personaje pasa a andar
+* *Y* aparece “Estás demasiado cansado para correr”
+
+h3. Escenario 5: Mayús sin energía
+* *Dado* que la energía es 8
+* *Cuando* el jugador pulsa Mayús
+* *Entonces* aparece “Estás demasiado cansado para correr”
+* *Y* el personaje sigue andando","* Los costes de energía de HU-46 se doblan: cavar 8, sembrar 2, regar 4, cosechar 2, pescar 6 cada vez que se lanza la caña (salvo durante el concurso de pesca, HU-60), talar 10 y recoger setas o moras 2.
+* Correr (HU-81) gasta 1 punto de energía por cada 3 segundos que el personaje se desplaza corriendo. Corriendo contra un obstáculo o quieto no gasta.
+* Con 10 puntos de energía o menos no se puede correr. Si el jugador estaba corriendo, el personaje pasa a andar y aparece “Estás demasiado cansado para correr” (o “cansada”, HU-68). Al pulsar Mayús con 10 o menos, aparece el mismo mensaje y sigue andando.
+* Andar, hablar, abrir cofres, comprar y vender siguen sin gastar energía.","sprint-2"
+"HU-54","Historia","HU-54. Entregar un pedido","Como jugador, quiero entregar los pedidos en el tablón para cobrar la recompensa de los pedidos del tablón.
+
+h2. Criterios de aceptación
+* Al pulsar E junto al tablón con un pedido activo cuyos objetos están en el inventario, se entregan los objetos, se cobra la recompensa y aparece el mensaje “Pedido completado”.
+* Si hay varios pedidos que se pueden entregar, se entregan todos.
+* Recompensas: Día 1, 20 monedas. Día 2, 15 monedas. Día 3, 30 monedas. Día 4, 40 monedas y 2 Semillas de zanahoria. Día 5, 70 monedas. Día 6, 200 monedas.
+* Antes de entregar, se comprueba que la recompensa cabe en el inventario. Si no cabe, aparece “Inventario lleno” y el pedido sigue activo.
+
+h2. Escenarios
+
+h3. Escenario 1: Entregar
+* *Dado* que el jugador tiene activo el pedido “Leña para el horno” y 3 Leñas
+* *Cuando* pulsa E junto al tablón
+* *Entonces* aparece el mensaje “Pedido completado”
+* *Y* el jugador recibe 20 monedas
+* *Y* las 3 Leñas desaparecen del inventario
+
+h3. Escenario 2: Faltan objetos
+* *Dado* que el jugador tiene activo el pedido “Leña para el horno” y 2 Leñas
+* *Cuando* pulsa E junto al tablón
+* *Entonces* el pedido sigue activo
+* *Y* las Leñas siguen en el inventario
+
+h3. Escenario 3: Inventario lleno
+* *Dado* que el jugador tiene activo el pedido del día 4, 2 Nabos y el inventario completo con otros objetos
+* *Cuando* pulsa E junto al tablón
+* *Entonces* aparece el mensaje “Inventario lleno”
+* *Y* el pedido sigue activo","* Al pulsar E junto al tablón con un pedido activo cuyos objetos están en el inventario, se entregan los objetos, se cobra la recompensa y aparece el mensaje “Pedido completado”.
+* Si hay varios pedidos que se pueden entregar, se entregan todos.
+* Recompensas: Día 1, 20 monedas. Día 2, 15 monedas. Día 3, 30 monedas. Día 4, 40 monedas y 2 Semillas de zanahoria. Día 5, 70 monedas. Día 6, 200 monedas.
+* Antes de entregar, se comprueba que la recompensa cabe en el inventario. Si no cabe, aparece “Inventario lleno” y el pedido sigue activo.","sprint-2"
+"HU-53","Historia","HU-53. Pedidos simultáneos","Como jugador, quiero llevar varios pedidos a la vez sin que bloqueen la historia para avanzar en la historia mientras cumplo otros pedidos.
+
+h2. Criterios de aceptación
+* Se pueden tener hasta 3 pedidos del tablón activos a la vez.
+* Con 3 pedidos activos, el tablón muestra “Ya tienes 3 pedidos activos” y no deja aceptar otro.
+* Los pedidos no tienen fecha límite.
+* Los pedidos del tablón no cuentan como encargo activo para los NPC: no impiden aceptar ni completar un encargo principal.
+
+h2. Escenarios
+
+h3. Escenario 1: Pedido y encargo a la vez
+* *Dado* que el jugador tiene activo un pedido del tablón
+* *Cuando* el alcalde le ofrece “Entregar la Carta del alcalde”
+* *Entonces* puede aceptarlo
+
+h3. Escenario 2: Límite de pedidos
+* *Dado* que el jugador tiene 3 pedidos del tablón activos
+* *Cuando* pulsa E junto al tablón un día con pedido nuevo
+* *Entonces* aparece el mensaje “Ya tienes 3 pedidos activos”
+* *Y* no puede aceptar el pedido
+
+h3. Escenario 3: Sin fecha límite
+* *Dado* que el jugador aceptó el pedido del día 1
+* *Cuando* empieza el día 3
+* *Entonces* el pedido sigue activo","* Se pueden tener hasta 3 pedidos del tablón activos a la vez.
+* Con 3 pedidos activos, el tablón muestra “Ya tienes 3 pedidos activos” y no deja aceptar otro.
+* Los pedidos no tienen fecha límite.
+* Los pedidos del tablón no cuentan como encargo activo para los NPC: no impiden aceptar ni completar un encargo principal.","sprint-2"
+"HU-52","Historia","HU-52. Tablón de anuncios","Como jugador, quiero leer pedidos en un tablón de la plaza para tener tareas cada día.
+
+h2. Criterios de aceptación
+* En la plaza hay un tablón de anuncios. Al pulsar E junto a él se muestra el pedido del día, con las opciones “Aceptar” y “Rechazar”.
+* Cada día tiene un pedido fijo, siempre el mismo para ese día. Día 1: 3 Leñas. Día 2: 2 Moras. Día 3: 1 Trucha. Día 4: 2 Nabos. Día 5: 1 Sopa de setas. Día 6: 1 Guiso de calabaza (HU-86). A partir del día 7 se repite la lista desde el día 1.
+* El pedido del día solo se puede aceptar ese día. Una vez aceptado, el tablón muestra “Ya has aceptado el pedido de hoy”.
+* Si se rechaza, se puede volver a leer y aceptar ese mismo día.
+* Los pedidos aceptados se entregan en el tablón (HU-54).
+
+h2. Escenarios
+
+h3. Escenario 1: Leer el pedido
+* *Dado* que es el día 1
+* *Cuando* el jugador pulsa E junto al tablón
+* *Entonces* aparece el pedido “Leña para el horno”, que pide 3 Leñas
+
+h3. Escenario 2: Aceptar
+* *Dado* que el tablón muestra el pedido del día
+* *Cuando* el jugador pulsa “Aceptar”
+* *Entonces* el pedido aparece en la lista de objetivos
+
+h3. Escenario 3: Ya aceptado
+* *Dado* que el jugador ha aceptado el pedido de hoy
+* *Cuando* vuelve a pulsar E junto al tablón
+* *Entonces* aparece el mensaje “Ya has aceptado el pedido de hoy”
+
+h3. Escenario 4: Mismo pedido cada partida
+* *Dado* que dos partidas distintas están en el día 3
+* *Cuando* el jugador lee el tablón en cada una
+* *Entonces* las dos muestran el mismo pedido","* En la plaza hay un tablón de anuncios. Al pulsar E junto a él se muestra el pedido del día, con las opciones “Aceptar” y “Rechazar”.
+* Cada día tiene un pedido fijo, siempre el mismo para ese día. Día 1: 3 Leñas. Día 2: 2 Moras. Día 3: 1 Trucha. Día 4: 2 Nabos. Día 5: 1 Sopa de setas. Día 6: 1 Guiso de calabaza (HU-86). A partir del día 7 se repite la lista desde el día 1.
+* El pedido del día solo se puede aceptar ese día. Una vez aceptado, el tablón muestra “Ya has aceptado el pedido de hoy”.
+* Si se rechaza, se puede volver a leer y aceptar ese mismo día.
+* Los pedidos aceptados se entregan en el tablón (HU-54).","sprint-2"
+"HU-50","Historia","HU-50. Recoger en el bosque","Como jugador, quiero recoger lo que da el bosque para conseguir comida y cosas que vender.
+
+h2. Criterios de aceptación
+* En el bosque hay puntos fijos: 4 de Setas, 3 de Moras y 5 troncos.
+* Al pulsar E junto a un punto de Setas o de Moras, se recoge 1 unidad, se gastan 2 de energía (HU-76) y el punto desaparece.
+* Al pulsar E junto a un tronco, con un Hacha en el inventario, se tala: se recibe 1 Leña, se gastan 10 de energía (HU-76) y el tronco desaparece. Sin Hacha aparece el mensaje “Necesitas un Hacha”.
+* Al empezar cada día, todos los puntos y troncos vuelven a aparecer.
+* Si no cabe en el inventario, aparece “Inventario lleno” y el punto o el tronco siguen ahí.
+* Precios de venta: Setas 8 monedas, Moras 5 y Leña 3. Las Setas dan 10 de energía y las Moras 5; la Leña no se puede comer.
+
+h2. Escenarios
+
+h3. Escenario 1: Recoger
+* *Dado* que el jugador está junto a un punto de Setas
+* *Cuando* pulsa E
+* *Entonces* aparece 1 Seta en el inventario
+* *Y* el punto desaparece
+
+h3. Escenario 2: Talar
+* *Dado* que el jugador tiene un Hacha y 100 de energía
+* *Cuando* pulsa E junto a un tronco
+* *Entonces* aparece 1 Leña en el inventario
+* *Y* la energía es 90
+* *Y* el tronco desaparece
+
+h3. Escenario 3: Sin Hacha
+* *Dado* que el jugador no tiene ningún Hacha
+* *Cuando* pulsa E junto a un tronco
+* *Entonces* aparece el mensaje “Necesitas un Hacha”
+* *Y* el tronco sigue en el bosque
+
+h3. Escenario 4: Vuelve al día siguiente
+* *Dado* que el jugador ha recogido un punto de Setas
+* *Cuando* duerme y empieza el día siguiente
+* *Entonces* el punto vuelve a estar en el bosque
+
+h3. Escenario 5: Inventario lleno
+* *Dado* que el inventario está completo
+* *Cuando* el jugador pulsa E junto a un punto de Moras
+* *Entonces* aparece el mensaje “Inventario lleno”
+* *Y* el punto sigue en el bosque","* En el bosque hay puntos fijos: 4 de Setas, 3 de Moras y 5 troncos.
+* Al pulsar E junto a un punto de Setas o de Moras, se recoge 1 unidad, se gastan 2 de energía (HU-76) y el punto desaparece.
+* Al pulsar E junto a un tronco, con un Hacha en el inventario, se tala: se recibe 1 Leña, se gastan 10 de energía (HU-76) y el tronco desaparece. Sin Hacha aparece el mensaje “Necesitas un Hacha”.
+* Al empezar cada día, todos los puntos y troncos vuelven a aparecer.
+* Si no cabe en el inventario, aparece “Inventario lleno” y el punto o el tronco siguen ahí.
+* Precios de venta: Setas 8 monedas, Moras 5 y Leña 3. Las Setas dan 10 de energía y las Moras 5; la Leña no se puede comer.","sprint-2"
+"HU-49","Historia","HU-49. Peces según la hora","Como jugador, quiero que el pez dependa de la hora para que merezca la pena pescar en distintos momentos.
+
+h2. Criterios de aceptación
+* El pez depende de la hora en la que aparece “¡Pica\!”: Trucha de 06:00 a 10:00, Carpa de 10:00 a 20:00 y Siluro de 20:00 a 24:00. Durante el concurso de pesca pican las tres especies (HU-60).
+* Cada pez sale con un tamaño al azar dentro del rango de su especie: Carpa de 20 a 45 cm, Trucha de 25 a 50 cm y Siluro de 50 a 120 cm.
+* Al pescar aparece el mensaje “Has pescado una \[especie\] de \[tamaño\] cm” (“un Siluro” para el Siluro). El tamaño no se guarda en el inventario: los peces de la misma especie se apilan.
+* Precios de venta: Carpa 15 monedas, Trucha 20 y Siluro 50. Los peces no se pueden comer.
+
+h2. Escenarios
+
+h3. Escenario 1: Por la mañana
+* *Dado* que son las 07:00
+* *Cuando* el jugador pesca un pez
+* *Entonces* es una Trucha
+* *Y* aparece el mensaje “Has pescado una Trucha de \[tamaño\] cm”, con un tamaño entre 25 y 50
+
+h3. Escenario 2: Por la tarde
+* *Dado* que son las 15:00
+* *Cuando* el jugador pesca un pez
+* *Entonces* es una Carpa
+
+h3. Escenario 3: Por la noche
+* *Dado* que son las 22:00
+* *Cuando* el jugador pesca un pez
+* *Entonces* es un Siluro
+
+h3. Escenario 4: Cambio de franja
+* *Dado* que son las 09:59 y el jugador ha lanzado la caña
+* *Cuando* “¡Pica\!” aparece a las 10:00
+* *Entonces* el pez es una Carpa","* El pez depende de la hora en la que aparece “¡Pica\!”: Trucha de 06:00 a 10:00, Carpa de 10:00 a 20:00 y Siluro de 20:00 a 24:00. Durante el concurso de pesca pican las tres especies (HU-60).
+* Cada pez sale con un tamaño al azar dentro del rango de su especie: Carpa de 20 a 45 cm, Trucha de 25 a 50 cm y Siluro de 50 a 120 cm.
+* Al pescar aparece el mensaje “Has pescado una \[especie\] de \[tamaño\] cm” (“un Siluro” para el Siluro). El tamaño no se guarda en el inventario: los peces de la misma especie se apilan.
+* Precios de venta: Carpa 15 monedas, Trucha 20 y Siluro 50. Los peces no se pueden comer.","sprint-2"
+"HU-48","Historia","HU-48. Pescar en el lago","Como jugador, quiero pescar en el lago para conseguir peces y venderlos.
+
+h2. Criterios de aceptación
+* Al pulsar E mirando al agua del lago, a menos de una casilla, con una Caña de pescar en el inventario, el personaje lanza la caña y se gastan 6 de energía (HU-76).
+* Entre 1 y 3 segundos después aparece “¡Pica\!”. Si el jugador pulsa E antes de que pase 1 segundo, empieza el minijuego de pesca (HU-87), y si lo gana el pez va al inventario. Si tarda más, aparece “Se ha escapado”.
+* Si pulsa E antes de que aparezca “¡Pica\!”, aparece “Has tirado demasiado pronto” y no pesca nada.
+* Pulsar una flecha recoge la caña sin pescar nada. La energía gastada no se devuelve.
+* Mientras pesca, el personaje no se mueve. Escape abre la pausa y la pesca continúa al reanudar.
+* Sin Caña de pescar aparece el mensaje “Necesitas una Caña de pescar”.
+
+h2. Escenarios
+
+h3. Escenario 1: Pescar a tiempo
+* *Dado* que el jugador tiene una Caña de pescar y está mirando al agua
+* *Cuando* pulsa E, vuelve a pulsar E menos de 1 segundo después de que aparezca “¡Pica\!” y gana el minijuego (HU-87)
+* *Entonces* aparece un pez en el inventario
+* *Y* la energía ha bajado 6
+
+h3. Escenario 2: Demasiado tarde
+* *Dado* que aparece “¡Pica\!”
+* *Cuando* el jugador no pulsa E en 1 segundo
+* *Entonces* aparece el mensaje “Se ha escapado”
+* *Y* el inventario no cambia
+
+h3. Escenario 3: Demasiado pronto
+* *Dado* que el jugador ha lanzado la caña y aún no ha aparecido “¡Pica\!”
+* *Cuando* pulsa E
+* *Entonces* aparece el mensaje “Has tirado demasiado pronto”
+* *Y* el inventario no cambia
+
+h3. Escenario 4: Recoger la caña
+* *Dado* que el jugador ha lanzado la caña
+* *Cuando* pulsa una flecha
+* *Entonces* deja de pescar sin pescar nada
+
+h3. Escenario 5: Sin caña
+* *Dado* que el jugador no tiene ninguna Caña de pescar
+* *Cuando* pulsa E mirando al agua
+* *Entonces* aparece el mensaje “Necesitas una Caña de pescar”","* Al pulsar E mirando al agua del lago, a menos de una casilla, con una Caña de pescar en el inventario, el personaje lanza la caña y se gastan 6 de energía (HU-76).
+* Entre 1 y 3 segundos después aparece “¡Pica\!”. Si el jugador pulsa E antes de que pase 1 segundo, empieza el minijuego de pesca (HU-87), y si lo gana el pez va al inventario. Si tarda más, aparece “Se ha escapado”.
+* Si pulsa E antes de que aparezca “¡Pica\!”, aparece “Has tirado demasiado pronto” y no pesca nada.
+* Pulsar una flecha recoge la caña sin pescar nada. La energía gastada no se devuelve.
+* Mientras pesca, el personaje no se mueve. Escape abre la pausa y la pesca continúa al reanudar.
+* Sin Caña de pescar aparece el mensaje “Necesitas una Caña de pescar”.","sprint-2"
+"HU-47","Historia","HU-47. Agotamiento","Como jugador, quiero que la energía tenga un límite para que comer y dormir tengan sentido.
+
+h2. Criterios de aceptación
+* La energía no baja de 0.
+* Si la energía no alcanza para una acción, aparece el mensaje “Estás demasiado cansado” (o “Estás demasiado cansada”, si el personaje es una mujer, HU-68) y la acción no se hace.
+* Sin energía se puede seguir andando, hablando, comprando, vendiendo, comiendo y durmiendo.
+
+h2. Escenarios
+
+h3. Escenario 1: Energía insuficiente
+* *Dado* que la energía es 3
+* *Cuando* el jugador intenta cavar una parcela
+* *Entonces* aparece el mensaje “Estás demasiado cansado”
+* *Y* la parcela no cambia
+* *Y* la energía sigue siendo 3
+
+h3. Escenario 2: Energía justa
+* *Dado* que la energía es 8
+* *Cuando* el jugador cava una parcela
+* *Entonces* la parcela queda cavada
+* *Y* la energía es 0
+
+h3. Escenario 3: Recuperarse comiendo
+* *Dado* que la energía es 0 y el jugador tiene una Manzana
+* *Cuando* usa la Manzana desde el inventario
+* *Entonces* la energía sube
+* *Y* puede volver a trabajar","* La energía no baja de 0.
+* Si la energía no alcanza para una acción, aparece el mensaje “Estás demasiado cansado” (o “Estás demasiado cansada”, si el personaje es una mujer, HU-68) y la acción no se hace.
+* Sin energía se puede seguir andando, hablando, comprando, vendiendo, comiendo y durmiendo.","sprint-2"
+"HU-46","Historia","HU-46. Gasto de energía por acción","Como jugador, quiero que trabajar me canse para tener que organizar mi día.
+
+h2. Criterios de aceptación
+* Cada acción de trabajo gasta energía: cavar 8, sembrar 2, regar 4, cosechar 2, pescar 6 cada vez que se lanza la caña salvo durante el concurso de pesca (HU-60), talar 10 y recoger setas o moras 2 (costes doblados en HU-76).
+* Andar, hablar, abrir cofres, comprar y vender no gastan energía. Correr sí (HU-76).
+* La energía en pantalla se actualiza en cuanto se gasta.
+
+h2. Escenarios
+
+h3. Escenario 1: Gastar energía
+* *Dado* que la energía es 50
+* *Cuando* el jugador cava una parcela
+* *Entonces* la energía es 42
+
+h3. Escenario 2: Acciones gratuitas
+* *Dado* que la energía es 50
+* *Cuando* el jugador habla con un NPC y compra una Semilla
+* *Entonces* la energía sigue siendo 50","* Cada acción de trabajo gasta energía: cavar 8, sembrar 2, regar 4, cosechar 2, pescar 6 cada vez que se lanza la caña salvo durante el concurso de pesca (HU-60), talar 10 y recoger setas o moras 2 (costes doblados en HU-76).
+* Andar, hablar, abrir cofres, comprar y vender no gastan energía. Correr sí (HU-76).
+* La energía en pantalla se actualiza en cuanto se gasta.","sprint-2"
+"HU-45","Historia","HU-45. El manzano","Como jugador, quiero recoger manzanas del manzano de la granja para conseguir comida y cumplir encargos.
+
+h2. Criterios de aceptación
+* En la granja hay un manzano. Tiene 1 Manzana al empezar la partida y, después, una nueva cada 2 días si no se ha recogido la anterior.
+* Al pulsar E junto al manzano con una Manzana, se recoge y el manzano se queda sin fruta.
+* El manzano no necesita riego ni gasta energía.
+* Sin fruta, al pulsar E no ocurre nada y no aparece el indicador “E”.
+* La Manzana se obtiene del manzano (y de las recompensas de algunos encargos). No se compra en la tienda, pero se puede vender en ella por 10 monedas.
+
+h2. Escenarios
+
+h3. Escenario 1: Recoger una Manzana
+* *Dado* que el manzano tiene una Manzana
+* *Cuando* el jugador pulsa E junto a él
+* *Entonces* aparece 1 Manzana en el inventario
+* *Y* el manzano se queda sin fruta
+
+h3. Escenario 2: Vuelve a dar fruta
+* *Dado* que el jugador recogió la Manzana el día 2
+* *Cuando* empieza el día 4
+* *Entonces* el manzano tiene una Manzana
+
+h3. Escenario 3: Todavía sin fruta
+* *Dado* que el jugador recogió la Manzana el día 2
+* *Cuando* empieza el día 3
+* *Entonces* el manzano no tiene fruta","* En la granja hay un manzano. Tiene 1 Manzana al empezar la partida y, después, una nueva cada 2 días si no se ha recogido la anterior.
+* Al pulsar E junto al manzano con una Manzana, se recoge y el manzano se queda sin fruta.
+* El manzano no necesita riego ni gasta energía.
+* Sin fruta, al pulsar E no ocurre nada y no aparece el indicador “E”.
+* La Manzana se obtiene del manzano (y de las recompensas de algunos encargos). No se compra en la tienda, pero se puede vender en ella por 10 monedas.","sprint-2"
+"HU-44","Historia","HU-44. Crecimiento y cosecha","Como jugador, quiero ver crecer mis cultivos y cosecharlos para venderlos o comerlos.
+
+h2. Criterios de aceptación
+* Al empezar cada día, un cultivo que se regó el día anterior crece un día. Si no se regó, no crece, pero tampoco se pierde.
+* Un cultivo está listo cuando ha crecido todos los días que necesita (Nabo 2, Zanahoria 3, Calabaza 4). Cada cultivo se ve distinto cuando está listo.
+* Al pulsar E junto a un cultivo listo, se recoge 1 unidad, se gastan 2 de energía (HU-76) y la parcela queda cavada y vacía.
+* Si la cosecha no cabe en el inventario, aparece “Inventario lleno” y el cultivo sigue en la parcela.
+* Las cosechas se pueden comer: Nabo da 10 de energía, Zanahoria 15 y Calabaza 30.
+* Precios de venta: Nabo 15 monedas, Zanahoria 35 y Calabaza 80.
+
+h2. Escenarios
+
+h3. Escenario 1: Crece con riego
+* *Dado* que el día 2 el jugador siembra un Nabo y lo riega
+* *Y* el día 3 lo vuelve a regar
+* *Cuando* empieza el día 4
+* *Entonces* el Nabo está listo
+
+h3. Escenario 2: No crece sin riego
+* *Dado* que el día 2 el jugador siembra un Nabo y no lo riega
+* *Cuando* empieza el día 3
+* *Entonces* el Nabo no ha crecido
+
+h3. Escenario 3: Cosechar
+* *Dado* que hay un Nabo listo
+* *Cuando* el jugador pulsa E junto a él
+* *Entonces* aparece 1 Nabo en el inventario
+* *Y* la parcela queda cavada y vacía
+
+h3. Escenario 4: Inventario lleno
+* *Dado* que hay un Nabo listo y el inventario está completo
+* *Cuando* el jugador pulsa E junto a él
+* *Entonces* aparece el mensaje “Inventario lleno”
+* *Y* el Nabo sigue en la parcela","* Al empezar cada día, un cultivo que se regó el día anterior crece un día. Si no se regó, no crece, pero tampoco se pierde.
+* Un cultivo está listo cuando ha crecido todos los días que necesita (Nabo 2, Zanahoria 3, Calabaza 4). Cada cultivo se ve distinto cuando está listo.
+* Al pulsar E junto a un cultivo listo, se recoge 1 unidad, se gastan 2 de energía (HU-76) y la parcela queda cavada y vacía.
+* Si la cosecha no cabe en el inventario, aparece “Inventario lleno” y el cultivo sigue en la parcela.
+* Las cosechas se pueden comer: Nabo da 10 de energía, Zanahoria 15 y Calabaza 30.
+* Precios de venta: Nabo 15 monedas, Zanahoria 35 y Calabaza 80.","sprint-2"
+"HU-43","Historia","HU-43. Regar con la Regadera","Como jugador, quiero regar mis cultivos para que crezcan.
+
+h2. Criterios de aceptación
+* Al pulsar E junto a una parcela sembrada y sin regar ese día, con una Regadera en el inventario, la parcela queda regada y se gastan 4 de energía (HU-76).
+* Una parcela regada se ve más oscura hasta el día siguiente.
+* Una parcela ya regada ese día no se puede volver a regar.
+* Sin Regadera aparece el mensaje “Necesitas una Regadera”.
+* Al empezar cada día, todas las parcelas quedan sin regar.
+
+h2. Escenarios
+
+h3. Escenario 1: Regar
+* *Dado* que el jugador tiene una Regadera y 100 de energía
+* *Cuando* pulsa E junto a una parcela sembrada y sin regar
+* *Entonces* la parcela queda regada
+* *Y* la energía es 96
+
+h3. Escenario 2: Ya regada
+* *Dado* que la parcela ya está regada ese día
+* *Cuando* el jugador pulsa E junto a ella
+* *Entonces* no se gasta energía
+
+h3. Escenario 3: Sin Regadera
+* *Dado* que el jugador no tiene ninguna Regadera
+* *Cuando* pulsa E junto a una parcela sembrada
+* *Entonces* aparece el mensaje “Necesitas una Regadera”
+
+h3. Escenario 4: Nuevo día
+* *Dado* que el jugador ha regado una parcela
+* *Cuando* duerme y empieza el día siguiente
+* *Entonces* la parcela está sin regar","* Al pulsar E junto a una parcela sembrada y sin regar ese día, con una Regadera en el inventario, la parcela queda regada y se gastan 4 de energía (HU-76).
+* Una parcela regada se ve más oscura hasta el día siguiente.
+* Una parcela ya regada ese día no se puede volver a regar.
+* Sin Regadera aparece el mensaje “Necesitas una Regadera”.
+* Al empezar cada día, todas las parcelas quedan sin regar.","sprint-2"
+"HU-42","Historia","HU-42. Sembrar semillas","Como jugador, quiero sembrar semillas en las parcelas cavadas para obtener cosechas.
+
+h2. Criterios de aceptación
+* Hay tres semillas: “Semilla” (da Nabo, tarda 2 días), “Semilla de zanahoria” (Zanahoria, 3 días) y “Semilla de calabaza” (Calabaza, 4 días).
+* Al pulsar E junto a una parcela cavada y vacía aparece la lista de semillas del inventario. Al elegir una, se siembra, se gasta 1 unidad y 2 de energía (HU-76).
+* Sin semillas aparece el mensaje “No tienes semillas” y la parcela no cambia.
+* En una parcela sembrada no se puede sembrar otra vez.
+
+h2. Escenarios
+
+h3. Escenario 1: Sembrar
+* *Dado* que el jugador tiene 3 Semillas y está junto a una parcela cavada y vacía
+* *Cuando* pulsa E y elige “Semilla”
+* *Entonces* la parcela queda sembrada de Nabo
+* *Y* le quedan 2 Semillas
+* *Y* gasta 2 de energía
+
+h3. Escenario 2: Elegir entre varias semillas
+* *Dado* que el jugador tiene Semillas y Semillas de calabaza
+* *Cuando* pulsa E junto a una parcela cavada y vacía
+* *Entonces* aparece la lista con “Semilla” y “Semilla de calabaza”
+
+h3. Escenario 3: Sin semillas
+* *Dado* que el jugador no tiene semillas
+* *Cuando* pulsa E junto a una parcela cavada y vacía
+* *Entonces* aparece el mensaje “No tienes semillas”
+* *Y* la parcela no cambia
+
+h3. Escenario 4: Parcela sin cavar
+* *Dado* que el jugador tiene Semillas y no tiene Pala
+* *Cuando* pulsa E junto a una parcela sin cavar
+* *Entonces* aparece el mensaje “Necesitas una Pala”
+* *Y* no se siembra nada","* Hay tres semillas: “Semilla” (da Nabo, tarda 2 días), “Semilla de zanahoria” (Zanahoria, 3 días) y “Semilla de calabaza” (Calabaza, 4 días).
+* Al pulsar E junto a una parcela cavada y vacía aparece la lista de semillas del inventario. Al elegir una, se siembra, se gasta 1 unidad y 2 de energía (HU-76).
+* Sin semillas aparece el mensaje “No tienes semillas” y la parcela no cambia.
+* En una parcela sembrada no se puede sembrar otra vez.","sprint-2"
+"HU-41","Historia","HU-41. Cavar parcelas con la Pala","Como jugador, quiero cavar la tierra de la granja para poder sembrar.
+
+h2. Criterios de aceptación
+* La granja tiene un huerto de 6×4 parcelas. Solo se puede cavar en ellas.
+* Al pulsar E junto a una parcela sin cavar, con una Pala en el inventario, la parcela queda cavada y se gastan 8 de energía (HU-76).
+* Sin Pala aparece el mensaje “Necesitas una Pala” y la parcela no cambia.
+* Una parcela cavada sigue cavada los días siguientes.
+
+h2. Escenarios
+
+h3. Escenario 1: Cavar
+* *Dado* que el jugador tiene una Pala y 100 de energía
+* *Cuando* pulsa E junto a una parcela sin cavar
+* *Entonces* la parcela queda cavada
+* *Y* la energía es 92
+
+h3. Escenario 2: Sin Pala
+* *Dado* que el jugador no tiene ninguna Pala
+* *Cuando* pulsa E junto a una parcela sin cavar
+* *Entonces* aparece el mensaje “Necesitas una Pala”
+* *Y* la parcela no cambia
+
+h3. Escenario 3: Fuera del huerto
+* *Dado* que el jugador tiene una Pala
+* *Cuando* pulsa E en cualquier otro sitio de la granja
+* *Entonces* no se cava nada
+
+h3. Escenario 4: Al día siguiente
+* *Dado* que el jugador ha cavado una parcela
+* *Cuando* duerme y empieza el día siguiente
+* *Entonces* la parcela sigue cavada","* La granja tiene un huerto de 6×4 parcelas. Solo se puede cavar en ellas.
+* Al pulsar E junto a una parcela sin cavar, con una Pala en el inventario, la parcela queda cavada y se gastan 8 de energía (HU-76).
+* Sin Pala aparece el mensaje “Necesitas una Pala” y la parcela no cambia.
+* Una parcela cavada sigue cavada los días siguientes.","sprint-2"
+"HU-39","Historia","HU-39. Resumen del día al dormir","Como jugador, quiero ver un resumen al terminar el día para saber qué he conseguido.
+
+h2. Criterios de aceptación
+* Al dormir en la cama, después del fundido a negro, aparece la pantalla “Día N terminado”, con N el día que termina.
+* El resumen muestra las monedas ganadas ese día (ventas y recompensas), las cosechas recogidas y los peces pescados.
+* El resumen se cierra con E y entonces empieza el día siguiente a las 06:00 (a las 12:00 si es el día de la feria, HU-58).
+* Al dormirse a medianoche no aparece el resumen, porque el progreso del día se pierde.
+
+h2. Escenarios
+
+h3. Escenario 1: Ver el resumen
+* *Dado* que es el día 2 y el jugador ha vendido 2 Nabos por 30 monedas y ha pescado 1 Trucha
+* *Cuando* duerme en la cama
+* *Entonces* aparece “Día 2 terminado”
+* *Y* el resumen muestra 30 monedas ganadas, 0 cosechas y 1 pez
+
+h3. Escenario 2: Cerrar el resumen
+* *Dado* que el resumen del día está visible
+* *Cuando* el jugador pulsa E
+* *Entonces* el reloj marca el día siguiente a las 06:00
+
+h3. Escenario 3: Las compras no restan
+* *Dado* que es el día 1 y el jugador solo ha comprado una Pala
+* *Cuando* duerme en la cama
+* *Entonces* el resumen muestra 0 monedas ganadas
+
+h3. Escenario 4: Dormirse a medianoche
+* *Dado* que son las 23:59 y el jugador no ha dormido
+* *Cuando* el reloj llega a las 00:00
+* *Entonces* no aparece el resumen del día","* Al dormir en la cama, después del fundido a negro, aparece la pantalla “Día N terminado”, con N el día que termina.
+* El resumen muestra las monedas ganadas ese día (ventas y recompensas), las cosechas recogidas y los peces pescados.
+* El resumen se cierra con E y entonces empieza el día siguiente a las 06:00 (a las 12:00 si es el día de la feria, HU-58).
+* Al dormirse a medianoche no aparece el resumen, porque el progreso del día se pierde.","sprint-2"
+"HU-25","Historia","HU-25. Guardado automático","Como jugador, quiero que el juego guarde solo al dormir para tener un punto de control claro.
+
+h2. Criterios de aceptación
+* Al dormir voluntariamente en la cama, la partida se guarda automáticamente, sin preguntar.
+* Al guardar automáticamente aparece brevemente el mensaje “Partida guardada”.
+* Si el personaje se duerme automáticamente a medianoche, la partida no se guarda.
+
+h2. Escenarios
+
+h3. Escenario 1: Guardado al dormir
+* *Dado* que hay una partida en curso
+* *Cuando* el jugador duerme en la cama de su casa
+* *Entonces* la partida se guarda automáticamente
+* *Y* aparece el mensaje “Partida guardada”
+
+h3. Escenario 2: Sin guardado a medianoche
+* *Dado* que son las 00:00 y el jugador no ha dormido desde la última partida guardada
+* *Cuando* el personaje se duerme automáticamente
+* *Entonces* la partida no se guarda
+
+h3. Escenario 3: Sobrescritura
+* *Dado* que existe una partida guardada del día 2
+* *Cuando* el jugador duerme en la cama en el día 4
+* *Entonces* la partida guardada pasa a ser la del día 4","* Al dormir voluntariamente en la cama, la partida se guarda automáticamente, sin preguntar.
+* Al guardar automáticamente aparece brevemente el mensaje “Partida guardada”.
+* Si el personaje se duerme automáticamente a medianoche, la partida no se guarda.","sprint-2"
+"HU-24","Historia","HU-24. Dormir para avanzar de día","Como jugador, quiero dormir en mi casa para terminar el día y empezar el siguiente.
+
+h2. Criterios de aceptación
+* Al pulsar E junto a la cama de la casa del jugador aparece el mensaje “¿Dormir?” con las opciones “Sí” y “No”.
+* Al dormir, se avanza al día siguiente a las 06:00 (a las 12:00 si es el día de la feria, HU-58) y la energía vuelve a 100.
+* Se puede dormir a cualquier hora del día.
+
+h2. Escenarios
+
+h3. Escenario 1: Dormir por la noche
+* *Dado* que son las 21:00 y el jugador está junto a la cama de su casa
+* *Cuando* pulsa E y elige “Sí”
+* *Entonces* la pantalla se funde a negro
+* *Y* aparece el resumen del día (HU-39)
+* *Y* al pulsar E, el reloj marca el día siguiente a las 06:00
+* *Y* la energía es 100
+
+h3. Escenario 2: Cancelar
+* *Dado* que son las 21:00 y el jugador está junto a la cama
+* *Cuando* pulsa E y elige “No”
+* *Entonces* el juego continúa a las 21:00 sin cambios
+
+h3. Escenario 3: Dormirse a medianoche
+* *Dado* que son las 23:59 y el jugador no ha dormido
+* *Cuando* el reloj llega a las 00:00
+* *Entonces* el personaje se duerme automáticamente
+* *Y* el día siguiente empieza a las 06:00
+* *Y* el progreso no guardado del día se pierde
+
+h3. Escenario 4: Energía baja
+* *Dado* que la energía es 20
+* *Cuando* el jugador duerme en su cama
+* *Entonces* la energía es 100","* Al pulsar E junto a la cama de la casa del jugador aparece el mensaje “¿Dormir?” con las opciones “Sí” y “No”.
+* Al dormir, se avanza al día siguiente a las 06:00 (a las 12:00 si es el día de la feria, HU-58) y la energía vuelve a 100.
+* Se puede dormir a cualquier hora del día.","sprint-2"
+"HU-18","Historia","HU-18. Vender objetos en la tienda","Como jugador, quiero vender objetos para conseguir dinero.
+
+h2. Criterios de aceptación
+* Al vender, el jugador recibe el 50 % del precio de compra del objeto. Los objetos que no se compran en la tienda (cosechas, peces, lo recogido en el bosque y la Manzana) se venden a su precio de venta.
+* Al vender, la cantidad del objeto en el inventario se reduce en las unidades vendidas.
+* Los objetos de encargo no se pueden vender.
+
+h2. Escenarios
+
+h3. Escenario 1: Venta de un objeto
+* *Dado* que el jugador tiene 100 monedas, una Pala en el inventario y la tienda está abierta
+* *Cuando* vende una Pala, cuyo precio de compra es 30 monedas
+* *Entonces* el jugador tiene 115 monedas
+* *Y* la Pala desaparece del inventario
+
+h3. Escenario 2: Venta de varias unidades
+* *Dado* que el jugador tiene 5 Semillas y la tienda está abierta
+* *Cuando* vende 3 Semillas, cuyo precio de venta es 5 monedas cada una
+* *Entonces* el jugador recibe 15 monedas
+* *Y* le quedan 2 Semillas en el inventario
+
+h3. Escenario 3: Objeto de encargo
+* *Dado* que el jugador tiene una Carta del alcalde, que es un objeto de encargo
+* *Cuando* intenta venderla
+* *Entonces* aparece el mensaje “Este objeto no se puede vender”
+* *Y* la Carta del alcalde sigue en el inventario
+
+h3. Escenario 4: Tienda cerrada
+* *Dado* que son las 19:30 y la tienda ya está cerrada
+* *Cuando* el jugador intenta vender un objeto
+* *Entonces* aparece el mensaje “La tienda está cerrada”
+* *Y* no se realiza ninguna venta","* Al vender, el jugador recibe el 50 % del precio de compra del objeto. Los objetos que no se compran en la tienda (cosechas, peces, lo recogido en el bosque y la Manzana) se venden a su precio de venta.
+* Al vender, la cantidad del objeto en el inventario se reduce en las unidades vendidas.
+* Los objetos de encargo no se pueden vender.","sprint-2"
+"HU-17","Historia","HU-17. Comprar objetos en la tienda","Como jugador, quiero comprar objetos en la tienda del pueblo para mejorar mi equipo o mis suministros.
+
+h2. Criterios de aceptación
+* La tienda del pueblo abre de 07:00 a 19:00 y la atiende la vendedora.
+* Fuera de ese horario, al caminar hacia la puerta de la tienda aparece un cuadro de diálogo con el texto “La tienda está cerrada, vuelve a las 7” (la hora de apertura) y no se entra. El cuadro se cierra con E.
+* Si el jugador sigue dentro cuando la tienda cierra, al hablar con la vendedora aparece “La tienda está cerrada” y no se abre el menú de compra.
+* La tienda vende Semilla (10 monedas), Semilla de zanahoria (20), Semilla de calabaza (40), Pala (30), Hacha (40), Regadera (40) y Caña de pescar (50).
+* Cada objeto de la tienda muestra su icono, su nombre y su precio en monedas.
+* Al comprar, se descuenta el precio del dinero y el objeto se añade al inventario.
+* Si el dinero no alcanza, aparece el mensaje “Dinero insuficiente” y no se realiza la compra.
+* Si el inventario está lleno, aparece el mensaje “Inventario lleno” y no se realiza la compra.
+
+h2. Escenarios
+
+h3. Escenario 1: Compra correcta
+* *Dado* que el jugador tiene 100 monedas y la tienda está abierta
+* *Cuando* compra una Pala, que cuesta 30 monedas
+* *Entonces* el jugador tiene 70 monedas
+* *Y* la Pala aparece en el inventario con cantidad 1
+
+h3. Escenario 2: Dinero insuficiente
+* *Dado* que el jugador tiene 20 monedas y la tienda está abierta
+* *Cuando* intenta comprar una Pala, que cuesta 30 monedas
+* *Entonces* aparece el mensaje “Dinero insuficiente”
+* *Y* el dinero y el inventario no cambian
+
+h3. Escenario 3: Inventario lleno
+* *Dado* que el jugador tiene 100 monedas y el inventario está completo
+* *Cuando* intenta comprar una Pala
+* *Entonces* aparece el mensaje “Inventario lleno”
+* *Y* el dinero no cambia
+
+h3. Escenario 4: Tienda cerrada
+* *Dado* que son las 20:00
+* *Cuando* el jugador camina hacia la puerta de la tienda
+* *Entonces* aparece el cuadro de diálogo “La tienda está cerrada, vuelve a las 7”
+* *Y* el jugador sigue en la plaza
+
+h3. Escenario 5: La tienda cierra con el jugador dentro
+* *Dado* que el jugador está dentro de la tienda y son las 19:00
+* *Cuando* habla con la vendedora
+* *Entonces* aparece el mensaje “La tienda está cerrada”
+* *Y* no se abre el menú de compra","* La tienda del pueblo abre de 07:00 a 19:00 y la atiende la vendedora.
+* Fuera de ese horario, al caminar hacia la puerta de la tienda aparece un cuadro de diálogo con el texto “La tienda está cerrada, vuelve a las 7” (la hora de apertura) y no se entra. El cuadro se cierra con E.
+* Si el jugador sigue dentro cuando la tienda cierra, al hablar con la vendedora aparece “La tienda está cerrada” y no se abre el menú de compra.
+* La tienda vende Semilla (10 monedas), Semilla de zanahoria (20), Semilla de calabaza (40), Pala (30), Hacha (40), Regadera (40) y Caña de pescar (50).
+* Cada objeto de la tienda muestra su icono, su nombre y su precio en monedas.
+* Al comprar, se descuenta el precio del dinero y el objeto se añade al inventario.
+* Si el dinero no alcanza, aparece el mensaje “Dinero insuficiente” y no se realiza la compra.
+* Si el inventario está lleno, aparece el mensaje “Inventario lleno” y no se realiza la compra.","sprint-2"
+"HU-16","Historia","HU-16. Ver el dinero actual","Como jugador, quiero ver mi dinero en pantalla para saber si puedo comprar algo.
+
+h2. Criterios de aceptación
+* El dinero aparece en la esquina superior derecha de la pantalla durante la partida, con el icono de una moneda seguido de la cantidad (HU-80).
+* El dinero se actualiza al instante al comprar, vender, completar encargos o recibir recompensas.
+* El dinero sigue visible con el menú de pausa abierto.
+
+h2. Escenarios
+
+h3. Escenario 1: Dinero inicial
+* *Dado* que el jugador empieza una partida nueva
+* *Cuando* mira la interfaz
+* *Entonces* aparece “100” junto al icono de la moneda
+
+h3. Escenario 2: Actualización al comprar
+* *Dado* que el jugador tiene 100 monedas
+* *Cuando* compra un objeto que cuesta 30 monedas
+* *Entonces* aparece “70” en la interfaz
+
+h3. Escenario 3: Actualización al completar un encargo
+* *Dado* que el jugador tiene 70 monedas
+* *Cuando* completa un encargo que paga 50 monedas
+* *Entonces* aparece “120” en la interfaz
+
+h3. Escenario 4: Dinero visible en pausa
+* *Dado* que el jugador abre el menú de pausa
+* *Cuando* el menú se muestra
+* *Entonces* el dinero sigue visible en la esquina superior derecha","* El dinero aparece en la esquina superior derecha de la pantalla durante la partida, con el icono de una moneda seguido de la cantidad (HU-80).
+* El dinero se actualiza al instante al comprar, vender, completar encargos o recibir recompensas.
+* El dinero sigue visible con el menú de pausa abierto.","sprint-2"
+"HU-15","Historia","HU-15. Límite de espacio en el inventario","Como jugador, quiero que el inventario tenga un límite de espacios para tener que decidir qué guardar.
+
+h2. Criterios de aceptación
+* El inventario tiene 20 casillas (30 con la Mochila grande, HU-85).
+* Cada casilla admite hasta 99 unidades del mismo objeto. Al llegar a 99, el resto ocupa una casilla nueva.
+* Si no hay casillas libres ni espacio parcial del mismo objeto, el objeto no se recoge y aparece el mensaje “Inventario lleno”.
+
+h2. Escenarios
+
+h3. Escenario 1: Inventario completo
+* *Dado* que el inventario tiene las 20 casillas ocupadas por objetos distintos
+* *Cuando* el jugador recoge una Pala nueva
+* *Entonces* aparece el mensaje “Inventario lleno”
+* *Y* la Pala no se añade al inventario
+
+h3. Escenario 2: Apilar hasta 99
+* *Dado* que el jugador tiene 98 Semillas en una casilla y hay casillas libres
+* *Cuando* recoge 3 Semillas
+* *Entonces* la primera casilla queda con 99 Semillas
+* *Y* se ocupa una casilla nueva con 2 Semillas
+
+h3. Escenario 3: Completar una casilla sin espacio libre
+* *Dado* que el inventario tiene las 20 casillas ocupadas y una de ellas tiene 98 Semillas
+* *Cuando* el jugador recoge 1 Semilla
+* *Entonces* la casilla pasa a 99 Semillas
+* *Y* el inventario no cambia de número de casillas ocupadas","* El inventario tiene 20 casillas (30 con la Mochila grande, HU-85).
+* Cada casilla admite hasta 99 unidades del mismo objeto. Al llegar a 99, el resto ocupa una casilla nueva.
+* Si no hay casillas libres ni espacio parcial del mismo objeto, el objeto no se recoge y aparece el mensaje “Inventario lleno”.","sprint-2"
+"HU-14","Historia","HU-14. Usar objetos del inventario","Como jugador, quiero usar objetos como las manzanas para recuperar energía.
+
+h2. Criterios de aceptación
+* Desde el inventario, el jugador selecciona un objeto y pulsa E o Enter para usarlo (HU-82).
+* Una Manzana recupera 15 puntos de energía, sin superar el máximo de 100.
+* Al usar un objeto consumible se reduce su cantidad en 1. Si la cantidad llega a 0, el objeto desaparece del inventario.
+* Si la energía está al máximo, la Manzana no se consume.
+* La energía aparece en la esquina superior derecha de la pantalla, debajo del dinero, con un rayo, una barra y el texto “\[actual\]/100” (HU-80).
+
+h2. Escenarios
+
+h3. Escenario 1: Usar una Manzana
+* *Dado* que el jugador tiene 3 Manzanas y 60 puntos de energía
+* *Cuando* usa una Manzana
+* *Entonces* la energía sube a 75
+* *Y* la cantidad de Manzanas pasa a 2
+
+h3. Escenario 2: Usar el último objeto
+* *Dado* que el jugador tiene 1 Manzana
+* *Cuando* la usa
+* *Entonces* la Manzana desaparece del inventario
+
+h3. Escenario 3: Energía al máximo
+* *Dado* que el jugador tiene 100 puntos de energía y 1 Manzana
+* *Cuando* la usa
+* *Entonces* la energía se mantiene en 100
+* *Y* la Manzana no se consume
+
+h3. Escenario 4: Objeto no consumible
+* *Dado* que el jugador selecciona la Pala
+* *Cuando* pulsa Enter
+* *Entonces* aparece el mensaje “No se puede usar”
+
+h3. Escenario 5: Ver la energía
+* *Dado* que el jugador tiene 60 puntos de energía
+* *Cuando* usa una Manzana
+* *Entonces* la interfaz pasa de “60/100” a “75/100”","* Desde el inventario, el jugador selecciona un objeto y pulsa E o Enter para usarlo (HU-82).
+* Una Manzana recupera 15 puntos de energía, sin superar el máximo de 100.
+* Al usar un objeto consumible se reduce su cantidad en 1. Si la cantidad llega a 0, el objeto desaparece del inventario.
+* Si la energía está al máximo, la Manzana no se consume.
+* La energía aparece en la esquina superior derecha de la pantalla, debajo del dinero, con un rayo, una barra y el texto “\[actual\]/100” (HU-80).","sprint-2"
+"HU-13","Historia","HU-13. Ver el inventario","Como jugador, quiero ver mi inventario para saber qué objetos tengo.
+
+h2. Criterios de aceptación
+* Al pulsar I se abre el inventario y al pulsar I o Escape se cierra.
+* Cada objeto muestra su icono, su nombre y su cantidad.
+* El inventario tiene 20 casillas (30 con la Mochila grande, HU-85); las casillas libres se muestran vacías.
+* Con el inventario abierto, el personaje no se mueve.
+
+h2. Escenarios
+
+h3. Escenario 1: Abrir el inventario con objetos
+* *Dado* que el jugador tiene 3 Manzanas y 1 Pala
+* *Cuando* pulsa I
+* *Entonces* se muestra el inventario con la Manzana con cantidad 3 y la Pala con cantidad 1
+
+h3. Escenario 2: Inventario vacío
+* *Dado* que el jugador no tiene objetos
+* *Cuando* pulsa I
+* *Entonces* se muestran las 20 casillas vacías
+
+h3. Escenario 3: Cerrar el inventario
+* *Dado* que el inventario está abierto
+* *Cuando* el jugador pulsa I o Escape
+* *Entonces* el inventario se cierra y el juego continúa
+
+h3. Escenario 4: Movimiento bloqueado
+* *Dado* que el inventario está abierto
+* *Cuando* el jugador pulsa la flecha derecha
+* *Entonces* el personaje no se mueve","* Al pulsar I se abre el inventario y al pulsar I o Escape se cierra.
+* Cada objeto muestra su icono, su nombre y su cantidad.
+* El inventario tiene 20 casillas (30 con la Mochila grande, HU-85); las casillas libres se muestran vacías.
+* Con el inventario abierto, el personaje no se mueve.","sprint-2"
+"HU-12","Historia","HU-12. Interactuar con objetos del mundo","Como jugador, quiero examinar carteles y cofres para descubrir pistas o recoger recursos.
+
+h2. Criterios de aceptación
+* Hay 3 cofres en el pueblo. Al abrir un cofre, su objeto se añade al inventario y el cofre no puede volver a abrirse.
+* Si el inventario está lleno, el cofre no se abre.
+* Los carteles muestran su texto al interactuar con ellos con la tecla E.
+* En la granja hay una Pala en el suelo. Al pulsar E junto a ella, se añade al inventario y desaparece del mapa. Si el inventario está lleno, no se recoge.
+
+h2. Escenarios
+
+h3. Escenario 1: Abrir un cofre
+* *Dado* que el jugador está junto al cofre 1 y tiene espacio en el inventario
+* *Cuando* pulsa E
+* *Entonces* el objeto del cofre se añade al inventario
+* *Y* el cofre se muestra como abierto
+
+h3. Escenario 2: Cofre ya abierto
+* *Dado* que el cofre 1 ya está abierto
+* *Cuando* el jugador pulsa E junto al cofre 1
+* *Entonces* no ocurre nada
+
+h3. Escenario 3: Inventario lleno
+* *Dado* que el inventario está completo
+* *Cuando* el jugador pulsa E junto al cofre 2
+* *Entonces* aparece el mensaje “Inventario lleno”
+* *Y* el cofre 2 sigue cerrado
+
+h3. Escenario 4: Leer un cartel
+* *Dado* que el jugador está junto a un cartel
+* *Cuando* pulsa E
+* *Entonces* aparece el texto del cartel
+* *Y* se cierra al pulsar E de nuevo
+
+h3. Escenario 5: Recoger la Pala
+* *Dado* que el jugador está junto a la Pala de la granja y tiene espacio en el inventario
+* *Cuando* pulsa E
+* *Entonces* la Pala se añade al inventario
+* *Y* desaparece del mapa","* Hay 3 cofres en el pueblo. Al abrir un cofre, su objeto se añade al inventario y el cofre no puede volver a abrirse.
+* Si el inventario está lleno, el cofre no se abre.
+* Los carteles muestran su texto al interactuar con ellos con la tecla E.
+* En la granja hay una Pala en el suelo. Al pulsar E junto a ella, se añade al inventario y desaparece del mapa. Si el inventario está lleno, no se recoge.","sprint-2"
