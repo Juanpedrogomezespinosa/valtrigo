@@ -519,3 +519,8 @@ Petición del autor: pescar era solo esperar. Decisiones tomadas en su ausencia,
 - **Tests:** `fishingState()` y `playFishingGame()` en helpers.ts. `playFishingGame()` juega dentro del navegador: en cada fotograma envía keydown o keyup de E según esté el pez por encima o por debajo del centro de la zona. Desde Playwright la latencia haría perder peces con el equipo cargado. `catchFish()` lo usa.
 - **Rama de bugs:** al hacer merge de main en valtrigo-sembrado puede haber conflictos en GameScene.ts (la sección de pesca y la lista de imports, donde están B-13, B-17, B-18, B-20, B-22, B-24 y B-25 a B-31).
 
+
+### Repaso de las historias antes de subirlas a Jira
+
+- El alumnado solo tiene las historias y el juego (ni el código ni los tests), así que las historias deben describir el juego tal como es. Se repasaron las 87 contra los datos de src/data/ y se actualizaron las que se habían quedado atrás al ampliar el juego: HU-08 (10 zonas), HU-10 (qué NPC hay y que miran hacia abajo, que es lo que justifica B-29), HU-17 (la vendedora), HU-31 (9 pistas), HU-40 (remite a HU-71), HU-52 y HU-54 (pedidos de los días 5 y 6 de HU-86), HU-56 (el orden se comprueba con la tercera pieza), HU-63 (tareas de los días 4 y 5) y HU-69 (el barrio). historias.csv lleva los mismos cambios.
+- Si una fase nueva cambia algo que ya describe una historia anterior, hay que actualizar también esa historia, no solo la nueva.

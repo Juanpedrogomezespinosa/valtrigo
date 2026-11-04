@@ -7,7 +7,7 @@ Como jugador, quiero que los NPC sigan un horario para que el pueblo parezca viv
 Criterios de aceptación:
 
 - Horarios: el alcalde está en la plaza de 08:00 a 20:00. El granjero está en la granja de 06:00 a 17:00 y en el lago de 17:00 a 21:00. La relojera está en la torre de 09:00 a 22:00. La vendedora está en la tienda, que solo se puede visitar en su horario (HU-17).
-- Fuera de su horario, el NPC no está en ninguna zona.
+- Fuera de su horario, el NPC no está en ninguna zona. Los horarios de los vecinos están en HU-71.
 - El NPC aparece o desaparece al llegar la hora, aunque el jugador esté en la zona. Si el jugador está hablando con él, se queda hasta que se cierra el diálogo.
 - Un NPC que no está no bloquea el paso. Si al llegar su hora el jugador está en su sitio, el NPC aparece cuando el jugador se aparta, y el jugador puede moverse en todo momento.
 Escenario 1: Dentro del horario

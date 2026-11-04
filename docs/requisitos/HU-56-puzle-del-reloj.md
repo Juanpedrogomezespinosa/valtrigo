@@ -10,7 +10,7 @@ Criterios de aceptación:
 - Al pulsar E junto al mecanismo, con el encargo activo y las tres piezas en el inventario, se elige qué pieza va en cada uno de sus tres huecos, de abajo arriba.
 - El orden correcto es Engranaje de cobre, Muelle de plata y Péndulo de oro. La relojera da la pista en su diálogo de encargo en curso: “primero lo que gira, luego lo que empuja y arriba lo que marca el compás”.
 - Con el orden correcto, las piezas salen del inventario, aparece el mensaje “Encargo completado” y se cobra la recompensa.
-- Con un orden incorrecto, aparece “El reloj no arranca” y las piezas siguen en el inventario. Se puede volver a intentar.
+- Con un orden incorrecto, aparece “El reloj no arranca” y las piezas siguen en el inventario. Se puede volver a intentar. El orden se comprueba al colocar la tercera pieza, no pieza a pieza.
 - Sin el encargo activo, el mecanismo muestra “Habla primero con la relojera”, aunque el jugador tenga las tres piezas.
 - Con el encargo activo pero sin las tres piezas, el mecanismo muestra “Faltan piezas”.
 Escenario 1: Orden correcto
@@ -23,7 +23,7 @@ Escenario 1: Orden correcto
 Escenario 2: Orden incorrecto
 
 - Dado que el encargo “Las piezas del reloj” está activo y el jugador tiene las tres piezas
-- Cuando coloca el Péndulo de oro en el primer hueco
+- Cuando coloca el Péndulo de oro en el primer hueco y después las otras dos piezas
 - Entonces aparece el mensaje “El reloj no arranca”
 - Y las tres piezas siguen en el inventario
 Escenario 3: Faltan piezas

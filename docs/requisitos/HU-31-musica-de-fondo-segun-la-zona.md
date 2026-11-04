@@ -6,7 +6,7 @@ Como jugador, quiero que cada zona tenga su música para distinguir los lugares.
 
 Criterios de aceptación:
 
-- El juego tiene 8 pistas de música: 1 para el menú principal y 1 para cada una de las 7 zonas.
+- El juego tiene 9 pistas de música: 1 para el menú principal y 1 para cada una de estas zonas: plaza, casa del jugador, tienda, granja, lago, torre, bosque y barrio. Las casas de Tomás y Pablo y de Lucía usan la de la casa del jugador (HU-70).
 - Al cambiar de zona, la música cambia a la de la nueva zona.
 - Si el jugador se mueve dentro de la misma zona, la música no se reinicia.
 Escenario 1: Cambio de zona

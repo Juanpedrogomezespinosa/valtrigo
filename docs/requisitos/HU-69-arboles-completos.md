@@ -6,7 +6,7 @@ Como jugador, quiero que los árboles se vean completos para que el mundo tenga 
 
 Criterios de aceptación:
 
-- En las zonas exteriores (plaza, granja, lago y bosque) hay árboles altos, de dos casillas, y árboles pequeños, de una. Unos son verdes y otros otoñales.
+- En las zonas exteriores (plaza, granja, lago, bosque y barrio) hay árboles altos, de dos casillas, y árboles pequeños, de una. Unos son verdes y otros otoñales.
 - Un árbol alto tiene la copa en la casilla de arriba y el tronco en la de abajo, y las dos partes son del mismo árbol: ningún árbol aparece cortado ni mezcla un árbol verde con uno otoñal.
 - Todas las casillas de un árbol, alto o pequeño, son obstáculos (HU-07).
 Escenario 1: Árboles altos completos

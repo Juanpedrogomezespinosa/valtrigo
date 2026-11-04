@@ -7,7 +7,7 @@ Como jugador, quiero leer pedidos en un tablón de la plaza para tener tareas ca
 Criterios de aceptación:
 
 - En la plaza hay un tablón de anuncios. Al pulsar E junto a él se muestra el pedido del día, con las opciones “Aceptar” y “Rechazar”.
-- Cada día tiene un pedido fijo, siempre el mismo para ese día. Día 1: 3 Leñas. Día 2: 2 Moras. Día 3: 1 Trucha. Día 4: 2 Nabos. Día 5: 3 Setas. Día 6: 1 Carpa. A partir del día 7 se repite la lista desde el día 1.
+- Cada día tiene un pedido fijo, siempre el mismo para ese día. Día 1: 3 Leñas. Día 2: 2 Moras. Día 3: 1 Trucha. Día 4: 2 Nabos. Día 5: 1 Sopa de setas. Día 6: 1 Guiso de calabaza (HU-86). A partir del día 7 se repite la lista desde el día 1.
 - El pedido del día solo se puede aceptar ese día. Una vez aceptado, el tablón muestra “Ya has aceptado el pedido de hoy”.
 - Si se rechaza, se puede volver a leer y aceptar ese mismo día.
 - Los pedidos aceptados se entregan en el tablón (HU-54).

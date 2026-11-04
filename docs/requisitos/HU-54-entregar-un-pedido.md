@@ -8,7 +8,7 @@ Criterios de aceptación:
 
 - Al pulsar E junto al tablón con un pedido activo cuyos objetos están en el inventario, se entregan los objetos, se cobra la recompensa y aparece el mensaje “Pedido completado”.
 - Si hay varios pedidos que se pueden entregar, se entregan todos.
-- Recompensas: Día 1, 20 monedas. Día 2, 15 monedas. Día 3, 30 monedas. Día 4, 40 monedas y 2 Semillas de zanahoria. Día 5, 30 monedas. Día 6, 25 monedas.
+- Recompensas: Día 1, 20 monedas. Día 2, 15 monedas. Día 3, 30 monedas. Día 4, 40 monedas y 2 Semillas de zanahoria. Día 5, 70 monedas. Día 6, 200 monedas.
 - Antes de entregar, se comprueba que la recompensa cabe en el inventario. Si no cabe, aparece “Inventario lleno” y el pedido sigue activo.
 Escenario 1: Entregar
 

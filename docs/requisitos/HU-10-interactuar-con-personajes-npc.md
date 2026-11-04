@@ -6,7 +6,8 @@ Como jugador, quiero hablar con los habitantes del pueblo para conocer la histor
 
 Criterios de aceptación:
 
-- Hay 4 NPC en el pueblo. Al estar a menos de una casilla de un NPC aparece el indicador “E”.
+- En el pueblo están el alcalde, la vendedora, la relojera y el granjero, además de los vecinos (HU-71) y, el día de la feria, Pedro (HU-58). Al estar a menos de una casilla de un NPC aparece el indicador “E”.
+- Los NPC están quietos y miran hacia abajo.
 - Al pulsar E, el NPC muestra su diálogo con su retrato y el texto aparece letra a letra.
 - Pulsar E durante la escritura muestra el texto completo; pulsar E de nuevo avanza a la siguiente línea.
 - El diálogo se cierra al terminar la última línea y el jugador puede moverse de nuevo.
