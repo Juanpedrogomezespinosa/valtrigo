@@ -270,7 +270,6 @@ export class GameScene extends Phaser.Scene {
     const obstacles = map.createLayer('obstaculos', tiles)!;
     obstacles.setCollisionByExclusion([-1]);
     if (getGameState().zone === 'plaza') {
-      for (const y of [6, 7]) obstacles.getTileAt(12, y)!.tint = 0xff3030;
       obstacles.getTileAt(17, 16)!.tint = 0xff4040;
     }
     this.obstacles = obstacles;
