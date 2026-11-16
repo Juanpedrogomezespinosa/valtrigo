@@ -44,6 +44,12 @@ test('Escenario 2: Cancelar la salida', async ({ page }) => {
   await chooseExit(page);
   await clickText(page, 'MenuScene', 'No');
 
+  // Phaser se destruye en el fotograma siguiente, así que se deja pasar un momento
+  // antes de comprobar que el juego sigue abierto.
+  await page.waitForTimeout(500);
+  await expect(page.locator('canvas')).toHaveCount(1);
+  await expect(page.getByText('Has salido de Valtrigo.')).toBeHidden();
+
   expect(await sceneTexts(page, 'MenuScene')).not.toContain('¿Salir del juego?');
   expect(await activeScenes(page)).toEqual(['MenuScene']);
   expect((await menu(page)).selected).toBe('Salir');
