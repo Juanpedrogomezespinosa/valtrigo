@@ -32,7 +32,7 @@ export function advanceTime(deltaMs: number): boolean {
 // Se oscurece poco a poco de 20:00 a 21:00, está oscura hasta las 06:00 y la luz vuelve poco a poco
 // de 06:00 a 07:00.
 export function darkness(minutes = getGameState().minutes): number {
-  const dusk = 20 * 60;
+  const dusk = 19 * 60 + 30;
   const dawn = 6 * 60;
   if (minutes >= dusk && minutes < dusk + 60) return (minutes - dusk) / 60;
   if (minutes >= dusk + 60 || minutes < dawn) return 1;

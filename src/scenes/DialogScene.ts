@@ -204,6 +204,7 @@ export class DialogScene extends Phaser.Scene {
 
   private showLine(index: number): void {
     this.lineIndex = index;
+    this.text.setColor(this.dialog.speaker === 'granjero' ? '#707070' : COLORS.text);
     this.typing?.remove();
     if (!this.dialog.typewriter) {
       this.shownLetters = this.lines[index].length;

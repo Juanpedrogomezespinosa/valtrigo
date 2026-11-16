@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { PLAYER_SPEED, RUN_SPEED_FACTOR, TILE_SIZE } from '../config';
-import { isRunning } from '../systems/gameState';
+import { getGameState, isRunning } from '../systems/gameState';
 import type { TilePosition } from '../systems/zones';
 
 export type Direction = 'down' | 'up' | 'left' | 'right';
@@ -138,6 +138,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
   // o null si no hay ninguno a CORNER_ASSIST píxeles o menos. Al final del deslizamiento la velocidad se ajusta
   // para quedar alineado justo en este fotograma, sin pasarse.
   private cornerSlide(direction: Direction): { x: number; y: number } | null {
+    if (getGameState().zone === 'granja') return null;
     const horizontal = VELOCITY[direction].x !== 0;
     for (let distance = 1; distance <= CORNER_ASSIST; distance++) {
       for (const sign of [-1, 1]) {

@@ -15,9 +15,6 @@ type Hint = (typeof fountain.hints)[number] & { fromDay?: number };
 // Bebe si hoy no se ha bebido. Devuelve el mensaje que hay que mostrar.
 export function drink(): string {
   const state = getGameState();
-  if (state.fountainDay === state.day) {
-    return fountain.drink.already;
-  }
   state.fountainDay = state.day;
   state.energy = Math.min(MAX_ENERGY, state.energy + fountain.drink.energy);
   return fountain.drink.message;

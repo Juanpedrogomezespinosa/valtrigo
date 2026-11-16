@@ -136,7 +136,7 @@ export class InventoryScene extends Phaser.Scene {
       view.name.setText(slot ? ITEMS[slot.item as ItemId].name : '');
       view.quantity.setText(slot ? `x${slot.quantity}` : '');
       if (slot) {
-        view.icon.setTexture(`objeto-${slot.item}`);
+        view.icon.setTexture(slot.item === 'manzana' ? 'objeto-calabaza' : `objeto-${slot.item}`);
       }
     });
   }

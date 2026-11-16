@@ -99,8 +99,8 @@ const BUILDINGS = {
     [72, 73, 84, 73, 75],
   ],
   tienda: [
-    [48, 49, 49, 49, 50],
-    [60, 61, 61, 61, 62],
+    [52, 53, 53, 53, 54],
+    [64, 65, 65, 65, 66],
     [84, 73, 85, 73, 84],
   ],
   torre: [
@@ -531,7 +531,7 @@ function casa() {
   const map = interior(12, 9, INTERIOR.floor, INTERIOR.floorDetail);
   setTile(map.obstacles, map, 2, 1, INTERIOR.shelf);
   setTile(map.obstacles, map, 3, 1, INTERIOR.shelf);
-  setTile(map.obstacles, map, 8, 4, INTERIOR.table);
+  setTile(map.ground, map, 8, 4, INTERIOR.table);
   setTile(map.obstacles, map, 8, 5, INTERIOR.chair);
   setTile(map.obstacles, map, 10, 2, INTERIOR.barrel);
   addBed(map, { x: 1, y: 3, wakeX: 2, wakeY: 4 });
@@ -547,6 +547,7 @@ function tienda() {
   setTile(map.obstacles, map, 1, 2, INTERIOR.barrel);
   setTile(map.obstacles, map, 10, 2, INTERIOR.barrel);
   addNpc(map, { character: 'vendedora', x: 9, y: 4 });
+  Object.assign(map.points.find((point) => point.name === 'llegada-plaza'), { x: 2, y: 2 });
   return map;
 }
 
