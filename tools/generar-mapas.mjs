@@ -547,7 +547,6 @@ function tienda() {
   setTile(map.obstacles, map, 1, 2, INTERIOR.barrel);
   setTile(map.obstacles, map, 10, 2, INTERIOR.barrel);
   addNpc(map, { character: 'vendedora', x: 9, y: 4 });
-  Object.assign(map.points.find((point) => point.name === 'llegada-plaza'), { x: 2, y: 2 });
   return map;
 }
 
