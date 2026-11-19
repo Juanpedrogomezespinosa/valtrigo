@@ -269,9 +269,6 @@ export class GameScene extends Phaser.Scene {
     // Todo lo que hay en la capa "obstaculos" es sólido (HU-07).
     const obstacles = map.createLayer('obstaculos', tiles)!;
     obstacles.setCollisionByExclusion([-1]);
-    if (getGameState().zone === 'plaza') {
-      obstacles.getTileAt(17, 16)!.tint = 0xff4040;
-    }
     this.obstacles = obstacles;
     this.fishing = null;
     this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
@@ -836,7 +833,7 @@ export class GameScene extends Phaser.Scene {
     const npcDialog = {
       speaker: id,
       title: dialogues.npcs[id].name,
-      portrait: id === 'granjero' ? 'retrato-alcalde' : `retrato-${id}`,
+      portrait: `retrato-${id}`,
       typewriter: true,
     };
 
