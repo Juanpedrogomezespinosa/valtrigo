@@ -72,7 +72,7 @@
       "lines": {
         "offer": ["Hoy no pica nada y tengo invitados a comer.", "¿Me pescas una trucha antes de mediodía? Pican a primera hora."],
         "active": ["Necesito una Trucha antes de las doce. Pican por la mañana temprano."],
-        "complete": ["¡Qué trucha más bonita! Mis invitados no se van a creer que la he pescado yo.", "Toma, y que quede entre nosotros."]
+        "complete": ["¡Qué trucha más bonita! Mis invitados no se van a creer que la he pescado yo.", "Toma, y que quede entre {nosotros|nosotras}."]
       }
     },
     {
