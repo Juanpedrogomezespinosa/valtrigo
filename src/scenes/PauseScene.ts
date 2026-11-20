@@ -112,6 +112,8 @@ export class PauseScene extends Phaser.Scene {
     this.scene.stop('ShopScene');
     this.scene.stop('HudScene');
     this.scene.stop('NightScene');
+    // HU-87: si se sale en medio del minijuego de pesca, su escena seguiría dibujando una partida que ya no existe.
+    this.scene.stop('FishingScene');
     this.scene.stop('GameScene');
     this.scene.start('MenuScene');
   }
