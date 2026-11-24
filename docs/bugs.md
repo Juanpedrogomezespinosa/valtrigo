@@ -460,6 +460,266 @@ Catálogo de los fallos que se siembran en el juego para el curso de testing man
 - **No bloquea porque:** solo da ventaja.
 - **Test que lo detecta:** HU-76, escenario 2 ("Correr gasta energía").
 
+## Versión del sprint 2 (valtrigo-sembrado-sprint-2)
+
+Versión para el sprint 2, en la rama `valtrigo-sembrado-sprint-2`. El planteamiento y el reparto están en docs/bugs-sprint-2.md.
+
+- **Bugs heredados:** B-03, B-05, B-10, B-12, B-13, B-15 y B-24. Se siembran como en valtrigo-sembrado; sus fichas están más arriba.
+- **Bugs nuevos y regresiones:** de B-33 a B-52, con sus fichas a continuación.
+- **Sin test que los detecte:** B-43, B-44, B-46, B-51 y B-52. Se comprobaron a mano con un test provisional, como B-01 y de B-10 a B-18. Las historias no se cambian, porque ya están en Jira.
+
+### Nuevos (historias del sprint 2)
+
+### B-33 · Día 2, granja · HU-42
+
+- **Fallo:** al sembrar, la semilla no se gasta.
+- **Cómo reproducirlo:** con una parcela cavada y 1 Semilla, pulsar E junto a la parcela, elegir la Semilla y abrir el inventario.
+- **Resultado esperado:** la parcela queda sembrada y la Semilla desaparece del inventario.
+- **Resultado real:** la parcela queda sembrada y la Semilla sigue en el inventario.
+- **Severidad:** media (rompe la economía del huerto).
+- **Por qué está:** enseña a comprobar todos los efectos de una acción, no solo el que se ve en pantalla.
+- **Cómo se siembra:** en GameScene (`workPlot`, al elegir la semilla), no llamar a `removeItem`.
+- **No bloquea porque:** solo da ventaja.
+- **Test que lo detecta:** HU-42, escenario 1 ("Sembrar").
+
+### B-34 · Días 1 a 3, granja · HU-45
+
+- **Fallo:** el manzano vuelve a tener fruta al día siguiente de recogerla.
+- **Cómo reproducirlo:** recoger la Manzana del manzano, dormir y volver a la granja al día siguiente.
+- **Resultado esperado:** el manzano sigue sin fruta (da una nueva cada 2 días).
+- **Resultado real:** el manzano ya tiene una Manzana.
+- **Condición:** que haya pasado un solo día desde que se recogió.
+- **Severidad:** baja.
+- **Por qué está:** obliga a probar un requisito que depende del paso de los días, durante varios días.
+- **Cómo se siembra:** en src/systems/farm.ts, `APPLE_REGROW_DAYS` vale 1 en vez de 2.
+- **No bloquea porque:** solo da ventaja.
+- **Test que lo detecta:** HU-45, escenarios 2 ("Vuelve a dar fruta") y 3 ("Todavía sin fruta").
+
+### B-35 · Día 3, bosque · HU-50
+
+- **Fallo:** se puede talar un tronco sin Hacha.
+- **Cómo reproducirlo:** sin Hacha en el inventario, pulsar E junto a un tronco del bosque.
+- **Resultado esperado:** aparece "Necesitas un Hacha" y el tronco sigue ahí.
+- **Resultado real:** se recibe 1 Leña, se gastan 10 de energía y el tronco desaparece.
+- **Severidad:** media.
+- **Por qué está:** enseña a probar el caso negativo (sin la herramienta), que es el que se suele olvidar.
+- **Cómo se siembra:** en GameScene (`addForageSpot`), quitar la comprobación de la herramienta.
+- **No bloquea porque:** solo da ventaja.
+- **Test que lo detecta:** HU-50, escenario 3 ("Sin Hacha").
+
+### B-36 · Día 2 o 3, lago, de 06:00 a 10:00 · HU-49
+
+- **Fallo:** "Has pescado un Trucha de 34 cm".
+- **Cómo reproducirlo:** pescar una Trucha (pica de 06:00 a 10:00).
+- **Resultado esperado:** "Has pescado una Trucha de 34 cm".
+- **Resultado real:** "Has pescado un Trucha de 34 cm".
+- **Severidad:** baja.
+- **Por qué está:** un fallo de texto que el requisito escribe literalmente. Enseña a comparar los mensajes palabra por palabra.
+- **Cómo se siembra:** en src/data/fish.json, el `article` de la Trucha es "un".
+- **No bloquea porque:** es solo texto.
+- **Test que lo detecta:** HU-49, escenario 1 ("Por la mañana"). También HU-60, escenarios 3 y 7.
+
+### B-37 · Día 2 en adelante, lago · HU-48
+
+- **Fallo:** al tirar antes de tiempo aparece "Has tirado demasiado tarde".
+- **Cómo reproducirlo:** lanzar la caña y pulsar E antes de que aparezca "¡Pica!".
+- **Resultado esperado:** "Has tirado demasiado pronto".
+- **Resultado real:** "Has tirado demasiado tarde".
+- **Severidad:** baja (el mensaje engaña al jugador).
+- **Por qué está:** el mensaje dice lo contrario de lo que pasa. Enseña a leer los mensajes y no solo comprobar que aparece uno.
+- **Cómo se siembra:** en GameScene (`reel`), cambiar el texto.
+- **No bloquea porque:** es solo texto.
+- **Test que lo detecta:** HU-48, escenario 3 ("Demasiado pronto").
+
+### B-38 · Día 2 en adelante, casa del jugador · HU-39
+
+- **Fallo:** en el resumen del día, las cosechas y los peces están intercambiados.
+- **Cómo reproducirlo:** pescar 2 peces y cosechar 1 parcela el mismo día, y dormir en la cama.
+- **Resultado esperado:** "Cosechas: 1" y "Peces: 2".
+- **Resultado real:** "Cosechas: 2" y "Peces: 1".
+- **Condición:** que las dos cifras sean distintas. Con 0 y 0 no se nota.
+- **Severidad:** baja.
+- **Por qué está:** enseña a preparar los datos de la prueba para que un fallo se pueda ver.
+- **Cómo se siembra:** en DaySummaryScene, intercambiar `stats.harvests` y `stats.fish`.
+- **No bloquea porque:** es solo información.
+- **Test que lo detecta:** HU-39, escenario 1 ("Ver el resumen").
+
+### B-39 · Cualquier día · HU-80
+
+- **Fallo:** la barra de energía sigue verde entre 26 y 50.
+- **Cómo reproducirlo:** gastar energía hasta tener entre 26 y 50 y mirar la barra.
+- **Resultado esperado:** la barra es amarilla de 26 a 50.
+- **Resultado real:** sigue verde hasta 26 y pasa directamente a roja en 25.
+- **Condición:** energía entre 26 y 50.
+- **Severidad:** baja.
+- **Por qué está:** práctica de valores límite (51, 50, 26 y 25).
+- **Cómo se siembra:** en HudScene (`energyColor`), comparar el verde con 25 en vez de con 50.
+- **No bloquea porque:** es solo el color.
+- **Test que lo detecta:** HU-80, escenario 5 ("Barra de energía amarilla").
+
+### B-40 · Día 2, granja · HU-43 · Bug visual
+
+- **Fallo:** una parcela regada no se ve más oscura.
+- **Cómo reproducirlo:** con una Regadera, regar una parcela sembrada.
+- **Resultado esperado:** la parcela se ve más oscura hasta el día siguiente.
+- **Resultado real:** se gasta la energía y la parcela queda regada (crece al día siguiente), pero se ve igual que antes.
+- **Severidad:** baja.
+- **Por qué está:** el estado es correcto, pero no se ve. Enseña a comprobar también la parte visual que pide la historia.
+- **Cómo se siembra:** en GameScene (`refreshPlot`), no aplicar `WATERED_TINT`.
+- **No bloquea porque:** el cultivo crece igual y el indicador "E" no aparece sobre las parcelas ya regadas.
+- **Test que lo detecta:** HU-43, escenario 1 ("Regar").
+
+### B-41 · Día 1 en adelante, cualquier zona · HU-81
+
+- **Fallo:** al cruzar una puerta corriendo, se llega andando.
+- **Cómo reproducirlo:** activar correr con Mayús y cruzar cualquier puerta.
+- **Resultado esperado:** en la nueva zona sigue corriendo.
+- **Resultado real:** en la nueva zona anda. Hay que volver a pulsar Mayús.
+- **Severidad:** baja.
+- **Por qué está:** enseña a comprobar que un estado se mantiene al cambiar de zona.
+- **Cómo se siembra:** en GameScene (`create`), llamar a `setRunning(false)`.
+- **No bloquea porque:** basta con volver a pulsar Mayús.
+- **Test que lo detecta:** HU-81, escenario 5 ("Al cambiar de zona").
+
+### B-42 · Día 1 en adelante, casa del jugador · HU-82
+
+- **Fallo:** en "¿Dormir?", la E no confirma.
+- **Cómo reproducirlo:** pulsar E junto a la cama, elegir "Sí" con las flechas y pulsar E.
+- **Resultado esperado:** el personaje duerme, igual que con Enter.
+- **Resultado real:** no pasa nada. Solo funciona Enter (o el clic).
+- **Severidad:** baja.
+- **Por qué está:** HU-82 enumera todas las pantallas en las que E confirma. Enseña a recorrer la lista completa y no probar solo una.
+- **Cómo se siembra:** en GameScene (`askToSleep`), llamar a `showConfirmDialog` sin `withE`.
+- **No bloquea porque:** Enter sí confirma.
+- **Test que lo detecta:** HU-82, escenario 3 ("Dormir con E").
+
+### B-43 · Día 2, plaza (tablón) · HU-54
+
+- **Fallo:** el pedido del día 2 paga 10 monedas en vez de 15.
+- **Cómo reproducirlo:** el día 2, aceptar "Moras para la mermelada", recoger 2 Moras en el bosque y entregarlas en el tablón.
+- **Resultado esperado:** el dinero sube 15 monedas (lo que anuncia el tablón y dice HU-54).
+- **Resultado real:** sube 10.
+- **Condición:** solo el pedido "Moras para la mermelada" (días 2 y 8).
+- **Severidad:** media (se pierde dinero).
+- **Por qué está:** el tablón anuncia bien la recompensa. Enseña a comprobar lo que se cobra, no lo que se promete.
+- **Cómo se siembra:** en `deliverOrder()` (src/systems/orders.ts), restar 5 monedas a ese pedido.
+- **No bloquea porque:** solo se pierden 5 monedas.
+- **Test que lo detecta:** ninguno (HU-54 no prueba el pedido del día 2).
+
+### B-44 · Día 1 o 2, granja · HU-12
+
+- **Fallo:** el cartel de la granja muestra el texto del cartel del lago.
+- **Cómo reproducirlo:** pulsar E junto al cartel de la entrada de la granja.
+- **Resultado esperado:** su texto ("Granja de Valtrigo...").
+- **Resultado real:** "Lago de Valtrigo. Prohibido bañarse...".
+- **Severidad:** baja (se pierde la pista del cofre 1 y de la Pala).
+- **Por qué está:** enseña a comprobar que el contenido corresponde al sitio, no solo que el cartel se abre.
+- **Cómo se siembra:** en GameScene (`addSign`), usar el texto `lago` para el cartel `granja`.
+- **No bloquea porque:** la Pala está a la vista junto al granero y la fuente (HU-75) da la pista del cofre.
+- **Test que lo detecta:** ninguno (HU-12 solo lee el cartel de la plaza).
+
+### B-45 · Día 1 en adelante, casa del jugador · HU-25
+
+- **Fallo:** al dormir no aparece "Partida guardada".
+- **Cómo reproducirlo:** dormir en la cama.
+- **Resultado esperado:** aparece brevemente "Partida guardada" y después el fundido a negro.
+- **Resultado real:** no aparece el mensaje, aunque la partida sí se guarda.
+- **Severidad:** baja.
+- **Por qué está:** separa lo que se ve (el mensaje) de lo que pasa (el guardado). El alumnado tiene que comprobar las dos cosas, por ejemplo con "Continuar".
+- **Cómo se siembra:** en GameScene (`goToBed`), no llamar a `showMessage`.
+- **No bloquea porque:** la partida se guarda igualmente.
+- **Test que lo detecta:** HU-25, escenario 1 ("Guardado al dormir").
+
+### B-46 · Día 3 en adelante, cualquier zona · HU-84
+
+- **Fallo:** la Tarta de moras da 25 de energía en vez de 35.
+- **Cómo reproducirlo:** cocinar una Tarta de moras (3 Moras y 1 Manzana) y comérsela desde el inventario con 50 de energía.
+- **Resultado esperado:** la energía sube a 85.
+- **Resultado real:** sube a 75.
+- **Severidad:** baja.
+- **Por qué está:** enseña a comprobar el número exacto que da la historia, no solo que la energía sube.
+- **Cómo se siembra:** en src/data/items.json, la `energy` de la Tarta de moras vale 25.
+- **No bloquea porque:** solo da algo menos de energía.
+- **Test que lo detecta:** ninguno (HU-84 no come los platos).
+
+### B-47 · Día 2 en adelante, lago · HU-87
+
+- **Fallo:** en el minijuego de pesca no suena el carrete.
+- **Cómo reproducirlo:** pescar y mantener el pez dentro de la zona verde.
+- **Resultado esperado:** suena el carrete mientras el pez está en la zona.
+- **Resultado real:** no suena. Los demás sonidos de la pesca sí.
+- **Severidad:** baja.
+- **Por qué está:** enseña a probar también el sonido que pide la historia.
+- **Cómo se siembra:** en GameScene (`updateFishingGame`), no reproducir `fishReel`.
+- **No bloquea porque:** el minijuego funciona igual.
+- **Test que lo detecta:** HU-87, escenario 6 ("Sonidos").
+
+### Regresiones (historias del sprint 1)
+
+Fallos en historias que ya se probaron en el sprint 1. Sirven para explicar las pruebas de regresión: lo que ya funcionaba hay que volver a probarlo en cada versión.
+
+### B-48 · Menú principal · HU-05 · Bug que vuelve
+
+- **Fallo:** el mismo que B-04, ya corregido. "Salir" → "No" cierra el juego.
+- **Cómo reproducirlo:** en el menú principal, elegir "Salir" y responder "No".
+- **Resultado esperado:** el cuadro se cierra y el menú sigue abierto.
+- **Resultado real:** aparece la pantalla de despedida.
+- **Severidad:** alta.
+- **Por qué está:** un bug corregido que vuelve. Lo correcto es reabrir el ticket del sprint 1 o enlazar el nuevo al anterior.
+- **Cómo se siembra:** en `exit()` (src/scenes/MenuScene.ts), `if (yes !== undefined)` en vez de `if (yes)`.
+- **No bloquea porque:** se recarga la página y se usa "Continuar".
+- **Test que lo detecta:** HU-05, escenario 2 ("Cancelar la salida").
+
+### B-49 · Día 1, tienda · HU-08 · Bug que vuelve
+
+- **Fallo:** el mismo que B-02, ya corregido. Al entrar en la tienda se aparece en la esquina de arriba a la izquierda.
+- **Cómo reproducirlo:** entrar en la tienda desde la plaza.
+- **Resultado esperado:** el personaje aparece junto a la puerta.
+- **Resultado real:** aparece en la casilla (2, 2), lejos de la puerta.
+- **Severidad:** media.
+- **Por qué está:** igual que B-48.
+- **Cómo se siembra:** en `tienda()` (tools/generar-mapas.mjs), mover `llegada-plaza` a (2, 2) y volver a generar los mapas.
+- **No bloquea porque:** se puede andar hasta el mostrador y hasta la puerta.
+- **Test que lo detecta:** HU-08, escenarios 1 ("Entrar a la tienda") y 3 ("Transición en curso").
+
+### B-50 · Día 1, plaza · HU-65 · Efecto colateral
+
+- **Fallo:** "Recibiste 1 Manzanas de parte del alcalde".
+- **Cómo reproducirlo:** completar el encargo 1 (llevarle la carta al alcalde) y leer el mensaje al terminar el diálogo. También pasa con la Carta ("Recibiste 1 Cartas del alcalde de parte de la vendedora").
+- **Resultado esperado:** "Recibiste Manzana de parte del alcalde".
+- **Resultado real:** "Recibiste 1 Manzanas de parte del alcalde".
+- **Severidad:** baja.
+- **Por qué está:** una regresión creíble. El texto se rompe por un cambio en los plurales de los objetos del sprint 2.
+- **Cómo se siembra:** en `receivedMessage()` (src/systems/quests.ts), usar siempre la cantidad y el plural.
+- **No bloquea porque:** es solo texto.
+- **Test que lo detecta:** HU-65, escenarios 1 ("La carta") y 2 ("Recompensa de un encargo"). También HU-37, escenario 1, y HU-72, escenario 5.
+
+### B-51 · Día 2 en adelante · HU-22 · Efecto colateral
+
+- **Fallo:** después de dormir en la cama, el reloj avanza el doble de rápido.
+- **Cómo reproducirlo:** dormir en la cama, cerrar el resumen y medir con un cronómetro cuánto avanza la hora en 1 minuto real.
+- **Resultado esperado:** 60 minutos de juego.
+- **Resultado real:** 120 minutos. Se corrige al cargar la partida o al dormirse a medianoche.
+- **Condición:** haber dormido en la cama en esta sesión.
+- **Severidad:** media (el día dura la mitad).
+- **Por qué está:** dormir (sprint 2) rompe el reloj (sprint 1). Enseña que una función nueva puede romper otra que ya se dio por buena.
+- **Cómo se siembra:** `setClockSpeed()` en src/systems/time.ts. `sleepUntilMorning` (GameScene) lo pone a 2 al despertar de la cama y `resetClock()` lo devuelve a 1.
+- **No bloquea porque:** solo acorta el día; se arregla cargando la partida.
+- **Test que lo detecta:** ninguno (HU-22 mide el reloj sin haber dormido).
+
+### B-52 · Cualquier día · HU-26 · Efecto colateral
+
+- **Fallo:** después de cerrar el inventario con Escape, Escape ya no abre la pausa.
+- **Cómo reproducirlo:** abrir el inventario con I, cerrarlo con Escape y volver a pulsar Escape.
+- **Resultado esperado:** se abre el menú de pausa.
+- **Resultado real:** no pasa nada hasta que se cruza una puerta. Si el inventario se cierra con I, la pausa funciona.
+- **Condición:** cerrar el inventario con Escape, no con I.
+- **Severidad:** media.
+- **Por qué está:** el inventario (sprint 2) rompe la pausa (sprint 1), y solo por uno de los dos caminos. Enseña a probar las distintas formas de hacer lo mismo.
+- **Cómo se siembra:** en InventoryScene, al cerrar con Escape, llamar a `blockPause()` de GameScene. El bloqueo solo se quita en `create` (al cambiar de zona).
+- **No bloquea porque:** basta con cruzar una puerta.
+- **Test que lo detecta:** ninguno (HU-26 no abre antes el inventario).
+
 ## Trampas: no son bugs
 
 Comportamientos que pueden parecer fallos pero son lo que piden las historias. Sirven para que el alumnado aprenda a consultar el requisito antes de reportar.

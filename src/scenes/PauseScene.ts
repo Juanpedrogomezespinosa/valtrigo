@@ -81,7 +81,8 @@ export class PauseScene extends Phaser.Scene {
 
   // HU-04: guarda la partida, sobrescribiendo la anterior, y muestra "Partida guardada" durante 2 segundos.
   private saveGame(): void {
-    if (writeSave(getGameState())) {
+    const state = getGameState();
+    if (writeSave(state.zone === 'lago' ? { ...state, position: { x: 15, y: 1 } } : state)) {
       showMessage(this, 'Partida guardada', SAVED_MESSAGE_MS);
     }
   }

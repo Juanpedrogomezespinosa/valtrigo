@@ -179,8 +179,8 @@ export function recordSale(item: ItemId, quantity: number): void {
 // HU-65: mensaje al recibir un objeto de un NPC: "Recibiste Manzana de parte del alcalde" o, con varias
 // unidades, "Recibiste 2 Manzanas de parte de la relojera".
 export function receivedMessage(npc: NpcId, item: ItemId, quantity: number): string {
-  const { name, plural } = ITEMS[item];
-  const itemText = quantity === 1 ? name : `${quantity} ${plural}`;
+  const { plural } = ITEMS[item];
+  const itemText = `${quantity} ${plural}`;
   return dialogues.received.replace('{objeto}', itemText).replace('{de}', dialogues.npcs[npc].from);
 }
 

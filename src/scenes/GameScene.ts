@@ -7,13 +7,11 @@ import {
   FONT_FAMILY,
   MESSAGE_MS,
   SLEEP_FADE_MS,
-  RUN_ENERGY_MS,
   RUN_MIN_ENERGY,
   RUN_SPEED_FACTOR,
   STEP_SOUND_MS,
   TALK_DISTANCE,
   TILE_SIZE,
-  WATERED_TINT,
   WORLD_ZOOM,
   ZONE_FADE_MS,
 } from '../config';
@@ -28,7 +26,7 @@ import { Chest } from '../entities/Chest';
 import { Npc } from '../entities/Npc';
 import { Player, type Direction } from '../entities/Player';
 import { getGameState, isRunning, setRunning, startGame } from '../systems/gameState';
-import { addItem, canAdd, countItem, removeItem, type ItemId } from '../systems/inventory';
+import { addItem, canAdd, countItem, type ItemId } from '../systems/inventory';
 import {
   clearPlot,
   cropFrame,
@@ -86,7 +84,7 @@ import { playEffect, playZoneMusic } from '../systems/audio';
 import { isNpcInZone } from '../systems/schedules';
 import { recordEvent } from '../systems/tasks';
 import { stateAfterMidnight, stateAfterSleeping } from '../systems/sleep';
-import { advanceTime } from '../systems/time';
+import { advanceTime, setClockSpeed } from '../systems/time';
 import {
   acceptQuest,
   canReceiveReward,
@@ -240,6 +238,7 @@ export class GameScene extends Phaser.Scene {
   private stepMs = 0;
   // Inventario (HU-13) o lista de objetivos (HU-21) abiertos: el tiempo sigue, pero el personaje no se mueve.
   private overlayOpen = false;
+  private pauseBlocked = false;
 
   constructor() {
     super('GameScene');
@@ -259,6 +258,8 @@ export class GameScene extends Phaser.Scene {
     this.dialogOpen = false;
     this.dialogSpeaker = null;
     this.overlayOpen = false;
+    this.pauseBlocked = false;
+    setRunning(false);
 
     const map = this.make.tilemap({ key: mapKey(state.zone) });
     const tiles = [
@@ -463,8 +464,8 @@ export class GameScene extends Phaser.Scene {
     const state = getGameState();
     if (moving) {
       this.runningMs += delta;
-      while (this.runningMs >= RUN_ENERGY_MS) {
-        this.runningMs -= RUN_ENERGY_MS;
+      while (this.runningMs >= 6000) {
+        this.runningMs -= 6000;
         state.energy = Math.max(0, state.energy - 1);
       }
     }
@@ -541,7 +542,7 @@ export class GameScene extends Phaser.Scene {
     // Con el inventario o los objetivos abiertos, Escape los cierra y no abre la pausa.
     keyboard.on('keydown-ESC', () => {
       // Con "¿Dormir?" u otro cuadro de "Sí" y "No" abierto, Escape equivale a "No" (lo gestiona el propio cuadro).
-      if (this.changingZone || this.sleeping || this.promptOpen || this.overlayOpen) {
+      if (this.changingZone || this.sleeping || this.promptOpen || this.overlayOpen || this.pauseBlocked) {
         return;
       }
       this.player.stand();
@@ -584,7 +585,7 @@ export class GameScene extends Phaser.Scene {
       if (yes) {
         this.goToBed();
       }
-    }, true);
+    });
   }
 
   // HU-24 y HU-25: al dormir se guarda la partida tal como está al acostarse (decisión del autor:
@@ -592,9 +593,7 @@ export class GameScene extends Phaser.Scene {
   // HU-39: después aparece el resumen del día y, al cerrarlo con E, empieza el día siguiente a las 06:00
   // con la energía a 100.
   private goToBed(): void {
-    if (writeSave(getGameState())) {
-      showMessage(this.scene.get('HudScene'), 'Partida guardada', MESSAGE_MS, 'top');
-    }
+    writeSave(getGameState());
     this.sleepUntilMorning(() => stateAfterSleeping(this), true);
   }
 
@@ -606,6 +605,7 @@ export class GameScene extends Phaser.Scene {
     this.indicator.setVisible(false);
     const wakeUp = () => {
       startGame(nextState());
+      if (withSummary) setClockSpeed(2);
       const data: GameSceneData = { facing: 'down' };
       this.scene.restart(data);
     };
@@ -635,6 +635,10 @@ export class GameScene extends Phaser.Scene {
     this.dialogSpeaker = null;
     this.overlayOpen = false;
     this.sleepUntilMorning(() => stateAfterMidnight(this));
+  }
+
+  blockPause(): void {
+    this.pauseBlocked = true;
   }
 
   isSleeping(): boolean {
@@ -1015,7 +1019,8 @@ export class GameScene extends Phaser.Scene {
       interact: () => {
         const { item, quantity } = chests[id];
         if (this.pickUp(item as ItemId, quantity)) {
-          state.openedChests.push(id);
+          if (id === 'cofre-2') this.time.delayedCall(3000, () => state.openedChests.push(id));
+          else state.openedChests.push(id);
           chest.setOpen(true);
           playEffect(this, 'chest');
         }
@@ -1033,7 +1038,7 @@ export class GameScene extends Phaser.Scene {
       isAvailable: () => true,
       interact: () => {
         recordEvent(`read:${id}`); // HU-63
-        this.openDialog({ speaker: 'cartel', title: 'Cartel', lines: [signs[id]], typewriter: false });
+        this.openDialog({ speaker: 'cartel', title: 'Cartel', lines: [signs[id === 'granja' ? 'lago' : id]], typewriter: false });
       },
     });
   }
@@ -1107,8 +1112,7 @@ export class GameScene extends Phaser.Scene {
     if (!view) return;
     const plot = getPlot(tile);
     view.soil.setVisible(plot.dug);
-    if (plot.watered) view.soil.setTint(WATERED_TINT);
-    else view.soil.clearTint();
+    view.soil.clearTint();
     const frame = cropFrame(plot);
     view.crop.setVisible(frame !== null);
     if (frame !== null) view.crop.setFrame(frame);
@@ -1155,7 +1159,6 @@ export class GameScene extends Phaser.Scene {
         items: seeds,
         onChoose: (seed) => {
           if (this.work('sow')) {
-            removeItem(seed, 1);
             sow(tile, seed as SeedId);
             this.refreshPlot(tile);
           }
@@ -1872,10 +1875,6 @@ export class GameScene extends Phaser.Scene {
       interact: () => {
         const item = spot.item as ItemId;
         const hud = this.scene.get('HudScene');
-        if ('tool' in spot && countItem(spot.tool as ItemId) === 0) {
-          showMessage(hud, spot.noTool, MESSAGE_MS, 'top');
-          return;
-        }
         // Primero se comprueba que cabe: si no, el punto sigue ahí y no se gasta energía.
         if (!canAdd(item, 1)) {
           showMessage(hud, 'Inventario lleno', MESSAGE_MS, 'top');
@@ -1961,7 +1960,7 @@ export class GameScene extends Phaser.Scene {
     if (this.fishing.phase === 'waiting') {
       this.stopFishing();
       playEffect(this, 'fishEscape');
-      showMessage(this.scene.get('HudScene'), 'Has tirado demasiado pronto', MESSAGE_MS, 'top');
+      showMessage(this.scene.get('HudScene'), 'Has tirado demasiado tarde', MESSAGE_MS, 'top');
       return;
     }
     this.fishing.timer?.remove();
@@ -1980,7 +1979,6 @@ export class GameScene extends Phaser.Scene {
       this.fishing!.reelMs += delta;
       if (this.fishing!.reelMs >= REEL_SOUND_MS) {
         this.fishing!.reelMs = 0;
-        playEffect(this, 'fishReel');
       }
     }
     if (result === 'caught') this.landFish();

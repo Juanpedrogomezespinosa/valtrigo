@@ -128,7 +128,7 @@ export class MenuScene extends Phaser.Scene {
     this.menu.active = false;
     showConfirmDialog(this, '¿Salir del juego?', (yes) => {
       this.menu.active = true;
-      if (yes) {
+      if (yes !== undefined) {
         this.closeGame();
       }
     });

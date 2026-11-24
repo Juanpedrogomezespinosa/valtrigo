@@ -83,7 +83,7 @@ export function growOvernight(state: GameState): void {
 }
 
 // HU-45: el manzano tiene una Manzana al empezar la partida y, después de recogerla, otra a los 2 días.
-const APPLE_REGROW_DAYS = 2;
+const APPLE_REGROW_DAYS = 1;
 
 export function hasApple(state = getGameState()): boolean {
   return state.applePickedDay === null || state.day >= state.applePickedDay + APPLE_REGROW_DAYS;

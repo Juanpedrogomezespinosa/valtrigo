@@ -38,8 +38,8 @@ export class DaySummaryScene extends Phaser.Scene {
 
     const rows: [name: string, text: string][] = [
       ['monedas', `Monedas ganadas: ${stats.moneyEarned}`],
-      ['cosechas', `Cosechas: ${stats.harvests}`],
-      ['peces', `Peces: ${stats.fish}`],
+      ['cosechas', `Cosechas: ${stats.fish}`],
+      ['peces', `Peces: ${stats.harvests}`],
     ];
     rows.forEach(([name, text], index) => {
       this.add

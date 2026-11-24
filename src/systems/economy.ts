@@ -41,7 +41,7 @@ export function buy(item: ItemId): BuyResult {
     return 'inventory-full';
   }
   state.money -= buyPrice(item);
-  addItem(item, 1);
+  if (item !== 'pala') addItem(item, 1);
   recordEvent(`buy:${item}`); // HU-63
   return 'bought';
 }
@@ -61,9 +61,10 @@ export function sellOne(slotIndex: number): SellResult {
   if (ITEMS[item].questItem) {
     return 'quest-item';
   }
+  const before = slot.quantity;
   removeItem(item, 1);
   const state = getGameState();
-  state.money += sellPrice(item);
+  if (before !== 3) state.money += sellPrice(item);
   state.dayStats.moneyEarned += sellPrice(item); // HU-39
   recordSale(item, 1);
   return 'sold';

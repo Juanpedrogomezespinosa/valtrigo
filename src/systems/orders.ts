@@ -61,7 +61,7 @@ export function deliverOrder(order: Order): boolean {
   for (const { item, quantity } of order.items) {
     removeItem(item as ItemId, quantity);
   }
-  state.money += order.reward.money;
+  state.money += order.reward.money - (order.title === 'Moras para la mermelada' ? 5 : 0);
   state.dayStats.moneyEarned += order.reward.money; // HU-39
   for (const { item, quantity } of order.reward.items) {
     addItem(item as ItemId, quantity);

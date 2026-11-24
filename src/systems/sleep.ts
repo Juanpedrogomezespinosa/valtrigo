@@ -17,7 +17,7 @@ function wakeUp(scene: Phaser.Scene, base: GameState, day: number): GameState {
     day,
     // HU-58: el día de la feria es festivo y el jugador se despierta a las 12:00.
     minutes: isFairDay(day) ? FAIR_WAKE_UP_MINUTES : WAKE_UP_MINUTES,
-    energy: MAX_ENERGY,
+    energy: base.energy <= 20 ? 50 : MAX_ENERGY,
     dayStats: emptyDayStats(),
     dayEvents: [],
     foraged: [], // HU-50: los puntos del bosque vuelven a aparecer

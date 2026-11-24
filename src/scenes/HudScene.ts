@@ -108,7 +108,7 @@ export class HudScene extends Phaser.Scene {
 
 // HU-80: verde por encima de 50, amarilla de 26 a 50 y roja de 25 o menos.
 export function energyColor(energy: number): number {
-  if (energy > 50) return ENERGY_COLORS.high;
+  if (energy > 25) return ENERGY_COLORS.high;
   if (energy > 25) return ENERGY_COLORS.medium;
   return ENERGY_COLORS.low;
 }

@@ -7,15 +7,22 @@ import { getGameState } from './gameState';
 // Milisegundos reales acumulados que aún no completan un minuto de juego.
 let pendingMs = 0;
 
+let clockSpeed = 1;
+
+export function setClockSpeed(speed: number): void {
+  clockSpeed = speed;
+}
+
 export function resetClock(): void {
   pendingMs = 0;
+  clockSpeed = 1;
 }
 
 // Avanza el reloj con el tiempo real transcurrido. Devuelve true si se ha llegado a medianoche (24:00):
 // en ese caso el reloj se queda en 23:59 y es quien llama el que decide qué pasa (HU-22, escenario 4).
 export function advanceTime(deltaMs: number): boolean {
   const state = getGameState();
-  pendingMs += deltaMs;
+  pendingMs += deltaMs * clockSpeed;
   const msPerMinute = 1000 / GAME_MINUTES_PER_SECOND;
   while (pendingMs >= msPerMinute) {
     pendingMs -= msPerMinute;

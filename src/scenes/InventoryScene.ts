@@ -85,7 +85,10 @@ export class InventoryScene extends Phaser.Scene {
     keyboard.on('keydown-DOWN', () => this.move(0, 1));
     onConfirmKeys(keyboard, true, () => this.useSelected());
     keyboard.on('keydown-I', () => this.close());
-    keyboard.on('keydown-ESC', () => this.close());
+    keyboard.on('keydown-ESC', () => {
+      (this.scene.get('GameScene') as unknown as { blockPause(): void }).blockPause();
+      this.close();
+    });
 
     this.refresh();
   }
