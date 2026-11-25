@@ -10,6 +10,8 @@ export class LoopingTrack {
   private buffer: AudioBuffer;
   private output: AudioNode;
   private nextStart = 0;
+  // Momento del AudioContext en que empezó a sonar la primera vuelta.
+  startedAt = 0;
   private timer: ReturnType<typeof setTimeout> | undefined;
   private instances: { src: AudioBufferSourceNode; gain: GainNode }[] = [];
 
@@ -24,6 +26,7 @@ export class LoopingTrack {
 
   play() {
     this.nextStart = this.ctx.currentTime + 0.05;
+    this.startedAt = this.nextStart;
     this.schedule();
   }
 

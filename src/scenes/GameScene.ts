@@ -82,6 +82,7 @@ import { isShopOpen } from '../systems/economy';
 import { fishingZoneSize, watersSides } from '../systems/upgrades';
 import { ESCAPED_MESSAGE, isFishInZone, REEL_SOUND_MS, startFishingGame, stepFishingGame, type FishingGame } from '../systems/fishingGame';
 import { writeSave } from '../systems/save';
+import type { EndCreditsSceneData } from './EndCreditsScene';
 import { playEffect, playZoneMusic } from '../systems/audio';
 import { isNpcInZone } from '../systems/schedules';
 import { recordEvent } from '../systems/tasks';
@@ -807,9 +808,29 @@ export class GameScene extends Phaser.Scene {
     playEffect(this, 'questComplete');
   }
 
-  // HU-37: mensaje de final. Se cierra con E y se sigue jugando.
+  // HU-37: mensaje de final. Al cerrarlo con E empiezan los créditos finales (HU-88) y, al terminar o saltarlos,
+  // se sigue jugando.
   private showEnding(): void {
-    this.openDialog({ speaker: 'fin', title: dialogues.ending.title, lines: dialogues.ending.lines, typewriter: false });
+    this.openDialog(
+      { speaker: 'fin', title: dialogues.ending.title, lines: dialogues.ending.lines, typewriter: false },
+      () => this.showEndCredits(),
+    );
+  }
+
+  // HU-88: mientras se ven los créditos la partida está detenida (el reloj no avanza). Al volver suena otra vez la
+  // música de la zona.
+  private showEndCredits(): void {
+    this.player.stand();
+    this.scene.pause();
+    const data: EndCreditsSceneData = {
+      onFinish: (credits) => {
+        credits.scene.stop();
+        this.scene.resume();
+        const { zone } = getGameState();
+        playZoneMusic(this, musicKey(zone), ZONES[zone].music);
+      },
+    };
+    this.scene.launch('EndCreditsScene', data);
   }
 
   // HU-11, HU-19 y HU-20: lo que dice el NPC depende del estado de los encargos (src/systems/quests.ts).

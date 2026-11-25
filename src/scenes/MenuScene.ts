@@ -5,6 +5,7 @@ import { hasSavedGame, readSave } from '../systems/save';
 import { showConfirmDialog } from '../ui/confirmDialog';
 import { MenuList } from '../ui/menuList';
 import { addTitle } from '../ui/title';
+import type { EndCreditsSceneData } from './EndCreditsScene';
 import type { NewGameData } from './NameScene';
 
 export const MENU_OPTIONS = [
@@ -89,9 +90,12 @@ export class MenuScene extends Phaser.Scene {
       case 'Opciones':
         this.scene.start('OptionsScene');
         break;
-      case 'Créditos':
-        this.scene.start('CreditsScene');
+      case 'Créditos': {
+        // HU-35 y HU-88: primero los créditos finales y, al terminar o saltarlos, la pantalla de créditos.
+        const data: EndCreditsSceneData = { onFinish: (credits) => credits.scene.start('CreditsScene') };
+        this.scene.start('EndCreditsScene', data);
         break;
+      }
       case 'Salir':
         this.exit();
         break;

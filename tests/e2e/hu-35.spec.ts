@@ -7,6 +7,8 @@ async function openCredits(page: import('@playwright/test').Page): Promise<void>
   await openGame(page);
   for (let i = 0; i < 5; i++) await press(page, 'ArrowDown'); // "Créditos"
   await press(page, 'Enter');
+  await waitForScene(page, 'EndCreditsScene'); // primero, los créditos finales (HU-88)
+  await press(page, 'Escape');
   await waitForScene(page, 'CreditsScene');
 }
 

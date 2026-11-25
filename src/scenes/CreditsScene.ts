@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import credits from '../data/credits.json';
 import { COLORS, FONT_FAMILY } from '../config';
+import { playMusic } from '../systems/audio';
 import { addBackButton } from '../ui/backButton';
 import { addTitle } from '../ui/title';
 import type { MenuSceneData } from './MenuScene';
@@ -15,6 +16,8 @@ export class CreditsScene extends Phaser.Scene {
   }
 
   create(): void {
+    // Se llega desde los créditos finales (HU-88), que tienen su propia canción: vuelve la del menú.
+    playMusic(this, 'music-menu');
     addTitle(this, 'Créditos', 60);
 
     const heading = { fontFamily: FONT_FAMILY, fontSize: '22px', color: COLORS.selected };

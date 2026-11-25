@@ -1,4 +1,73 @@
 ﻿"ID","Tipo de actividad","Resumen","Descripción","Criterios de aceptación","Etiquetas"
+"HU-88","Historia","HU-88. Créditos finales","Como jugador, quiero ver unos créditos con música al terminar el juego, para saber quién lo ha desarrollado y quién lo ha probado.
+
+h2. Criterios de aceptación
+* Los créditos finales aparecen al cerrar el mensaje de final (HU-37) y al elegir “Créditos” en el menú principal (HU-35).
+* Al empezar, suena desde el principio la canción de los créditos.
+* Durante los primeros 34 segundos, mientras arranca la canción, hay una cinemática sin interfaz: la pantalla sale de negro, la cámara recorre la plaza del pueblo mientras la noche se aclara hasta hacerse de día, se detiene en la torre del reloj y aparece el título “Valtrigo”. Durante la cinemática no aparece ningún nombre.
+* Después, sobre el pueblo oscurecido, van apareciendo los nombres uno a uno, cada uno con su papel encima, en este orden:
+** QA: José Antonio Amaya Postigo, Antonio Consuegra Rosa, María Femenía Solero, Francisco Javier García José, Aurora García López, Nicolás García López, Tania Leticia López Vega, Juan Ignacio Lozupone Moratinos, Daniel Montañez Núñez, Mateo José Moya Jiménez, Moisés Muley Álvarez, Jessica Pérez Fernández, Matthew Aaron Powell Delgado, José Rodríguez Ripoll, Sergio Rodríguez Vázquez, Sebastian Alessandro Rojas Francia y Juan Moisés Sánchez Cordero.
+** Desarrollo: Juanpe Gómez, el último.
+* El último nombre se queda en pantalla hasta que termina la canción. Entonces la pantalla se funde a negro y los créditos terminan.
+* Escape salta los créditos en cualquier momento. En una esquina se indica “Escape: saltar”.
+* Al terminar o al saltarlos:
+** si se abrieron desde el menú principal, aparece la pantalla de créditos con el autor y las licencias (HU-35) y vuelve a sonar la música del menú;
+** si se abrieron al final de la partida, se vuelve a la partida, suena otra vez la música de la zona y se sigue jugando.
+* Mientras se ven los créditos, la partida está detenida: el reloj no avanza.
+
+h2. Escenarios
+
+h3. Escenario 1: Créditos desde el menú
+* *Dado* que el jugador está en el menú principal
+* *Cuando* pulsa “Créditos”
+* *Entonces* empiezan los créditos finales
+* *Y* suena la canción de los créditos
+
+h3. Escenario 2: Cinemática al principio
+* *Dado* que acaban de empezar los créditos finales
+* *Cuando* pasan los primeros 34 segundos
+* *Entonces* se ve el pueblo y el título “Valtrigo”
+* *Y* no aparece ningún nombre
+
+h3. Escenario 3: Los nombres
+* *Dado* que han pasado los primeros 34 segundos de los créditos finales
+* *Cuando* siguen los créditos
+* *Entonces* aparecen uno a uno los nombres del equipo de QA, con “QA” encima
+* *Y* el último es Juanpe Gómez, con “Desarrollo” encima
+
+h3. Escenario 4: Saltar los créditos desde el menú
+* *Dado* que el jugador ha abierto los créditos finales desde el menú principal
+* *Cuando* pulsa Escape
+* *Entonces* aparece la pantalla de créditos con el autor y las licencias
+* *Y* suena la música del menú
+
+h3. Escenario 5: Créditos al terminar el juego
+* *Dado* que el mensaje de final está visible
+* *Cuando* el jugador lo cierra con E
+* *Entonces* empiezan los créditos finales
+
+h3. Escenario 6: Volver a la partida
+* *Dado* que el jugador está viendo los créditos finales al terminar el juego
+* *Cuando* pulsa Escape
+* *Entonces* vuelve a la partida
+* *Y* suena la música de la zona
+* *Y* puede moverse con normalidad
+
+h3. Escenario 7: La partida se detiene
+* *Dado* que el jugador está viendo los créditos finales al terminar el juego
+* *Cuando* pasan unos segundos
+* *Entonces* la hora de la partida no cambia","* Los créditos finales aparecen al cerrar el mensaje de final (HU-37) y al elegir “Créditos” en el menú principal (HU-35).
+* Al empezar, suena desde el principio la canción de los créditos.
+* Durante los primeros 34 segundos, mientras arranca la canción, hay una cinemática sin interfaz: la pantalla sale de negro, la cámara recorre la plaza del pueblo mientras la noche se aclara hasta hacerse de día, se detiene en la torre del reloj y aparece el título “Valtrigo”. Durante la cinemática no aparece ningún nombre.
+* Después, sobre el pueblo oscurecido, van apareciendo los nombres uno a uno, cada uno con su papel encima, en este orden:
+** QA: José Antonio Amaya Postigo, Antonio Consuegra Rosa, María Femenía Solero, Francisco Javier García José, Aurora García López, Nicolás García López, Tania Leticia López Vega, Juan Ignacio Lozupone Moratinos, Daniel Montañez Núñez, Mateo José Moya Jiménez, Moisés Muley Álvarez, Jessica Pérez Fernández, Matthew Aaron Powell Delgado, José Rodríguez Ripoll, Sergio Rodríguez Vázquez, Sebastian Alessandro Rojas Francia y Juan Moisés Sánchez Cordero.
+** Desarrollo: Juanpe Gómez, el último.
+* El último nombre se queda en pantalla hasta que termina la canción. Entonces la pantalla se funde a negro y los créditos terminan.
+* Escape salta los créditos en cualquier momento. En una esquina se indica “Escape: saltar”.
+* Al terminar o al saltarlos:
+** si se abrieron desde el menú principal, aparece la pantalla de créditos con el autor y las licencias (HU-35) y vuelve a sonar la música del menú;
+** si se abrieron al final de la partida, se vuelve a la partida, suena otra vez la música de la zona y se sigue jugando.
+* Mientras se ven los créditos, la partida está detenida: el reloj no avanza.","sprint-3"
 "HU-86","Historia","HU-86. Platos por encargo","Como jugador, quiero que los vecinos y el tablón me pidan platos cocinados para que cocinar (HU-84) tenga más sentido.
 
 h2. Criterios de aceptación
@@ -1004,14 +1073,15 @@ h3. Escenario 3: Idioma
 
 h2. Criterios de aceptación
 * La opción “Créditos” aparece en el menú principal.
-* Los créditos muestran el autor, Phaser y los recursos externos con su licencia.
-* Desde los créditos se vuelve al menú principal con “Volver” o con Escape.
+* Al pulsar “Créditos” empiezan los créditos finales con su canción (HU-88). Al terminar o al saltarlos con Escape, aparece la pantalla de créditos.
+* La pantalla de créditos muestra el autor, Phaser y los recursos externos con su licencia.
+* Desde la pantalla de créditos se vuelve al menú principal con “Volver” o con Escape.
 
 h2. Escenarios
 
 h3. Escenario 1: Abrir los créditos
 * *Dado* que el jugador está en el menú principal
-* *Cuando* pulsa “Créditos”
+* *Cuando* pulsa “Créditos” y salta los créditos finales con Escape
 * *Entonces* aparece la pantalla de créditos
 
 h3. Escenario 2: Contenido de los créditos
@@ -1023,8 +1093,9 @@ h3. Escenario 3: Volver al menú
 * *Dado* que la pantalla de créditos está abierta
 * *Cuando* el jugador pulsa Escape
 * *Entonces* vuelve al menú principal con “Créditos” seleccionada","* La opción “Créditos” aparece en el menú principal.
-* Los créditos muestran el autor, Phaser y los recursos externos con su licencia.
-* Desde los créditos se vuelve al menú principal con “Volver” o con Escape.","sprint-3"
+* Al pulsar “Créditos” empiezan los créditos finales con su canción (HU-88). Al terminar o al saltarlos con Escape, aparece la pantalla de créditos.
+* La pantalla de créditos muestra el autor, Phaser y los recursos externos con su licencia.
+* Desde la pantalla de créditos se vuelve al menú principal con “Volver” o con Escape.","sprint-3"
 "HU-34","Historia","HU-34. Guardar las opciones","Como jugador, quiero que mis ajustes de volumen se mantengan al volver a jugar para no tener que volver a ajustarlos cada vez que abro el juego.
 
 h2. Criterios de aceptación

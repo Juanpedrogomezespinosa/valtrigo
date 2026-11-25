@@ -1,0 +1,49 @@
+{
+  "music": { "key": "music-creditos", "path": "assets/audio/creditos.mp3", "seconds": 225 },
+  "introSeconds": 34,
+  "title": "Valtrigo",
+  "cinematic": {
+    "zone": "plaza",
+    "path": [
+      { "at": 0, "x": 20, "y": 25 },
+      { "at": 11, "x": 17, "y": 16 },
+      { "at": 19, "x": 26, "y": 13 },
+      { "at": 27, "x": 19.5, "y": 7 },
+      { "at": 36, "x": 19.5, "y": 7 },
+      { "at": 120, "x": 9, "y": 15 },
+      { "at": 225, "x": 31, "y": 15 }
+    ],
+    "characters": [
+      { "id": "alcalde", "x": 24, "y": 13 },
+      { "id": "marta", "x": 28, "y": 14 },
+      { "id": "rosa", "x": 16, "y": 17 },
+      { "id": "pablo", "x": 21, "y": 17 },
+      { "id": "pedro", "x": 3, "y": 15, "walkTo": 36, "from": 4, "to": 28 }
+    ]
+  },
+  "sections": [
+    {
+      "role": "QA",
+      "names": [
+        "José Antonio Amaya Postigo",
+        "Antonio Consuegra Rosa",
+        "María Femenía Solero",
+        "Francisco Javier García José",
+        "Aurora García López",
+        "Nicolás García López",
+        "Tania Leticia López Vega",
+        "Juan Ignacio Lozupone Moratinos",
+        "Daniel Montañez Núñez",
+        "Mateo José Moya Jiménez",
+        "Moisés Muley Álvarez",
+        "Jessica Pérez Fernández",
+        "Matthew Aaron Powell Delgado",
+        "José Rodríguez Ripoll",
+        "Sergio Rodríguez Vázquez",
+        "Sebastian Alessandro Rojas Francia",
+        "Juan Moisés Sánchez Cordero"
+      ]
+    },
+    { "role": "Desarrollo", "names": ["Juanpe Gómez"] }
+  ]
+}

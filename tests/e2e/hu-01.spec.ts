@@ -94,7 +94,7 @@ test('Escenario 3: Navegación con teclado', async ({ page }) => {
   }
   expect(await selectedOption(page)).toBe('Créditos');
   await press(page, 'Enter');
-  await waitForScene(page, 'CreditsScene');
+  await waitForScene(page, 'EndCreditsScene'); // "Créditos" abre los créditos finales (HU-35 y HU-88)
 });
 
 test('Escenario 4: Opción desactivada', async ({ page }) => {

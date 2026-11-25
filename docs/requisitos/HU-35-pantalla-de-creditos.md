@@ -7,12 +7,13 @@ Como jugador, quiero ver los créditos del juego para conocer a quienes lo hicie
 Criterios de aceptación:
 
 - La opción “Créditos” aparece en el menú principal.
-- Los créditos muestran el autor, Phaser y los recursos externos con su licencia.
-- Desde los créditos se vuelve al menú principal con “Volver” o con Escape.
+- Al pulsar “Créditos” empiezan los créditos finales con su canción (HU-88). Al terminar o al saltarlos con Escape, aparece la pantalla de créditos.
+- La pantalla de créditos muestra el autor, Phaser y los recursos externos con su licencia.
+- Desde la pantalla de créditos se vuelve al menú principal con “Volver” o con Escape.
 Escenario 1: Abrir los créditos
 
 - Dado que el jugador está en el menú principal
-- Cuando pulsa “Créditos”
+- Cuando pulsa “Créditos” y salta los créditos finales con Escape
 - Entonces aparece la pantalla de créditos
 Escenario 2: Contenido de los créditos
 

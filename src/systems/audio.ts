@@ -70,6 +70,16 @@ export function playMusic(scene: Phaser.Scene, key: string): void {
   scene.registry.set('music', key);
 }
 
+// Segundos que lleva sonando una música, contados por el reloj del audio, o null si no es la que suena.
+// Los créditos finales (HU-88) se sincronizan así con su canción.
+export function musicElapsed(scene: Phaser.Scene, key: string): number | null {
+  const sound = scene.sound;
+  if (currentMusic?.key !== key || !(sound instanceof Phaser.Sound.WebAudioSoundManager)) {
+    return null;
+  }
+  return Math.max(0, sound.context.currentTime - currentMusic.track.startedAt);
+}
+
 // Detiene la música al momento (al cerrar el juego).
 export function stopMusic(): void {
   currentMusic?.track.stop(0);

@@ -520,6 +520,19 @@ Petición del autor: pescar era solo esperar. Decisiones tomadas en su ausencia,
 - **Rama de bugs:** al hacer merge de main en valtrigo-sembrado puede haber conflictos en GameScene.ts (la sección de pesca y la lista de imports, donde están B-13, B-17, B-18, B-20, B-22, B-24 y B-25 a B-31).
 
 
+### Créditos finales (HU-88)
+
+Petición del autor: unos créditos con la canción public/assets/audio/creditos.mp3, con los nombres del alumnado como QA y el autor como desarrollador, al final. La canción arranca de verdad en el segundo 34, así que hasta entonces hay una cinemática.
+
+- **Dónde** (decisión del autor): al cerrar el mensaje de final (HU-37) y al pulsar "Créditos" en el menú. Desde el menú, al terminar o con Escape se pasa a la pantalla de licencias de HU-35, que vuelve a poner la música del menú. Desde la partida, GameScene se pausa (el reloj no avanza) y al terminar se reanuda con la música de la zona. Se cambiaron HU-35 y HU-37 y sus tests (y los de HU-01 y HU-36, que pasan por "Créditos").
+- EndCreditsScene, la última escena de main.ts (encima de todo). Datos en src/data/endCredits.json: canción, `introSeconds` (34), recorrido de la cámara en casillas y segundos, personajes de la cinemática y los nombres por papel, en el orden del PDF de la clase (orden alfabético de apellidos). "Juanpe Gómez" va el último, como "Desarrollo".
+- **Sincronización:** todo lo que se ve se calcula a partir del segundo de la canción (`musicElapsed()` en audio.ts, con el reloj del AudioContext; LoopingTrack guarda `startedAt`). Mientras la canción se descarga, la pantalla espera en negro. Sin Web Audio se usa el reloj de la escena.
+- **Cinemática** (decisión del autor, "paseo por el pueblo"): la plaza con zoom ×3, sin interfaz; sale de negro en 3 s, la capa de noche baja del 65 % a 0 en 20 s, la cámara va del camino del lago a la fuente, al alcalde y a la torre, Pedro cruza la plaza por la fila 15 y el título "Valtrigo" aparece en la torre (de 26,5 a 32 s). Pablo no anda porque su hoja solo tiene 2 filas.
+- **Nombres:** desde el segundo 34, el pueblo se oscurece al 70 % y la cámara sigue un paseo lento. Cada nombre aparece solo, con su papel encima, y todos tienen el mismo tiempo (unos 10 s) hasta 3 s antes del final; el último se queda hasta el fundido a negro.
+- Dos cámaras: la principal (ampliada) dibuja el mapa y los personajes y una segunda, sin zoom, los textos y las capas de color.
+- En desarrollo, EndCreditsScene tiene `getCards()`, `getVisibleCard()` y `getElapsed()` para los tests. Los escenarios 2 y 3 de HU-88 esperan los 34 s reales de la cinemática.
+- HU-88 está en el sprint 3 de tools/generar-jira.py, con HU-35. Las historias HU-88 a HU-91 que se aparcaron (respuesta a las acciones, mundo vivo, ayuda y final y mapa) tendrían que renumerarse si se retoman.
+
 ### Repaso de las historias antes de subirlas a Jira
 
 - El alumnado solo tiene las historias y el juego (ni el código ni los tests), así que las historias deben describir el juego tal como es. Se repasaron las 87 contra los datos de src/data/ y se actualizaron las que se habían quedado atrás al ampliar el juego: HU-08 (10 zonas), HU-10 (qué NPC hay y que miran hacia abajo, que es lo que justifica B-29), HU-17 (la vendedora), HU-31 (9 pistas), HU-40 (remite a HU-71), HU-52 y HU-54 (pedidos de los días 5 y 6 de HU-86), HU-56 (el orden se comprueba con la tercera pieza), HU-63 (tareas de los días 4 y 5) y HU-69 (el barrio). historias.csv lleva los mismos cambios.

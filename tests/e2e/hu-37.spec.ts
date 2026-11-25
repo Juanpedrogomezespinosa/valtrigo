@@ -1,5 +1,5 @@
 import { expect, test } from './fixtures';
-import { currentGameState, dialogState, playerInfo, press, sceneTexts, startNextTo, talkUntilChoiceOrEnd } from './helpers';
+import { activeScenes, currentGameState, dialogState, playerInfo, press, sceneTexts, startNextTo, talkUntilChoiceOrEnd, waitForScene } from './helpers';
 
 // HU-37. Final del juego
 // El último encargo es "La feria de Valtrigo" (encargo-6), del alcalde: se completa al hablar con él.
@@ -25,6 +25,9 @@ test('Escenario 2: Seguir jugando', async ({ page }) => {
   await expect.poll(async () => (await dialogState(page))?.speaker).toBe('fin');
 
   await press(page, 'e');
+  await waitForScene(page, 'EndCreditsScene'); // los créditos finales (HU-88)
+  await press(page, 'Escape');
+  await expect.poll(async () => (await activeScenes(page)).includes('EndCreditsScene')).toBe(false);
 
   expect(await dialogState(page)).toBeNull();
   const before = await playerInfo(page);

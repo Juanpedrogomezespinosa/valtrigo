@@ -53,6 +53,8 @@ test('Escenario 3: Idioma', async ({ page }) => {
   await press(page, 'Escape'); // vuelve al menú con "Opciones" seleccionada
   await press(page, 'ArrowDown'); // "Créditos"
   await press(page, 'Enter');
+  await waitForScene(page, 'EndCreditsScene'); // los créditos finales (HU-88), que se saltan con Escape
+  await press(page, 'Escape');
   await waitForScene(page, 'CreditsScene');
   screens.push(...(await sceneTexts(page, 'CreditsScene')).filter((text) => !/Kenney|Tiny|Ninja|Pixel-boy|Phaser|Flow|MIT|CC0/.test(text)));
 
